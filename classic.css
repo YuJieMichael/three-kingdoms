@@ -24,3 +24,13 @@ body{background:#28261f;color:var(--ink);font-size:12px;overflow:hidden}button,i
 @media(max-width:600px){.quest-card{padding:11px}.quest-card .loot{display:flex;flex-wrap:wrap}.quest-summary{font-size:13px}.quest-heading .badge{white-space:nowrap}}
 
 .quest-collect{margin:0 0 14px}
+
+/* Government comfort and levy commands. */
+.government-summary{display:flex;flex-wrap:wrap;gap:8px 20px;margin:15px 0;color:#705a32;font-size:12px}.government-summary b{margin-left:5px}
+.government-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:14px 0}.government-tabs .btn{padding:9px 5px;font-size:12px}
+.civic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}.civic-card{padding:14px;border:1px solid #bba47c;background:#ede1c4;display:flex;flex-direction:column;min-width:0}.civic-card h3{font-size:16px;margin:0 0 10px}.civic-effect{font-size:12px;color:#685126;line-height:1.6;min-height:38px;margin:0 0 9px}.civic-card .cost,.civic-card .loot{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.civic-card .cost span,.civic-card .loot span{font-size:12px}.civic-card .btn{margin-top:auto}.civic-reason{min-height:34px;margin:6px 0 10px;color:#9d4933}.civic-formula{min-height:28px}.civic-unavailable{background:#e4dcc9;color:#8b7e62}.government-rules{margin-top:18px;font-size:12px}.government-rules summary{cursor:pointer;margin-bottom:10px}.government-rules .hint{margin-bottom:10px}
+@media(max-width:600px){.government-summary{gap:7px 12px}.government-tabs{gap:4px}.government-tabs .btn{font-size:11px}.civic-grid{gap:7px}.civic-card{padding:10px}.civic-card h3{font-size:14px}.civic-effect{font-size:11px}.civic-card .cost span,.civic-card .loot span{font-size:10px}.civic-reason,.civic-formula{font-size:10px}}
+
+.civic-effect{white-space:pre-line}
+
+.civic-card>.label{margin:0}.civic-reason:empty{display:none}.civic-formula{min-height:0;margin:5px 0 10px}.civic-reason{min-height:0}.is-levy .civic-effect{min-height:0;margin-bottom:10px}.is-levy .civic-card{padding:12px}.is-levy .civic-card .btn{padding:8px}

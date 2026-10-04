@@ -2,7 +2,22 @@
 // Public handbook numeric tables. Unknown timings, prices, research costs and NPC populations are marked trial.
 const ManualData = {
   "version": 1,
+  "civic": {
+    "cooldownSeconds": 900,
+    "minimumCostPopulation": 100,
+    "comfort": {
+      "relief": {"name":"赈灾","resource":"food","costMultiplier":1,"morale":5,"unrest":-15},
+      "blessing": {"name":"祈福","resource":"gold","costMultiplier":1,"morale":25,"unrest":-5},
+      "immigration": {"name":"增丁","resource":"food","costMultiplier":2,"populationFraction":0.1,"minimumIncrease":20},
+      "sacrifice": {"name":"祭天","unavailable":"天灾与天赐系统尚未开放"}
+    },
+    "levyMultipliers": {"food":5,"wood":3,"stone":3,"iron":2,"gold":2},
+    "trialCost": true,
+    "trialLevyCooldown": true
+  },
   "source": {
+    "civic": "https://web.4399.com/rxsg/yxzl_06_993847.html",
+    "civicCooldown": "https://web.4399.com/rxsg/wjgl_14_1042.html",
     "buildings": "https://web.4399.com/rxsg/yxzy/xszn/a1204083.html",
     "city": "https://web.4399.com/rxsg/yxzy/xszn/a1204085.html",
     "units": "https://web.4399.com/rxsg/yxzy/gsjj/a1204092.html",

@@ -1,5 +1,5 @@
 'use strict';
-let shopCategory='全部',manualModalContext=null;
+let shopCategory='全部',manualModalContext=null,governmentTab='comfort';
 const manualLink=(key,label='查看手册')=>`<a href="${Game.manual.source[key]}" target="_blank" rel="noopener">${label}</a>`;
 const recordDetails=row=>row?Object.entries({output:'调整后基础产量 /小时',capacity:'容量',workers:'所需劳动人口',population:'人口上限',limit:'规模'}).filter(([k])=>row[k]!==undefined).map(([k,label])=>`<div class="enemy-row"><span>${label}</span><strong>${num(k==='output'?row[k]*Game.economyOutputFactor:row[k])}</strong></div>`).join(''):'';
 function manualCityScene(){
@@ -17,7 +17,31 @@ function manualCitySlotModal(site){
 function manualBuildPlan(site,id){
   const b=Game.buildings[id],row=Game.buildRecord(id,1);showModal('建设 · '+b.name,`${buildingIcon(id,'building-detail-art')}<p class="sub">${b.desc}</p><div class="enemy-list">${recordDetails(row)}</div>${costs(row.cost)}<p class="hint">工期 ${duration(Game.buildSeconds(id,1))}${row.confirmedTime?' · 手册基础工期':' · 试玩基础工期'}，当前倍率 ×${S().speed}。</p>`,btn('重新选择','citySlot',String(site),'secondary')+btn('开始建设','manualBuild',site+':'+id,'',!Game.canPay(row.cost)||S().buildQueue.length>=Game.buildLimit()));
 }
-const buildingFunctions={hall:['调整城务','citySettings'],academy:['研究科技','manualResearch'],inn:['寻访与招募','manualInn'],tavern:['帐下将领','manualHeroes'],barracks:['训练军队','manualArmy'],drill:['部队与出征','manualDrill'],market:['资源交易','manualMarket'],warehouse:['仓储分配','manualStorage'],wall:['城防工事','manualDefense']};
+const buildingFunctions={hall:['官府指令','citySettings'],academy:['研究科技','manualResearch'],inn:['寻访与招募','manualInn'],tavern:['帐下将领','manualHeroes'],barracks:['训练军队','manualArmy'],drill:['部队与出征','manualDrill'],market:['资源交易','manualMarket'],warehouse:['仓储分配','manualStorage'],wall:['城防工事','manualDefense']};
+function governmentNav(tab){return `<nav class="government-tabs" aria-label="官府指令分类">${[['comfort','安抚百姓'],['levy','征收物资'],['settings','任命与税率']].map(([id,name])=>btn(name,'governmentTab',id,`secondary ${tab===id?'active-order':''}`)).join('')}</nav>`;}
+function governmentSummary(){return `<div class="government-summary"><span>人口 <b data-population>${num(S().population)} / ${num(Game.maxPop())}</b></span><span>民心 <b data-morale>${Math.round(S().morale)}</b></span><span>民怨 <b data-unrest>${Math.round(S().unrest)}</b></span></div>`;}
+function civicEffectText(order){const e=order.effects,points=n=>Math.round(n*10)/10;return order.kind==='levy'?`民心 −20（${points(S().morale)} → ${points(Math.max(0,S().morale-20))}）`:order.id==='immigration'?`人口 +${num(e.population)}，不超过民房容量`:order.id==='sacrifice'?'抵挡一次天灾，并有机会获得天赐':`民心 +${Game.manual.civic.comfort[order.id].morale} · 民怨 −${-Game.manual.civic.comfort[order.id].unrest}\n本次：民心 +${points(e.morale)} · 民怨 −${points(-e.unrest)}`;}
+function civicCard(id){
+  const order=Game.civicOrderPreview(id),available=!Game.manual.civic.comfort[id]?.unavailable;
+  return `<article class="civic-card ${available?'':'civic-unavailable'}" data-civic-order="${id}"><h3>${esc(order.name)}</h3><p class="civic-effect" data-civic-effect>${civicEffectText(order)}</p>${available?`<p class="label">${order.kind==='levy'?'本次可入库':'本次消耗'}</p><div data-civic-amount>${order.kind==='levy'?lootHtml(order.reward):costs(order.cost)}</div><p class="hint civic-formula" data-civic-formula></p>`:''}<p class="civic-reason hint" data-civic-reason role="status">${esc(order.reason)}</p><button class="btn block ${order.kind==='levy'?'secondary':''}" data-action="civicExecute" data-id="${id}" ${order.enabled?'':'disabled'}>${available?order.name:'未开放'}</button></article>`;
+}
+function manualGovernmentModal(tab=governmentTab){
+  if(!['comfort','levy','settings'].includes(tab))return;governmentTab=tab;
+  if(tab==='settings'){cityTaxSettings();return;}
+  const ids=tab==='comfort'?Object.keys(Game.manual.civic.comfort):Object.keys(Game.manual.civic.levyMultipliers).map(k=>'levy_'+k);
+  showModal('官府 · 城务指令',`${governmentSummary()}${governmentNav(tab)}<p class="notice">${tab==='comfort'?'赈灾、祈福、增丁共享 15 分钟冷却。':'征收五种资源共享 15 分钟冷却，每次民心减少 20；民心低于 20 时无法征收。'}安抚与征收的冷却互相独立，按真实时间计算。</p><div class="civic-grid ${tab==='levy'?'is-levy':''}">${ids.map(civicCard).join('')}</div><details class="government-rules"><summary>消耗与收益规则</summary><p class="hint">赈灾：粮食 = 人口；祈福：黄金 = 人口；增丁：粮食 = 人口 ×2，增加当前人口的 10%，至少 20 人。安抚计费人口最低 100。征粮 ×5、征木／石 ×3、征铁／金 ×2，按当前人口计算。上述具体比例、增丁人数和征收冷却为试玩设定；赈灾、祈福的民心／民怨变化与征收降低 20 民心采用手册。征收实际到账受仓储剩余容量限制，满仓时无法执行。</p>${manualLink('civic','4399 民心与征收手册')} · ${manualLink('civicCooldown','安抚冷却说明')}</details>`,btn('关闭','close','','secondary'));
+  manualModalContext=manualGovernmentModal;refreshGovernmentQuotes();
+}
+function refreshGovernmentQuotes(){
+  if(!modal.open||manualModalContext!==manualGovernmentModal)return;
+  modalBody.querySelectorAll('[data-civic-order]').forEach(card=>{
+    const order=Game.civicOrderPreview(card.dataset.civicOrder),button=card.querySelector('[data-action="civicExecute"]'),amount=card.querySelector('[data-civic-amount]'),formula=card.querySelector('[data-civic-formula]');
+    button.disabled=!order.enabled;card.querySelector('[data-civic-effect]').textContent=civicEffectText(order);
+    if(amount){const html=order.kind==='levy'?lootHtml(order.reward):costs(order.cost);if(amount.innerHTML!==html)amount.innerHTML=html;}
+    if(formula)formula.textContent=order.kind==='levy'?`人口 ×${Game.manual.civic.levyMultipliers[order.id.slice(5)]} · 预计 ${num(order.requested)}${Object.values(order.reward)[0]<order.requested?'，仓储仅能容纳上方数量':''}`:'随人口计算 · 试玩消耗';
+    card.querySelector('[data-civic-reason]').textContent=order.cooldownEnd>Date.now()&&!Game.manual.civic.comfort[order.id]?.unavailable?`${order.reason} · 剩余 ${duration((order.cooldownEnd-Date.now())/1000)}`:order.reason;
+  });
+}
 function manualBuildingModal(arg){
   const site=String(arg).startsWith('site:')?Number(String(arg).slice(5)):Game.primarySite(arg),id=S().cityLayout[site],b=Game.buildings[id];if(!b)return;
   const level=S().cityLevels[site],q=S().buildQueue.find(q=>q.site===site),row=Game.buildRecord(id,level),next=Game.buildRecord(id,level+1),fn=buildingFunctions[id];
@@ -52,6 +76,11 @@ function manualInventoryModal(){
 function manualUsePlan(id){const item=Game.manual.shop.find(x=>x.id===id);if(!item?.effect){toast('该宝物关联系统尚未接入');return;}if(!(S().inventory[id]>0)){toast('尚未持有该宝物，可通过商城购买或战斗掉落获取');return;}const needsHero=['politics','valor','wisdom','tiger'].includes(item.effect);showModal('使用 · '+item.name,`${itemIcon(item)}<p class="sub">${item.desc}</p>${needsHero?`<label class="label">选择将领</label><select id="item-hero">${S().generals.map(id=>`<option value="${id}">${esc(Game.general(id).name)}</option>`).join('')}</select>`:''}${['rename','banner'].includes(item.effect)?`<label class="label">${item.effect==='rename'?'新君主名称（最多 12 字）':'新旗号（最多 2 字）'}</label><input id="item-text" maxlength="${item.effect==='rename'?12:2}" aria-label="新名称">`:''}${item.effect==='flag'?'<p class="notice">军旗用于下一次出征，成功派兵后消耗效果；未出征时保留 24 小时（试玩保留时限）。</p>':''}`,btn('返回行囊','manualInventory','','secondary')+btn('确认使用','manualUse',id));}
 document.addEventListener('click',event=>{
   const el=event.target.closest('[data-action]');if(!el||el.disabled)return;const a=el.dataset.action,id=el.dataset.id;
+  if(a==='governmentTab')manualGovernmentModal(id);
+  if(a==='civicExecute'){
+    const order=Game.civicOrderPreview(id),scroll=modal.scrollTop;
+    if(actResult(Game.executeCivicOrder(id))){manualGovernmentModal();modal.scrollTop=scroll;toast(order.name+'已执行，城池状态已更新');}else refreshGovernmentQuotes();
+  }
   if(a==='manualAutoUpgrade'){const enabled=!S().autoUpgrade;actResult(Game.setAutoUpgrade(enabled),enabled?'自动升级已开启':'自动升级已停止，已开工的工程继续完成');}
   if(a==='manualBuildPlan'){
 const [site,b]=id.split(':');manualBuildPlan(Number(site),b);}
