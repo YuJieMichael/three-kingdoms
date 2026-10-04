@@ -20,6 +20,7 @@ npm start
 | --- | --- |
 | 游戏规则、生产、掠夺、负重、战斗结算 | `engine.js` |
 | 建筑、兵种、商城与掉落基础数据 | `manual-data.js` |
+| 加速道具时长、价格、城墙前置与使用窗口 | `speedup-data.js`、`speedup-ui.js` |
 | 城外资源田 | `outskirts.js` |
 | 世界地图 | `grid-world.js` |
 | 战斗画面、指令与倒计时 | `combat-ui.js` |
