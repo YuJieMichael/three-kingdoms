@@ -1,0 +1,51 @@
+'use strict';
+let taskTab='growth';
+function taskTabs(){return `<div class="shop-tabs task-tabs" role="group" aria-label="任务分类">${[['growth','成长任务'],['daily','每日任务'],['epic','黄巾史诗']].map(([id,name])=>btn(name,'taskTab',id,'small secondary '+(taskTab===id?'active-order':''))).join('')}</div>`;}
+function classicMissionModal(){
+  if(taskTab==='growth'){growthMissionModal();return;}
+  Game.progression.ensureDaily(S());
+  showModal('任务册 · '+(taskTab==='daily'?'每日任务':'黄巾之乱'),taskTabs()+(taskTab==='daily'?dailyTasksHTML():epicTasksHTML()),btn('关闭','close','','secondary'));
+  manualModalContext=classicMissionModal;
+}
+function dailyTasksHTML(){
+  const s=S(),p=Game.progression,d=s.daily,accepted=d.tasks.filter(t=>t.status==='accepted'),available=d.tasks.filter(t=>t.status==='available');
+  const row=t=>{const def=p.definition(t),ready=p.taskReady(s,t),reward=p.reward(t),amount=def.resource?Math.min(t.target,Math.floor(s.res[def.resource])):t.progress;
+    return `<article class="quest-card ${ready?'quest-ready':''}"><div class="quest-heading"><h3>${def.title}</h3><span class="badge">${t.status==='available'?'待接取':ready?'可交付':'进行中'} · ${t.tier} 档</span></div><p class="hint">${def.desc}${def.resource?' '+Game.resources[def.resource].name:''} · 目标 ${num(t.target)}${t.status==='accepted'?' · 当前 <span data-daily-progress="'+t.uid+'">'+num(amount)+'</span>':''}</p>${t.status==='accepted'?`<div class="progress"><i data-daily-meter="${t.uid}" style="width:${amount/t.target*100}%"></i></div>`:''}<div class="loot"><span>黄金 +${num(reward.gold)}</span><span>声望 +${num(reward.prestige)}</span><span>铜钱 +${reward.copper}</span><span>宝物 ×1</span></div><div class="quest-actions">${t.status==='available'?btn('接取','dailyAccept',t.uid,'small',accepted.length>=5):btn(def.resource?'交付物资并领奖':'领取奖励','dailyClaim',t.uid,'small',!ready)+btn('前往完成','dailyGo',def.route,'small secondary')+btn('放弃','dailyAbandon',t.uid,'small secondary')}</div></article>`;
+  };
+  return `<div class="quest-summary"><strong>今日完成 ${d.claimed} 项</strong><span>接取 ${accepted.length} / 5 · 待接 ${available.length} / 10</span></div><p class="notice">北京时间每天 05:00 刷新 10 项；本轮任务过期后进度不保留（试玩规则）。接取后统计行动，物资交付可使用现有库存；放弃无惩罚，已交付物资不会返还。</p><p class="hint">下次整批刷新 ${clock(d.start+p.DAY)}${available.length<10?' · 下次补充 '+clock(d.refillAt+p.REFILL):''}<br>有空缺时，每 2 小时补 1 项。任务量、奖励和同时接取上限为试玩值；新任务按当前声望档位生成。</p><div class="quest-collect">${btn('铜钱黑市 · '+num(s.copper),'copperMarket','','secondary')}${btn('声望说明 · '+num(s.prestige),'prestigeInfo','','secondary')}</div><h3 class="ledger-heading">已接任务</h3>${accepted.length?accepted.map(row).join(''):'<p class="empty">先从下面挑选任务，再进行建设、招兵或战斗。</p>'}<h3 class="ledger-heading">今日告示</h3>${available.map(row).join('')}`;
+}
+function epicMeter(g){return `<div class="quest-heading"><h3>${g.name}</h3><span class="badge">${Math.floor(g.progress*100)}%</span></div><div class="progress"><i style="width:${g.progress*100}%"></i></div><p class="hint">${g.detail}</p>`;}
+function donationCard(kind,id,name,stock){const q=Game.progression.donationQuote(S(),kind,id);return `<div class="epic-donation"><div><strong>${name} ×${num(q.cost)}</strong><p class="hint">持有 <span data-epic-stock="${kind}:${id}">${num(stock)}</span> · 声望 +${num(q.prestige)}${q.points?' · '+(kind==='troop'?'勤王诏':'贡品录')+' +'+q.points:''}</p></div>${btn(q.reason||'捐献','epicDonateAsk',kind+':'+id,'small secondary',!!q.reason)}</div>`;}
+function epicTasksHTML(){const s=S(),p=Game.progression,groups=p.groups(s),unlocked=Game.countyUnlocked();
+  return `<div class="epic-banner"><span class="label">当前史诗</span><h3>黄巾之乱</h3><p>${unlocked?'县城攻打已开放':'四项进度全部 100% 后，开放县城掠夺与占领'}</p>${s.epic.legacyAccess?'<p class="hint">旧存档已攻打县城，原有攻打权限保留。</p>':''}</div><p class="notice">原版由全服共同完成，本原型为个人 PVE 进度，完成总量为试玩值。捐献每批数量与声望沿用手册，物资、士兵和珍宝实际扣除；完成的项目不能重复捐献刷声望。</p><section class="quest-card">${epicMeter(groups[0])}<p class="hint">仅掠夺野地和非县城据点的胜利计入，击杀 1 名敌军折为 1 件头巾（试玩规则）；每累计 500 件头巾获得 500 声望。战斗胜利保底珍珠 ×1，另有概率得到其他珍宝（掉落为试玩规则）。</p>${btn('前往地图','dailyGo','world','small secondary')}</section><section class="quest-card">${epicMeter(groups[1])}${Object.keys(p.resourceDonations).map(id=>donationCard('resource',id,Game.resources[id].name,s.res[id])).join('')}</section><section class="quest-card">${epicMeter(groups[2])}<p class="hint">可自由选择兵种。例如义兵 2,000 换 1 诏；长枪兵 1,500 或弓箭兵 1,000 可直接换 2 诏。只扣除驻城空闲士兵，不影响出征、驻军和训练队列。</p>${Object.keys(p.troopDonations).map(id=>donationCard('troop',id,Game.units[id].name,s.army[id])).join('')}</section><section class="quest-card">${epicMeter(groups[3])}${Object.entries(p.jewels).map(([id,j])=>donationCard('jewel',id,j.name,s.jewels[id])).join('')}${btn('铜钱兑换珍珠','copperMarket','','small secondary')}</section>${unlocked?btn('查看古渡县城','epicCounty','','block'):'<p class="notice">县城在地图上可查看、侦察；史诗完成前不能派兵掠夺或占领。</p>'}`;
+}
+function epicWorldBanner(){const gs=Game.progression.groups(S());return `<section class="epic-world-banner"><div><strong>黄巾之乱</strong><span>${Game.countyUnlocked()?'县城攻打已开放':'县城封锁中 · 先完成四项史诗'}</span></div><div class="epic-mini">${gs.map(g=>`<span>${g.name} ${Math.floor(g.progress*100)}%</span>`).join('')}</div>${btn('史诗进度','taskTab','epic','small secondary')}</section>`;}
+function prestigeInfoModal(){const s=S();showModal('声望与功勋',`<div class="quest-summary"><strong>声望 ${num(s.prestige)}</strong><span>每日任务第 ${Game.progression.tier(s)} 档</span></div><p class="notice">声望用于衡量城主功绩，达到门槛后，新刷出的每日任务提高奖励与部分任务目标。已接任务保持原档位。声望不是可消费的货币。</p><table class="progression-table"><tr><th>档位</th><th>最低声望</th><th>每日任务奖励</th></tr>${[0,1000,8000,32000].map((v,i)=>`<tr><td>${i+1}</td><td>${num(v)}</td><td>声望 ${200*(i+1)} · 黄金 ${1500*(i+1)} · 铜钱 ${20*(i+1)}</td></tr>`).join('')}</table><h3 class="ledger-heading">如何获得</h3><p class="hint">建筑完工：新等级 ×50；科技完成：新等级 ×100；训练完成：每 5 人约 1 点；成长任务：每项 300 点。战胜敌军、每日任务和史诗捐献也能提升声望；战败会扣少量声望，最低降至 0。常规收益系数、档位与奖励为试玩数值。</p><p class="hint">旧存档首次更新时，根据已有建筑、科技、累计练兵、胜利和已领奖任务估算初始声望，不补发任务奖励。本版未开放正式官职／爵位晋升，多城上限也未接入。</p>`,btn('每日任务','taskTab','daily','secondary')+btn('关闭','close','','secondary'));}
+function copperMarketModal(){const s=S(),offers=Game.progression.exchangeOffers(s);showModal('客栈 · 铜钱黑市',`<div class="quest-summary"><strong>铜钱 ${num(s.copper)}</strong><span>刷新 ${clock(s.daily.start+Game.progression.DAY)}</span></div><p class="hint">每日任务奖励铜钱；黑市需 1 级客栈。每天轮换 3 种实用宝物，各限换 1 次；珍珠每天最多换 10 次。商品、价格与限购为试玩规则。</p>${offers.map(o=>{const limit=o.id==='pearl'?10:1,claimed=s.daily.exchangeClaims.filter(id=>id===o.id).length;return `<article class="quest-card"><h3>${esc(o.name)}</h3><p class="hint">${o.cost} 铜钱 · 今日 ${claimed}/${limit}</p>${btn('兑换','copperExchange',o.id,'small',s.buildings.inn<1||s.copper<o.cost||claimed>=limit)}</article>`;}).join('')}`,btn('每日任务','taskTab','daily','secondary')+btn('关闭','close','','secondary'));manualModalContext=copperMarketModal;}
+function jewelInventoryHTML(){return `<section class="quest-card"><div class="section-title"><h3>史诗珍宝</h3>${btn('进献','taskTab','epic','small secondary')}</div><p class="hint">战斗获胜保底珍珠，较强敌军有机会掉落其他珍宝；每 10 枚可进献一次。</p><div class="jewel-grid">${Object.entries(Game.progression.jewels).map(([id,j])=>`<div><strong>${j.name}</strong><span>×${num(S().jewels[id])}</span></div>`).join('')}</div></section>`;}
+document.addEventListener('click',event=>{
+  const el=event.target.closest('[data-action]');if(!el||el.disabled)return;const a=el.dataset.action,id=el.dataset.id;
+  if(a==='taskTab'){taskTab=id;classicMissionModal();}
+  if(a==='prestigeInfo')prestigeInfoModal();
+  if(a==='dailyAccept'){const error=Game.acceptDaily(id);classicMissionModal();actResult(error,'任务已接取，现在开始累计进度');}
+  if(a==='dailyClaim'){const error=Game.claimDaily(id);classicMissionModal();actResult(error,'每日任务奖励已到账');}
+  if(a==='dailyAbandon'){const error=Game.abandonDaily(id);classicMissionModal();actResult(error,'已放弃，无惩罚；空缺按两小时补充');}
+  if(a==='dailyGo'){
+    modal.close();if(id==='civic'){citySettings();return;}if(id==='inventory'){manualInventoryModal();return;}if(id==='research'){manualResearchModal();return;}
+    if(id==='inner'||id==='outer'){page='city';cityArea=id;}else page=id==='stock'?'city':id;render();
+  }
+  if(a==='epicDonateAsk'){
+    const [kind,key]=id.split(':'),q=Game.progression.donationQuote(S(),kind,key),name=kind==='resource'?Game.resources[key].name:kind==='troop'?Game.units[key].name:Game.progression.jewels[key].name;
+    showModal('确认史诗捐献',`<p class="notice">捐献 ${esc(name)} ×${num(q.cost)}，获得声望 +${num(q.prestige)}${q.points?'，史诗凭证 +'+q.points:''}。</p><p class="hint">${kind==='troop'?'这些士兵会离开你的军队，不会返城，也不会退还人口和造兵资源。':'捐出的物资或珍宝会从库存扣除，无法撤销。'}</p>`,btn('返回史诗','taskTab','epic','secondary')+btn('确认捐献','epicDonate',id,'',!!q.reason));
+  }
+  if(a==='epicDonate'){const [kind,key]=id.split(':'),error=Game.donateEpic(kind,key);taskTab='epic';classicMissionModal();actResult(error,'捐献完成，史诗进度与声望已保存');}
+  if(a==='epicCounty'){modal.close();page='world';selectedNode='fort';worldView.x=Game.landmarks.fort.x;worldView.y=Game.landmarks.fort.y;render();}
+  if(a==='copperMarket')copperMarketModal();
+  if(a==='copperExchange'){const error=Game.exchangeCopper(id);copperMarketModal();actResult(error,'兑换物品已收入行囊');}
+});
+
+function progressionRefreshValues(){
+  if(!modal.open)return;
+  for(const el of modalBody.querySelectorAll('[data-epic-stock]')){const [kind,id]=el.dataset.epicStock.split(':');el.textContent=num(kind==='resource'?S().res[id]:kind==='troop'?S().army[id]:S().jewels[id]);}
+  for(const el of modalBody.querySelectorAll('[data-daily-progress]')){const t=S().daily.tasks.find(t=>t.uid===el.dataset.dailyProgress);if(!t)continue;const def=Game.progression.definition(t),amount=def.resource?Math.min(t.target,Math.floor(S().res[def.resource])):t.progress;el.textContent=num(amount);const meter=modalBody.querySelector('[data-daily-meter="'+t.uid+'"]');if(meter)meter.style.width=amount/t.target*100+'%';}
+}

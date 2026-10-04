@@ -34,3 +34,11 @@ body{background:#28261f;color:var(--ink);font-size:12px;overflow:hidden}button,i
 .civic-effect{white-space:pre-line}
 
 .civic-card>.label{margin:0}.civic-reason:empty{display:none}.civic-formula{min-height:0;margin:5px 0 10px}.civic-reason{min-height:0}.is-levy .civic-effect{min-height:0;margin-bottom:10px}.is-levy .civic-card{padding:12px}.is-levy .civic-card .btn{padding:8px}
+.task-tabs{position:sticky;top:0;background:#f8f3e8;padding:8px 0;z-index:2}
+.epic-banner{padding:18px 20px;background:linear-gradient(110deg,#554326,#806c3b);color:#fff4d2;border:1px solid #9e8a51;border-radius:8px;margin:14px 0}
+.epic-banner h3{font-size:23px;margin:6px 0}.epic-banner .label,.epic-banner .hint{color:#e6d6b1}
+.epic-donation{display:flex;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid #dfd5bf;padding:12px 0}.epic-donation .hint{margin:5px 0 0}.epic-donation .btn{max-width:180px;flex-shrink:0}
+.epic-world-banner{display:flex;align-items:center;gap:16px;padding:12px 15px;margin-bottom:14px;border:1px solid #c7b781;background:#f3ead3;border-radius:6px}.epic-world-banner strong{font-size:18px;color:#685125}.epic-world-banner>div:first-child span{display:block;font-size:12px;margin-top:4px}.epic-mini{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:12px;flex:1}.epic-world-banner>.btn{flex-shrink:0}
+.jewel-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}.jewel-grid>div{border:1px solid #d7cab2;padding:10px;border-radius:4px;background:#f4eddf}.jewel-grid span{display:block;color:#8b7145;margin-top:5px}
+.progression-table{width:100%;border-collapse:collapse;font-size:13px}.progression-table td,.progression-table th{text-align:left;padding:10px 7px;border-bottom:1px solid #d8ceb9}.prestige-link{color:#815719;text-decoration:underline}
+@media(max-width:700px){.epic-world-banner{flex-wrap:wrap;gap:10px}.epic-mini{flex-basis:100%;order:3}.epic-donation{align-items:flex-start;flex-wrap:wrap}.epic-donation .btn{max-width:100%}.jewel-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.progression-table td{font-size:11px}}
