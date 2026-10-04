@@ -9,3 +9,18 @@ body{background:#28261f;color:var(--ink);font-size:12px;overflow:hidden}button,i
 .target-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}.target-actions .btn{padding:8px 4px;font-size:11px}.target-summary{margin:9px 0;font-size:10px}.target-drop-info{border:1px solid #b2a071;background:#dfdab5;font-size:10px;color:#645c30;padding:7px 8px;margin:9px 0}.target-details{font-size:10px;color:#7c6844;border-top:1px dotted #bea77f;padding-top:8px}.target-details summary{cursor:pointer;color:#70562d}.target-details .label{margin-top:9px}.target-details .loot{margin:6px 0}.target-time{margin-top:8px;font-size:10px}@media(min-width:761px){.world-grid{height:clamp(300px,42dvh,390px)}.world-layout .node-panel{position:sticky;top:0}.outskirts-board .plot-tile{min-height:85px}.outskirts-board .plot-tile svg{height:37px}.allocation-item{padding:6px 9px}}
 
 .classic-tools .classic-gift{background:linear-gradient(#f5df9d,#c3a35d);border-color:#94713a;color:#715021}.classic-tools .classic-gift:disabled{opacity:.6;background:#c9b791;color:#796849}
+
+/* Mission supplies and staged onboarding. */
+.classic-footer .mission .mark{min-width:40px;font-size:10px;letter-spacing:-.3px}
+.quest-summary,.quest-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.quest-summary{margin:14px 0;color:#705522}.quest-summary span{font-size:12px}
+.quest-gift{background:#ead5a4;border:1px solid #b99555;padding:14px;margin:14px 0}.quest-gift .loot{margin:12px 0}
+.quest-sections>section{margin-top:24px}.quest-stage-note{margin:0 0 12px}
+.quest-card{background:#eee4cf;border:1px solid #c3b18d;padding:13px;margin:9px 0}
+.quest-card.quest-ready{border-color:#a08642;background:#f5e7bd}.quest-card.quest-claimed{opacity:.7}
+.quest-heading h3{margin:0;font-size:15px}.quest-card>.hint{margin:9px 0}.quest-card .loot{margin:12px 0;gap:7px}
+.quest-card .loot span{font-size:11px;white-space:nowrap}.quest-actions{text-align:right}
+.quest-completed{margin:12px 0}.quest-completed summary{font-size:12px;color:#6a754b;cursor:pointer}
+@media(max-width:600px){.quest-card{padding:11px}.quest-card .loot{display:flex;flex-wrap:wrap}.quest-summary{font-size:13px}.quest-heading .badge{white-space:nowrap}}
+
+.quest-collect{margin:0 0 14px}

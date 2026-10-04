@@ -64,17 +64,38 @@ const Game = (() => {
     const tile=getWorldTile(x,y);return tile?.wild?tile:null;
   }
   const defaultCityLayout=()=>Array.from({length:36},(_,i)=>i===14?'hall':[15,20,21].includes(i)?'reserved':null);
+  const starterGiftReward={food:40000,wood:40000,stone:40000,iron:40000,gold:60000};
+  const supplies=(amount,gold)=>({food:amount,wood:amount,stone:amount,iron:amount,gold});
+  const plotReached=(s,type,level=1)=>s.plots.some(p=>p.type===type&&p.level>=level);
   const missions = [
-    {title:'沃土养兵',desc:'在城外将任意农田升级至 2 级',check:s=>s.plots.some(p=>p.type==='farm'&&p.level>=2),reward:{food:180,wood:120,gold:80}},
-    {title:'操练乡勇',desc:'累计训练 20 名士兵',check:s=>s.stats.trained>=20,reward:{iron:150,food:200,gold:100}},
-    {title:'收复粮田',desc:'首次攻下河畔荒田',check:s=>!!s.conquered.field,reward:{wood:280,stone:180,gold:150}},
-    {title:'立城之本',desc:'官府升至 2 级',check:s=>s.buildings.hall>=2,reward:{food:300,iron:200,gold:200}},
-    {title:'兵临营寨',desc:'攻下黄巾营寨，解救严秋',check:s=>!!s.conquered.camp,reward:{food:500,wood:400,gold:300}},
-    {title:'一县之主',desc:'占领古渡县城',check:s=>!!s.conquered.fort,reward:{food:1000,wood:1000,stone:800,iron:800,gold:1500}}
+    {id:'gift',stage:'立城补给',title:'奉诏立城',desc:'领取新手礼包，取得第一批建城物资',route:'gift',check:s=>s.starterGiftClaimed,reward:supplies(3000,8000)},
+    {id:'house',stage:'立城补给',title:'安置百姓',desc:'完成 1 座 1 级民房，为招兵提供人口',route:'inner',check:s=>s.buildings.house>=1,reward:{food:5000,wood:4000,stone:3000,iron:2000,gold:6000}},
+    {id:'farm',stage:'立城补给',title:'开垦农田',desc:'在城外完成 1 块农田',route:'outer',check:s=>plotReached(s,'farm'),reward:{food:6000,wood:4000,stone:3000,iron:2000,gold:5000}},
+    {id:'lumber',stage:'立城补给',title:'伐木备料',desc:'在城外完成 1 块伐木场',route:'outer',check:s=>plotReached(s,'lumber'),reward:{food:3000,wood:7000,stone:3000,iron:2000,gold:5000}},
+    {id:'quarry',stage:'立城补给',title:'采石筑城',desc:'在城外完成 1 块采石场',route:'outer',check:s=>plotReached(s,'quarry'),reward:{food:3000,wood:4000,stone:7000,iron:2000,gold:5000}},
+    {id:'mine',stage:'立城补给',title:'冶铁备兵',desc:'在城外完成 1 块铁矿',route:'outer',check:s=>plotReached(s,'mine'),reward:{food:3000,wood:4000,stone:3000,iron:7000,gold:6000}},
+    {id:'house2',stage:'立城补给',title:'扩充民居',desc:'将任意民房升至 2 级，人口上限达到 300',route:'inner',check:s=>s.buildings.house>=2,reward:supplies(5000,8000)},
+    {id:'population',stage:'立城补给',title:'百姓归附',desc:'城中人口达到 100；已累计训练 20 名士兵也可完成',route:'inner',check:s=>s.population>=100||s.stats.trained>=20,reward:{food:8000,wood:4000,stone:3000,iron:4000,gold:10000}},
+    {id:'hall2',stage:'立城补给',title:'立城之本',desc:'官府升至 2 级',route:'inner',check:s=>s.buildings.hall>=2,reward:supplies(8000,12000)},
+    {id:'warehouse',stage:'立城补给',title:'储粮备战',desc:'完成 1 座仓库；任务奖励可暂时超出仓储上限',route:'inner',check:s=>s.buildings.warehouse>=1,reward:supplies(5000,8000)},
+    {id:'drill',stage:'立城补给',title:'设立校场',desc:'完成 1 座校场，开启派兵出征',route:'inner',check:s=>s.buildings.drill>=1,reward:{food:10000,wood:6000,stone:4000,iron:6000,gold:10000}},
+    {id:'barracks',stage:'立城补给',title:'军营落成',desc:'完成 1 座军营，开启义兵训练',route:'inner',check:s=>s.buildings.barracks>=1,reward:{food:12000,wood:10000,stone:4000,iron:8000,gold:12000}},
+    {id:'trained20',stage:'整军出征',title:'操练乡勇',desc:'累计完成训练 20 名士兵',route:'army',check:s=>s.stats.trained>=20,reward:{food:6000,wood:5000,iron:4000,gold:8000}},
+    {id:'spearReady',stage:'整军出征',title:'长枪列阵',desc:'军营达到 2 级，并研究 1 级战斗技巧，解锁长枪兵',route:'research',check:s=>s.buildings.barracks>=2&&s.tech.combat>=1,reward:{food:5000,wood:8000,iron:4000,gold:10000}},
+    {id:'trained60',stage:'整军出征',title:'初成军势',desc:'累计完成训练 60 名士兵，开始依靠战利品发展',route:'army',check:s=>s.stats.trained>=60,reward:{food:4000,wood:3000,iron:3000,gold:12000}},
+    {id:'firstVictory',stage:'征战里程',title:'首战告捷',desc:'赢得任意 1 场掠夺或占领战斗',route:'world',check:s=>s.stats.victories>=1,reward:{food:3000,wood:2000,iron:2000,gold:10000}},
+    {id:'field',stage:'征战里程',title:'收复粮田',desc:'掠夺或占领河畔荒田并获胜',route:'world',check:s=>!!(s.raided.field||s.conquered.field),reward:{food:4000,wood:2000,gold:12000}},
+    {id:'victories3',stage:'征战里程',title:'连战三捷',desc:'累计赢得 3 场战斗',route:'world',check:s=>s.stats.victories>=3,reward:{food:3000,iron:2000,gold:15000}},
+    {id:'camp',stage:'征战里程',title:'兵临营寨',desc:'占领黄巾营寨，解救严秋',route:'world',check:s=>!!s.conquered.camp,reward:{food:4000,wood:3000,gold:18000}},
+    {id:'victories10',stage:'征战里程',title:'威震乡野',desc:'累计赢得 10 场战斗',route:'world',check:s=>s.stats.victories>=10,reward:{food:5000,iron:3000,gold:25000}},
+    {id:'fort',stage:'征战里程',title:'一县之主',desc:'占领古渡县城',route:'world',check:s=>!!s.conquered.fort,reward:{food:6000,wood:4000,stone:4000,iron:4000,gold:30000}}
   ];
+  const missionClaimed=(id,s=state)=>s.missionClaims.includes(id);
+  const missionReady=(m,s=state)=>!missionClaimed(m.id,s)&&m.check(s);
+  const currentMission=()=>missions.find(m=>missionReady(m))||missions.find(m=>!missionClaimed(m.id));
   let state,economyClock=null;
   const blankArmy = () => Object.fromEntries(Object.keys(units).map(k=>[k,0]));
-  const newState=()=>({version:2,manualSchema:1,last:Date.now(),speed:1,autoUpgrade:false,starterGiftClaimed:false,res:{food:5000,wood:5000,stone:5000,iron:5000,gold:5000},buildings:Object.fromEntries(cityIds.map(id=>[id,id==='hall'?1:0])),cityLayout:defaultCityLayout(),cityLevels:Array.from({length:36},(_,i)=>i===14?1:0),tactics:Object.fromEntries(Object.keys(units).map(id=>[id,{command:defaultOrder(id),target:''}])),plots:newPlots(),army:blankArmy(),buildQueue:[],trainQueue:[],researchQueue:null,tech:Object.fromEntries(Object.keys(ManualData.technology).map(id=>[id,0])),generals:['lin','su'],generalLevels:{lin:1,su:1},generalXp:{lin:0,su:0},customGenerals:[],innCandidates:[],governor:'su',population:0,morale:80,unrest:0,tax:20,storageAllocation:{food:25,wood:25,stone:25,iron:25},gems:1000,inventory:{},buffs:{},itemCooldowns:{},trialGiftAt:0,ruler:'青溪城主',banner:'青',scouted:{},defenses:Object.fromEntries(Object.keys(ManualData.defenses).map(id=>[id,0])),defenseQueue:[],landClaims:{},conquered:{},raided:{},garrisons:{},towns:{fort:{morale:100,unrest:0,population:400}},cooldowns:{},expedition:null,expeditions:[],battle:null,reports:[],mission:0,stats:{trained:0,victories:0},seen:[],tutorial:false});
+  const newState=()=>({version:2,manualSchema:1,last:Date.now(),speed:1,autoUpgrade:false,starterGiftClaimed:false,starterGiftVersion:0,missionSchema:2,missionClaims:[],res:{food:5000,wood:5000,stone:5000,iron:5000,gold:5000},buildings:Object.fromEntries(cityIds.map(id=>[id,id==='hall'?1:0])),cityLayout:defaultCityLayout(),cityLevels:Array.from({length:36},(_,i)=>i===14?1:0),tactics:Object.fromEntries(Object.keys(units).map(id=>[id,{command:defaultOrder(id),target:''}])),plots:newPlots(),army:blankArmy(),buildQueue:[],trainQueue:[],researchQueue:null,tech:Object.fromEntries(Object.keys(ManualData.technology).map(id=>[id,0])),generals:['lin','su'],generalLevels:{lin:1,su:1},generalXp:{lin:0,su:0},customGenerals:[],innCandidates:[],governor:'su',population:0,morale:80,unrest:0,tax:20,storageAllocation:{food:25,wood:25,stone:25,iron:25},gems:1000,inventory:{},buffs:{},itemCooldowns:{},trialGiftAt:0,ruler:'青溪城主',banner:'青',scouted:{},defenses:Object.fromEntries(Object.keys(ManualData.defenses).map(id=>[id,0])),defenseQueue:[],landClaims:{},conquered:{},raided:{},garrisons:{},towns:{fort:{morale:100,unrest:0,population:400}},cooldowns:{},expedition:null,expeditions:[],battle:null,reports:[],mission:0,stats:{trained:0,victories:0},seen:[],tutorial:false});
   function migrateSave(data){
     if(!data||![1,2].includes(data.version))return data;
     const old=JSON.parse(JSON.stringify(data));
@@ -101,6 +122,13 @@ const Game = (() => {
       if(b.mode===undefined)b.mode='occupy';if(b.siege===undefined)b.siege=false;if(b.militia===undefined)b.militia=0;if(b.finished){if(!b.result.mode)b.result.mode='occupy';if(b.result.claimed===undefined)b.result.claimed=!!b.result.first;if(b.result.stationed===undefined)b.result.stationed=false;}
     }
     for(const r of [...old.reports,...(old.battle?.finished?[old.battle.result]:[])]){if(!r.mode)r.mode='occupy';for(const key of ['back','lost','wounded'])for(const id of Object.keys(units))if(r[key][id]===undefined)r[key][id]=0;}
+    if(old.starterGiftVersion===undefined)old.starterGiftVersion=old.starterGiftClaimed?1:0;
+    if(old.missionSchema===undefined&&Number.isInteger(old.mission)&&old.mission>=0&&old.mission<=6){
+      // The old six sequential missions map to stable IDs, so previously collected rewards stay collected.
+      const legacy=['farm','trained20','field','hall2','camp','fort'];
+      old.missionClaims=legacy.slice(0,Math.max(0,Math.min(legacy.length,old.mission||0)));
+      old.missionSchema=2;old.mission=old.missionClaims.length;
+    }
     return old;
   }
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{return false;}}
@@ -139,7 +167,8 @@ const Game = (() => {
       return q.kind==='upgrade'?p.type===q.id&&q.level===p.level+1&&q.level<=10:q.kind==='build'?p.type===null&&q.level===1:q.kind==='replace'&&p.type!==null&&p.type!==q.id&&q.level===1;
     }))return false;
     if(!Array.isArray(d.trainQueue)||d.trainQueue.length>100||!d.trainQueue.every(q=>object(q)&&Object.hasOwn(units,q.id)&&integer(q.count)&&q.count>=1&&q.count<=100000&&timing(q)))return false;
-    if(!integer(d.mission)||d.mission>missions.length||!Array.isArray(d.reports)||d.reports.length>20||!d.reports.every(r=>result(r)&&node(r.node)&&finite(r.id)&&integer(r.round)&&d.generals.includes(r.general)))return false;
+    if(d.missionSchema!==2||!Array.isArray(d.missionClaims)||new Set(d.missionClaims).size!==d.missionClaims.length||!d.missionClaims.every(id=>missions.some(m=>m.id===id))||!integer(d.starterGiftVersion)||d.starterGiftVersion>2||d.starterGiftClaimed!==(d.starterGiftVersion>0))return false;
+    if(!integer(d.mission)||d.mission!==d.missionClaims.length||d.mission>missions.length||!Array.isArray(d.reports)||d.reports.length>20||!d.reports.every(r=>result(r)&&node(r.node)&&finite(r.id)&&integer(r.round)&&d.generals.includes(r.general)))return false;
     if(d.expedition!==null){const e=d.expedition;if(!object(e)||!node(e.node)||!d.generals.includes(e.general)||e.general===d.governor||!army(e.army)||!['raid','occupy'].includes(e.mode)||!orders(e.orders)||!['march','battle','return'].includes(e.phase)||!timing(e))return false;}
     if(!Array.isArray(d.expeditions)||d.expeditions.length>10||!d.expeditions.every(e=>object(e)&&node(e.node)&&d.generals.includes(e.general)&&e.general!==d.governor&&army(e.army)&&['raid','occupy'].includes(e.mode)&&orders(e.orders)&&['march','return'].includes(e.phase)&&timing(e)))return false;
     const deployment=[...(d.expedition?[d.expedition]:[]),...d.expeditions,...Object.values(d.garrisons)];if(new Set(deployment.map(e=>e.general)).size!==deployment.length)return false;
@@ -415,20 +444,31 @@ const Game = (() => {
     else{const key=effect+(['politics','valor','wisdom','tiger'].includes(effect)?':'+heroId:'');const end=effect==='flag'?Date.now()+86400000:Math.max(Date.now(),state.buffs[key]?.end||0)+item.seconds*1000;state.buffs[key]={effect,general:heroId||null,end};}
     state.inventory[id]--;save();return null;
   }
+  function starterGiftPending(){return state.starterGiftVersion<2;}
+  function starterGiftRemaining(){return Object.fromEntries(Object.entries(starterGiftReward).map(([id,n])=>[id,n-(state.starterGiftVersion===1?20000:state.starterGiftVersion>=2?n:0)]));}
+  function addSupplies(reward){for(const [id,n] of Object.entries(reward))state.res[id]+=n;}
   function claimStarterGift(){
-    if(state.starterGiftClaimed)return '新手礼包已领取，每个存档限领一次';
+    if(!starterGiftPending())return '新手礼包已足额领取，每个存档限领一次';
     tick(Date.now(),false);
-    // Starter supplies are delivered in full; stock above capacity remains available to spend.
-    for(const id of Object.keys(resources))state.res[id]+=20000;
-    state.starterGiftClaimed=true;save();return null;
+    // Gifts and mission supplies are guaranteed; temporarily overfull storage remains spendable.
+    addSupplies(starterGiftRemaining());
+    state.starterGiftClaimed=true;state.starterGiftVersion=2;save();return null;
   }
   function claimTrialGems(){if(Date.now()-state.trialGiftAt<86400000)return '试玩补给每天领取一次';state.gems+=1000;state.trialGiftAt=Date.now();save();return null;}
   function setSpeed(value){tick();if(![1,10,60].includes(Number(value)))return '请选择试玩倍率';state.speed=Number(value);save();return null;}
   function setStorage(allocation){const keys=['food','wood','stone','iron'];if(!keys.every(k=>Number.isInteger(Number(allocation[k]))&&Number(allocation[k])>=0&&Number(allocation[k])<=100)||keys.reduce((v,k)=>v+Number(allocation[k]),0)!==100)return '四项比例之和必须是 100%';state.storageAllocation=Object.fromEntries(keys.map(k=>[k,Number(allocation[k])]));save();return null;}
   function buildDefense(id,count){tick();count=Math.floor(count);const d=ManualData.defenses[id];if(!d||count<1||count>10000)return '请输入城防数量';if(state.buildings.wall<d.wall)return '需要城墙 '+d.wall+' 级';for(const [key,level] of Object.entries(d.tech||{}))if(state.tech[key]<level)return '需要 '+ManualData.technology[key].name+' '+level+' 级';if(state.defenseQueue.length>=1)return '城防工队正在忙碌';const cost=Object.fromEntries(Object.entries(d.cost).map(([k,v])=>[k,v*count]));if(!canPay(cost))return '城防资源不足';pay(cost);const start=Date.now();state.defenseQueue.push({id,count,start,end:start+Math.max(1,count*60/(1+state.tech.construction*.1)/state.speed)*1000});save();return null;}
 
-  function claimMission(){const m=missions[state.mission];if(!m)return '首章目标已全部完成';if(!m.check(state))return '目标尚未达成';addRes(m.reward);state.mission++;save();return null;}
+  function claimMission(id){
+    tick(Date.now(),false);const m=id?missions.find(x=>x.id===id):currentMission();
+    if(!m)return '任务已全部完成';if(missionClaimed(m.id))return '该任务奖励已领取';if(!m.check(state))return '目标尚未达成';
+    addSupplies(m.reward);state.missionClaims.push(m.id);state.mission=state.missionClaims.length;save();return null;
+  }
+  function claimReadyMissions(){
+    tick(Date.now(),false);const ready=missions.filter(m=>missionReady(m));if(!ready.length)return '暂无可领取奖励';
+    for(const m of ready){addSupplies(m.reward);state.missionClaims.push(m.id);}state.mission=state.missionClaims.length;save();return null;
+  }
   function reset(){state=newState();save();}
-  return {init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},allExpeditions,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,trade,buyItem,useItem,claimStarterGift,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setTactic,recall,dismissBattle,claimMission};
+  return {init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},allExpeditions,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setTactic,recall,dismissBattle,claimMission};
 })();
 if(typeof module!=='undefined')module.exports=Game;
