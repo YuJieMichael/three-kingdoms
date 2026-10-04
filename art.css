@@ -1,0 +1,24 @@
+/* Historical raster art shared by city, army, officers and battle controls. */
+.asset-sprite{display:inline-block;flex:none;vertical-align:middle;width:40px;height:40px;background-repeat:no-repeat;box-sizing:border-box;overflow:hidden}
+.troop-symbol.asset-sprite{width:58px;height:58px;clip-path:none;border:1px solid #937347;border-radius:3px;box-shadow:0 1px 4px #36271455}
+.troop-top{gap:10px;align-items:center}.troop-top .text{min-width:0}.troop-top .number{font-size:22px;margin-left:auto}.troop-top h3{white-space:nowrap}
+.hero-art{display:block;width:144px;height:144px;margin:0 auto 12px;padding:0;border:2px solid #987847;border-radius:3px;background:none;clip-path:none;box-shadow:0 3px 9px #3c2e2350;overflow:hidden}
+.hero-art .asset-sprite{width:100%;height:100%}.hero-watermark{opacity:.06}.hero-card{overflow:hidden}.hero-card.locked .hero-art{filter:saturate(.65)}
+.lord-portrait.asset-sprite{width:49px;height:49px;border:2px solid #b99e61;border-radius:2px;margin:0!important}
+.lord-card span.lord-portrait{display:inline-block}.lord-card>div{min-width:0}.lord-card strong .lord-banner{display:inline-block;width:auto;font-size:10px;color:#ecd7a0;border:1px solid #ac915e;padding:1px 3px;margin:0 0 0 4px}
+.resource-emblem{border:0!important;background:none!important;width:28px;height:28px}.resource-emblem .asset-sprite{width:28px;height:28px}
+.icon-mini.asset-sprite{width:21px;height:21px;margin-right:3px}.cost>span,.loot>span{display:inline-flex;align-items:center}
+.city-building-art{width:100%;height:49px;display:flex;align-items:center;justify-content:center}.city-building-art .asset-sprite{width:53px;height:53px;filter:drop-shadow(0 2px 1px #20311960)}
+.city-grid-tile{padding-top:5px;padding-bottom:4px;min-height:80px}.city-grid-tile strong{position:relative;z-index:1}
+.plot-tile>.asset-sprite{width:52px;height:52px;filter:drop-shadow(0 2px 1px #20311960)}
+.allocation-glyph{border:0;opacity:1}.allocation-glyph .asset-sprite{width:33px;height:33px}
+.plot-options button>.asset-sprite{width:70px;height:70px}
+.building-detail-art{float:right;width:112px;height:112px;margin:0 0 8px 12px}.building-detail-art+.sub{min-height:48px}
+.world-cell{overflow:hidden;isolation:isolate}.world-cell .terrain-image{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;filter:saturate(.9)}
+.world-cell:hover .terrain-image{filter:brightness(1.1)}.world-cell.selected{outline:2px solid #f5d27d;outline-offset:-2px}.world-cell-level{background:#211c16b8!important;color:#ffe4aa!important;text-shadow:0 1px #000}.world-owned{background:#294922c9;color:#fff!important;border-radius:2px;padding:0 2px}.world-landmark{color:#ffe0a0!important;text-shadow:0 1px 2px #000}
+.unit-portrait-small.asset-sprite{width:28px;height:28px;border:1px solid #9d885e;border-radius:2px;margin:0 6px 0 0;vertical-align:middle}.enemy-row>span{display:inline-flex;align-items:center;min-width:0;gap:3px}
+.distance-formation{padding:3px!important;min-width:42px;max-width:46px}.battle-portrait.asset-sprite{display:block;width:34px;height:34px;border-radius:2px;margin:0 auto 3px}.distance-formation.enemy{border-color:#a65e44;box-shadow:0 0 0 1px #9e3d2f}.distance-formation small{display:block;line-height:12px}.distance-lane{min-height:82px}
+.unit-order-name .unit-portrait-small{margin-left:0}.candidate-art.asset-sprite{float:left;width:65px;height:65px;margin-right:12px;border:1px solid #9d885e;border-radius:2px}.manual-list article:has(.candidate-art){min-height:93px}
+.item-art.asset-sprite{width:64px;height:64px;float:right;margin:0 0 5px 9px;filter:drop-shadow(0 2px 1px #6e523a33)}.shop-card h3{margin-top:7px}.shop-card .hint{clear:both}.shop-price{clear:both}
+@media(max-width:1050px){.troop-symbol.asset-sprite{width:48px;height:48px}.troop-top{gap:7px}.hero-art{width:128px;height:128px}}
+@media(max-width:760px){.hero-card{display:grid;grid-template-columns:94px minmax(0,1fr);gap:10px}.hero-art{grid-row:1 / 3;width:94px;height:94px;margin:0}.hero-stats{grid-column:2}.hero-desc,.hero-footer{grid-column:1 / -1}.hero-card h3{font-size:20px}.hero-card .hero-title{font-size:11px}.troop-symbol.asset-sprite{width:48px;height:48px}.troop-top h3{font-size:14px}.troop-top .number{font-size:18px}.troop-top .sub{font-size:9px}.city-grid-tile{min-height:77px}.city-building-art{height:44px}.city-building-art .asset-sprite{width:48px;height:48px}.plot-tile>.asset-sprite{width:51px;height:51px}.item-art.asset-sprite{width:56px;height:56px}}

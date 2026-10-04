@@ -1,0 +1,24 @@
+# Local settings, credentials and saves
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*存档*.json
+*.save.json
+
+# Dependencies and generated output
+node_modules/
+dist/
+coverage/
+test-results/
+*.log
+*.zip
+*.bak
+*.tmp
+
+# Editor and OS settings
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
