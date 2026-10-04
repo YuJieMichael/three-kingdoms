@@ -4,6 +4,8 @@
 
 ## 运行
 
+在线试玩：[打开三国城志](https://yujiemichael.github.io/three-kingdoms/)。GitHub Pages 从 `main` 分支根目录自动发布，推送修改后网页会更新。
+
 在此目录执行 `npm start`（或 `node server.cjs`），打开 http://127.0.0.1:8137/ 。无 npm 依赖，无构建步骤。存档保存在当前浏览器。继续开发与保存更新请看 [修改指南](DEVELOPMENT.md)。
 
 静态部署保留全部前端 HTML、CSS、JavaScript、icon.svg、manifest.webmanifest 和完整 assets 目录，保持相对路径。server.cjs 仅供本地运行。

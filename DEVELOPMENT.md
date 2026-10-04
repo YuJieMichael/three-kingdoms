@@ -56,6 +56,8 @@ git push
 
 ## 静态部署
 
+在线试玩地址：[https://yujiemichael.github.io/three-kingdoms/](https://yujiemichael.github.io/three-kingdoms/)。
+
 游戏可以部署到静态网站。上传所有前端文件和完整 `assets/` 目录，保持相对路径；`server.cjs` 只供本地运行。
 
 GitHub Pages 从 `main` 分支的根目录发布，`.nojekyll` 让文件作为普通静态资源提供。启用 Pages 后，后续 `git push` 会自动发布更新。
