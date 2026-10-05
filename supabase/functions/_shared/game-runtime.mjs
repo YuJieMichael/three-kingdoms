@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="1ab8f152450967ad838e681fe7ed790102bedd18036abcc9a832be721e7f6e5c";
+export const runtimeHash="815ae1200a0eaa71c89034b96b7ec060f1fca234355eed1bfbb04f34dafa11d1";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","hero-system.js","heritage-data.js","heritage-system.js","npc-data.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random()}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -14635,9 +14635,9 @@ const Game = (() => {
     const identity=BattleStratagems.identity(b.enemyGeneralSnapshot),attempt=action=>{const q=BattleStratagems.quote(b,'enemy',action,stratagemApi);return q.ok?tacticSubmit(b,'enemy',action.type,action,q.key).ok:false;};
     if(identity.action==='huangzhong'&&attempt({type:'huangzhong',unit:'archer'}))return;
     if(identity.action==='weiyan'){for(const row of b.enemy.filter(r=>r.hp>0&&['spear','cavalry'].includes(r.id)))for(const target of b.player.filter(r=>r.hp>0))if(attempt({type:'weiyan',unit:row.id,target:target.id}))return;}
-    // Prepared fire is announced before the player freezes a response. Named
-    // late-game commanders and Xu Shu use it once when the lane is still open.
-    if(b.round===0&&(identity.action==='xushu'||node.commander&&node.level>=5)){
+    // Automatic plans belong to the explicitly designed wild-general encounters.
+    // Ordinary commanders retain their existing attacks and challenge balance.
+    if(b.round===0&&identity.action==='xushu'){
       const actor=b.enemy.find(r=>r.hp>0),left=Math.floor(b.length/2)-50;if(actor)attempt({type:'fire',unit:actor.id,left});
     }
   }

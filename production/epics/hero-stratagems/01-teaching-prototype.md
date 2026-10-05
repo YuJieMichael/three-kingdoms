@@ -43,7 +43,7 @@ battle-stratagems.js、tactical-lessons.js、engine.js、battle-tactics-ui.js、
 
 **Run result:** OBSERVED — 390×844及1280×900完成三场固定演练，真实名将详情／出征和正式战斗施计已有保留截图。见[验收与逐项追溯](../../qa/hero-stratagems-v0.29.0.md)，最终画面见[黄忠教学](../../qa/evidence/hero-stratagems-v0.29.0/03-mobile-ready-shot.png)、[火区回顾](../../qa/evidence/hero-stratagems-v0.29.0/08-desktop-fire-lane.png)、[名将详情](../../qa/evidence/hero-stratagems-v0.29.0/09-desktop-hero-identity.png)、[正式提交](../../qa/evidence/hero-stratagems-v0.29.0/12-mobile-formal-preparation.png)。
 
-新增18项与兼容62项共80个唯一必要用例通过。规则与UI由独立角色核查，测试角色另验真实画像抓将招降、存档一致性及教学隔离；发现的身份伪装、旧行军快照、教学结束、计时和回顾问题已修复。版本入口、README／RULES、设计状态、测试加载器及生成工厂属于本故事必要接线与发布记录，未增加新云服务或其余名将玩法。原型参数集中在纯规则模块与教学数据，未拆出额外配置系统。
+新增18项与兼容67项共85个唯一必要用例通过。规则与UI由独立角色核查，测试角色另验真实画像抓将招降、存档一致性及教学隔离；发现的身份伪装、旧行军快照、教学结束、计时和回顾问题已修复。首次发布CI发现普通床弩守军筹备火攻丢失首轮攻击，使纯弓过早达成旧高级挑战；已将自动敌计限制到明确的野将身份与固定教学，不放宽旧测试。修后49项相关检查通过；新增计数只有原军令分支的5项，其余复查不重复累加。版本入口、README／RULES、设计状态、测试加载器及生成工厂属于本故事必要接线与发布记录，未增加新云服务或其余名将玩法。原型参数集中在纯规则模块与教学数据，未拆出额外配置系统。
 
 有效配置为workflow minimal、qa.level minimal、review_mode solo。QL-TEST-COVERAGE正式gate依配置跳过；独立必要验证仍保留。control-manifest与ADR不适用于本次有界扩展。没有真人理解度、数值平衡、自然长局、实体手机或百人容量结论。
 

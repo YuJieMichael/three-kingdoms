@@ -678,9 +678,9 @@ const Game = (() => {
     const identity=BattleStratagems.identity(b.enemyGeneralSnapshot),attempt=action=>{const q=BattleStratagems.quote(b,'enemy',action,stratagemApi);return q.ok?tacticSubmit(b,'enemy',action.type,action,q.key).ok:false;};
     if(identity.action==='huangzhong'&&attempt({type:'huangzhong',unit:'archer'}))return;
     if(identity.action==='weiyan'){for(const row of b.enemy.filter(r=>r.hp>0&&['spear','cavalry'].includes(r.id)))for(const target of b.player.filter(r=>r.hp>0))if(attempt({type:'weiyan',unit:row.id,target:target.id}))return;}
-    // Prepared fire is announced before the player freezes a response. Named
-    // late-game commanders and Xu Shu use it once when the lane is still open.
-    if(b.round===0&&(identity.action==='xushu'||node.commander&&node.level>=5)){
+    // Automatic plans belong to the explicitly designed wild-general encounters.
+    // Ordinary commanders retain their existing attacks and challenge balance.
+    if(b.round===0&&identity.action==='xushu'){
       const actor=b.enemy.find(r=>r.hp>0),left=Math.floor(b.length/2)-50;if(actor)attempt({type:'fire',unit:actor.id,left});
     }
   }
