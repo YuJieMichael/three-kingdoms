@@ -37,14 +37,16 @@ function classicQueuePanel(){
 function classicQueuesModal(){
   const s=S();showModal('营造与训练队列',`<div class="shop-tabs">${Object.entries(SpeedupData.kinds).map(([kind,name])=>btn(name+'加速','speedupPicker',kind+'|','small secondary')).join('')}</div>${autoUpgradeControls()}<h3 class="ledger-heading">营造 ${s.buildQueue.length}/${Game.buildLimit()}</h3>${s.buildQueue.length?s.buildQueue.map(q=>queueHTML(q,'build')+btn('取消施工','manualCancelAsk',q.plot===undefined?'site:'+q.site:'plot:'+q.plot,'small danger')).join(''):'<p class="empty">暂无工程。</p>'}<h3 class="ledger-heading">训练 ${s.trainQueue.length}/${Game.trainingLimit()}</h3>${s.trainQueue.length?s.trainQueue.map(q=>queueHTML(q,'train')).join(''):'<p class="empty">暂无训练。</p>'}<h3 class="ledger-heading">科技研究</h3>${s.researchQueue?`<p class="hint">${Game.manual.technology[s.researchQueue.id].name} → ${s.researchQueue.level} 级 ${clock(s.researchQueue.end)} ${speedupQueueButton('research',s.researchQueue)}</p>`:'<p class="empty">暂无研究。</p>'}`,btn('关闭','close','','secondary'));manualModalContext=classicQueuesModal;
 }
-let growthStage='立城补给';
+let growthStage='立城补给',growthPage=0;
+const GROWTH_PAGE_SIZE=10;
 function missionItemHTML(items){return Object.keys(items||{}).length?'<div class="loot">'+Object.entries(items).map(([id,n])=>'<span>'+Game.manual.shop.find(x=>x.id===id).name+' ×'+num(n)+'</span>').join('')+'</div>':'';}
 function growthMissionModal(){
   const ready=Game.missions.filter(m=>Game.missionReady(m)),claimed=S().missionClaims.length,groups=['立城补给','城池经营','书院研习','整军出征','征战里程'];
   const nav='<div class="shop-tabs" role="group" aria-label="成长任务路线">'+groups.map(stage=>{const list=Game.missions.filter(m=>m.stage===stage),count=list.filter(m=>Game.missionReady(m)).length;return btn(stage+(count?' · '+count+' 可领':''),'growthStage',stage,'small secondary '+(stage===growthStage?'active-order':''));}).join('')+'</div>';
   const rows=list=>list.map(m=>{const done=Game.missionClaimed(m.id),available=Game.missionReady(m);return `<article class="quest-card ${done?'quest-claimed':available?'quest-ready':''}"><div class="quest-heading"><h3>${esc(m.title)}</h3><span class="badge">${done?'已领取':available?'可领取':'待达成'}</span></div><p class="hint">${esc(m.desc)}</p>${lootHtml(m.reward)}${missionItemHTML(m.items)}<p class="hint">声望 +300</p><div class="quest-actions">${done?'':available?btn('领取奖励','mission',m.id,'small'):btn(m.route==='gift'?'领取礼包':'前往完成','missionGo',m.id,'small secondary')}</div></article>`;}).join('');
-  const list=Game.missions.filter(m=>m.stage===growthStage),pending=list.filter(m=>!Game.missionClaimed(m.id)),done=list.filter(m=>Game.missionClaimed(m.id));
-  showModal('任务册 · 成长路线',`${taskTabs()}<div class="quest-summary"><strong>已领取 ${claimed} / ${Game.missions.length}</strong><span>${ready.length} 项可领</span></div><div class="quest-collect">${btn('一键领取 '+ready.length+' 项奖励','missionClaimAll','','block',!ready.length)}</div><p class="notice">五条成长路线支持建设、科技、配兵、征战和招降。所有任务都给黄金和石料，立城及城池经营任务额外增加 50% 石料；部分里程碑另送加速道具或金砖；可分别领取，每项仅限一次。资源奖励可暂时超出仓储容量。</p>${Game.starterGiftPending()?`<div class="quest-gift"><strong>${S().starterGiftClaimed?'旧礼包补领差额':'新手礼包'}</strong>${lootHtml(Game.starterGiftRemaining())}${btn(S().starterGiftClaimed?'补领差额':'领取新手礼包','classicStarterGift','','small')}</div>`:''}${nav}<div class="section-title"><h3>${growthStage}</h3><span class="label">${done.length} / ${list.length}</span></div>${rows(pending)}${done.length?`<details class="quest-completed"><summary>已领取 ${done.length} 项</summary>${rows(done)}</details>`:''}`,btn('关闭','close','','secondary'));
+  const list=Game.missions.filter(m=>m.stage===growthStage),pending=list.filter(m=>!Game.missionClaimed(m.id)).sort((a,b)=>Number(Game.missionReady(b))-Number(Game.missionReady(a))),done=list.filter(m=>Game.missionClaimed(m.id));
+  const pages=Math.max(1,Math.ceil(pending.length/GROWTH_PAGE_SIZE));growthPage=Math.max(0,Math.min(pages-1,growthPage));const visible=pending.slice(growthPage*GROWTH_PAGE_SIZE,(growthPage+1)*GROWTH_PAGE_SIZE),pager=pages>1?`<div class="quest-pagination">${btn('上一页','growthPage',String(growthPage-1),'small secondary',growthPage===0)}<span class="label">第 ${growthPage+1} / ${pages} 页 · ${pending.length} 项待领取</span>${btn('下一页','growthPage',String(growthPage+1),'small secondary',growthPage===pages-1)}</div>`:'';
+  showModal('任务册 · 成长路线',`${taskTabs()}<div class="quest-summary"><strong>已领取 ${claimed} / ${Game.missions.length}</strong><span>${ready.length} 项可领</span></div><div class="quest-collect">${btn('一键领取 '+ready.length+' 项奖励','missionClaimAll','','block',!ready.length)}</div><p class="notice">五条成长路线支持建设、科技、配兵、征战和招降。所有任务都给黄金和石料，立城及城池经营任务额外增加 50% 石料；部分里程碑另送加速道具或金砖；可分别领取，每项仅限一次。资源奖励可暂时超出仓储容量。</p>${Game.starterGiftPending()?`<div class="quest-gift"><strong>${S().starterGiftClaimed?'旧礼包补领差额':'新手礼包'}</strong>${lootHtml(Game.starterGiftRemaining())}${btn(S().starterGiftClaimed?'补领差额':'领取新手礼包','classicStarterGift','','small')}</div>`:''}${nav}<div class="section-title"><h3>${growthStage}</h3><span class="label">${done.length} / ${list.length}</span></div>${pager}${rows(visible)}${pager}${done.length?`<details class="quest-completed"><summary>已领取 ${done.length} 项</summary>${rows(done)}</details>`:''}`,btn('关闭','close','','secondary'));
   manualModalContext=growthMissionModal;
 }
 
@@ -62,7 +64,8 @@ document.addEventListener('click',event=>{
   if(action==='classicQueues')classicQueuesModal();
   if(action==='classicTerritory')showModal('附属野地',territorySummary(),btn('关闭','close','','secondary'));
   if(action==='classicMission')classicMissionModal();
-  if(action==='growthStage'){growthStage=id;taskTab='growth';classicMissionModal();}
+  if(action==='growthStage'){growthStage=id;growthPage=0;taskTab='growth';classicMissionModal();}
+  if(action==='growthPage'){growthPage=Number(id);classicMissionModal();}
   if(action==='missionClaimAll'){if(actResult(Game.claimReadyMissions(),'已完成任务的补给与黄金已全部到账'))classicMissionModal();}
   if(action==='missionGo'){
     const m=Game.missions.find(x=>x.id===id);if(!m)return;
@@ -70,6 +73,8 @@ document.addEventListener('click',event=>{
     modal.close();
     if(m.route==='research'){if(S().buildings.academy<1){page='city';cityArea='inner';render();toast('先完成 1 级书院，再按对应科技的条件研究');}else manualResearchModal();return;}
     if(m.route==='captives'){captiveCampModal();return;}
+    if(m.route==='defense'){manualDefenseModal();return;}
+    if(m.route==='epic'){taskTab='epic';classicMissionModal();return;}
     if(m.route==='civic'){manualGovernmentModal();return;}
     if(m.route==='market'){manualMarketModal();return;}
     if(['inner','outer'].includes(m.route)){page='city';cityArea=m.route;}else page=m.route;

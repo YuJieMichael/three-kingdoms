@@ -8,9 +8,11 @@ const Progression = (() => {
   const resourceDonations={food:{amount:100000,prestige:1000},wood:{amount:100000,prestige:1500},stone:{amount:100000,prestige:2000},iron:{amount:100000,prestige:2500},gold:{amount:100000,prestige:3000}};
   const troopDonations={militia:{amount:2000,prestige:2000,points:1},spear:{amount:1500,prestige:2000,points:2},shield:{amount:1200,prestige:2000,points:2},archer:{amount:1000,prestige:3000,points:2},cavalry:{amount:750,prestige:3500,points:3},heavy:{amount:500,prestige:4500,points:4},ballista:{amount:300,prestige:5000,points:5},ram:{amount:200,prestige:5500,points:6},catapult:{amount:100,prestige:6000,points:8}};
   const targets={kills:1500,troops:2,treasures:2}; // Personal PVE completion totals: trial values.
-  const BOARD_SIZE=16, ACCEPT_LIMIT=8;
-  const fixedMetrics=['build','research','civic','item','victory','field_build','comfort','levy','occupy'];
-  const metricIds=['build','field_build','train','train_archer','train_cavalry','research','victory','kill','occupy','raid_food','raid_wood','raid_stone','raid_iron','raid_gold','scout','civic','comfort','levy','item','defense','trade','capture','captive_recruit'];
+  const BOARD_SIZE=24, ACCEPT_LIMIT=12;
+  const fixedMetrics=['build','research','civic','item','victory','field_build','comfort','levy','occupy','city_build','research_production','research_military','wild_victory','siege_victory','win_level_3','win_level_5'];
+  const metricIds=[...new Set(['build','field_build','train','train_archer','train_cavalry','research','victory','kill','occupy','raid_food','raid_wood','raid_stone','raid_iron','raid_gold','scout','civic','comfort','levy','item','defense','trade','capture','captive_recruit',...Object.keys(ManualData.units).map(id=>'train_'+id),'city_build','research_production','research_military','wild_victory','siege_victory','win_level_3','win_level_5','win_level_8','trade_buy','trade_sell'])];
+  const researchGroups={production:['plant','logging','mining','smelting'],military:['combat','protection','shooting','training','march','riding','load','leadership','manufacture','fortification','repair','plunder','supply','scouting']};
+  const researchMetric=id=>Object.entries(researchGroups).find(([,ids])=>ids.includes(id))?.[0];
   const milestones=[{count:3,resources:10000,gold:25000,items:{speed_build_15m:2}},{count:6,resources:20000,gold:50000,items:{speed_research_1h:1}},{count:10,resources:35000,gold:80000,items:{goldBrick:1,speed_train_1h:1}}];
   const templates=[
     {id:'build',title:'修整城坊',desc:'接取后完成建筑或资源田建设／升级',metric:'build',amount:2,route:'inner'},
@@ -37,8 +39,24 @@ const Progression = (() => {
     {id:'cavalry',title:'骑兵集训',desc:'接取后完成轻骑兵训练',metric:'train_cavalry',amount:10,route:'army'},
     ...['wood','stone','iron'].map(resource=>({id:'raid_'+resource,title:({wood:'夺取木料',stone:'缴获石料',iron:'夺取铁料'})[resource],desc:'接取后通过掠夺实际收入仓库的'+({wood:'木材',stone:'石料',iron:'铁锭'})[resource],metric:'raid_'+resource,amount:500,route:'world'}))
   );
+  templates.push(
+    ...[['militia',30],['spear',20],['shield',20],['heavy',10],['worker',20],['wagon',5],['ballista',3],['ram',3],['catapult',3]].map(([unit,amount])=>({id:'train_'+unit,title:ManualData.units[unit].name+'操练',desc:'接取后完成'+ManualData.units[unit].name+'训练',metric:'train_'+unit,unit,amount,route:'army'})),
+    {id:'wildVictory',title:'肃清乡野',desc:'接取后赢得网格野地战斗',metric:'wild_victory',worldType:'wild',amount:1,route:'world'},
+    {id:'siegeVictory',title:'城下立功',desc:'接取后赢得县城掠夺或占领战斗',metric:'siege_victory',worldType:'siege',amount:1,route:'world'},
+    {id:'highVictory3',title:'攻克强敌',desc:'接取后战胜 3 级或更高等级目标',metric:'win_level_3',worldType:'combat',minLevel:3,amount:1,route:'world'},
+    {id:'highVictory5',title:'破阵夺旗',desc:'接取后战胜 5 级或更高等级目标',metric:'win_level_5',worldType:'combat',minLevel:5,amount:1,route:'world'},
+    {id:'cityBuild',title:'修缮城内',desc:'接取后完成城内建筑建设或升级',metric:'city_build',amount:2,route:'inner'},
+    {id:'productionResearch',title:'农工技艺',desc:'接取后完成种植、砍伐、挖掘或冶炼科技研究',metric:'research_production',researchGroup:'production',amount:1,route:'research'},
+    {id:'militaryResearch',title:'军备研习',desc:'接取后完成军事类科技研究',metric:'research_military',researchGroup:'military',amount:1,route:'research'},
+    {id:'tradeBuy',title:'采购军需',desc:'接取后在市场用黄金购买资源',metric:'trade_buy',market:true,amount:2000,route:'market'},
+    {id:'tradeSell',title:'调剂库存',desc:'接取后在市场卖出资源换黄金',metric:'trade_sell',market:true,amount:2000,route:'market'}
+  );
   function tier(s){return s.prestige>=32000?4:s.prestige>=8000?3:s.prestige>=1000?2:1;}
   function unlocked(s,t){
+    if(t.unit){const req=ManualData.units[t.unit].requires;return Object.entries(req.buildings).every(([id,n])=>s.buildings[id]>=n)&&Object.entries(req.tech).every(([id,n])=>s.tech[id]>=n);}
+    if(t.researchGroup)return s.buildings.academy>=1&&researchGroups[t.researchGroup].some(id=>s.tech[id]<10);
+    if(t.market)return s.buildings.market>=1;
+    if(t.worldType){if(s.buildings.drill<1||s.buildings.barracks<1)return false;if(t.worldType==='siege')return countyUnlocked(s);return !t.minLevel||s.stats.victories>=t.minLevel;}
     if(['victory','raid','kills','occupy','capture'].includes(t.id)||t.id.startsWith('raid_'))return s.buildings.drill>=1&&s.buildings.barracks>=1;
     if(t.id==='train')return s.buildings.barracks>=1;
     if(t.id==='research')return s.buildings.academy>=1;
@@ -50,12 +68,13 @@ const Progression = (() => {
     return true;
   }
   function makeTask(s,index){const d=s.daily,level=tier(s),seed=Math.floor(d.start/DAY),pool=templates.filter(t=>unlocked(s,t)),unique=pool.filter(t=>!d.tasks.some(x=>x.template===t.id)),choices=unique.length?unique:pool,template=choices[((seed+index*7)%choices.length+choices.length)%choices.length];return {uid:d.start+'_'+index,template:template.id,target:template.amount*(fixedMetrics.includes(template.metric)?1:level),progress:0,status:'available',acceptedAt:0,tier:level};}
-  function freshDaily(s,now){s.daily={start:period(now),refillAt:period(now),serial:0,tasks:[],claimed:0,exchangeClaims:[],milestoneClaims:[],brickPurchases:Object.fromEntries(RewardData.goldBricks.map(b=>[b.id,0])),rulesVersion:2};for(let i=0;i<BOARD_SIZE;i++)s.daily.tasks.push(makeTask(s,s.daily.serial++));}
+  function freshDaily(s,now){s.daily={start:period(now),refillAt:period(now),serial:0,tasks:[],claimed:0,exchangeClaims:[],milestoneClaims:[],brickPurchases:Object.fromEntries(RewardData.goldBricks.map(b=>[b.id,0])),rulesVersion:3};for(let i=0;i<BOARD_SIZE;i++)s.daily.tasks.push(makeTask(s,s.daily.serial++));}
   function init(s,now=Date.now()){
     if(s.activityMetrics===undefined)s.activityMetrics=Object.fromEntries(metricIds.map(id=>[id,0]));
+    else if(s.activityMetrics&&typeof s.activityMetrics==='object')for(const id of metricIds)if(s.activityMetrics[id]===undefined)s.activityMetrics[id]=0;
     if(s.daily&&s.daily.milestoneClaims===undefined)s.daily.milestoneClaims=[];
     if(s.daily&&s.daily.brickPurchases===undefined)s.daily.brickPurchases=Object.fromEntries(RewardData.goldBricks.map(b=>[b.id,0]));
-    if(s.daily&&s.daily.rulesVersion===undefined){s.daily.rulesVersion=2;while(s.daily.tasks.filter(t=>t.status==='available').length<BOARD_SIZE)s.daily.tasks.push(makeTask(s,s.daily.serial++));}
+    if(s.daily&&(s.daily.rulesVersion===undefined||s.daily.rulesVersion<3)){s.daily.rulesVersion=3;while(s.daily.tasks.filter(t=>t.status==='available').length<BOARD_SIZE)s.daily.tasks.push(makeTask(s,s.daily.serial++));}
     if(s.progressionSchema===1)return;
     // One-time estimate preserves existing development; no old rewards are reissued.
     s.prestige=Math.floor((s.cityLevels||[]).reduce((n,l)=>n+l*l*50,0)+(s.plots||[]).reduce((n,p)=>n+p.level*p.level*50,0)+Object.values(s.tech||{}).reduce((n,l)=>n+l*l*100,0)+(s.stats?.trained||0)/5+(s.stats?.victories||0)*100+(s.missionClaims||[]).length*300);
@@ -77,8 +96,8 @@ const Progression = (() => {
     ensureDaily(s,at);if(at<s.daily.start)return;
     for(const t of s.daily.tasks)if(t.status==='accepted'&&at>=t.acceptedAt&&definition(t).metric===metric)t.progress=Math.min(t.target,t.progress+amount);
   }
-  function reward(t){const def=definition(t),combat=['victory','kill','occupy','capture'].includes(def.metric)||def.metric?.startsWith('raid_'),level=t.tier,amount=(combat?10000:def.resource?6000:8000)*level;
-    const stone=Math.ceil(amount*(['build','field_build'].includes(def.metric)?RewardData.constructionStoneFactor:1));
+  function reward(t){const def=definition(t),combat=['victory','kill','occupy','capture','wild_victory','siege_victory','win_level_3','win_level_5'].includes(def.metric)||def.metric?.startsWith('raid_'),level=t.tier,amount=(combat?10000:def.resource?6000:8000)*level;
+    const stone=Math.ceil(amount*(['build','field_build','city_build'].includes(def.metric)?RewardData.constructionStoneFactor:1));
     return {prestige:300*level,copper:40*level,gold:(combat?20000:12000)*level,resources:{food:amount,wood:amount,stone,iron:amount}};
   }
   function taskItem(s,t){const items=ManualData.shop.filter(i=>i.effect),index=Number(t.uid.split('_')[1]);return items[((Math.floor(s.daily.start/DAY)+index)%items.length+items.length)%items.length];}
@@ -131,7 +150,7 @@ const Progression = (() => {
   function battle(s,n,b,won,received){
     const before=s.prestige,kills=b.enemy.reduce((sum,r)=>sum+r.initial-Math.ceil(r.hp/r.stats.hp),0),loss=b.player.reduce((sum,r)=>sum+r.initial-Math.ceil(r.hp/r.stats.hp),0);
     s.prestige=Math.max(0,s.prestige+(won?100*n.level+Math.floor(kills/5):-Math.max(20,Math.floor(loss/5))));
-    const jewelDrops={};if(won){record(s,'victory');record(s,'kill',kills);if(b.mode==='raid'){for(const [id,count] of Object.entries(received))record(s,'raid_'+id,count);if(!n.terrain||n.terrain!=='fort'){s.epic.kills=Math.min(targets.kills,s.epic.kills+kills);const batches=Math.floor(s.epic.kills/500);s.prestige+=(batches-s.epic.killRewards)*500;s.epic.killRewards=batches;}}
+    const jewelDrops={};if(won){record(s,'victory');record(s,'kill',kills);if(n.wild)record(s,'wild_victory');if(n.terrain==='fort')record(s,'siege_victory');for(const level of [3,5,8])if(n.level>=level)record(s,'win_level_'+level);if(b.mode==='raid'){for(const [id,count] of Object.entries(received))record(s,'raid_'+id,count);if(!n.terrain||n.terrain!=='fort'){s.epic.kills=Math.min(targets.kills,s.epic.kills+kills);const batches=Math.floor(s.epic.kills/500);s.prestige+=(batches-s.epic.killRewards)*500;s.epic.killRewards=batches;}}
       // Prototype drops: a low-tier pearl every win, plus a rarer jewel at higher levels.
       jewelDrops.pearl=1;if(Math.random()<Math.min(.5,n.level*.05)){const choices=Object.keys(jewels).slice(1,Math.min(9,n.level+2));jewelDrops[choices[Math.floor(Math.random()*choices.length)]]=1;}
       for(const [id,count] of Object.entries(jewelDrops))s.jewels[id]+=count;
@@ -150,9 +169,9 @@ const Progression = (() => {
     if(!object(s.activityMetrics)||Object.keys(s.activityMetrics).length!==metricIds.length||!metricIds.every(id=>int(s.activityMetrics[id])))return false;
     const e=s.epic;if(!object(e)||!int(e.kills)||e.kills>targets.kills||e.killRewards!==Math.floor(e.kills/500)||!int(e.troops)||!int(e.treasures)||typeof e.legacyAccess!=='boolean'||!object(e.resources)||Object.keys(e.resources).length!==5||!Object.keys(resourceDonations).every(id=>[0,100000].includes(e.resources[id])))return false;
     if(!object(s.daily)||!object(s.daily.brickPurchases)||Object.keys(s.daily.brickPurchases).length!==RewardData.goldBricks.length||!RewardData.goldBricks.every(b=>int(s.daily.brickPurchases[b.id])&&s.daily.brickPurchases[b.id]<=RewardData.dailyBrickLimit))return false;
-    const d=s.daily;if(!object(d)||d.rulesVersion!==2||!Array.isArray(d.milestoneClaims)||new Set(d.milestoneClaims).size!==d.milestoneClaims.length||!d.milestoneClaims.every(n=>milestones.some(m=>m.count===n)&&n<=d.claimed)||!int(d.start)||period(d.start)!==d.start||!int(d.refillAt)||d.refillAt<d.start||d.refillAt>=d.start+DAY||!int(d.serial)||d.serial>1000||!int(d.claimed)||d.claimed>1000||!Array.isArray(d.exchangeClaims)||d.exchangeClaims.length>10+ManualData.shop.filter(i=>i.effect).length||!d.exchangeClaims.every(id=>id==='pearl'||ManualData.shop.some(i=>i.id===id&&i.effect))||d.exchangeClaims.some(id=>d.exchangeClaims.filter(v=>v===id).length>(id==='pearl'?10:1))||!Array.isArray(d.tasks)||d.tasks.length>BOARD_SIZE+ACCEPT_LIMIT||new Set(d.tasks.map(t=>t.uid)).size!==d.tasks.length)return false;
+    const d=s.daily;if(!object(d)||d.rulesVersion!==3||!Array.isArray(d.milestoneClaims)||new Set(d.milestoneClaims).size!==d.milestoneClaims.length||!d.milestoneClaims.every(n=>milestones.some(m=>m.count===n)&&n<=d.claimed)||!int(d.start)||period(d.start)!==d.start||!int(d.refillAt)||d.refillAt<d.start||d.refillAt>=d.start+DAY||!int(d.serial)||d.serial>1000||!int(d.claimed)||d.claimed>1000||!Array.isArray(d.exchangeClaims)||d.exchangeClaims.length>10+ManualData.shop.filter(i=>i.effect).length||!d.exchangeClaims.every(id=>id==='pearl'||ManualData.shop.some(i=>i.id===id&&i.effect))||d.exchangeClaims.some(id=>d.exchangeClaims.filter(v=>v===id).length>(id==='pearl'?10:1))||!Array.isArray(d.tasks)||d.tasks.length>BOARD_SIZE+ACCEPT_LIMIT||new Set(d.tasks.map(t=>t.uid)).size!==d.tasks.length)return false;
     if(d.tasks.filter(t=>t.status==='available').length>BOARD_SIZE||d.tasks.filter(t=>t.status==='accepted').length>ACCEPT_LIMIT)return false;
     return d.tasks.every(t=>object(t)&&typeof t.uid==='string'&&/^\d+_\d+$/.test(t.uid)&&t.uid.startsWith(d.start+'_')&&definition(t)&&int(t.target)&&t.target>0&&int(t.progress)&&t.progress<=t.target&&['available','accepted'].includes(t.status)&&int(t.acceptedAt)&&(t.status==='available'?t.acceptedAt===0:t.acceptedAt>=d.start&&t.acceptedAt<d.start+DAY)&&[1,2,3,4].includes(t.tier)&&t.target===definition(t).amount*(fixedMetrics.includes(definition(t).metric)?1:t.tier));
   }
-  return {DAY,REFILL,BOARD_SIZE,ACCEPT_LIMIT,milestones,period,jewels,resourceDonations,troopDonations,targets,templates,init,ensureDaily,record,definition,taskReady,reward,taskItem,accept,abandon,claim,claimMilestone,claimReady,groups,countyUnlocked,donationQuote,donate,battle,exchangeOffers,exchange,valid,tier};
+  return {researchMetric,DAY,REFILL,BOARD_SIZE,ACCEPT_LIMIT,milestones,period,jewels,resourceDonations,troopDonations,targets,templates,init,ensureDaily,record,definition,taskReady,reward,taskItem,accept,abandon,claim,claimMilestone,claimReady,groups,countyUnlocked,donationQuote,donate,battle,exchangeOffers,exchange,valid,tier};
 })();

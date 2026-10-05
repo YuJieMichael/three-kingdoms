@@ -48,4 +48,6 @@ body{background:#28261f;color:var(--ink);font-size:12px;overflow:hidden}button,i
 .daily-milestones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .daily-milestones .quest-card{margin:0}
 .daily-milestones .loot{gap:5px}
+.quest-pagination{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0}
+.quest-pagination .label{text-align:center}
 @media(max-width:680px){.daily-milestones{grid-template-columns:1fr}}

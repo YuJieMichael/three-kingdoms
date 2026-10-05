@@ -41,6 +41,38 @@ const RewardData = {
     for(const count of [25,50,100])add('victories_'+count,'征战里程','百战功勋 · '+count,'累计赢得 '+count+' 场战斗','world',s=>s.stats.victories>=count,supply(count*1000,count*4000),{'goldBrick':1});
     add('captureFirst','征战里程','收容降卒','战斗胜利后累计获得 1 名俘虏','world',s=>metric(s,'capture')>=1,supply(10000,30000));
     add('recruitCaptives10','征战里程','化敌为友','累计招降 10 名俘虏','captives',s=>metric(s,'captive_recruit')>=10,supply(15000,40000));
+    // Longer development routes: each goal uses a mechanic already playable in PVE.
+    for(const [id,name] of [['house','民房'],['barracks','军营'],['drill','校场'],['academy','书院'],['warehouse','仓库'],['market','市场'],['inn','客栈'],['stable','马厩'],['workshop','工匠作坊'],['wall','城墙']])
+      for(const level of [3,5,8])add('expand_'+id+'_'+level,'城池经营',name+'扩建 · '+level+'级','任意'+name+'达到 '+level+' 级','inner',s=>s.buildings[id]>=level,supply(level*8000,level*24000),{['speed_build_'+(level>=8?'3h':'1h')]:1});
+    for(const [id,name] of [['farm','农田'],['lumber','伐木场'],['quarry','采石场'],['mine','铁矿']])
+      for(const level of [2,5])add('develop_field_'+id+'_'+level,'城池经营',name+'升级 · '+level+'级','任意'+name+'达到 '+level+' 级','outer',s=>s.plots.some(p=>p.type===id&&p.level>=level),supply(level*6000,level*16000));
+    for(const level of [6,8,10])add('hall_'+level,'城池经营','州县经略 · 官府'+level+'级','官府达到 '+level+' 级','inner',s=>s.buildings.hall>=level,supply(level*10000,level*30000),{speed_build_3h:1});
+    for(const count of [12,20,39])add('fields_'+count,'城池经营','阡陌纵横 · '+count+'块','完成 '+count+' 块任意资源田','outer',s=>s.plots.filter(p=>p.type).length>=count,supply(count*2000,count*5000));
+    for(const count of [50,200])add('defenses_'+count,'城池经营','城防工事 · '+count,'拥有 '+count+' 件已建成的城防工事','defense',s=>Object.values(s.defenses).reduce((n,v)=>n+v,0)>=count,supply(count*200,count*600));
+    const introductory=new Set(['plant','logging','mining','smelting','combat','shooting','construction']);
+    for(const id of technology.filter(id=>!introductory.has(id))){const name=ManualData.technology[id].name;
+      add('study_'+id,'书院研习',name+'入门',name+'达到 1 级','research',s=>s.tech[id]>=1,supply(10000,25000),{speed_research_15m:1});
+    }
+    for(const id of ['plant','logging','mining','smelting','combat','protection','shooting','training'])
+      for(const level of [3,5]){const name=ManualData.technology[id].name;add('specialize_'+id+'_'+level,'书院研习',name+'专精 · '+level+'级',name+'达到 '+level+' 级','research',s=>s.tech[id]>=level,supply(level*10000,level*30000),{speed_research_1h:1});}
+    for(const count of [50,100])add('researchTotal'+count,'书院研习','群贤论道 · '+count,'科技等级总和达到 '+count,'research',s=>technology.reduce((n,id)=>n+s.tech[id],0)>=count,supply(count*1200,count*3000),{speed_research_3h:1});
+    for(const [id,count] of [['worker',50],['militia',100],['heavy',20],['ballista',5],['ram',5],['catapult',5]]){const name=ManualData.units[id].name;
+      add('army_'+id,'整军出征',name+'成队','拥有 '+count+' 名'+name+'（驻城、出征和驻军均计入）','army',s=>held(s,id)>=count,supply(20000,50000),{speed_train_1h:1});
+    }
+    add('formation_front','整军出征','坚阵护军','拥有长枪兵与刀盾兵合计 100 名','army',s=>held(s,'spear')+held(s,'shield')>=100,supply(24000,60000));
+    add('formation_archer','整军出征','百弓齐发','拥有 100 名弓箭兵','army',s=>held(s,'archer')>=100,supply(24000,60000));
+    add('formation_cavalry','整军出征','骑阵成军','拥有轻骑兵与铁骑兵合计 50 名','army',s=>held(s,'cavalry')+held(s,'heavy')>=50,supply(30000,75000));
+    add('formation_mixed','整军出征','步弓骑协同','同时拥有长枪兵、刀盾兵、弓箭兵、轻骑兵各 20 名','army',s=>['spear','shield','archer','cavalry'].every(id=>held(s,id)>=20),supply(32000,80000),{speed_train_1h:2});
+    for(const count of [2000,5000,10000])add('trained_'+count,'整军出征','大军操练 · '+count,'累计完成训练 '+count+' 名士兵','army',s=>s.stats.trained>=count,supply(Math.floor(count*20),count*60),{speed_train_3h:1});
+    add('generalLevel5','整军出征','将才初显','任意帐下将领达到 5 级','heroes',s=>s.generals.some(id=>s.generalLevels[id]>=5),supply(30000,80000));
+    for(const count of [200,500])add('victories_'+count,'征战里程','千军破阵 · '+count,'累计赢得 '+count+' 场战斗','world',s=>s.stats.victories>=count,supply(count*400,count*1500),{goldBrickLarge:1});
+    for(const count of [10,50,200])add('captured_'+count,'征战里程','收容降卒 · '+count,'累计在战斗中获得 '+count+' 名俘虏','world',s=>metric(s,'capture')>=count,supply(count*400+10000,count*1000+20000));
+    for(const count of [50,200])add('captiveRecruit_'+count,'征战里程','降卒归心 · '+count,'累计招降 '+count+' 名俘虏','captives',s=>metric(s,'captive_recruit')>=count,supply(count*400,count*1200));
+    for(const level of [3,5,8])add('victoryLevel_'+level,'征战里程','攻坚克敌 · '+level+'级','战胜任意 '+level+' 级或更高等级的野地／据点','world',s=>metric(s,'win_level_'+level)>0||Object.keys(s.raided).some(id=>Math.max(s.landClaims[id]?.level||0,Game.getNode(id)?.level||0)>=level),supply(level*14000,level*40000),{speed_train_1h:1});
+    for(const count of [3,5])add('wildClaims_'+count,'征战里程','据土守疆 · '+count,'同时拥有 '+count+' 块网格野地','world',s=>Object.keys(s.landClaims).length>=count,supply(count*15000,count*40000));
+    for(const count of [10,30])add('scouted_'+count,'征战里程','斥候经略 · '+count,'累计完成 '+count+' 次侦察','world',s=>metric(s,'scout')>=count,supply(count*1000,count*3000));
+    add('countyAccess','征战里程','进军县城','完成黄巾史诗，开启县城攻打；旧档保留权限也可完成','epic',s=>Progression.countyUnlocked(s),supply(60000,180000),{speed_train_3h:1});
+    add('raidStone50000','征战里程','缴石筑城','累计通过掠夺实际入库 50,000 石料','world',s=>metric(s,'raid_stone')>=50000,supply(40000,100000));
     // Every growth reward includes stone; construction receives extra building material.
     for(const m of missions){
       const base=Math.max(m.reward.stone||0,m.reward.food||0,m.reward.wood||0,m.reward.iron||0);
