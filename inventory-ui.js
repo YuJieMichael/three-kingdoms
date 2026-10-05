@@ -1,13 +1,13 @@
 'use strict';
 // Inventory filters and selection belong to the view, not the saved game state.
-let bagCategory='全部',bagOwnedOnly=false,bagPage=0,bagSelected='';
+let bagCategory='全部',bagPage=0,bagSelected='';
 const BAG_PAGE_SIZE=24;
 const BAG_CATEGORIES=['全部','资源补给','加速','内政','军事','将领','装备','珍宝','其他'];
 function bagEntries(){
  const items=Game.manual.shop.map(item=>({key:'item:'+item.id,kind:'item',id:item.id,name:item.name,count:S().inventory[item.id]||0,category:item.effect==='gold'?'资源补给':item.effect==='speedup'?'加速':['内政','军事','将领','装备'].includes(item.category)?item.category:'其他',item}));
  const jewels=Object.entries(Game.progression.jewels).map(([id,jewel])=>({key:'jewel:'+id,kind:'jewel',id,name:jewel.name,count:S().jewels[id]||0,category:'珍宝',jewel}));
  const equipment=S().equipment.map(e=>({key:'equipment:'+e.id,kind:'equipment',id:e.id,name:HeroSystem.itemName(e),count:1,category:'装备',equipment:e}));
- return [...items,...jewels,...equipment];
+ return [...items,...jewels,...equipment].filter(entry=>entry.count>0);
 }
 function bagIcon(entry,classes='bag-icon'){
  if(entry.kind==='equipment')return heroEquipmentIcon(entry.equipment).replace('item-art','item-art '+classes);
@@ -19,10 +19,10 @@ function bagQuantity(n){return n>=10000?(n/10000).toFixed(1).replace(/\.0$/,'')+
 function bagTile(entry){
  const rare=entry.kind==='equipment'?entry.equipment.tier:entry.kind==='item'&&entry.item.effect&&entry.item.price>=Game.manual.battleDrops.rarePrice?3:1;
  const status=entry.kind==='equipment'?(entry.equipment.hero?'已穿戴':entry.equipment.enhance?'+'+entry.equipment.enhance:''):entry.kind==='item'&&!entry.item.effect?'未开放':'';
- return `<button class="bag-slot ${entry.count?'bag-owned':'bag-unowned'} bag-quality-${rare} ${bagSelected===entry.key?'bag-selected':''}" data-action="bagSelect" data-id="${esc(entry.key)}" aria-pressed="${bagSelected===entry.key}" aria-label="${esc(entry.name)}，数量 ${num(entry.count)}${status?'，'+status:''}" title="${esc(entry.name)} · ${num(entry.count)} 件"><span class="bag-count">×${bagQuantity(entry.count)}</span>${bagIcon(entry)}<span class="bag-name">${esc(entry.name)}</span>${status?`<span class="bag-status">${status}</span>`:''}</button>`;
+ return `<button class="bag-slot bag-owned bag-quality-${rare} ${bagSelected===entry.key?'bag-selected':''}" data-action="bagSelect" data-id="${esc(entry.key)}" aria-pressed="${bagSelected===entry.key}" aria-label="${esc(entry.name)}，数量 ${num(entry.count)}${status?'，'+status:''}" title="${esc(entry.name)} · ${num(entry.count)} 件"><span class="bag-count">×${bagQuantity(entry.count)}</span>${bagIcon(entry)}<span class="bag-name">${esc(entry.name)}</span>${status?`<span class="bag-status">${status}</span>`:''}</button>`;
 }
 function bagDetailHTML(entry){
- if(!entry)return '<section class="bag-detail bag-detail-empty"><p class="hint">点击一个格子查看说明与操作。</p></section>';
+ if(!entry)return '<section class="bag-detail bag-detail-empty"><p class="hint">此分类暂无物品，获得后会显示在格子里。</p></section>';
  const head=`<div class="bag-detail-head">${bagIcon(entry,'bag-detail-icon')}<span class="label">${entry.category}</span><h3>${esc(entry.name)}${entry.kind==='equipment'&&entry.equipment.enhance?' +'+entry.equipment.enhance:''}</h3><p class="bag-detail-count">持有 <strong>${num(entry.count)}</strong> ${entry.kind==='equipment'?'件':'个'}</p></div>`;
  let body='';
  if(entry.kind==='jewel'){
@@ -39,14 +39,14 @@ function bagDetailHTML(entry){
 }
 function inventoryGridModal(){
  const categoryScroll=modalBody.querySelector('.bag-categories')?.scrollLeft||0;
- const all=bagEntries(),filtered=all.filter(e=>(bagCategory==='全部'||e.category===bagCategory)&&(!bagOwnedOnly||e.count>0)),pages=Math.max(1,Math.ceil(filtered.length/BAG_PAGE_SIZE));
+ const all=bagEntries(),filtered=all.filter(e=>bagCategory==='全部'||e.category===bagCategory),pages=Math.max(1,Math.ceil(filtered.length/BAG_PAGE_SIZE));
  bagPage=Math.min(Math.max(0,bagPage),pages-1);
  const visible=filtered.slice(bagPage*BAG_PAGE_SIZE,(bagPage+1)*BAG_PAGE_SIZE);
- if(!visible.some(e=>e.key===bagSelected))bagSelected=visible.find(e=>e.count>0)?.key||visible[0]?.key||'';
+ if(!visible.some(e=>e.key===bagSelected))bagSelected=visible[0]?.key||'';
  const selected=visible.find(e=>e.key===bagSelected),focused=document.activeElement?.dataset.action==='bagSelect'?document.activeElement.dataset.id:null;
- const categories=`<nav class="bag-categories" aria-label="背包物品分类">${BAG_CATEGORIES.map(category=>{const group=all.filter(e=>category==='全部'||e.category===category);return bagChoice(category+' <span class="bag-category-count">'+group.filter(e=>e.count>0).length+'</span>','bagCategory',category,bagCategory===category);}).join('')}</nav>`;
+ const categories=`<nav class="bag-categories" aria-label="背包物品分类">${BAG_CATEGORIES.map(category=>{const group=all.filter(e=>category==='全部'||e.category===category);return bagChoice(category+' <span class="bag-category-count">'+group.length+'</span>','bagCategory',category,bagCategory===category);}).join('')}</nav>`;
  const placeholders=Array.from({length:BAG_PAGE_SIZE-visible.length},()=>'<span class="bag-slot bag-empty" aria-hidden="true"></span>').join('');
- showModal('背包',`<div class="bag-summary"><span>已持有 ${all.filter(e=>e.count>0).length} 种物品</span><span>装备 ${S().equipment.length}/${S().equipmentCapacity} 件</span></div>${categories}<div class="bag-tools"><div role="group" aria-label="是否显示未持有物品">${bagChoice('全部物品','bagOwnership','all',!bagOwnedOnly)}${bagChoice('已持有','bagOwnership','owned',bagOwnedOnly)}</div><span class="label">${bagCategory} · ${filtered.length} 格</span></div><div class="bag-layout"><div class="bag-main">${!visible.length?'<p class="bag-empty-message">这一分类暂无已持有物品，可切换「全部物品」查看目录。</p>':''}<div class="bag-grid" role="group" aria-label="背包物品格子">${visible.map(bagTile).join('')}${placeholders}</div><div class="bag-pagination">${btn('上一页','bagPage',String(bagPage-1),'small secondary',bagPage===0)}<span class="label">${bagPage+1} / ${pages}</span>${btn('下一页','bagPage',String(bagPage+1),'small secondary',bagPage+1>=pages)}</div><p class="bag-legend hint">灰色：未持有 · 金框：稀有 · 点击格子查看详情</p></div>${bagDetailHTML(selected)}</div>`,btn('关闭','close','','secondary'));
+ showModal('背包',`<div class="bag-summary"><span>已持有 ${all.length} 种物品</span><span>装备 ${S().equipment.length}/${S().equipmentCapacity} 件</span></div>${categories}<div class="bag-tools"><span class="label">${bagCategory} · ${filtered.length} 格</span></div><div class="bag-layout"><div class="bag-main">${!visible.length?'<p class="bag-empty-message">这一分类暂无物品，获得后会自动显示。</p>':''}<div class="bag-grid" role="group" aria-label="背包物品格子">${visible.map(bagTile).join('')}${placeholders}</div><div class="bag-pagination">${btn('上一页','bagPage',String(bagPage-1),'small secondary',bagPage===0)}<span class="label">${bagPage+1} / ${pages}</span>${btn('下一页','bagPage',String(bagPage+1),'small secondary',bagPage+1>=pages)}</div><p class="bag-legend hint">金框：稀有 · 点击格子查看详情</p></div>${bagDetailHTML(selected)}</div>`,btn('关闭','close','','secondary'));
  modal.classList.add('bag-dialog');manualModalContext=manualInventoryModal;
  modalBody.querySelector('.bag-categories').scrollLeft=categoryScroll;
  if(focused){const target=[...modalBody.querySelectorAll('[data-action="bagSelect"]')].find(e=>e.dataset.id===focused);target?.focus({preventScroll:true});}
@@ -56,7 +56,6 @@ document.addEventListener('click',event=>{
  const el=event.target.closest('[data-action]');if(!el||el.disabled)return;const a=el.dataset.action,id=el.dataset.id;if(!a.startsWith('bag'))return;
  const scroll=modal.scrollTop;
  if(a==='bagCategory'){bagCategory=id;bagPage=0;bagSelected='';inventoryGridModal();modal.scrollTop=0;}
- if(a==='bagOwnership'){bagOwnedOnly=id==='owned';bagPage=0;bagSelected='';inventoryGridModal();modal.scrollTop=0;}
  if(a==='bagPage'){bagPage=Number(id);bagSelected='';inventoryGridModal();modal.scrollTop=scroll;}
  if(a==='bagSelect'){bagSelected=id;if(window.matchMedia('(max-width:650px)').matches){bagItemDetailModal(id);modal.scrollTop=0;}else{inventoryGridModal();modal.scrollTop=scroll;}}
  if(a==='bagShop'){const item=Game.manual.shop.find(x=>x.id===id);if(item){shopCategory=item.category;page='shop';modal.close();render();}}
