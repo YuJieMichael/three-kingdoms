@@ -30,18 +30,18 @@ const HeroSystem=(()=>{
     const portraitOwned=(s,line)=>!!s.wildGenerals?.portraits?.includes(line);
     const hero=(d,id,node)=>({id,name:d.name,title:d.title,type:'将',level:d.level,atk:d.atk,def:d.def,pol:d.pol,wis:d.wis,lead:d.level*10,price:d.gold,bonus:d.bonus,desc:d.historical?'在野历史将领，数值与招降条件为本作试玩设定。':'山林中的游侠，清剿其驻守野地后可手动招降。',origin:'wild',wildLine:d.line,sourceNode:node});
     function validId(id,s){const seq=s.wildGenerals?.seq;if(!integer(seq)||typeof id!=='string'||!/^local_\d+$/.test(id))return false;const n=Number(id.slice(6));return Number.isSafeInteger(n)&&n>ID_BASE&&n<=ID_BASE+seq;}
-    function nodeValid(id){const m=/^wild_(\d{1,2})_(\d{1,2})$/.exec(id||'');return !!m&&Number(m[1])<64&&Number(m[2])<64&&id==='wild_'+Number(m[1])+'_'+Number(m[2])&&!!Game.getNode(id)?.wild;}
+    function nodeValid(id,s){const m=/^wild_(\d{1,2})_(\d{1,2})$/.exec(id||'');return !!m&&Number(m[1])<64&&Number(m[2])<64&&id==='wild_'+Number(m[1])+'_'+Number(m[2])&&!!Game.getNode(id,s)?.wild;}
     function validWild(s){
       const w=s.wildGenerals;if(!object(w)||w.version!==1||!integer(w.seq)||w.seq>MAX_SEQ||!Array.isArray(w.rumors)||w.rumors.length>3||!Array.isArray(w.captives)||w.captives.length>3||!Array.isArray(w.recruited)||w.recruited.length>3||!Array.isArray(w.portraits)||w.portraits.length>3||!w.portraits.every(line=>!!definition(line))||new Set(w.portraits).size!==w.portraits.length||!object(s.heroLoyalty))return false;
       if(!s.generals.every(id=>Number.isInteger(s.heroLoyalty[id])&&s.heroLoyalty[id]>=0&&s.heroLoyalty[id]<=100)||!Object.keys(s.heroLoyalty).every(id=>s.generals.includes(id)))return false;
-      if(!w.rumors.every(r=>object(r)&&definition(r.line)&&validId(r.id,s)&&nodeValid(r.node)&&integer(r.at)&&['active','captive','recruited','released'].includes(r.status)))return false;
+      if(!w.rumors.every(r=>object(r)&&definition(r.line)&&validId(r.id,s)&&nodeValid(r.node,s)&&integer(r.at)&&['active','captive','recruited','released'].includes(r.status)))return false;
       if(new Set(w.rumors.map(r=>r.line)).size!==w.rumors.length||new Set(w.rumors.map(r=>r.id)).size!==w.rumors.length||new Set(w.rumors.filter(r=>r.status==='active').map(r=>r.node)).size!==w.rumors.filter(r=>r.status==='active').length)return false;
       if(!w.captives.every(c=>{const d=definition(c?.line),r=w.rumors.find(r=>r.id===c?.id),expected=d&&hero(d,c.id,c.node);return object(c)&&!!d&&!!r&&r.line===c.line&&r.node===c.node&&r.status==='captive'&&integer(c.at)&&c.loyalty===40&&object(c.hero)&&Object.entries(expected).every(([k,v])=>c.hero[k]===v)&&!s.generals.includes(c.id)&&!s.customGenerals.some(g=>g.id===c.id);} ))return false;
       if(new Set(w.captives.map(c=>c.id)).size!==w.captives.length||s.customGenerals.length+w.captives.length>100||new Set(w.recruited).size!==w.recruited.length)return false;
       if(!w.recruited.every(id=>s.generals.includes(id)&&s.customGenerals.some(g=>g.id===id&&g.origin==='wild')&&w.rumors.some(r=>r.id===id&&r.status==='recruited')))return false;
       return w.rumors.every(r=>r.status==='captive'?w.captives.some(c=>c.id===r.id):r.status==='recruited'?w.recruited.includes(r.id):!w.captives.some(c=>c.id===r.id)&&!w.recruited.includes(r.id)&&!s.generals.includes(r.id));
     }
-    function validReceipt(r,s){if(r===undefined||r===null)return true;return object(r)&&definition(r.line)?.name===r.name&&validId(r.id,s)&&nodeValid(r.node)&&['captured','released','portrait_required'].includes(r.status)&&r.loyalty===(r.status==='captured'?40:0)&&typeof r.reason==='string'&&r.reason.length<=100;}
+    function validReceipt(r,s){if(r===undefined||r===null)return true;return object(r)&&definition(r.line)?.name===r.name&&validId(r.id,s)&&nodeValid(r.node,s)&&['captured','released','portrait_required'].includes(r.status)&&r.loyalty===(r.status==='captured'?40:0)&&typeof r.reason==='string'&&r.reason.length<=100;}
     function location(s,d){
       const occupied=new Set(s.wildGenerals.rumors.filter(r=>r.status!=='released').map(r=>r.node));
       const available=n=>n?.wild&&n.level===d.fieldLevel&&!s.conquered[n.id]&&!occupied.has(n.id)&&Object.values(n.army).some(v=>v>0);

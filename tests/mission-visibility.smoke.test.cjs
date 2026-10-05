@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {loadGame}=require('./helpers/game.cjs');
 const copy=x=>JSON.parse(JSON.stringify(x));
-const visible=g=>copy(g.nodes.filter(n=>g.landmarkVisible(n.id)).map(n=>n.id));
+const visible=g=>copy(g.nodes.filter(n=>!n.openCity&&g.landmarkVisible(n.id)).map(n=>n.id));
 test('task landmarks reveal the next visit while retaining veteran progress and deployments',()=>{
  const e=loadGame(),g=e.Game,s=g.state;
  assert.deepEqual(visible(g),['field']);s.raided.field=true;assert.deepEqual(visible(g),['field','wood']);
