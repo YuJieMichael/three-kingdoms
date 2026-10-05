@@ -32,6 +32,8 @@ const HeroSystem=(()=>{
     if(!s.equipment.every(e=>validEquipment(e,s))||new Set(s.equipment.map(e=>e.id)).size!==s.equipment.length)return false;
     const worn=s.equipment.filter(e=>e.hero).map(e=>e.hero+':'+e.slot);return new Set(worn).size===worn.length;
   }
+  // Construction rewards depend on the completed level, not duration or game speed.
+  const constructionXp=level=>level*10;
   function addXp(s,id,xp){s.generalXp[id]=(s.generalXp[id]||0)+xp;while(s.generalLevels[id]<10000&&s.generalXp[id]>=s.generalLevels[id]*80){s.generalXp[id]-=s.generalLevels[id]*80;s.generalLevels[id]++;}init(s);}
   function addEquipment(s,slot,tier){const e={id:++s.equipmentSeq,slot,tier,enhance:0,hero:''};s.equipment.push(e);return e;}
   function drops(s,level){
@@ -58,5 +60,5 @@ const HeroSystem=(()=>{
   function salvage(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero)return '请先卸下装备';s.equipment=s.equipment.filter(x=>x.id!==eid);s.inventory.pearl=(s.inventory.pearl||0)+e.tier+Math.floor(e.enhance/3);return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {attrs,slots,qualities,names,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand};
+  return {attrs,slots,qualities,names,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand};
 })();
