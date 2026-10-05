@@ -21,6 +21,9 @@ npm start
 | 游戏规则、生产、掠夺、负重、战斗结算 | `engine.js` |
 | 建筑、兵种、商城与掉落基础数据 | `manual-data.js` |
 | 本地游戏包接入规则与差异 | `reference-rules.js`、`REFERENCE-NOTES.md` |
+| 官职、爵位、俸禄与野地采集参考数据 | `heritage-data.js` |
+| 城内任职、晋升、俸禄、采集及存档校验 | `heritage-system.js` |
+| 官爵、任职与采集交互界面 | `heritage-ui.js`、`hero.css` |
 | 将领培养、装备数值与存档校验 | `hero-system.js` |
 | 将领详情、装备库、打造与强化界面 | `hero-ui.js`、`hero.css` |
 | 成长任务、任务奖励、金砖与俘虏数值 | `reward-data.js` |
