@@ -1,0 +1,31 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const {loadGame,city}=require('./helpers/game.cjs');
+const {run}=require('./balance/archer-onboarding.cjs');
+test('ten gifts enforce hall level and each tier pays once, even above capacity',()=>{
+ const e=loadGame(),g=e.Game,before=g.state.res.food;assert.match(g.onboarding.claim(2),/官府 2/);assert.equal(g.state.res.food,before);assert.equal(g.onboarding.claim(1),null);assert.equal(g.state.res.food,before+40000);assert.ok(g.state.res.food>g.capacity('food'));const snapshot=JSON.stringify(g.state);assert.match(g.onboarding.claim(1),/已领取/);assert.equal(JSON.stringify(g.state),snapshot);
+ city(g,{hall:10});for(let n=2;n<=10;n++)assert.equal(g.onboarding.claim(n),null);assert.equal(g.state.onboarding.claims.length,10);assert.equal(g.state.inventory.starterJewelBox,8);assert.equal(g.state.inventory.starterEquipmentBasic,1);assert.equal(g.state.inventory.starterEquipmentFine,2);assert.equal(g.validSave(g.state),true);assert.equal(g.starterGiftPending(),false);e.offline(1);assert.match(g.onboarding.claim(10),/已领取/);
+});
+test('old fully paid gift receives only new items; first-generation resources receive the old difference',()=>{
+ for(const version of [1,2]){const e=loadGame(),g=e.Game,s=JSON.parse(JSON.stringify(g.state));delete s.onboarding;s.starterGiftClaimed=true;s.starterGiftVersion=version;const migrated=g.migrateSave(s);assert.equal(g.validSave(migrated),true);assert.equal(g.importSave(migrated),undefined);const before={...g.state.res};assert.equal(g.claimStarterGift(),null);for(const id of Object.keys(before))assert.equal(g.state.res[id]-before[id],version===2?0:id==='gold'?40000:20000);assert.equal(g.state.inventory.speed_build_15m,6);e.offline(1);assert.match(g.claimStarterGift(),/已领取/);}
+});
+test('invalid claims, hidden flags and opening receipts are rejected on import',()=>{
+ const e=loadGame(),g=e.Game;for(const mutate of [s=>s.onboarding.claims=[2],s=>s.onboarding.claims=[1,1],s=>s.onboarding.claims=[1.5],s=>s.onboarding.hidden='yes',s=>s.onboarding.lastOpen={kind:'jewel',id:'pearl',count:99},s=>s.onboarding.lastOpen={kind:'equipment',id:999}]){const s=JSON.parse(JSON.stringify(g.state));mutate(s);assert.equal(g.validSave(s),false);}
+});
+test('jewel boxes roll disclosed bounds, persist the receipt, and cannot be bought or rerolled without a box',()=>{
+ const e=loadGame(),g=e.Game,s=g.state;assert.equal(e.evaluate('Object.values(OnboardingData.jewels.weights).reduce((a,b)=>a+b,0)'),100);city(g,{hall:5});assert.equal(g.onboarding.claim(5),null);e.evaluate('Math.random=()=>0');assert.equal(g.useItem('starterJewelBox'),null);assert.equal(s.jewels.pearl,2);assert.equal(s.inventory.starterJewelBox,0);assert.match(g.useItem('starterJewelBox'),/没有/);assert.match(g.buyItem('starterJewelBox'),/不能购买/);assert.equal(g.validSave(s),true);e.offline(1);assert.equal(g.state.onboarding.lastOpen.count,2);city(g,{hall:6});g.onboarding.claim(6);e.evaluate('Math.random=()=>0.999999');assert.equal(g.useItem('starterJewelBox'),null);assert.equal(g.state.jewels.nightPearl,5);assert.equal(g.state.honors.office,0);
+});
+test('equipment boxes require a valid slot, respect full storage and existing level gates',()=>{
+ const e=loadGame(),g=e.Game,s=g.state;city(g,{hall:8});g.onboarding.claim(8);assert.match(g.useItem('starterEquipmentFine','','unknown'),/部位/);assert.equal(s.inventory.starterEquipmentFine,1);for(let i=0;i<s.equipmentCapacity;i++)e.evaluate("HeroSystem.addEquipment(Game.state,'weapon',1)");assert.match(g.useItem('starterEquipmentFine','','armor'),/已满/);assert.equal(s.inventory.starterEquipmentFine,1);s.equipment.pop();assert.equal(g.useItem('starterEquipmentFine','','armor'),null);const item=s.equipment.at(-1);assert.equal(item.tier,2);assert.equal(item.slot,'armor');assert.equal(s.inventory.starterEquipmentFine,0);assert.match(e.evaluate(`HeroSystem.equip(${item.id},'lin')`),/5 级/);assert.equal(g.validSave(s),true);e.offline(1);assert.equal(g.state.equipment.at(-1).id,item.id);
+});
+test('guide follows actual prerequisites and training, preserves state when viewed, and can stay collapsed',()=>{
+ const e=loadGame(),g=e.Game,guide=e.evaluate('GrowthGuide');assert.equal(guide.model(g).kind,'gift');g.claimStarterGift();let before=JSON.stringify(g.state);assert.equal(guide.model(g).id,'house');assert.equal(JSON.stringify(g.state),before);city(g,{hall:2,house:2,barracks:4,drill:1,academy:4});g.state.plots[0]={type:'farm',level:1};g.state.plots[1]={type:'lumber',level:2};g.state.plots[2]={type:'quarry',level:2};g.state.plots[3]={type:'mine',level:3};g.onboarding.claim(2);assert.equal(guide.model(g).id,'smith');g.onboarding.hide(true);e.offline(1);assert.equal(g.state.onboarding.hidden,true);g.onboarding.hide(false);g.state.activityMetrics.train_archer=30;assert.equal(guide.model(g).phase,'hall');
+});
+test('resource estimate uses real net output, detects caps and does not change stocks',()=>{
+ const e=loadGame(),g=e.Game,guide=e.evaluate('GrowthGuide'),before=JSON.stringify(g.state);const q=guide.resources(g,{wood:6000});assert.equal(q.seconds,Math.ceil(1000/g.rates().wood*60));assert.equal(guide.resources(g,{wood:g.capacity('wood')+1}).seconds,null);assert.equal(JSON.stringify(g.state),before);g.state.army.archer=100;assert.equal(guide.resources(g,{food:6000}).seconds,null);
+});
+test('fresh normal APIs reach thirty archers with earned gifts and speedups under the 90-minute target',()=>{
+ const baseline=run(123,false);for(const seed of [123,456]){const actual=run(seed,true);assert.equal(actual.archers,30);assert.equal(actual.validSave,true);assert.ok(actual.minutes<90);assert.ok(actual.minutes<baseline.minutes);assert.ok(actual.spent.gold>20000);assert.ok(actual.used.speed_research_1h>0);assert.ok(actual.log.some(x=>x.target.includes('铁匠铺')));}
+});
+test('after the archer milestone all ten hall gifts are reachable through actual prerequisites, earned supplies and market purchases',()=>{
+ for(const seed of [123,456]){const actual=run(seed,true,'ten-gifts');assert.equal(actual.hall,10);assert.equal(actual.gifts,10);assert.equal(actual.validSave,true);assert.ok(actual.log.some(x=>x.target.includes('市场')));assert.ok(actual.log.some(x=>x.target.includes('购买')));assert.ok(actual.used.speed_build_15_30h>0);}
+});

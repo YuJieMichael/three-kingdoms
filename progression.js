@@ -100,7 +100,7 @@ const Progression = (() => {
     const stone=Math.ceil(amount*(['build','field_build','city_build'].includes(def.metric)?RewardData.constructionStoneFactor:1));
     return {prestige:300*level,copper:40*level,gold:(combat?20000:12000)*level,resources:{food:amount,wood:amount,stone,iron:amount}};
   }
-  function taskItem(s,t){const items=ManualData.shop.filter(i=>i.effect),index=Number(t.uid.split('_')[1]);return items[((Math.floor(s.daily.start/DAY)+index)%items.length+items.length)%items.length];}
+  function taskItem(s,t){const items=ManualData.shop.filter(i=>i.effect&&!i.rewardOnly),index=Number(t.uid.split('_')[1]);return items[((Math.floor(s.daily.start/DAY)+index)%items.length+items.length)%items.length];}
   function accept(s,uid,now=Date.now()){
     ensureDaily(s,now);const t=s.daily.tasks.find(t=>t.uid===uid);
     if(!t||t.status!=='available')return '该任务已刷新或已接取';
@@ -157,7 +157,7 @@ const Progression = (() => {
     }
     return {prestigeDelta:s.prestige-before,jewelDrops};
   }
-  function exchangeOffers(s){const available=ManualData.shop.filter(i=>i.effect),seed=Math.floor(s.daily.start/DAY);return [{id:'pearl',name:'珍珠 ×1',cost:40},...Array.from({length:3},(_,i)=>{const item=available[(seed+i*5)%available.length];return {id:item.id,name:item.name+' ×1',cost:Math.max(20,Math.ceil(item.price/5))};})];}
+  function exchangeOffers(s){const available=ManualData.shop.filter(i=>i.effect&&!i.rewardOnly),seed=Math.floor(s.daily.start/DAY);return [{id:'pearl',name:'珍珠 ×1',cost:40},...Array.from({length:3},(_,i)=>{const item=available[(seed+i*5)%available.length];return {id:item.id,name:item.name+' ×1',cost:Math.max(20,Math.ceil(item.price/5))};})];}
   function exchange(s,id,now=Date.now()){
     ensureDaily(s,now);const offer=exchangeOffers(s).find(x=>x.id===id);if(!offer)return '商品已刷新';
     if(s.buildings.inn<1)return '需要 1 级客栈';if(s.daily.exchangeClaims.filter(x=>x===id).length>=(id==='pearl'?10:1))return '今日兑换次数已用完';if(s.copper<offer.cost)return '铜钱不足';
