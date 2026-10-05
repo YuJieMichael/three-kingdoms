@@ -578,7 +578,7 @@ const Game = (() => {
     processAutoUpgrade();processAutoResearch();save();return null;
   }
   function readAutomationNotices(){state.automation.notices.forEach(n=>n.read=true);save();}
-  function scout(id){tick();const n=getNode(id);if(!n)return '目标不存在';if(state.army.scout<1)return '城内至少需要 1 名斥候';if(state.res.food<10)return '侦察需要 10 粮食（试玩值）';state.res.food-=10;state.scouted[id]={at:Date.now(),level:state.tech.scouting};Progression.record(state,'scout');save();return null;}
+  function scout(id){tick();const n=getNode(id);if(!n)return '目标不存在';if(n.chapter===3&&!ChapterData.unlocked(state,3))return ChapterData.blocked(state,id);if(state.army.scout<1)return '城内至少需要 1 名斥候';if(state.res.food<10)return '侦察需要 10 粮食（试玩值）';state.res.food-=10;state.scouted[id]={at:Date.now(),level:state.tech.scouting};Progression.record(state,'scout');save();return null;}
   function intel(id){if(getNode(id)?.orderRoute||getNode(id)?.chapter===2)return {exact:true,public:true};const entry=state.scouted[id];return entry?{...entry,exact:entry.level>=5}:null;}
   function troopBand(n){if(n===0)return '无';const bands=[[10,'几个'],[25,'少数'],[50,'小队'],[100,'一些'],[250,'一群'],[500,'许多'],[1000,'大队'],[2500,'大群'],[5000,'大批'],[10000,'巨量'],[Infinity,'无数']];return bands.find(([max])=>n<max)[1];}
   function npcName(id,n){return n?.wild?ManualData.npcNames[id]||units[id].name:units[id].name;}
