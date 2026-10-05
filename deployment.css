@@ -13,6 +13,17 @@
 .deployment-troops{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
 .deployment-troops span{font-size:11px;color:#b9c3aa;border:1px solid #46533f;border-radius:3px;padding:5px 8px;line-height:1.6}
 .deployment-troops strong{color:#e9ddbf;margin-left:5px}
+.deployment-timing{background:#141d17;border:1px solid #596447;border-radius:4px;padding:12px;margin:12px 0;min-width:0}
+.deployment-time-main{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 12px;margin:0 0 10px;color:#c5ccb2;font-size:12px}
+.deployment-time-main strong{font-size:20px;line-height:1.45;color:#f0dfaa;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.deployment-route-progress{height:7px;overflow:hidden;border-radius:4px;background:#303a2d}
+.deployment-route-progress i{display:block;height:100%;background:#a79759}
+.deployment-time-details{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 8px;margin:8px 0 0;color:#b9c3aa;font-size:11px;line-height:1.7;font-variant-numeric:tabular-nums}
+.deployment-time-details>span:first-child{min-width:0;overflow-wrap:anywhere}
+.deployment-arrival-time{margin:8px 0 0;color:#aeb99f;font-size:11px;line-height:1.7;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.deployment-arrived{margin:12px 0;padding:10px 12px;border-left:3px solid #a79759;background:#202b20}
+.deployment-arrived strong{font-size:13px;color:#e9ddbf}
+.deployment-arrived .hint{margin-bottom:0;overflow-wrap:anywhere}
 .deployment-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .deployment-actions .btn{white-space:normal}
 @media(max-width:800px){.army-deployment-grid{grid-template-columns:1fr}.army-overview-counts{grid-template-columns:repeat(2,minmax(0,1fr))}}
