@@ -18,7 +18,25 @@ const ChapterData={
     {resources:30000,gold:100000,jewels:{glass:5},items:{speed_build_3h:1}},
     {resources:40000,gold:150000,jewels:{amber:5},items:{speed_train_3h:2,speed_research_3h:1}}
   ],
-  blocked(s,id){const n=this.nodes.find(n=>n.id===id);if(!n)return null;if(!s.conquered.fort)return '先占领古渡县城，开启第二章';if(!s.conquered[n.requires])return '先占领'+this.nodes.find(row=>row.id===n.requires).name;return null;},
-  progress(s){return {unlocked:!!s.conquered.fort,conquered:this.nodes.filter(n=>s.conquered[n.id]).length,claimed:this.nodes.filter(n=>s.missionClaims.includes('chapter2_'+n.id)).length,next:this.nodes.find(n=>!s.conquered[n.id])||null};},
-  extendMissions(missions){this.nodes.forEach((n,i)=>{const r=this.rewards[i];missions.push({id:'chapter2_'+n.id,node:n.id,chapter:2,stage:this.title,title:n.name+' · 平定',desc:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&!!s.conquered[n.id],reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items});});}
+  chapterThreeTitle:'第三章 · 河洛攻城',
+  chapterThreeNodes:[
+    {id:'luo_outpost',name:'洛水前哨',terrain:'camp',x:43,y:9,level:8,chapter:3,requires:'north_keep',desc:'北境平定后南下河洛。孟衡率枪兵守住前哨；先在野外交锋，领取盟军试作冲车。',commander:{name:'孟衡',title:'前哨守将',attack:1.08,defense:1.06,order:'advance'},army:{shield:180,spear:220,archer:180,cavalry:70},loot:{food:4000,wood:4000,iron:2500,gold:6000},reward:'前哨肃清 · 盟军支援 5 辆试作冲车',time:60},
+    {id:'luo_gate',name:'河洛东门',terrain:'mountain',x:46,y:12,level:8,chapter:3,requires:'luo_outpost',desc:'石峤坚守城门，步军依托门墙。冲车推进至门前可迅速破门；破门前守军不会出城。',commander:{name:'石峤',title:'东门守将',attack:1,defense:1.18,order:'hold'},fortification:{name:'包铁城门',hp:18000,protection:1.5,tower:700,range:1100},army:{shield:240,spear:220,archer:200,ballista:12},loot:{food:5000,wood:4000,stone:3500,gold:8000},reward:'攻破东门 · 盟军支援 2 辆投石车',time:66},
+    {id:'luo_cavalry',name:'赤垒外营',terrain:'camp',x:49,y:15,level:9,chapter:3,requires:'luo_gate',desc:'韩骁带骑兵主动迎战，外围木栅虽弱但骑兵冲击凌厉。枪兵护住器械，避免弓兵先行接敌。',commander:{name:'韩骁',title:'突骑统领',attack:1.2,defense:1.03,order:'advance'},fortification:{name:'外营木栅',hp:10000,protection:1.2,tower:300,range:800},army:{cavalry:180,heavy:40,spear:170,archer:140},loot:{food:5500,wood:4500,iron:4000,gold:9000},reward:'击退突骑 · 战线补给',time:70},
+    {id:'luo_wall',name:'白石城垣',terrain:'mountain',x:51,y:11,level:9,chapter:3,requires:'luo_cavalry',desc:'严岑以弓弩据守厚墙。投石车能在远处轰击城垣，冲车需要护卫靠近。破墙后箭楼停止射击。',commander:{name:'严岑',title:'弩阵都督',attack:1.12,defense:1.18,order:'hold'},fortification:{name:'白石重墙',hp:30000,protection:1.65,tower:1000,range:1400},army:{shield:280,spear:180,archer:260,ballista:30},loot:{food:6000,wood:5000,stone:5000,iron:4500,gold:12000},reward:'攻克城垣 · 河洛内城开放',time:76},
+    {id:'luo_citadel',name:'河洛内城',terrain:'camp',x:54,y:8,level:10,chapter:3,requires:'luo_wall',desc:'邵靖收拢混编精锐据守内城。必须破坏城防并清空守军；只歼敌而未破城仍不能占领。',commander:{name:'邵靖',title:'河洛主将',attack:1.18,defense:1.25,order:'hold'},fortification:{name:'内城门墙',hp:42000,protection:1.7,tower:1200,range:1400},army:{shield:330,spear:250,archer:300,cavalry:130,heavy:40,ballista:35},loot:{food:8000,wood:6500,stone:6500,iron:6500,gold:18000},reward:'平定河洛 · 第三章完成',time:84}
+  ],
+  chapterThreeRewards:[
+    {resources:45000,gold:160000,jewels:{pearl:12},items:{speed_train_3h:2},army:{ram:5}},
+    {resources:50000,gold:180000,jewels:{coral:10},items:{speed_research_3h:2},army:{catapult:2}},
+    {resources:55000,gold:200000,jewels:{glass:10},items:{speed_train_3h:2}},
+    {resources:65000,gold:230000,jewels:{amber:10},items:{speed_build_3h:2}},
+    {resources:80000,gold:300000,jewels:{jade:5,nightPearl:1},items:{speed_train_3h:3,speed_research_3h:2}}
+  ],
+  allNodes(){return [...this.nodes,...this.chapterThreeNodes];},
+  chapterNodes(chapter=2){return chapter===3?this.chapterThreeNodes:this.nodes;},
+  chapterTitle(chapter=2){return chapter===3?this.chapterThreeTitle:this.title;},
+  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!s.conquered.fort)return '先占领古渡县城，开启第二章';if(n.chapter===3&&!s.conquered.north_keep)return '先平定北境大营，开启第三章';if(!s.conquered[n.requires])return '先占领'+this.allNodes().find(row=>row.id===n.requires).name;return null;},
+  progress(s,chapter=2){const nodes=this.chapterNodes(chapter);return {unlocked:!!s.conquered[chapter===3?'north_keep':'fort'],conquered:nodes.filter(n=>s.conquered[n.id]).length,claimed:nodes.filter(n=>s.missionClaims.includes('chapter'+chapter+'_'+n.id)).length,next:nodes.find(n=>!s.conquered[n.id])||null};},
+  extendMissions(missions){[2,3].forEach(chapter=>this.chapterNodes(chapter).forEach((n,i)=>{const r=(chapter===3?this.chapterThreeRewards:this.rewards)[i];missions.push({id:'chapter'+chapter+'_'+n.id,node:n.id,chapter,stage:this.chapterTitle(chapter),title:n.name+' · 平定',desc:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&!!s.conquered[n.id],reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items,army:r.army});}));}
 };

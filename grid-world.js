@@ -14,7 +14,8 @@ function cityBuildingArt(id){
 }
 function cityScene(){return manualCityScene();}
 function citySlotModal(index){manualCitySlotModal(index);}
-const worldBounds=()=>({x:Math.max(0,Math.min(Game.WORLD_SIZE-9,worldView.x-4)),y:Math.max(0,Math.min(Game.WORLD_SIZE-9,worldView.y-4))});
+const worldSpan=()=>window.matchMedia('(max-width:760px)').matches?6:9;
+const worldBounds=()=>{const span=worldSpan(),half=Math.floor(span/2);return {x:Math.max(0,Math.min(Game.WORLD_SIZE-span,worldView.x-half)),y:Math.max(0,Math.min(Game.WORLD_SIZE-span,worldView.y-half))};};
 function terrainArt(type){
   return terrainIcon(type);
 }
@@ -34,8 +35,8 @@ function legacyTerrainArt(type){
   return `<svg viewBox="0 0 56 56" aria-hidden="true">${arts[type]||arts.plain}</svg>`;
 }
 function worldMap(){
-  const start=worldBounds();
-  return `<section class="world-grid-board"><div class="map-toolbar"><span class="outskirts-title">青溪天下 · 方格图</span><span class="label">${start.x}–${start.x+8} / ${start.y}–${start.y+8}</span></div><div class="world-grid" aria-label="世界地图，拖动可移动视野"><span class="axis-corner">Y/X</span>${Array.from({length:9},(_,i)=>`<span class="map-axis">${start.x+i}</span>`).join('')}${Array.from({length:9},(_,dy)=>`<span class="map-axis">${start.y+dy}</span>${Array.from({length:9},(_,dx)=>{
+  const start=worldBounds(),span=worldSpan();
+  return `<section class="world-grid-board"><div class="map-toolbar"><span class="outskirts-title">青溪天下 · 方格图</span><span class="label">${start.x}–${start.x+span-1} / ${start.y}–${start.y+span-1}</span></div><div class="world-grid" style="--map-span:${span}" aria-label="世界地图，拖动可移动视野"><span class="axis-corner">Y/X</span>${Array.from({length:span},(_,i)=>`<span class="map-axis">${start.x+i}</span>`).join('')}${Array.from({length:span},(_,dy)=>`<span class="map-axis">${start.y+dy}</span>${Array.from({length:span},(_,dx)=>{
     const t=Game.getWorldTile(start.x+dx,start.y+dy),owned=S().conquered[t.id],job=S().expedition?.node===t.id;
     return `<button class="world-cell ${t.type} ${t.id===selectedNode?'selected':''} ${owned?'owned':''} ${job?'march-target':''}" data-action="worldTile" data-id="${t.id}" data-x="${t.x}" data-y="${t.y}" aria-label="${t.name} 坐标 ${t.x},${t.y} ${t.level}级${owned?' 已占领':''}">${terrainArt(t.type)}<span class="world-cell-level">${t.id==='home'?'城':t.level}</span>${owned?'<span class="world-owned">✓</span>':!t.wild&&t.id!=='home'?'<span class="world-landmark">◆</span>':''}${job?'<span class="world-march">⚑</span>':''}</button>`;
   }).join('')}`).join('')}</div><div class="map-controls"><div class="map-pad">${btn('←','mapPan','-4:0','small secondary')}${btn('↑','mapPan','0:-4','small secondary')}${btn('↓','mapPan','0:4','small secondary')}${btn('→','mapPan','4:0','small secondary')}</div>${btn('回到主城','mapHome','','small secondary')}</div><p class="hint map-help">拖动地图移动视野 · 点击野地查看守军并出征</p></section>`;
@@ -51,7 +52,7 @@ function drawWorldMiniMap(){
   for(let y=0;y<Game.WORLD_SIZE;y++)for(let x=0;x<Game.WORLD_SIZE;x++){
     const t=Game.getWorldTile(x,y);ctx.fillStyle=t.id==='home'?'#e1c17b':S().conquered[t.id]?'#bddd98':Game.terrainTypes[t.type]?.color||'#b09772';ctx.fillRect(x*cell,y*cell,cell,cell);
   }
-  const start=worldBounds();ctx.strokeStyle='#f3e3b5';ctx.lineWidth=1.5;ctx.strokeRect(start.x*cell,start.y*cell,9*cell,9*cell);
+  const start=worldBounds();ctx.strokeStyle='#f3e3b5';ctx.lineWidth=1.5;ctx.strokeRect(start.x*cell,start.y*cell,worldSpan()*cell,worldSpan()*cell);
   const n=Game.getNode(selectedNode);if(n){ctx.fillStyle='#f2d286';ctx.fillRect(n.x*cell-1,n.y*cell-1,cell+2,cell+2);}
 }
 function worldNodeModal(id){const n=Game.getNode(id);if(!n)return;showModal(n.name+' · '+n.level+' 级',`<p class="coordinate-tag">坐标 (${n.x}, ${n.y})</p><p class="hint">${n.desc}</p>${enemyIntelHTML(n)}${campaignNodeDetails(n)}`,btn('返回地图','close','','secondary'));}
@@ -73,7 +74,7 @@ document.addEventListener('click',event=>{
 });
 document.addEventListener('pointerdown',event=>{
   const grid=event.target.closest('.world-grid');if(!grid||event.button>0)return;
-  mapDrag={grid,pointer:event.pointerId,x:event.clientX,y:event.clientY,start:{...worldView},moved:false,cell:grid.getBoundingClientRect().width/9.4};
+  mapDrag={grid,pointer:event.pointerId,x:event.clientX,y:event.clientY,start:{...worldView},moved:false,cell:grid.getBoundingClientRect().width/(worldSpan()+.4)};
 });
 document.addEventListener('pointermove',event=>{
   if(!mapDrag||event.pointerId!==mapDrag.pointer)return;
