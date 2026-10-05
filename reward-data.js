@@ -3,6 +3,7 @@
 const RewardData = {
   dailyBrickLimit:5,
   testSupplyAmount:1000000,
+  constructionStoneFactor:1.5,
   goldBricks:[
     {id:'goldBrick',name:'金砖',price:50,gold:50000},
     {id:'goldBrickLarge',name:'大金砖',price:180,gold:200000}
@@ -40,6 +41,11 @@ const RewardData = {
     for(const count of [25,50,100])add('victories_'+count,'征战里程','百战功勋 · '+count,'累计赢得 '+count+' 场战斗','world',s=>s.stats.victories>=count,supply(count*1000,count*4000),{'goldBrick':1});
     add('captureFirst','征战里程','收容降卒','战斗胜利后累计获得 1 名俘虏','world',s=>metric(s,'capture')>=1,supply(10000,30000));
     add('recruitCaptives10','征战里程','化敌为友','累计招降 10 名俘虏','captives',s=>metric(s,'captive_recruit')>=10,supply(15000,40000));
+    // Every growth reward includes stone; construction receives extra building material.
+    for(const m of missions){
+      const base=Math.max(m.reward.stone||0,m.reward.food||0,m.reward.wood||0,m.reward.iron||0);
+      m.reward.stone=Math.ceil(base*(['立城补给','城池经营'].includes(m.stage)?this.constructionStoneFactor:1));
+    }
   }
 };
 for(const brick of RewardData.goldBricks)ManualData.shop.push({...brick,category:'黄金补给',effect:'gold',seconds:0,trialPrice:true,trialEffect:true,desc:'使用后获得 '+brick.gold.toLocaleString('zh-CN')+' 黄金，可暂时超过官府黄金容量。'});

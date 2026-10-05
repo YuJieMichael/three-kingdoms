@@ -78,7 +78,8 @@ const Progression = (() => {
     for(const t of s.daily.tasks)if(t.status==='accepted'&&at>=t.acceptedAt&&definition(t).metric===metric)t.progress=Math.min(t.target,t.progress+amount);
   }
   function reward(t){const def=definition(t),combat=['victory','kill','occupy','capture'].includes(def.metric)||def.metric?.startsWith('raid_'),level=t.tier,amount=(combat?10000:def.resource?6000:8000)*level;
-    return {prestige:300*level,copper:40*level,gold:(combat?20000:12000)*level,resources:{food:amount,wood:amount,stone:amount,iron:amount}};
+    const stone=Math.ceil(amount*(['build','field_build'].includes(def.metric)?RewardData.constructionStoneFactor:1));
+    return {prestige:300*level,copper:40*level,gold:(combat?20000:12000)*level,resources:{food:amount,wood:amount,stone,iron:amount}};
   }
   function taskItem(s,t){const items=ManualData.shop.filter(i=>i.effect),index=Number(t.uid.split('_')[1]);return items[((Math.floor(s.daily.start/DAY)+index)%items.length+items.length)%items.length];}
   function accept(s,uid,now=Date.now()){
