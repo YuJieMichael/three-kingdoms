@@ -80,3 +80,5 @@ git push
 GitHub Pages 从 `main` 分支的根目录发布，`.nojekyll` 让文件作为普通静态资源提供。启用 Pages 后，后续 `git push` 会自动发布更新。
 
 网页版与 localhost 的存档分开；需要沿用进度时，在旧地址导出存档，再到新地址导入。
+
+前端发布时同步更新 package.json、界面版本号与 index.html 的 JS/CSS 版本查询参数，避免 Pages／浏览器缓存造成新旧代码混用。查询参数仅用于缓存更新，本地文件名不变。
