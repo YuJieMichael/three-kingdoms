@@ -1,6 +1,8 @@
 'use strict';
 // Prototype economy, missions and prisoner rules requested for this game.
 const RewardData = {
+  dailyBrickLimit:5,
+  testSupplyAmount:1000000,
   goldBricks:[
     {id:'goldBrick',name:'金砖',price:50,gold:50000},
     {id:'goldBrickLarge',name:'大金砖',price:180,gold:200000}
