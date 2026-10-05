@@ -1,18 +1,35 @@
 'use strict';
 let cityArea='inner';
 function cityPage(){return cityArea==='inner'?innerCityPage():outsideCityPage();}
-function plotArt(type){
-  if(HistoricalArt.buildings.ids.includes(type))return buildingIcon(type);
-  const ground='<path d="M5 40L44 18 86 40 47 63Z" fill="#89976b"/><path d="M5 40v5l42 24 39-24v-5L47 63Z" fill="#566b48"/>';
-  const content={
-    farm:'<path d="M12 39l31-17 34 19-30 18Z" fill="#c0b477"/><path d="M20 39l28 16m-20-22l28 16m-20-22l28 16m-20-22l28 16" stroke="#748a43" stroke-width="4"/><path d="M25 35v-7m14 15v-8m14 14v-9" stroke="#e2d38a" stroke-width="2"/>',
-    lumber:'<g fill="#365c44" stroke="#96b68a" stroke-width=".7"><path d="M30 6L16 30h8l-12 16h36L36 30h8Z"/><path d="M58 13L45 34h7L42 48h32L64 34h7Z"/></g><path d="M30 46v7m28-5v7" stroke="#c3b18a" stroke-width="4"/><path d="M61 55l12-7 7 5-12 7Z" fill="#c6b588"/>',
-    quarry:'<g fill="#b4bbaa" stroke="#728677" stroke-width="1"><path d="M17 45l4-22 16-10 19 19-3 21Z"/><path d="M43 48l9-26 15-6 15 23-4 14Z"/></g><path d="M21 23l19 13 16-4m-16 4l-3 17m15-31l11 14 19 3" fill="none" stroke="#879686" stroke-width="2"/><path d="M62 58l8-4 8 6-9 4Z" fill="#d0d1b8"/>',
-    mine:'<path d="M13 47l12-26 17-9 25 26-5 18Z" fill="#897f6c"/><path d="M32 23l16 18-3 13H27V35Z" fill="#293f32"/><path d="M26 29v27m23-20v23M24 29l28 8" stroke="#c0a57b" stroke-width="4"/><path d="M57 50l18-8 9 8-6 9-17 3Z" fill="#a48563"/><circle cx="65" cy="62" r="4" fill="#324b3b"/><circle cx="78" cy="57" r="4" fill="#324b3b"/><path d="M61 46l5-6 6 3 4-6 5 10" fill="#d1af79"/>',
-    empty:'<path d="M22 41l3-6m8 12l2-8m28 6l-2-7m-13 18l2-5" stroke="#aec291" stroke-width="2"/><path d="M38 29h16m-8-8v16" stroke="#d4dbb9" stroke-width="2"/>',
-    locked:'<path d="M37 38v-8a9 9 0 0118 0v8" fill="none" stroke="#9ba88b" stroke-width="3"/><rect x="34" y="36" width="24" height="18" rx="3" fill="#637958" stroke="#9ba88b"/><circle cx="46" cy="44" r="2" fill="#ccd0b0"/>'
-  };
-  return `<svg viewBox="0 0 92 74" aria-hidden="true">${ground}${content[type]||content.empty}</svg>`;
+function plotArt(type,level=1,index=0,working=false){
+  const tier=Math.max(1,Math.min(3,Math.ceil(level/3))),seed=landscapeSeed(index,level);
+  const ground='<path d="M3 72L72 31 157 72 87 114Z" fill="#5c6b43"/><path d="M3 72v6l84 42 70-42v-6l-70 42Z" fill="#354931"/><path d="M7 72l65-37 80 37-65 37Z" fill="#90906a"/>';
+  let detail='';
+  if(type==='farm'){
+    detail='<path d="M12 72l58-32 48 25-59 35Z" fill="#9d8d57"/><path d="M18 72l57 28m-46-35l56 28m-45-34l56 28m-45-34l55 27" stroke="#6d713e" stroke-width="5"/><path d="M17 78l54-31m-41 38l52-31m-39 37l50-30" stroke="#c7b675" stroke-width="2"/><path d="M11 78L68 43 119 69" fill="none" stroke="#73988a" stroke-width="3"/>'+landscapeRoof(123,54,.65);
+    if(tier>1)detail+='<path d="M73 100L112 78 144 94 105 115Z" fill="#a49760"/><path d="M80 100l29 14m-17-21l29 15m-17-22l29 15" stroke="#748449" stroke-width="4"/>';
+    if(tier>2)detail+='<path d="M120 46v-13l9-5 10 6v14l-9 6Z" fill="#a69d76"/><path d="M116 34l13-11 15 13Z" fill="#4f5b45"/>';
+  }else if(type==='lumber'){
+    detail='<path d="M8 73L72 39 146 77 86 107Z" fill="#697550"/>';
+    for(let i=0;i<3+tier;i++)detail+=landscapeTree(24+(seed+i*29)%96,47+(i%2)*19,.8+(i%3)*.13);
+    detail+='<path d="M83 87l29-16 29 13-29 17Z" fill="#a6986c"/><path d="M92 87l20 10m-11-16l19 10m-11-16l19 10" stroke="#61563c" stroke-width="4"/><path d="M87 86l25-14m-17 19l26-14" stroke="#c8b48a" stroke-width="3"/>'+landscapeRoof(41,77,.58);
+  }else if(type==='quarry'){
+    detail='<path d="M19 75L45 37 73 26 109 54 138 75 106 101 60 100Z" fill="#777f70"/><path d="M45 37L63 59 93 43 109 54 76 72 37 61Z" fill="#a6ab8f"/><path d="M37 61L76 72 106 56V69L72 85 26 76Z" fill="#89947c"/><path d="M26 76L72 85 126 68 132 81 82 101Z" fill="#b1b095"/><path d="M61 39l-9 12m24-8l-7 10m15 17l-16 8" stroke="#d0c5a0" stroke-width="2"/>';
+    detail+='<path d="M117 83V38m-17 7l39-13m-32 16l11-10 14 9M132 36v34" stroke="#5a5540" stroke-width="3" fill="none"/><path d="M126 69l11-6 10 6-10 7Z" fill="#c1ba98"/><path d="M126 69v9l11 7 10-7v-9" fill="#93967b"/>';
+    if(tier>1)detail+='<path d="M20 92l18-10 15 8-18 11Z" fill="#c4bea0"/><path d="M20 92v8l15 10 18-12v-8" fill="#8e957b"/>';
+    if(tier>2)detail+=landscapeRoof(127,91,.46);
+  }else if(type==='mine'){
+    detail='<path d="M10 81L34 34 65 18 112 59 133 83 99 104 43 102Z" fill="#646b5c"/><path d="M34 34L67 41 65 18 112 59 91 67Z" fill="#92917b"/><path d="M37 89V65Q58 32 80 65v34Z" fill="#242e26"/><path d="M34 92V59m49 0v37M33 59l50 2" stroke="#a69162" stroke-width="5"/><path d="M50 76l58 40m-48-47l59 40M53 86l12-7m5 17l12-7m5 17l12-7" stroke="#81806b" stroke-width="2"/>';
+    detail+='<path d="M91 94l20-10 21 10-20 12Z" fill="#b3a677"/><path d="M91 94v11l21 11 20-11V94l-20 12Z" fill="#726a4b"/><path d="M98 90l7-9 7 6 8-10 7 14" fill="#b29363"/><circle cx="98" cy="109" r="5" fill="#303b2e"/><circle cx="126" cy="110" r="5" fill="#303b2e"/>';
+    if(tier>1)detail+=landscapeRoof(119,59,.46);
+    if(tier>2)detail+='<path d="M120 57V31l14 7-14 7" fill="#ae7444" stroke="#cab789" stroke-width="1.5"/>';
+  }else if(type==='locked'){
+    detail=landscapeTree(30,71,1.1)+landscapeTree(127,72,.75)+'<path d="M71 70V57a12 12 0 0124 0v13" stroke="#afb798" stroke-width="4" fill="none"/><rect x="65" y="68" width="36" height="28" rx="3" fill="#4c5f44" stroke="#a5af90" stroke-width="2"/><circle cx="83" cy="79" r="3" fill="#d1c89d"/><path d="M83 81v6" stroke="#d1c89d" stroke-width="2"/>';
+  }else{
+    detail='<path d="M25 76l49-27 54 25-50 29Z" fill="none" stroke="#bcb58a" stroke-width="2" stroke-dasharray="5 5"/><path d="M58 78l34-18m-29 2l25 15" stroke="#c7c099" stroke-width="3"/><path d="M27 83v-8m3 5l5-4m79 9v-8" stroke="#889566" stroke-width="2"/>';
+  }
+  const construction=working?'<g class="plot-scaffold"><path d="M20 86V39m23 60V52m-27-10l31 15m-28 4l28 15m-24-31l17 41" fill="none" stroke="#d3b681" stroke-width="2.5"/><path d="M20 39l23 13" stroke="#6b5b3f" stroke-width="5"/><path d="M136 53V18l15 6-15 7" fill="#c39752" stroke="#e0c997" stroke-width="1.5"/></g>':'';
+  return `<svg class="plot-scene" viewBox="0 0 160 124" aria-hidden="true">${ground}${detail}${construction}</svg>`;
 }
 function outsideCityPage(){
   const s=S(),unlocked=Game.unlockedPlots(),used=s.plots.filter(p=>p.type).length;
@@ -20,7 +37,7 @@ function outsideCityPage(){
   <div class="allocation">${Object.entries(Game.plotTypes).map(([type,cfg])=>{const plots=s.plots.filter(p=>p.type===type),gain=plots.reduce((sum,p)=>sum+Game.plotYield(p),0);return `<div class="allocation-item ${type}"><span class="allocation-glyph">${resourceIcon(cfg.resource,'')}</span><div><strong>${Game.resources[cfg.resource].name}</strong><p>${plots.length} 块 · <span data-plot-rate="${type}">+${Math.round(gain*60)}/时</span></p></div></div>`;}).join('')}</div>
   <div class="layout outskirts-layout"><section class="outskirts-board"><div class="outskirts-banner"><span class="outskirts-title">青溪城外 · 田庄图</span><span class="label">官府 ${s.buildings.hall} 级 · 已开放 ${unlocked} / ${Game.PLOT_COUNT}</span></div><div class="plot-grid">${s.plots.map((p,index)=>{
     const locked=index>=unlocked,job=Game.plotJob(index),name=locked?'待开垦':p.type?Game.buildings[p.type].name:'空地';
-    return `<button class="plot-tile ${locked?'locked-land':p.type||'empty-land'} ${job?'working':''}" data-action="plot" data-id="${index}" aria-label="${index+1}号地块 ${name}${p.type?' '+p.level+'级':''}${job?' 施工中':''}"><span class="plot-index">${String(index+1).padStart(2,'0')}</span>${job?'<span class="plot-work">工</span>':''}${plotArt(locked?'locked':p.type)}<strong>${name}${p.type&&!locked?'<em>Lv.'+p.level+'</em>':''}</strong><small>${locked?'官府 '+(Math.floor((index-12)/3)+2)+' 级开放':job?`${job.kind==='replace'?'改建':'营造'} · ${clock(job.end)}`:p.type?`+${Math.round(Game.plotYield(p)*60)}/时`:'点击建造'}</small></button>`;
+    return `<button class="plot-tile ${locked?'locked-land':p.type||'empty-land'} ${job?'working':''}" data-action="plot" data-id="${index}" aria-label="${index+1}号地块 ${name}${p.type?' '+p.level+'级':''}${job?' 施工中':''}"><span class="plot-index">${String(index+1).padStart(2,'0')}</span>${job?'<span class="plot-work">营造</span>':p.type&&!locked?'<span class="plot-level">'+p.level+'级</span>':''}${plotArt(locked?'locked':p.type,p.level,index,!!job)}<strong>${name}</strong><small>${locked?'官府 '+(Math.floor((index-12)/3)+2)+' 级开放':job?`${job.kind==='replace'?'改建':job.kind==='build'?'建造':'升级'}至 ${job.level} 级<br>${clock(job.end)}`:p.type?`+${Math.round(Game.plotYield(p)*60)}/时`:'点击建造'}</small></button>`;
   }).join('')}</div><div class="outskirts-note">可重复建设同一种产业 · 同一块地独立升级 · 城内城外共用建造队</div></section>
   <aside class="city-side">${classicQueuePanel()}</aside></div>`;
 }

@@ -1,10 +1,19 @@
 const {loadGame,battle}=require('../helpers/game.cjs');
 function run(seed=123,speed=60,reinforce=true){
- const env=loadGame(seed),{Game}=env,initial=env.now(),log=[],spent={food:0,wood:0,stone:0,iron:0,gold:0};
+ const env=loadGame(seed),{Game}=env,initial=env.now(),log=[],trades=[],spent={food:0,wood:0,stone:0,iron:0,gold:0};let preparingMarket=false;
  Game.setSpeed(speed);Game.claimStarterGift();Game.claimReadyMissions();
  const rules=env.evaluate('ReferenceRules');
- function advance(ms){env.advance(Math.max(1,ms));Game.claimReadyMissions();}
- function wait(cost){for(let attempts=0;!Game.canPay(cost);attempts++){if(attempts>4000)throw Error('Resource bottleneck '+JSON.stringify({cost,stock:Game.state.res,rates:Game.rates()}));advance(3600000);}}
+ function advance(ms){env.advance(Math.max(1,ms));if(Game.onboarding.available(Game.state).length){const error=Game.onboarding.claimAvailable();if(error)throw Error(error);}Game.claimReadyMissions();}
+ function wait(cost){for(let attempts=0;!Game.canPay(cost);attempts++){
+  if(attempts>4000)throw Error('Resource bottleneck '+JSON.stringify({cost,stock:Game.state.res,rates:Game.rates()}));
+  // A campaign may choose to spend its earned gold instead of waiting for field output.
+  // This also handles a material cost above the current warehouse cap: waiting alone cannot fill it.
+  const blocked=Object.entries(cost).filter(([id,n])=>id!=='gold'&&Game.state.res[id]<n);
+  if(blocked.length&&!Game.state.buildings.market&&!preparingMarket){preparingMarket=true;build('market',1);preparingMarket=false;continue;}
+  let bought=false;
+  if(Game.state.buildings.market)for(const [id,n]of blocked){const reserve=cost.gold||0,count=Math.min(Math.ceil(n-Game.state.res[id]),Game.tradeQuote(id,true).limit,Math.max(0,Math.floor(Game.state.res.gold-reserve)));if(count>0){const error=Game.trade(id,count,true);if(error)throw Error(error);spent.gold+=count;trades.push({resource:id,count,hours:(env.now()-initial)/3600000});bought=true;}}
+  if(!bought)advance(3600000);
+ }}
  function payTrack(cost){for(const [id,n]of Object.entries(cost))spent[id]+=n;}
  function prereqs(list){for(const r of list||[]){if(r.kind==='building')build(r.id,r.level);else if(r.kind==='tech')research(r.id,r.level);else throw Error('Item prerequisite '+r.id);}}
  function build(id,level){
@@ -27,6 +36,6 @@ function run(seed=123,speed=60,reinforce=true){
   if(!result.won)break;
   const err=Game.claimMission('chapter'+n.chapter+'_'+n.id);if(err)throw Error(err);advance(90001);Game.dismissBattle();
  }
- return {seed,clockSpeed:speed,chapterOneCheckpoint:'fort ownership only',spent,log,totalHours:(env.now()-initial)/3600000,validSave:Game.validSave(Game.state)};
+ return {seed,clockSpeed:speed,chapterOneCheckpoint:'fort ownership only',spent,trades,log,totalHours:(env.now()-initial)/3600000,validSave:Game.validSave(Game.state)};
 }
 if(require.main===module)process.stdout.write(JSON.stringify(run(),null,2)+'\n');module.exports={run};

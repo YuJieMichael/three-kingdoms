@@ -140,7 +140,101 @@ const Game = (() => {
     Progression.init(old);HeroSystem.init(old);HeritageSystem.init(old);NPCDefense.init(old);AutomationSystem.init(old);OnboardingSystem.init(old);WarOrders.init(old);
     return old;
   }
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{return false;}}
+  // Hold one origin-wide exclusive Web Lock throughout a browser writer's lifetime.
+  const SESSION_KEY=KEY+'-writer',BACKUP_KEY=KEY+'-backup',REQUEST_KEY=KEY+'-handoff',LEASE_MS=15000;
+  const browserSession=typeof navigator!=='undefined',locks=browserSession&&navigator.locks;
+  let sessionOwner='',observedRaw=null,saveMode='uninitialized',saveReason='',lastSavedAt=0,archiveSerial=0,lockHeld=false,lockRelease=null,lockPending=null,lastOffline=null,lockAbort=null,lockGeneration=0,pendingFinish=null,pendingHandoff=null,handoffSerial=0;
+  function ownerId(){if(!sessionOwner){if(typeof crypto!=='undefined'&&crypto.randomUUID)sessionOwner=crypto.randomUUID();else{const counter=Number(localStorage.getItem(KEY+'-session-sequence')||0)+1;localStorage.setItem(KEY+'-session-sequence',String(counter));sessionOwner=Date.now()+'-'+counter;}}return sessionOwner;}
+  function storedState(raw){try{if(raw===null)return null;const data=migrateSave(JSON.parse(raw));return validSave(data)?data:null;}catch{return null;}}
+  function writer(){const raw=localStorage.getItem(SESSION_KEY);if(!raw)return null;try{const value=JSON.parse(raw);return value&&typeof value.owner==='string'&&Number.isFinite(value.until)?value:null;}catch{return null;}}
+  function storageFailure(mode,reason){saveMode=mode;saveReason=reason;return reason;}
+  function saveBlockReason(){
+    if(saveMode!=='active')return saveReason||'当前页面未取得存档写入权';
+    if(browserSession&&!lockHeld)return storageFailure('readonly','本页没有存档写入锁，已暂停操作');
+    try{
+      const lease=writer();
+      if(lease?.owner&&lease.owner!==sessionOwner)return storageFailure('readonly','另一页面已接管城池，本页已暂停，请接管后继续');
+      if(localStorage.getItem(KEY)!==observedRaw)return storageFailure('conflict','已保存进度发生变化，本页已暂停，请重新读取最新进度');
+      return '';
+    }catch{return storageFailure('read-error','无法读取浏览器存储，已暂停操作并保留原存档');}
+  }
+  function claimWriter(){
+    if(browserSession&&!lockHeld)return storageFailure(locks?'starting':'unsupported',locks?'正在读取存档并取得写入权':'此浏览器无法提供独占存档锁，请使用支持 Web Locks 的浏览器；原始数据已保留');
+    ownerId();const lease=writer();
+    // Headless callers have no Web Locks: refuse foreign ownership even after lease expiry.
+    if(!lockHeld&&lease?.owner&&lease.owner!==sessionOwner)return storageFailure('readonly','城池正在另一页面运行，请关闭原页面后重新读取');
+    localStorage.setItem(SESSION_KEY,JSON.stringify({owner:sessionOwner,until:Date.now()+LEASE_MS}));
+    if(writer()?.owner!==sessionOwner)return storageFailure('readonly','另一页面取得了城池写入权，请重新接管');
+    saveMode='active';saveReason='';return '';
+  }
+  function save(){
+    if(saveBlockReason())return false;
+    try{
+      const next=JSON.stringify(state);
+      localStorage.setItem(SESSION_KEY,JSON.stringify({owner:sessionOwner,until:Date.now()+LEASE_MS}));
+      if(saveBlockReason())return false;
+      if(next!==observedRaw){if(storedState(observedRaw))localStorage.setItem(BACKUP_KEY,observedRaw);localStorage.setItem(KEY,next);observedRaw=next;}
+      lastSavedAt=Date.now();return true;
+    }catch{storageFailure('write-error','保存失败，已暂停操作。请导出当前进度后检查浏览器存储');return false;}
+  }
+  function saveSessionInfo(){
+    saveBlockReason();let backup=null,rawAvailable=false;
+    try{backup=storedState(localStorage.getItem(BACKUP_KEY));rawAvailable=localStorage.getItem(KEY)!==null||localStorage.getItem('sanguo-city-v1')!==null;}catch{}
+    return {mode:saveMode,writable:saveMode==='active',reason:saveReason,lastSavedAt,hasBackup:!!backup,backupAt:backup?.last||0,rawAvailable,lockSupported:!!locks};
+  }
+  function exportStoredRaw(){try{const raw=localStorage.getItem(KEY);return raw===null?(localStorage.getItem('sanguo-city-v1')??''):raw;}catch{throw new Error('无法读取原始存档');}}
+  function archiveRaw(raw){if(raw!==null)localStorage.setItem(KEY+'-recovery-'+Date.now()+'-'+sessionOwner+'-'+(++archiveSerial),raw);}
+  function replaceSave(data){
+    const next=migrateSave(data);if(!validSave(next))throw new Error('Invalid save');
+    if(browserSession&&!lockHeld||['readonly','conflict','released','starting','handoff'].includes(saveMode))throw new Error(saveReason||'请先接管最新进度');
+    const current=localStorage.getItem(KEY),lease=writer();
+    if(!lockHeld&&lease?.owner&&lease.owner!==sessionOwner)throw new Error('城池正在另一页面运行，请先接管');
+    if(saveMode==='active'&&current!==observedRaw)throw new Error('存档已变化，请先重新读取最新进度');
+    // Explicit import/reset/restore preserves the replaced payload, including invalid or empty data.
+    archiveRaw(current);if(storedState(current))localStorage.setItem(BACKUP_KEY,current);
+    observedRaw=current;if(claimWriter())throw new Error(saveReason);
+    state=next;if(!save())throw new Error(saveReason);init();if(saveMode!=='active')throw new Error(saveReason||'恢复后重新读取失败');
+  }
+  function restoreSaveBackup(){try{const data=storedState(localStorage.getItem(BACKUP_KEY));if(!data)return '没有可恢复的有效备份';replaceSave(data);return null;}catch(error){return error.message||'备份恢复失败';}}
+  function openSaveSession(wait=false){
+    if(!locks){lastOffline=init();return Promise.resolve(saveMode==='active'?null:saveReason);}
+    if(lockHeld){lastOffline=init();return Promise.resolve(saveMode==='active'?null:saveReason);}
+    if(lockPending)return lockPending;
+    let finish;const opened=new Promise(resolve=>{finish=resolve;});lockPending=opened;pendingFinish=finish;
+    const generation=lockGeneration,controller=wait&&typeof AbortController!=='undefined'?new AbortController():null;lockAbort=controller;
+    locks.request(KEY+'-exclusive',{ifAvailable:!wait,...(controller?{signal:controller.signal}:{})},async lock=>{
+      if(generation!==lockGeneration){finish('本页已停止等待存档交接');return;}
+      if(!lock){storageFailure('readonly','城池正在另一页面运行。本页只读，可接管最新进度');finish(saveReason);return;}
+      lockHeld=true;const held=new Promise(resolve=>{lockRelease=resolve;});
+      lastOffline=init();finish(saveMode==='active'?null:saveReason);
+      await held;
+    }).catch(()=>{if(generation!==lockGeneration){finish('本页已停止等待存档交接');return;}storageFailure('lock-error','无法取得存档锁，已暂停操作并保留原始数据');finish(saveReason);});
+    opened.then(()=>{if(lockPending===opened){lockPending=null;pendingFinish=null;lockAbort=null;}});return opened;
+  }
+  function takeOverSaveSession(){
+    if(!locks||lockHeld){init();return saveMode==='active'?null:saveReason;}
+    if(lockPending)return lockPending;
+    try{ownerId();const lease=writer(),id=sessionOwner+'-'+(++handoffSerial);pendingHandoff=id;localStorage.setItem(REQUEST_KEY+'-'+sessionOwner,id);localStorage.setItem(REQUEST_KEY,JSON.stringify({id,requester:sessionOwner,target:lease?.owner||'',at:Date.now()}));storageFailure('handoff','等待另一页面保存并交接，请保持两个页面打开');const opened=openSaveSession(true);opened.then(()=>clearHandoff(id));return opened;}
+    catch{return storageFailure('read-error','无法请求存档交接，未覆盖原始数据');}
+  }
+  function clearHandoff(id=pendingHandoff){if(!id)return;try{if(localStorage.getItem(REQUEST_KEY+'-'+sessionOwner)===id)localStorage.setItem(REQUEST_KEY+'-'+sessionOwner,'');}catch{}if(pendingHandoff===id)pendingHandoff=null;}
+  function respondSaveTakeover(){
+    if(!lockHeld&&saveMode==='handoff'&&pendingHandoff){try{const lease=writer();localStorage.setItem(REQUEST_KEY,JSON.stringify({id:pendingHandoff,requester:sessionOwner,target:lease?.owner||'',at:Date.now()}));}catch{}return;}
+    if(!lockHeld||saveMode!=='active')return;
+    try{const request=JSON.parse(localStorage.getItem(REQUEST_KEY)||'null');if(!request||request.requester===sessionOwner||request.target!==sessionOwner||!request.id||localStorage.getItem(REQUEST_KEY+'-'+request.requester)!==request.id)return;
+      // A blocked writer must preserve unsaved progress and must not report a successful handoff.
+      if(!save())return;
+      if(localStorage.getItem(REQUEST_KEY+'-'+request.requester)!==request.id)return;
+      releaseSaveSession();storageFailure('readonly','另一页面已请求接管，本页已保存并暂停');
+    }catch{}
+  }
+  function releaseSaveSession(){
+    clearHandoff();lockGeneration++;if(lockAbort){lockAbort.abort();lockAbort=null;}if(pendingFinish){pendingFinish('本页已停止等待存档交接');pendingFinish=null;}lockPending=null;
+    if(saveMode==='active')save();
+    try{if(writer()?.owner===sessionOwner)localStorage.setItem(SESSION_KEY,JSON.stringify({owner:'',until:0}));}catch{}
+    if(lockRelease){const release=lockRelease;lockRelease=null;lockHeld=false;release();}
+    if(['active','handoff','starting','readonly'].includes(saveMode))storageFailure('released','本页已停止写入，重新读取后可继续');
+  }
   function validSave(d){
     const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
     const finite=n=>Number.isFinite(n)&&n>=0&&n<=Number.MAX_SAFE_INTEGER;
@@ -187,12 +281,23 @@ const Game = (() => {
     if(!['food','wood','stone','iron'].every(k=>integer(d.storageAllocation[k])&&d.storageAllocation[k]<=100)||!Object.values(d.buffs).every(b=>object(b)&&typeof b.effect==='string'&&finite(b.end)&&(b.general===null||d.generals.includes(b.general)))||!Object.values(d.itemCooldowns).every(finite)||!finite(d.trialGiftAt)||typeof d.ruler!=='string'||d.ruler.length>12||typeof d.banner!=='string'||d.banner.length>2)return false;
     if(!d.defenseQueue.every(q=>object(q)&&Object.hasOwn(ManualData.defenses,q.id)&&integer(q.count)&&q.count>0&&q.count<=10000&&timing(q)))return false;
     if(!Object.entries(d.landClaims).every(([id,c])=>getNode(id)?.wild&&object(c)&&finite(c.at)&&integer(c.level)&&c.level<=10)||!Object.entries(d.scouted).every(([id,c])=>node(id)&&object(c)&&finite(c.at)&&integer(c.level)&&c.level<=10))return false;
-    if(d.battle!==null){const b=d.battle;if(!object(b)||!['raid','occupy'].includes(b.mode)||typeof b.siege!=='boolean'||!integer(b.militia)||b.rules!==2||!integer(b.length)||b.length<200||b.length>10000||!node(b.node)||!d.generals.includes(b.general)||!integer(b.round)||b.round>30||typeof b.finished!=='boolean'||typeof b.auto!=='boolean'||!rows(b.player,b.length)||!rows(b.enemy,b.length)||!object(b.orders)||!SiegeSystem.valid(b.gate,getNode(b.node),b.mode)||!b.player.every(r=>object(b.orders[r.id])&&['advance','hold','fallback'].includes(b.orders[r.id].command)&&(b.orders[r.id].target===''||b.orders[r.id].target==='gate'&&!!b.gate||Object.hasOwn(units,b.orders[r.id].target)))||!Array.isArray(b.log)||b.log.length>40||!b.log.every(t=>typeof t==='string'&&t.length<1000))return false;if(b.finished?(!result(b.result)||b.result.warOrder&&b.result.warOrder.node!==b.node):!d.expedition||d.expedition.phase!=='battle'||d.expedition.node!==b.node||d.expedition.general!==b.general)return false;}
+    if(d.battle!==null){const b=d.battle;if(!object(b)||!['raid','occupy'].includes(b.mode)||typeof b.siege!=='boolean'||!integer(b.militia)||b.rules!==2||!integer(b.length)||b.length<200||b.length>10000||!node(b.node)||!d.generals.includes(b.general)||!integer(b.round)||b.round>30||(b.machineGateAttacks!==undefined&&(!integer(b.machineGateAttacks)||b.machineGateAttacks>b.round*2))||typeof b.finished!=='boolean'||typeof b.auto!=='boolean'||!rows(b.player,b.length)||!rows(b.enemy,b.length)||!object(b.orders)||!SiegeSystem.valid(b.gate,getNode(b.node),b.mode)||!b.player.every(r=>object(b.orders[r.id])&&['advance','hold','fallback'].includes(b.orders[r.id].command)&&(b.orders[r.id].target===''||b.orders[r.id].target==='gate'&&!!b.gate||Object.hasOwn(units,b.orders[r.id].target)))||!Array.isArray(b.log)||b.log.length>40||!b.log.every(t=>typeof t==='string'&&t.length<1000))return false;if(b.finished?(!result(b.result)||b.result.warOrder&&b.result.warOrder.node!==b.node):!d.expedition||d.expedition.phase!=='battle'||d.expedition.node!==b.node||d.expedition.general!==b.general)return false;}
     if(!HeritageSystem.valid(d)||!NPCDefense.valid(d,units,ManualData.defenses,validReceipt))return false;
     return true;
   }
-  function init(){let offline=null;try{const raw=localStorage.getItem(KEY)||localStorage.getItem('sanguo-city-v1');const data=JSON.parse(raw);if(raw&&!data?.manualSchema&&!localStorage.getItem(KEY+'-before-manual'))localStorage.setItem(KEY+'-before-manual',raw);state=migrateSave(data);if(!validSave(state))state=newState();}catch{state=newState();}const before={...state.res},elapsed=(Date.now()-state.last)/1000;state.last=Math.min(Date.now(),state.last);tick(Date.now(),false);if(state.battle)state.battle.auto=false;if(elapsed>60)offline={seconds:Math.min(elapsed,28800),gain:Object.fromEntries(Object.keys(resources).map(k=>[k,Math.max(0,Math.floor(state.res[k]-before[k]))]))};save();return offline;}
-  function importSave(data){const migrated=migrateSave(data);if(!validSave(migrated))throw new Error('Invalid save');localStorage.setItem(KEY,JSON.stringify(migrated));init();}
+  function init(){
+    let raw,legacy;saveMode='uninitialized';saveReason='';
+    try{raw=localStorage.getItem(KEY);legacy=raw===null?localStorage.getItem('sanguo-city-v1'):null;observedRaw=raw;
+      const payload=raw===null?legacy:raw;state=payload===null?newState():storedState(payload);
+      if(!state){state=newState();if(lockHeld)claimWriter();storageFailure('recovery','原始存档无法通过校验，已暂停并保留原始数据');return null;}
+      if(claimWriter())return null;
+      if(legacy&&!localStorage.getItem(KEY+'-before-manual'))localStorage.setItem(KEY+'-before-manual',legacy);
+    }catch{state=state||newState();storageFailure('read-error','读取存档失败，已暂停并保留原始数据。可重新读取或导出');return null;}
+    const before={...state.res},elapsed=(Date.now()-state.last)/1000;state.last=Math.min(Date.now(),state.last);tick(Date.now(),false);if(state.battle)state.battle.auto=false;
+    const offline=elapsed>60?{seconds:Math.min(elapsed,28800),gain:Object.fromEntries(Object.keys(resources).map(k=>[k,Math.max(0,Math.floor(state.res[k]-before[k]))]))}:null;
+    save();return offline;
+  }
+  function importSave(data){replaceSave(data);}
   const totalArmy = a => Object.values(a).reduce((v,n)=>v+n,0);
   const maxPop=()=>state.cityLayout.reduce((v,id,i)=>v+(id==='house'?(buildRecord(id,state.cityLevels[i])?.population||0):0),0);
   const allExpeditions=()=>[...(state.expedition?[state.expedition]:[]),...state.expeditions];
@@ -208,6 +313,7 @@ const Game = (() => {
   function upkeep(army){return Object.entries(army).reduce((v,[id,n])=>v+(units[id]?.upkeep||0)*n,0);}
   function rates(){let r={food:100/60,wood:100/60,stone:100/60,iron:100/60,gold:state.population*state.tax/100/60};for(const key of Object.keys(r))r[key]*=ECONOMY_OUTPUT_FACTOR;for(const p of state.plots)if(p.type)r[plotTypes[p.type].resource]+=plotYield(p);r.food-=(upkeep(NPCDefense.heldArmy(state))+upkeep(state.army)+allExpeditions().reduce((v,e)=>v+upkeep(e.army),0)+Object.values(state.garrisons).reduce((v,g)=>v+upkeep(g.army)*(g.phase==='stationed'?2:1),0))/60;return r;}
   function tick(now=Date.now(),allowAutomation=true,settleAtSameTime=false){
+    if(saveBlockReason())return;
     if(now<=state.last&&!settleAtSameTime){Progression.ensureDaily(state,now);NPCDefense.tick(state,now);if(allowAutomation){processAutoUpgrade();processAutoResearch();}return;}
     const start=Math.max(state.last,now-28800000);
     // Settle queues in timestamp order so offline buildings only boost production after completion.
@@ -397,7 +503,7 @@ const Game = (() => {
   function startBattle(){
     tick();if(state.cityDefense.battle)return '请先结束守城战或演练';const e=state.expedition;if(!e||e.phase!=='march'||e.end>Date.now())return '部队尚未到达';
     const n=getNode(e.node),info=attackInfo(n.id,e.mode),player=formation(e.army),enemy=formation(e.enemySnapshot||info.army,true),length=battleLength([...player,...enemy]);for(const r of enemy)r.pos=length;
-    state.battle={rules:2,length,node:n.id,general:e.general,mode:e.mode,siege:info.siege,gate:SiegeSystem.gate(n,e.mode),militia:info.militia,round:0,player,enemy,orders:Object.fromEntries(player.map(r=>[r.id,{...e.orders[r.id]}])),log:['两军相距 '+length+'。按兵种速度依次行动，同速守方优先。'],auto:true,finished:false,result:null};
+    state.battle={rules:2,length,node:n.id,general:e.general,mode:e.mode,siege:info.siege,gate:SiegeSystem.gate(n,e.mode),militia:info.militia,round:0,machineGateAttacks:0,player,enemy,orders:Object.fromEntries(player.map(r=>[r.id,{...e.orders[r.id]}])),log:['两军相距 '+length+'。按兵种速度依次行动，同速守方优先。'],auto:true,finished:false,result:null};
     if(n.commander)pushLog(state.battle,'敌将 '+n.commander.name+' · '+n.commander.title+'：攻击 ×'+n.commander.attack+'，防御 ×'+n.commander.defense+'。');if(state.battle.gate)pushLog(state.battle,n.fortification.name+'：耐久 '+state.battle.gate.hp+'；冲车、投石车优先破城，破城后箭楼失效。');
     if(info.siege)pushLog(state.battle,'占领攻城：城防启用，义兵 '+info.militia+' 人加入义兵阵。');e.phase='battle';save();return null;
   }
@@ -415,6 +521,12 @@ const Game = (() => {
     if(command!==undefined){if(!['advance','hold','fallback'].includes(command))return '请选择向前、坚守或后退';order.command=command;}
     if(target!==undefined){if(target!==''&&!(target==='gate'&&b.gate?.hp>0)&&!b.enemy.some(r=>r.id===target))return '目标兵种不存在';order.target=target;}
     save();return null;
+  }
+  function setBattleOrders(command){
+    const b=state.battle;if(!b||b.finished)return '当前没有进行中的战斗';
+    if(!['advance','hold','fallback'].includes(command))return '请选择前进、固守或后退';
+    const living=b.player.filter(r=>r.hp>0);if(!living.length)return '当前没有可指挥的部队';
+    for(const row of living)b.orders[row.id].command=command;save();return null;
   }
   function pushLog(b,text){b.log.push(text);b.log=b.log.slice(-40);}
   function battleRound(){
@@ -446,7 +558,7 @@ const Game = (() => {
       }else if(order.command==='fallback')r.pos=side==='player'?Math.max(0,r.pos-u.speed):Math.min(b.length,r.pos+u.speed);
       r.pos=Math.max(0,Math.min(b.length,r.pos));r.defending=order.command==='hold';
       if(r.pos!==before)pushLog(b,(side==='player'?'我军':'敌军')+u.name+(order.command==='fallback'?'后退':'向前')+Math.abs(r.pos-before)+'，位置 '+before+' → '+r.pos);
-      if(side==='player'&&SiegeSystem.canHit(r,b)&&(order.target==='gate'||['ram','catapult'].includes(r.id)||!foes.some(t=>Math.abs(t.pos-r.pos)<=u.range))){const damage=SiegeSystem.damage(r),before=b.gate.hp;b.gate.hp=Math.max(0,b.gate.hp-damage);pushLog(b,'我军'+u.name+'攻击'+node.fortification.name+'，伤害 '+Math.min(before,damage)+'，剩余耐久 '+b.gate.hp+'。');if(!b.gate.hp)pushLog(b,'城防已破：守军掩护解除，箭楼停止射击。');continue;}
+      if(side==='player'&&SiegeSystem.canHit(r,b)&&(order.target==='gate'||['ram','catapult'].includes(r.id)||!foes.some(t=>Math.abs(t.pos-r.pos)<=u.range))){const damage=SiegeSystem.damage(r),before=b.gate.hp;b.gate.hp=Math.max(0,b.gate.hp-damage);if(['ram','catapult'].includes(r.id)&&before>b.gate.hp)b.machineGateAttacks=(b.machineGateAttacks||0)+1;pushLog(b,'我军'+u.name+'攻击'+node.fortification.name+'，伤害 '+Math.min(before,damage)+'，剩余耐久 '+b.gate.hp+'。');if(!b.gate.hp)pushLog(b,'城防已破：守军掩护解除，箭楼停止射击。');continue;}
       const inRange=foes.filter(t=>Math.abs(t.pos-r.pos)<=u.range);
       const t=inRange.find(t=>t.id===order.target)||inRange.sort((a,z)=>Math.abs(a.pos-r.pos)-Math.abs(z.pos-r.pos)||a.hp-z.hp)[0];
       if(!t){pushLog(b,(side==='player'?'我军':'敌军')+u.name+'：'+(order.command==='hold'?'坚守阵位，':'')+'射程 '+u.range+' 内没有目标。');continue;}
@@ -483,7 +595,7 @@ const Game = (() => {
     const xp=won?n.level*45:15;HeroSystem.addXp(state,e.general,xp);
     const equipmentResult=won?HeroSystem.drops(state,n.level):{equipmentDrops:[],equipmentDiscarded:0};
     if(stationed)state.expedition=null;else{e.army=back;e.phase='return';e.start=Date.now();e.end=Date.now()+Math.max(1,Math.max(5,n.time/2)/state.speed)*1000;}
-    const warOrder=WarOrders.settle(state,n,won,Date.now(),{round:b.round,army:originalArmy,lost,back,wounded,alive});
+    const warOrder=WarOrders.settle(state,n,won,Date.now(),{round:b.round,machineGateAttacks:b.machineGateAttacks||0,army:originalArmy,lost,back,wounded,alive});
     b.finished=true;b.auto=false;b.result={warOrder,failure,...progressionResult,...equipmentResult,won,mode,returnAfterOccupy:!!e.returnAfterOccupy,claimed,stationed,moraleBefore,moraleAfter,retreated,loot,resourceReceipt,captures,captureDiscarded,itemDrops:drops.items,bonusLoot,bonusDiscarded,cargoCapacity,cargoLoaded:Object.values(loot).reduce((v,n)=>v+n,0)+Object.values(bonusLoot).reduce((v,n)=>v+n,0),lootDiscarded,lost,wounded,back,xp,first:claimed,recruit,overflow,overCapacity};
     state.reports.unshift({id:Date.now(),node:n.id,general:e.general,round:b.round,...b.result});state.reports=state.reports.slice(0,20);
     pushLog(b,n.orderRoute&&won?'军令讨伐成功，军功 +'+warOrder.points+'，已保存；部队返城。':!won?'战斗失利，幸存部队返城整顿。':mode==='raid'?'掠夺成功，未改变领地归属，部队携战利品返城。':stationed?'占领成功，部队留守野地，耗粮翻倍。':claimed?(n.wild&&e.returnAfterOccupy?'占领成功，部队按出征选择返城；野地归属与产量加成保留。':'占领成功，领地归属变更。'):moraleAfter!==null?'攻城获胜，民心 '+moraleBefore+' → '+moraleAfter+'，尚未易主。':'本次战斗结束。');
@@ -522,6 +634,19 @@ const Game = (() => {
   }
   function recruitCaptives(id,count){tick(Date.now(),false);count=Math.floor(count);const q=captiveRecruitQuote(id,count);if(q.reason)return q.reason;
     pay(q.cost);state.population-=q.people;state.captives[id]-=count;state.army[id]+=count;Progression.record(state,'captive_recruit',count);save();return null;
+  }
+  function captiveRecruitAllQuote(){
+    const r=RewardData.captives,cost={food:0,gold:0};let food=Math.max(0,state.res.food),gold=Math.max(0,state.res.gold),peopleLeft=freePopulation(),count=0,people=0;const rows=[];
+    for(const id of r.units){const available=state.captives[id]||0;if(!available)continue;const u=units[id],perPeople=u.people||1,perGold=Math.max(r.minGold,Math.ceil((u.cost.gold||0)*r.goldRatio)),needed=unitRequirements(id);let selected=0,reason='';
+      if(needed)reason='需要 '+needed;else{selected=Math.max(0,Math.min(available,Math.floor(food/r.food),Math.floor(gold/perGold),Math.floor(peopleLeft/perPeople)));if(selected<available)reason='其余俘虏因粮食、黄金或人口不足暂留营中';}
+      rows.push({id,available,count:selected,reason});food-=selected*r.food;gold-=selected*perGold;peopleLeft-=selected*perPeople;count+=selected;people+=selected*perPeople;cost.food+=selected*r.food;cost.gold+=selected*perGold;
+    }
+    const key=JSON.stringify({rows:rows.filter(row=>row.count>0).map(row=>[row.id,row.count]),cost,people});
+    return {rows,count,people,cost,key,reason:count?'':rows.length?'当前没有满足条件且可负担的俘虏':'暂未收容俘虏'};
+  }
+  function recruitAllCaptives(expectedKey){
+    tick(Date.now(),false);const q=captiveRecruitAllQuote();if(typeof expectedKey!=='string'||expectedKey!==q.key)return '招降计划已变化，请重新核对数量和费用';if(q.reason)return q.reason;
+    pay(q.cost);state.population-=q.people;for(const row of q.rows)if(row.count){state.captives[row.id]-=row.count;state.army[row.id]+=row.count;}Progression.record(state,'captive_recruit',q.count);save();return null;
   }
   function releaseCaptives(id,count){tick(Date.now(),false);count=Math.floor(count);if(!RewardData.captives.units.includes(id)||!Number.isSafeInteger(count)||count<1||count>state.captives[id])return '俘虏数量不足';state.captives[id]-=count;save();return null;}
   function battleDropInfo(nodeId){
@@ -677,7 +802,11 @@ const Game = (() => {
   const acceptDaily=uid=>progressionAction('accept',uid),abandonDaily=uid=>progressionAction('abandon',uid),claimDaily=uid=>progressionAction('claim',uid),donateEpic=(kind,id)=>progressionAction('donate',kind,id),exchangeCopper=id=>progressionAction('exchange',id);
   const claimDailyMilestone=count=>progressionAction('claimMilestone',Number(count));
   const claimReadyDaily=()=>progressionAction('claimReady');
-  function reset(){state=newState();save();}
-  return {completeFirstBattleGuide,warOrders:WarOrders,onboarding:OnboardingSystem,buildingConditions,requirementLevel,startCityDefense,cityDefenseRound,endDefenseDrill,brickPurchaseRemaining,grantTestSupplies,captiveCapacity,captiveChance,captiveRecruitQuote,recruitCaptives,releaseCaptives,claimDailyMilestone,claimReadyDaily,defenseCapacity,defenseUsed,defenseRequirements,armyPeople,buildingRuleText,researchRequirements,researchRuleText,buildingRequirements,speedupKey,speedupTargets,speedupQuote,useSpeedup,progression:Progression,acceptDaily,abandonDaily,claimDaily,donateEpic,exchangeCopper,countyUnlocked:()=>Progression.countyUnlocked(state),init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},allExpeditions,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,setAutoResearch,autoResearchStatus,setAutomationSettings,readAutomationNotices,automation:AutomationSystem,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,tradeQuote,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,civicOrderPreview,executeCivicOrder,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setTactic,recall,dismissBattle,claimMission};
+  function reset(){try{replaceSave(newState());return null;}catch(error){return error.message||'重新开始失败';}}
+  const api={saveOfflineInfo:()=>lastOffline,openSaveSession,respondSaveTakeover,saveBlockReason,saveSessionInfo,exportStoredRaw,restoreSaveBackup,takeOverSaveSession,releaseSaveSession,completeFirstBattleGuide,warOrders:WarOrders,onboarding:OnboardingSystem,buildingConditions,requirementLevel,startCityDefense,cityDefenseRound,endDefenseDrill,brickPurchaseRemaining,grantTestSupplies,captiveCapacity,captiveChance,captiveRecruitQuote,captiveRecruitAllQuote,recruitAllCaptives,recruitCaptives,releaseCaptives,claimDailyMilestone,claimReadyDaily,defenseCapacity,defenseUsed,defenseRequirements,armyPeople,buildingRuleText,researchRequirements,researchRuleText,buildingRequirements,speedupKey,speedupTargets,speedupQuote,useSpeedup,progression:Progression,acceptDaily,abandonDaily,claimDaily,donateEpic,exchangeCopper,countyUnlocked:()=>Progression.countyUnlocked(state),init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},allExpeditions,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,setAutoResearch,autoResearchStatus,setAutomationSettings,readAutomationNotices,automation:AutomationSystem,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,tradeQuote,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,civicOrderPreview,executeCivicOrder,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setBattleOrders,setTactic,recall,dismissBattle,claimMission};
+  const actions=['completeFirstBattleGuide','startCityDefense','cityDefenseRound','endDefenseDrill','grantTestSupplies','recruitAllCaptives','recruitCaptives','releaseCaptives','claimDailyMilestone','claimReadyDaily','acceptDaily','abandonDaily','claimDaily','donateEpic','exchangeCopper','selectExpedition','developPlot','recallGarrison','abandonWild','queueBuilding','cancelBuild','demolish','setAutoUpgrade','setAutoResearch','setAutomationSettings','readAutomationNotices','dismissTroops','research','scout','refreshInn','recruit','trade','buyItem','useItem','claimStarterGift','claimReadyMissions','claimTrialGems','setSpeed','setStorage','buildDefense','relocateBuilding','upgrade','train','setGovernor','setTax','executeCivicOrder','dispatch','startBattle','battleRound','setBattleOrder','setBattleOrders','setTactic','recall','dismissBattle','claimMission'];
+  for(const name of actions){const action=api[name];api[name]=(...args)=>{const error=saveBlockReason();if(error)return error;const result=action(...args);return ['write-error','read-error','readonly','conflict'].includes(saveMode)?saveReason:result;};}
+  api.useSpeedup=(...args)=>{const error=saveBlockReason();if(error)return {error};const result=useSpeedup(...args);return saveMode==='active'?result:{error:saveReason};};
+  return api;
 })();
 if(typeof module!=='undefined')module.exports=Game;

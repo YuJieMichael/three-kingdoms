@@ -3,7 +3,7 @@ const {loadGame,city,battle}=require('./helpers/game.cjs');
 const ids={loss:'order_challenge_field_5_preserve',round:'order_challenge_elite_5_swift',engines:'order_challenge_siege_5_engines'};
 const force={shield:350,spear:500,archer:1100,cavalry:150,ram:10,catapult:5};
 function setup(seed=123){const e=loadGame(seed),g=e.Game;city(g,{hall:8,drill:10,house:10,barracks:10,academy:8,smith:8});Object.assign(g.state.conquered,{fort:true,north_keep:true});Object.assign(g.state.army,force);g.state.res.food=1000000;for(const route of ['field','elite','siege']){g.state.warOrders.cleared[route]=5;g.state.warOrders.wins[route]=5;}return e;}
-function evidence(values={}){return {round:6,army:{archer:95,ram:5},lost:{archer:15,ram:0},alive:{archer:80,ram:5},...values};}
+function evidence(values={}){return {round:6,machineGateAttacks:1,army:{archer:95,ram:5},lost:{archer:15,ram:0},alive:{archer:80,ram:5},...values};}
 function settle(e,id,won,context){const g=e.Game;return g.warOrders.settle(g.state,g.getNode(id),won,e.now(),context);}
 function copy(x){return JSON.parse(JSON.stringify(x));}
 

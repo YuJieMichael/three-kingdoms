@@ -20,7 +20,9 @@ const WarOrders=(()=>{
   const challenges=Object.freeze([
     Object.freeze({id:'order_challenge_field_5_preserve',route:'field',tier:5,name:'稳阵保兵',kind:'loss',limit:15,bonus:30,condition:'战胜第 5 阶野战敌军，永久损失不超过出征人数的 15%。',hint:'永久损失按结算战损计算，已救回伤兵不计入；可调整阵型、科技和将领装备。'}),
     Object.freeze({id:'order_challenge_elite_5_swift',route:'elite',tier:5,name:'六回合决胜',kind:'round',limit:6,bonus:40,condition:'在 6 回合以内战胜第 5 阶精锐敌军。',hint:'在射程内集中火力，避免远程在阵地上空等；超过回合条件仍可取得普通胜利。'}),
-    Object.freeze({id:'order_challenge_siege_5_engines',route:'siege',tier:5,name:'护械破城',kind:'engines',limit:80,minimum:5,bonus:40,condition:'派出至少 5 架冲车或投石车，破城歼敌时至少 80% 器械仍在战场存活。',hint:'器械按架数计算；伤兵救回不算战场存活。搭配护卫并关注城防箭楼的射程。'})
+    Object.freeze({id:'order_challenge_siege_5_engines',route:'siege',tier:5,name:'护械破城',kind:'engines',limit:80,minimum:5,bonus:40,condition:'派出至少 5 架冲车或投石车，器械实际攻击城防至少一次，破城歼敌时至少 80% 器械仍在战场存活。',hint:'停在后方而未参与攻城不能达标；器械按架数计算，伤兵救回不算战场存活。搭配护卫并关注城防箭楼的射程。'}),
+    Object.freeze({id:'order_branch_field_10_intercept',route:'field',tier:10,branch:true,name:'截骑护弓',kind:'loss',limit:30,bonus:60,army:Object.freeze({cavalry:500}),condition:'击退 500 轻骑，永久损失不超过出征人数的 30%。',hint:'枪兵克制轻骑，可在弓阵前接住冲锋；弓兵继续担当输出。先比较战损和补兵成本，再决定护卫人数。'}),
+    Object.freeze({id:'order_branch_elite_10_flank',route:'elite',tier:10,branch:true,name:'疾袭弩阵',kind:'swift_loss',limit:15,maxRound:2,bonus:70,army:Object.freeze({ballista:200}),condition:'在 2 回合内击败 200 床弩，永久损失不超过出征人数的 15%。',hint:'轻骑的速度能及时接近长射程弩阵；纯弓能速胜但可能损失较高，慢护卫更省兵却可能超时。可用科技、装备或指挥尝试其他解法。'})
   ]);
   const targets=Object.fromEntries(Object.entries(routes).flatMap(([route,spec])=>Array.from({length:MAX_TIER},(_,i)=>{
     const tier=i+1,champion=tier===5||tier===10,factor=1+i*.16,plan=spec.plans[i%spec.plans.length];
@@ -29,14 +31,14 @@ const WarOrders=(()=>{
     if(route==='siege')node.fortification={name:champion?'重垒门墙':'营寨门墙',hp:12000+i*3500+(champion?6000:0),protection:1.4,tower:400+i*70,range:1100};
     return [id,node];
   })));
-  for(const c of challenges){const base=targets[`order_${c.route}_${c.tier}`];targets[c.id]=Object.freeze({...base,id:c.id,name:c.name+' · 第 '+c.tier+' 阶战术挑战',challengeId:c.id,desc:c.condition+' '+c.hint,army:Object.freeze({...base.army}),loot:Object.freeze({...base.loot}),commander:Object.freeze({...base.commander}),...(base.fortification?{fortification:Object.freeze({...base.fortification})}:{}),reward:'胜利获得普通军功；首次达成战术条件额外获得 '+c.bonus+' 军功。'});}
+  for(const c of challenges){const base=targets[`order_${c.route}_${c.tier}`];targets[c.id]=Object.freeze({...base,id:c.id,name:c.name+' · '+(c.branch?'进阶分支':'第 '+c.tier+' 阶战术挑战'),challengeId:c.id,desc:c.condition+' '+c.hint,army:Object.freeze({...(c.army||base.army)}),loot:Object.freeze({...base.loot}),commander:Object.freeze(c.branch?{name:c.kind==='loss'?'游骑统领':'弩阵校尉',title:'分支守将',attack:1,defense:1,order:'advance'}:{...base.commander}),...(base.fortification?{fortification:Object.freeze({...base.fortification})}:{}),reward:'胜利获得普通军功；首次达成战术条件额外获得 '+c.bonus+' 军功。'});}
   function init(s){if(s.warOrders===undefined)s.warOrders={schema:1,merit:0,earned:0,spent:0,cleared:{field:0,siege:0,elite:0},wins:{field:0,siege:0,elite:0},nextAt:{field:0,siege:0,elite:0},last:null};if(s.warOrders&&typeof s.warOrders==='object'&&!Array.isArray(s.warOrders)&&s.warOrders.challenges===undefined)s.warOrders.challenges={schema:1,completed:{},earned:0,lastAttempts:{}};}
   function getNode(id){return Object.hasOwn(targets,id)?targets[id]:null;}
   function challenge(id){return challenges.find(c=>c.id===id)||null;}
   function points(n,first=false){const base=12+4*n.orderTier+(n.orderRoute==='siege'?4:n.orderRoute==='elite'?8:0);return base*(first?2:1);}
   const int=n=>Number.isSafeInteger(n)&&n>=0,object=o=>!!o&&typeof o==='object'&&!Array.isArray(o);
-  function challengeMet(c,a){if(!a.won||!a.deployed)return false;if(c.kind==='loss')return a.lost<=Math.floor(a.deployed*c.limit/100);if(c.kind==='round')return a.round<=c.limit;return a.machines>=c.minimum&&a.machineAlive>=Math.ceil(a.machines*c.limit/100);}
-  function validAttempt(a,c){return object(a)&&a.id===c.id&&typeof a.won==='boolean'&&typeof a.met==='boolean'&&['round','deployed','lost','machines','machineAlive'].every(k=>int(a[k]))&&(a.round>=1||!a.won)&&a.round<=30&&a.lost<=a.deployed&&a.machines<=a.deployed&&a.machineAlive<=a.machines&&a.machineAlive<=a.deployed-a.lost&&a.met===challengeMet(c,a);}
+  function challengeMet(c,a){if(!a.won||!a.deployed)return false;if(c.kind==='loss')return a.lost<=Math.floor(a.deployed*c.limit/100);if(c.kind==='round')return a.round<=c.limit;if(c.kind==='swift_loss')return a.round<=c.maxRound&&a.lost<=Math.floor(a.deployed*c.limit/100);return a.machines>=c.minimum&&a.machineAlive>=Math.ceil(a.machines*c.limit/100)&&(a.rulesVersion===undefined||a.machineGateAttacks>0);}
+  function validAttempt(a,c){return object(a)&&a.id===c.id&&typeof a.won==='boolean'&&typeof a.met==='boolean'&&(a.rulesVersion===undefined?!c.branch&&a.machineGateAttacks===undefined:a.rulesVersion===2&&int(a.machineGateAttacks)&&a.machineGateAttacks<=a.round*2)&&['round','deployed','lost','machines','machineAlive'].every(k=>int(a[k]))&&(a.round>=1||!a.won)&&a.round<=30&&a.lost<=a.deployed&&a.machines<=a.deployed&&a.machineAlive<=a.machines&&a.machineAlive<=a.deployed-a.lost&&(!a.machineGateAttacks||a.machines>0)&&a.met===challengeMet(c,a);}
   function validReceipt(r){
     if(r===undefined||r===null)return true;
     const n=getNode(r.node);if(!n||r.route!==n.orderRoute||r.tier!==n.orderTier||typeof r.first!=='boolean')return false;
@@ -70,7 +72,7 @@ const WarOrders=(()=>{
     const c=challenge(n.challengeId),sum=a=>Object.values(a||{}).reduce((total,value)=>total+value,0),army=context?.army,lost=context?.lost,alive=context?.alive;
     const counts=a=>object(a)&&Object.keys(a).every(id=>Object.hasOwn(ManualData.units,id))&&Object.values(a).every(int)&&int(sum(a));
     const validContext=context&&int(context.round)&&(context.round>=1||!won)&&context.round<=30&&counts(army)&&counts(lost)&&counts(alive)&&sum(army)>0&&sum(lost)<=sum(army)&&sum(alive)<=sum(army)&&Object.keys(ManualData.units).every(id=>(lost[id]||0)+(alive[id]||0)<=(army[id]||0));
-    const a={id:c.id,won:!!won,met:false,round:validContext?context.round:30,deployed:validContext?sum(army):0,lost:validContext?sum(lost):0,machines:validContext?(army.ram||0)+(army.catapult||0):0,machineAlive:validContext?(alive.ram||0)+(alive.catapult||0):0};a.met=challengeMet(c,a);return a;
+    const a={id:c.id,rulesVersion:2,machineGateAttacks:validContext&&int(context.machineGateAttacks)&&context.machineGateAttacks<=context.round*2?context.machineGateAttacks:0,won:!!won,met:false,round:validContext?context.round:30,deployed:validContext?sum(army):0,lost:validContext?sum(lost):0,machines:validContext?(army.ram||0)+(army.catapult||0):0,machineAlive:validContext?(alive.ram||0)+(alive.catapult||0):0};a.met=challengeMet(c,a);return a;
   }
   function settle(s,n,won,now,context){
     if(!n.orderRoute)return null;

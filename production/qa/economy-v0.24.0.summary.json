@@ -1,0 +1,322 @@
+{
+  "baseSha": "baca347b116d4f54d0eac2792c7b49faff1bc3c6",
+  "version": "v0.24.0",
+  "method": "Normal APIs and immediate actions; hourly simulation advances; speed=1; earned gifts and speedups; fixed policy with no governor-point allocations.",
+  "milestones": {
+    "archer": {
+      "before": {
+        "hours": 0.8302213888888889,
+        "initialGold": 5000,
+        "giftGold": 30000,
+        "missionGold": 771000,
+        "naturalGold": 8.598028328633518,
+        "spentGold": 51460,
+        "remainingGold": 754548.5980283286,
+        "remainingGoldReconciles": true,
+        "naturalResources": {
+          "food": 0,
+          "wood": 0,
+          "stone": 0,
+          "iron": 0,
+          "gold": 8.598028328633518
+        },
+        "missionResources": {
+          "food": 324000,
+          "wood": 312000,
+          "stone": 474500,
+          "iron": 295500,
+          "gold": 771000
+        }
+      },
+      "after": {
+        "hours": 0.8302213888888889,
+        "initialGold": 5000,
+        "giftGold": 30000,
+        "missionGold": 115650,
+        "naturalGold": 8.598028328480723,
+        "spentGold": 51460,
+        "remainingGold": 99198.59802832849,
+        "remainingGoldReconciles": true,
+        "naturalResources": {
+          "food": 0,
+          "wood": 0.0004493246142374119,
+          "stone": 0,
+          "iron": 216.24259778408305,
+          "gold": 8.598028328480723
+        },
+        "missionResources": {
+          "food": 12960,
+          "wood": 12480,
+          "stone": 18980,
+          "iron": 11820,
+          "gold": 115650
+        }
+      }
+    },
+    "first-battle": {
+      "before": {
+        "hours": 0.8343891666666666,
+        "initialGold": 5000,
+        "giftGold": 30000,
+        "missionGold": 870000,
+        "naturalGold": 8.78986404837633,
+        "spentGold": 53460,
+        "remainingGold": 851548.7898640484,
+        "remainingGoldReconciles": true,
+        "naturalResources": {
+          "food": 0,
+          "wood": 0,
+          "stone": 0,
+          "iron": 0,
+          "gold": 8.78986404837633
+        },
+        "missionResources": {
+          "food": 354500,
+          "wood": 338000,
+          "stone": 505000,
+          "iron": 318500,
+          "gold": 870000
+        }
+      },
+      "after": {
+        "hours": 0.8343891666666666,
+        "initialGold": 5000,
+        "giftGold": 30000,
+        "missionGold": 193400,
+        "naturalGold": 8.789864048310847,
+        "spentGold": 53460,
+        "remainingGold": 174948.7898640483,
+        "remainingGoldReconciles": true,
+        "naturalResources": {
+          "food": 0,
+          "wood": 1.850109102391798,
+          "stone": 0,
+          "iron": 216.24259778408305,
+          "gold": 8.789864048310847
+        },
+        "missionResources": {
+          "food": 33860,
+          "wood": 28880,
+          "stone": 39880,
+          "iron": 25220,
+          "gold": 193400
+        }
+      }
+    },
+    "ten-gifts": {
+      "before": {
+        "hours": 42.99169861111111,
+        "initialGold": 5000,
+        "giftGold": 1000000,
+        "missionGold": 2513000,
+        "naturalGold": 2837.2950085234042,
+        "spentGold": 1216265,
+        "remainingGold": 2304572.2950085234,
+        "remainingGoldReconciles": true,
+        "naturalResources": {
+          "food": 0,
+          "wood": 8342.442929333729,
+          "stone": 8342.442929333729,
+          "iron": 0,
+          "gold": 2837.2950085234042
+        },
+        "missionResources": {
+          "food": 900500,
+          "wood": 884000,
+          "stone": 1309000,
+          "iron": 864500,
+          "gold": 2513000
+        }
+      },
+      "after": {
+        "hours": 42.99169861111111,
+        "initialGold": 5000,
+        "giftGold": 1000000,
+        "missionGold": 1577650,
+        "naturalGold": 2837.2950083897667,
+        "spentGold": 2187304,
+        "remainingGold": 398183.29500838986,
+        "remainingGoldReconciles": true,
+        "naturalResources": {
+          "food": 0,
+          "wood": 8344.29328499168,
+          "stone": 8342.442929333729,
+          "iron": 216.24259778408305,
+          "gold": 2837.2950083897667
+        },
+        "missionResources": {
+          "food": 495380,
+          "wood": 490400,
+          "stone": 731560,
+          "iron": 486740,
+          "gold": 1577650
+        }
+      }
+    }
+  },
+  "twelveSeeds": [
+    {
+      "seed": 1,
+      "hours": 34.99169861111111,
+      "gold": 347442.6950083921,
+      "hallTenWaitHours": 10.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 2,
+      "hours": 34.99169861111111,
+      "gold": 397442.6950083921,
+      "hallTenWaitHours": 10.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 3,
+      "hours": 34.99169861111111,
+      "gold": 347442.6950083921,
+      "hallTenWaitHours": 10.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 4,
+      "hours": 32.37372083333334,
+      "gold": 347266.76694911916,
+      "hallTenWaitHours": 10.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 5,
+      "hours": 42.99169861111111,
+      "gold": 347980.29500838986,
+      "hallTenWaitHours": 18.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 6,
+      "hours": 34.99169861111111,
+      "gold": 347442.6950083921,
+      "hallTenWaitHours": 10.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 7,
+      "hours": 42.99169861111111,
+      "gold": 347980.29500838986,
+      "hallTenWaitHours": 18.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 8,
+      "hours": 42.99169861111111,
+      "gold": 347980.29500838986,
+      "hallTenWaitHours": 18.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 18,
+      "hours": 26.99169861111111,
+      "gold": 397109.09500839433,
+      "hallTenWaitHours": 2.7977533333333335,
+      "validSave": true
+    },
+    {
+      "seed": 123,
+      "hours": 42.99169861111111,
+      "gold": 398183.29500838986,
+      "hallTenWaitHours": 18.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 456,
+      "hours": 34.99169861111111,
+      "gold": 397442.6950083921,
+      "hallTenWaitHours": 10.797753333333333,
+      "validSave": true
+    },
+    {
+      "seed": 9876,
+      "hours": 34.99169861111111,
+      "gold": 397442.6950083921,
+      "hallTenWaitHours": 10.797753333333333,
+      "validSave": true
+    }
+  ],
+  "slowOpening": {
+    "hours": 13.64833,
+    "beforeNatural": {
+      "food": 0,
+      "wood": 0,
+      "stone": 0,
+      "iron": 0,
+      "gold": 450.0207275998182
+    },
+    "afterNatural": {
+      "food": 0,
+      "wood": 2303.7303569314663,
+      "stone": 0,
+      "iron": 883.9938989251386,
+      "gold": 450.02072755948393
+    }
+  },
+  "optionalPolitics": {
+    "hours": 23.331918055555555,
+    "gold": 396862.650081801
+  },
+  "camp": {
+    "openingHours": 42.99169861111111,
+    "continuationMinutes": 0.5501,
+    "rounds": 4,
+    "loss": 0,
+    "army": 100,
+    "next": {
+      "kind": "epic",
+      "id": "kills",
+      "title": "开放县城 · 讨伐黄巾",
+      "reason": "掠夺野地／黄巾据点，胜利缴获黄巾头巾 25 / 1500 件头巾。四项史诗完成后才能攻打古渡县城；捐献士兵会离队，请保留出征主力。",
+      "progress": 1,
+      "route": "epic",
+      "shortages": [],
+      "phase": "campaign"
+    },
+    "validSave": true
+  },
+  "chapterCampaign": [
+    {
+      "speed": 1,
+      "totalHours": 119.1622585820855,
+      "preparationHours": 76.2542710917155,
+      "purchases": 13,
+      "spent": {
+        "food": 1412900,
+        "wood": 1848970,
+        "stone": 324105,
+        "iron": 1200590,
+        "gold": 334859
+      },
+      "allWins": true,
+      "validSave": true,
+      "checkpoint": "fort ownership only"
+    },
+    {
+      "speed": 60,
+      "totalHours": 2.2559353990342883,
+      "preparationHours": 1.2700114734564887,
+      "purchases": 22,
+      "spent": {
+        "food": 1412900,
+        "wood": 1848970,
+        "stone": 324105,
+        "iron": 1200590,
+        "gold": 538777
+      },
+      "allWins": true,
+      "validSave": true,
+      "checkpoint": "fort ownership only"
+    }
+  ],
+  "limits": [
+    "Simulation excludes human interaction time and does not model online user behavior.",
+    "Hourly advancement avoids the long-jump offline settlement cap; single long-jump result is kept separately in routes.json.",
+    "Twelve seeds are deterministic sampling, not a distribution of real players.",
+    "Browser rebased checkpoints are UI fixtures only and do not provide timing evidence."
+  ]
+}

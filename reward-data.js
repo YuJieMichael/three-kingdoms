@@ -4,13 +4,16 @@ const RewardData = {
   dailyBrickLimit:10,
   testSupplyAmount:1000000,
   constructionStoneFactor:1.5,
+  // Growth tasks complement the ten hall gifts. Early prerequisites no longer
+  // each pay another full development budget; later hall rewards fund trade.
+  missionTuning:{opening:{gold:.15,resources:.04},hall:{gold:1,resources:1},advanced:{gold:.8,resources:1}},
   goldBricks:[
     {id:'goldBrick',name:'金砖',price:50,gold:50000},
     {id:'goldBrickLarge',name:'大金砖',price:180,gold:200000}
   ],
   captives:{baseChance:.3,perLevel:.02,maxChance:.5,minRatio:.03,maxRatio:.08,escortRatio:.25,maxPerBattle:300,maxCapacity:5000,food:50,goldRatio:.5,minGold:20,units:['militia','spear','shield','archer','cavalry','heavy']},
   extendMissions(missions){
-    // Stable old IDs keep earlier claims collected; improved rewards apply to unclaimed missions.
+    // Stable old IDs keep earlier claims collected; retuned rewards apply to unclaimed missions.
     for(const m of missions)m.reward=Object.fromEntries(Object.entries(m.reward).map(([id,n])=>[id,Math.round(n*(id==='gold'?2:1.5))]));
     const supply=(n,g)=>({food:n,wood:n,stone:n,iron:n,gold:g});
     const add=(id,stage,title,desc,route,check,reward,items={})=>missions.push({id,stage,title,desc,route,check,reward,items});
@@ -77,6 +80,15 @@ const RewardData = {
     for(const m of missions){
       const base=Math.max(m.reward.stone||0,m.reward.food||0,m.reward.wood||0,m.reward.iron||0);
       m.reward.stone=Math.ceil(base*(['立城补给','城池经营'].includes(m.stage)?this.constructionStoneFactor:1));
+      const economy=['立城补给','城池经营','书院研习','整军出征'].includes(m.stage);
+      if(economy){
+        const hall=/^hall_(\d+)$/.test(m.id),advanced=/^expand_.+_(5|8)$/.test(m.id)||/^specialize_.+_5$/.test(m.id)||/^researchTotal(25|50|100)$/.test(m.id)||/^trained_(1000|2000|5000|10000)$/.test(m.id)||['formation_front','formation_archer','formation_cavalry','formation_mixed'].includes(m.id),rule=this.missionTuning[hall?'hall':advanced?'advanced':'opening'];
+        m.reward=Object.fromEntries(Object.entries(m.reward).map(([id,n])=>[id,Math.round(n*(id==='gold'?rule.gold:rule.resources))]));
+        // Put the final hall's trade budget before construction rather than
+        // awarding money only after the expensive project has been paid for.
+        if(m.id==='hall_8'){m.reward.gold+=300000;m.desc+='；备齐后续官府工程的市场采购资金';}
+        if(m.id==='hall_10')m.reward.gold=0;
+      }
     }
   }
 };

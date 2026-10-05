@@ -4,6 +4,12 @@ const GrowthGuide=(()=>{
   function resources(game,cost){const rates=game.rates(),missing=Object.entries(cost||{}).filter(([id,n])=>game.state.res[id]<n).map(([id,n])=>({id,amount:Math.ceil(n-game.state.res[id]),blocked:n>game.capacity(id)||rates[id]<=0,seconds:rates[id]>0?Math.ceil((n-game.state.res[id])/rates[id]*60):null}));return {missing,seconds:missing.some(x=>x.blocked)?null:Math.max(0,...missing.map(x=>x.seconds))};}
   function held(game,id){const s=game.state;return s.army[id]+[...game.allExpeditions(),...Object.values(s.garrisons)].reduce((n,e)=>n+(e.army[id]||0),0);}
   function archerComplete(game){const s=game.state;return held(game,'archer')>=OnboardingData.archerTarget||(s.activityMetrics.train_archer||0)>=OnboardingData.archerTarget||s.missionClaims.includes('army_archer');}
+  function governorAdvice(game){
+    const s=game.state,id=s.governor,points=HeroSystem.remaining(s,id);if(points<1)return null;
+    const g=game.general(id),base=game.generals.find(h=>h.id===id),plain=(base?.pol||0)+HeroSystem.bonus(s,id).pol,multiplier=plain?g.pol/plain:1;
+    const before=1+s.tech.construction*.1+g.pol/100,after=before+points*multiplier/100;
+    return {id,name:g.name,points,pol:g.pol,nextPol:g.pol+points*multiplier,reduction:(1-before/after)*100};
+  }
   function model(game){
     const s=game.state,gift=OnboardingSystem.available(s)[0];
     if(gift)return {kind:'gift',id:gift.level,title:'领取第 '+gift.level+' 阶 · '+gift.title,reason:'官府等级已达标，领取资源和道具，为下一段成长备齐补给。'};
@@ -64,12 +70,38 @@ const GrowthGuide=(()=>{
       if(s.tactics.archer.command!=='advance')return {kind:'tactics',id:'archer',title:'设置弓兵向前，进入射程再坚守',reason:'出征战术中为弓箭兵选择「向前」。战场内可随时改令；「坚守」适合敌军已在射程内时保持距离。不会替你修改保存的战术。'};
       return {kind:'dispatch',id:target,general:free[0],count:OnboardingData.archerTarget,cost:{food:Math.ceil(OnboardingData.archerTarget*1.2+n.time*2)},title:'选择主将与弓兵，确认河畔荒田首战',reason:'查看情报后先掠夺练习：选空闲主将与 30 弓兵，斥候留城。已有枪兵可少量保护前排；确认人数、行军粮食和实际入库预览后开始行军。'};
     }
+    function campaign(){
+      if(s.cityDefense.battle||s.battle&&!s.battle.finished||game.allExpeditions().length){const goal=firstBattle();return {...goal,title:goal.title.replaceAll('首胜','战斗').replaceAll('首战','当前作战')};}
+      const reward=game.missions.find(m=>m.chapter&&game.missionReady(m));if(reward)return {kind:'campaignReward',id:reward.id,chapter:reward.chapter,title:'领取'+reward.title+'通关补给',reason:'已占领据点，领取一次性资源、珍宝和援军，再准备下一关。奖励预览和领取状态保留。'};
+      let id,chapter=1;
+      if(!s.conquered.camp)id='camp';
+      else if(!s.conquered.fort){
+        if(!game.countyUnlocked()){const groups=game.progression.groups(s),group=groups.find(g=>g.progress<1);return {kind:'epic',id:group.id,title:'开放县城 · '+group.name,reason:group.detail+'。四项史诗完成后才能攻打古渡县城；捐献士兵会离队，请保留出征主力。',progress:Math.min(100,Math.floor(group.progress*100)),route:'epic',shortages:group.id==='resources'?Object.keys(game.progression.resourceDonations).filter(key=>s.epic.resources[key]<100000).map(key=>({id:key,amount:Math.max(0,100000-s.res[key])})):[]};}
+        id='fort';
+      }else{chapter=ChapterData.completed(s,2)?3:2;id=ChapterData.progress(s,chapter).next?.id;}
+      if(!id){
+        const route=Object.keys(game.warOrders.routes).find(r=>s.warOrders.cleared[r]<10);
+        if(route){const tier=s.warOrders.cleared[route]+1;return {kind:'orders',id:'order_'+route+'_'+tier,route,tier,title:'军令进阶 · '+game.warOrders.routes[route].name+'第 '+tier+' 阶',reason:'河洛已平定，继续三路军令。查看守军组成与攻城要求，补充永久损失、调整配兵；首通双倍军功可兑换加速、珠宝和装备。'};}
+        const challenge=game.warOrders.challenges.find(c=>!s.warOrders.challenges.completed[c.id]);if(challenge)return {kind:'orders',id:challenge.id,route:challenge.route,title:'战术挑战 · '+challenge.name,reason:challenge.condition+'首次达标奖励军功 '+challenge.bonus+'；普通胜利保留基础收益。'};
+        return {kind:'orders',id:'repeat',title:'军令循环 · 选择补给与战术目标',reason:'三路十阶与全部战术挑战已达成。按军功兑换需求选择复战路线；培养将领、强化装备，并留意补兵资源与耗粮。'};
+      }
+      const n=game.getNode(id),archers=id==='camp'?100:id==='fort'?300:chapter===2?700:1100,front=id==='camp'?0:id==='fort'?60:chapter===2?250:350,technology=id==='camp'?2:id==='fort'?3:5;
+      for(const [tech,level]of [['combat',technology],['shooting',technology],...(front?[['protection',technology]]:[])]){const goal=resolve('tech',tech,level);if(goal)return {...goal,reason:'准备'+n.name+'：提升弓兵输出与前排防护；'+goal.reason};}
+      for(const [unit,count]of [['archer',archers],...(front?[['shield',front]]:[]),...(n.fortification?[['ram',5]]:[])]){
+        if(s.army[unit]<count){const away=Object.entries(s.garrisons).find(([,g])=>g.army[unit]>0);if(away)return {kind:'garrison',id:away[0],title:'查看外驻'+game.units[unit].name+'，准备'+n.name,reason:'该兵种已有部队在外驻守；可先收获采集并召回，或保留驻军另行练兵。不要将驻军误当成损失。'};}
+        if(s.army[unit]>=count)continue;
+        for(const [building,level]of Object.entries(game.units[unit].requires.buildings)){const goal=resolve('building',building,level);if(goal)return goal;}
+        for(const [tech,level]of Object.entries(game.units[unit].requires.tech)){const goal=resolve('tech',tech,level);if(goal)return goal;}
+        const goal=train(unit,count,'准备'+n.name+'：建议驻城'+game.units[unit].name+' '+count+' 名，当前 '+s.army[unit]+' 名。这是配兵准备参考，胜负还取决于指令、科技、将领和战场。');if(goal)return goal;
+      }
+      return {kind:'campaign',id,chapter,title:'占领'+n.name+'，推进'+(chapter===1?'第一章':ChapterData.chapterTitle(chapter)),reason:n.desc+'查看敌军、配兵与预计战利品，再自行确认占领；掠夺不推进章节。'+(n.fortification?'必须破城并歼敌，器械需要前排保护。':'弓兵为主力，按敌军组成安排前排。'),army:{archer:archers,...(front?{shield:front}:{})}};
+    }
     if(phase==='battle')return {...firstBattle(),phase};
-    if(phase==='hall'){if(s.buildings.hall<10){const goal=resolve('building','hall',s.buildings.hall+1);if(goal)return {...goal,phase,reason:'弓兵已经成队。推进官府 '+(s.buildings.hall+1)+' 级，解锁下一阶补给；'+goal.reason};}return {kind:'complete',phase,title:'十阶成长达成，继续经略州县',reason:'弓兵负责远程输出，步兵保护前排。继续科技、将领、装备与章节征战。'};}
+    if(phase==='hall'){if(s.buildings.hall<10){const goal=resolve('building','hall',s.buildings.hall+1);if(goal)return {...goal,phase,reason:'弓兵已经成队。推进官府 '+(s.buildings.hall+1)+' 级，解锁下一阶补给；'+goal.reason};}return {...campaign(),phase:'campaign'};}
     for(const [id,level]of [['house',2],['farm',1],['lumber',2],['quarry',2],['mine',3],['hall',2],['barracks',4],['academy',4]]){const goal=resolve('building',id,level);if(goal)return goal;}
     for(const [id,level]of [['training',4],['shooting',1]]){const goal=resolve('tech',id,level);if(goal)return goal;}
     return train('archer',OnboardingData.archerTarget,'义兵可临时补充兵力；弓箭兵是这条成长路线的远程主力，仍需步兵保护。');
   }
   function key(game){const m=model(game);return JSON.stringify([m.kind,m.phase,m.id,m.level,m.site,m.count,m.queue?.end,m.end,m.inRange,m.command,m.promotionReady,m.cost&&game.canPay(m.cost),m.people]);}
-  return {resources,held,archerComplete,model,key};
+  return {resources,held,archerComplete,governorAdvice,model,key};
 })();

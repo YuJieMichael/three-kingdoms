@@ -1,6 +1,6 @@
 {
   "name": "three-kingdoms-city",
-  "version": "0.23.5",
+  "version": "0.24.0",
   "private": true,
   "description": "三国城志：单机 PVE 策略游戏原型",
   "scripts": {

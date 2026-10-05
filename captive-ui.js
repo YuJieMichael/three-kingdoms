@@ -1,7 +1,14 @@
 'use strict';
+let captiveAllPlan=null;
 function captiveSummaryHTML(){const count=Game.totalArmy(S().captives);return `<section class="panel"><div class="section-title"><h3>俘虏营 · ${num(count)} / ${num(Game.captiveCapacity())}</h3>${btn('管理俘虏','captiveCamp','','small secondary')}</div><p class="hint">战胜敌军有机会获得降卒。招降消耗粮食、黄金和空闲人口，随后直接加入驻城军队。未招降的俘虏不耗粮、不参与战斗。</p></section>`;}
 function captiveCampModal(){const s=S(),rows=RewardData.captives.units.filter(id=>s.captives[id]>0);
-  showModal('军队 · 俘虏营',`<div class="quest-summary"><strong>收容 ${num(Game.totalArmy(s.captives))} / ${num(Game.captiveCapacity())} 人</strong><span>空闲人口 ${num(Game.freePopulation())}</span></div><p class="notice">胜利收容概率 30%–50%，随敌军等级增加。成功时可收容敌军的约 3%–8%；押解人数最多为幸存我军的 25%，每战不超过 300 人，超出营地容量者会被释放。县城临时义兵与运输、侦察、器械单位不作为俘虏。</p><p class="hint">收容容量 = 官府等级 ×100 + 校场等级 ×50（最低 100，最高 5,000）。招降须满足对应兵种的建筑与科技条件；每人花费粮食 50、黄金为原训练价的一半且至少 20，并消耗该兵种所需人口。招降立即归队；释放没有资源奖励。</p>${rows.length?rows.map(id=>{const u=Game.units[id],q=Game.captiveRecruitQuote(id,1);return `<article class="quest-card"><div class="quest-heading"><h3>${troopPortrait(id,'unit-portrait-small')}${u.name}</h3><span class="badge">${num(s.captives[id])} 名</span></div>${costs(q.cost)}<p class="hint">每人需要 ${q.people} 空闲人口${q.reason?' · '+esc(q.reason):''}</p><div class="quest-actions">${btn('选择招降数量','captiveRecruitPlan',id,'small',!!q.reason)}${btn('释放俘虏','captiveReleasePlan',id,'small secondary')}</div></article>`;}).join(''):'<div class="empty">暂未收容俘虏。赢得野地或据点战斗后，有机会带回降卒。</div>'}`,btn('前往军队','captiveArmy','','secondary')+btn('关闭','close','','secondary'));manualModalContext=captiveCampModal;
+  captiveAllPlan=null;
+  showModal('军队 · 俘虏营',`<div class="quest-summary"><strong>收容 ${num(Game.totalArmy(s.captives))} / ${num(Game.captiveCapacity())} 人</strong><span>空闲人口 ${num(Game.freePopulation())}</span></div><p class="notice">胜利收容概率 30%–50%，随敌军等级增加。成功时可收容敌军的约 3%–8%；押解人数最多为幸存我军的 25%，每战不超过 300 人，超出营地容量者会被释放。县城临时义兵与运输、侦察、器械单位不作为俘虏。</p><p class="hint">收容容量 = 官府等级 ×100 + 校场等级 ×50（最低 100，最高 5,000）。招降须满足对应兵种的建筑与科技条件；每人花费粮食 50、黄金为原训练价的一半且至少 20，并消耗该兵种所需人口。招降立即归队；释放没有资源奖励。</p>${rows.length?rows.map(id=>{const u=Game.units[id],q=Game.captiveRecruitQuote(id,1);return `<article class="quest-card"><div class="quest-heading"><h3>${troopPortrait(id,'unit-portrait-small')}${u.name}</h3><span class="badge">${num(s.captives[id])} 名</span></div>${costs(q.cost)}<p class="hint">每人需要 ${q.people} 空闲人口${q.reason?' · '+esc(q.reason):''}</p><div class="quest-actions">${btn('选择招降数量','captiveRecruitPlan',id,'small',!!q.reason)}${btn('释放俘虏','captiveReleasePlan',id,'small secondary')}</div></article>`;}).join(''):'<div class="empty">暂未收容俘虏。赢得野地或据点战斗后，有机会带回降卒。</div>'}`,btn('一键招降 · 先看报价','captiveRecruitAllPlan','','',!rows.length)+btn('前往军队','captiveArmy','','secondary')+btn('关闭','close','','secondary'));manualModalContext=captiveCampModal;
+}
+function captiveRecruitAllModal(){
+  const q=Game.captiveRecruitAllQuote();captiveAllPlan=q;
+  showModal('俘虏营 · 一键招降预览',`<div class="quest-summary"><strong>本次招降 ${num(q.count)} 人</strong><span>使用 ${num(q.people)} 空闲人口</span></div><p class="notice">按下列兵种顺序，招降当前满足前置且能负担的最大人数。未解锁或材料、人口不足的俘虏仍留在营中。</p>${q.rows.map(row=>`<article class="quest-card"><div class="quest-heading"><h3>${Game.units[row.id].name}</h3><span class="badge">招降 ${num(row.count)} / 收容 ${num(row.available)}</span></div>${row.reason?`<p class="hint">${esc(row.reason)}</p>`:''}</article>`).join('')}${costs(q.cost)}<p class="hint">确认后一次扣除上列粮食、黄金和人口，降卒立即归队并开始耗粮。${q.reason?esc(q.reason):'确认时会重新核对，数量或费用发生变化需再次确认。'}</p>`,btn('返回俘虏营','captiveCamp','','secondary')+btn('确认一键招降 · '+num(q.count)+' 人','captiveRecruitAll','','',!!q.reason));
+  manualModalContext=captiveRecruitAllModal;
 }
 function captivePlan(id,release=false){const count=S().captives[id]||0,u=Game.units[id];if(!count||!u){toast('俘虏已处理');captiveCampModal();return;}
   let max=count;if(!release){const q=Game.captiveRecruitQuote(id,1);max=Math.max(0,Math.min(count,Math.floor(Game.freePopulation()/q.people),...Object.entries(q.cost).map(([k,n])=>Math.floor(S().res[k]/n))));}
@@ -14,6 +21,8 @@ document.addEventListener('click',event=>{const el=event.target.closest('[data-a
   if(a==='captiveCamp')captiveCampModal();
   if(a==='captiveRecruitPlan')captivePlan(id);
   if(a==='captiveReleasePlan')captivePlan(id,true);
+  if(a==='captiveRecruitAllPlan')captiveRecruitAllModal();
+  if(a==='captiveRecruitAll'){const error=Game.recruitAllCaptives(captiveAllPlan?.key);if(actResult(error,'降卒已按预览加入驻城军队'))captiveCampModal();else captiveRecruitAllModal();}
   if(a==='captiveRecruit'||a==='captiveRelease'){const count=Number(document.getElementById('captive-count')?.value),error=a==='captiveRecruit'?Game.recruitCaptives(id,count):Game.releaseCaptives(id,count);if(actResult(error,a==='captiveRecruit'?'降卒已加入驻城军队':'俘虏已释放'))captiveCampModal();}
   if(a==='captiveArmy'){modal.close();page='army';render();}
 });
