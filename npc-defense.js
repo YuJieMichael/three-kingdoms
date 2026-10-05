@@ -3,7 +3,23 @@ const NPCDefense=(()=>{
   const C=NPCDefenseData;
   const total=a=>Object.values(a).reduce((sum,n)=>sum+n,0);
   const blank=units=>Object.fromEntries(Object.keys(units).map(id=>[id,0]));
-  function init(s){if(s.cityDefense===undefined)s.cityDefense={nextAt:0,wave:0,wins:0,incoming:null,battle:null,reports:[]};}
+  function init(s){
+    if(s.cityDefense===undefined)s.cityDefense={autoEnabled:false,nextAt:0,wave:0,wins:0,incoming:null,battle:null,reports:[]};
+    else if(s.cityDefense&&typeof s.cityDefense==='object'&&s.cityDefense.autoEnabled===undefined)s.cityDefense.autoEnabled=true;
+  }
+  const unlocked=s=>s.buildings.hall>=C.unlockHall&&s.stats.victories>=1;
+  function requestChallenge(s,now){
+    const d=s.cityDefense;if(!unlocked(s))return '官府达到 2 级并赢得一次出征后可发起黄巾挑战';
+    if(d.incoming||d.battle)return '已有来袭或守城战，请先处理当前事件';
+    d.incoming=makeWave(s,now);d.wave=d.incoming.wave;d.nextAt=0;return null;
+  }
+  function setAutomatic(s,now,enabled){
+    if(typeof enabled!=='boolean')return '请选择是否开启周期来袭';
+    if(enabled&&!unlocked(s))return '官府达到 2 级并赢得一次出征后可开启周期来袭';
+    s.cityDefense.autoEnabled=enabled;
+    if(enabled&&!s.cityDefense.nextAt&&!s.cityDefense.incoming&&!s.cityDefense.battle)s.cityDefense.nextAt=now+C.intervalMs;
+    return null;
+  }
   function makeWave(s,now,drill=false){
     const level=Math.min(C.maxLevel,Math.max(1,s.buildings.hall));
     const army=Object.fromEntries(Object.entries(C.waveArmy).map(([id,n])=>[id,n*level]));
@@ -12,49 +28,62 @@ const NPCDefense=(()=>{
   }
   function tick(s,now){
     const d=s.cityDefense;
-    if(s.buildings.hall<C.unlockHall||s.stats.victories<1||d.incoming||d.battle)return;
+    if(!d.autoEnabled||!unlocked(s)||d.incoming||d.battle)return;
     if(!d.nextAt)d.nextAt=now+C.intervalMs;
     if(now>=d.nextAt){d.incoming=makeWave(s,now);d.wave=d.incoming.wave;d.nextAt=0;}
   }
   function heldArmy(s){const b=s.cityDefense?.battle;return b&&!b.drill?b.army:{};}
   function heldDefenses(s){const b=s.cityDefense?.battle;return b&&!b.drill?b.defenses:{};}
-  function begin(s,api,now,drill=false){
+  function begin(s,api,now,drill=false,generalId=s.governor,selectedArmy){
     const d=s.cityDefense;
+    if(typeof drill!=='boolean')return '请选择正式守城或演练';
     if(d.battle)return '已有守城战或演练正在进行';
     if(s.battle&&!s.battle.finished)return '请先结束当前出征战斗';
     if(!drill&&(!d.incoming||d.incoming.arriveAt>now))return '敌军尚未抵达';
-    const wave=drill?makeWave(s,now,true):d.incoming,general=s.governor,army={...s.army},defenses={...s.defenses};
+    if(!s.generals.includes(generalId))return '请选择已招募的守将';
+    const deployed=[...(s.expedition?[s.expedition]:[]),...(s.expeditions||[]),...Object.values(s.garrisons||{})];
+    if(api.generalBusy?.(generalId)||deployed.some(e=>e.general===generalId))return '守将正在出征或驻守，请选择留城将领';
+    if(generalId!==s.governor&&Object.values(s.cityRoles||{}).includes(generalId))return '主将或军师正在任职，请先卸任；城守可亲自守城';
+    const source=selectedArmy===undefined?s.army:selectedArmy;
+    if(!source||typeof source!=='object'||Array.isArray(source)||Object.keys(source).some(id=>!Object.hasOwn(api.units,id)))return '驻城配兵格式不正确';
+    const army=blank(api.units);
+    for(const id of Object.keys(api.units)){const n=Object.hasOwn(source,id)?source[id]:0;if(!Number.isSafeInteger(n)||n<0||n>s.army[id])return '守城兵数必须为驻城兵力范围内的非负整数';army[id]=n;}
+    const wave=drill?makeWave(s,now,true):d.incoming,general=generalId,defenses={...s.defenses};
     const rows=(a,player)=>Object.entries(a).filter(([,n])=>n>0).map(([id,n])=>{const stats=api.unitStats(id,player);return {id,count:n,stats,hp:n*stats.hp};});
     const fortified=1+s.tech.fortification*C.fortificationPerLevel;
     const forts=Object.entries(defenses).filter(([,n])=>n>0).map(([id,n])=>({id,count:n,hp:n*api.defenses[id].hp*fortified,used:0}));
     const gateMax=(C.baseGateHp+s.buildings.wall*C.wallHp)*fortified;
     delete d.drillResult;
-    d.battle={fortification:fortified,drill,wave:wave.wave,level:wave.level,general,army,defenses,player:rows(army,true),enemy:rows(wave.army,false),forts,gateMax,gateHp:gateMax,distance:C.distance,round:0,log:['山匪逼近青溪城，驻城部队与完工工事准备迎敌。']};
-    if(!drill){for(const id of Object.keys(s.army))s.army[id]=0;for(const id of Object.keys(s.defenses))s.defenses[id]=0;d.incoming=null;}
+    const contribution={wallBonus:Math.max(0,gateMax-C.baseGateHp*fortified),gateDamage:0,abatisDelayed:0,armyDamage:0,forts:{}};
+    d.battle={fortification:fortified,drill,wave:wave.wave,level:wave.level,general,army,defenses,player:rows(army,true),enemy:rows(wave.army,false),forts,gateMax,gateHp:gateMax,distance:C.distance,round:0,contribution,log:['黄巾军逼近青溪城，'+api.general(general).name+'率所选 '+total(army)+' 人迎敌；未参战部队留城。','城墙增加城门耐久 '+Math.round(contribution.wallBonus)+'，总耐久 '+Math.round(gateMax)+'。']};
+    if(!drill){for(const id of Object.keys(s.army))s.army[id]-=army[id];for(const id of Object.keys(s.defenses))s.defenses[id]=0;d.incoming=null;}
     return null;
   }
   function log(b,text){b.log.push(text);b.log=b.log.slice(-20);}
   const living=rows=>rows.filter(r=>r.hp>0);
   const number=r=>Math.ceil(r.hp/r.stats.hp);
-  function damage(rows,amount){let rest=amount;for(const row of living(rows)){const dealt=Math.min(row.hp,rest/(1+row.stats.def/200));row.hp-=dealt;rest=Math.max(0,rest-dealt*(1+row.stats.def/200));if(!rest)break;}}
+  function damage(rows,amount){let rest=amount,actual=0;for(const row of living(rows)){const dealt=Math.min(row.hp,rest/(1+row.stats.def/200));row.hp-=dealt;actual+=dealt;rest=Math.max(0,rest-dealt*(1+row.stats.def/200));if(!rest)break;}return actual;}
+  function fortImpact(b,id,key,amount){if(!b.contribution)return;const row=b.contribution.forts[id]||(b.contribution.forts[id]={damage:0,absorbed:0});row[key]+=amount;}
   function round(s,api,now){
     const b=s.cityDefense.battle;if(!b)return '当前没有守城战';
     b.round++;const g=api.general(b.general),abatis=b.forts.some(f=>f.id==='abatis'&&f.hp>0);
-    b.distance=Math.max(0,b.distance-C.marchPerRound*(abatis&&b.distance<=api.defenses.abatis.range?C.abatisSlow:1));
+    const beforeDistance=b.distance,slowed=abatis&&b.distance<=api.defenses.abatis.range;
+    b.distance=Math.max(0,b.distance-C.marchPerRound*(slowed?C.abatisSlow:1));
     log(b,'第 '+b.round+' 回合 · 敌军距城门 '+b.distance);
+    if(slowed){const delayed=Math.max(0,Math.min(beforeDistance,C.marchPerRound)-(beforeDistance-b.distance));if(b.contribution)b.contribution.abatisDelayed+=delayed;if(delayed)log(b,'拒马阻滞，本回合敌军少前进 '+delayed+' 距离。');}
     for(const f of b.forts){
       const cfg=api.defenses[f.id];if(b.distance>cfg.range||!living(b.enemy).length)continue;
-      if(cfg.oneUse){if(f.used>=f.count)continue;const count=Math.min(f.count-f.used,total(living(b.enemy).map(number)));f.used+=count;const hit=count*(f.id==='trap'?C.trapDamage:cfg.atk);damage(b.enemy,hit);log(b,cfg.name+' 消耗 '+count+' 个，造成 '+hit+' 点攻击。');}
-      else if(f.hp>0&&cfg.atk){const hit=Math.ceil(f.hp/(cfg.hp*b.fortification))*cfg.atk;damage(b.enemy,hit);log(b,cfg.name+' 射击，造成 '+hit+' 点攻击。');}
+      if(cfg.oneUse){if(f.used>=f.count)continue;const count=Math.min(f.count-f.used,total(living(b.enemy).map(number)));f.used+=count;const hit=count*(f.id==='trap'?C.trapDamage:cfg.atk),actual=damage(b.enemy,hit);fortImpact(b,f.id,'damage',actual);log(b,cfg.name+' 消耗 '+count+' 个，攻击 '+hit+' 点，实际削减敌军生命 '+Math.round(actual)+'。');}
+      else if(f.hp>0&&cfg.atk){const hit=Math.ceil(f.hp/(cfg.hp*b.fortification))*cfg.atk,actual=damage(b.enemy,hit);fortImpact(b,f.id,'damage',actual);log(b,cfg.name+' 射击，攻击 '+hit+' 点，实际削减敌军生命 '+Math.round(actual)+'。');}
     }
     const attack=living(b.player).filter(r=>r.stats.range>=b.distance).reduce((sum,r)=>sum+number(r)*r.stats.atk,0)*(1+g.atk/C.generalAttackDivisor);
-    if(attack){damage(b.enemy,attack);log(b,'驻军攻击 '+Math.round(attack)+' 点。');}
+    if(attack){const actual=damage(b.enemy,attack);if(b.contribution)b.contribution.armyDamage+=actual;log(b,'守军攻击 '+Math.round(attack)+' 点，实际削减敌军生命 '+Math.round(actual)+'。');}
     if(!living(b.enemy).length)return finish(s,api,now,true);
     let hit=living(b.enemy).filter(r=>r.stats.range>=b.distance).reduce((sum,r)=>sum+number(r)*r.stats.atk,0)/(1+g.def/C.generalDefenseDivisor);
     if(hit){
-      for(const f of b.forts.filter(f=>f.hp>0)){const cfg=api.defenses[f.id],dealt=Math.min(f.hp,hit/(1+cfg.def/200));f.hp-=dealt;hit=Math.max(0,hit-dealt*(1+cfg.def/200));if(!hit)break;}
+      for(const f of b.forts.filter(f=>f.hp>0)){const cfg=api.defenses[f.id],dealt=Math.min(f.hp,hit/(1+cfg.def/200));f.hp-=dealt;fortImpact(b,f.id,'absorbed',dealt);if(dealt)log(b,cfg.name+' 承受 '+Math.round(dealt)+' 点耐久损伤。');hit=Math.max(0,hit-dealt*(1+cfg.def/200));if(!hit)break;}
       for(const r of living(b.player)){const dealt=Math.min(r.hp,hit/(1+r.stats.def/200));r.hp-=dealt;hit=Math.max(0,hit-dealt*(1+r.stats.def/200));if(!hit)break;}
-      if(b.distance===0)b.gateHp=Math.max(0,b.gateHp-hit);
+      if(b.distance===0){const before=b.gateHp;b.gateHp=Math.max(0,b.gateHp-hit);if(b.contribution)b.contribution.gateDamage+=before-b.gateHp;}
       log(b,'敌军进攻，城门耐久 '+Math.ceil(b.gateHp)+' / '+Math.ceil(b.gateMax)+'。');
     }
     if(b.gateHp<=0)return finish(s,api,now,false);
@@ -71,9 +100,10 @@ const NPCDefense=(()=>{
       for(const id of Object.keys(back))s.army[id]+=back[id];
       for(const id of Object.keys(b.defenses))s.defenses[id]+=b.defenses[id]-(defenseLost[id]||0);
       if(won)d.wins++;else {const enemies=Object.fromEntries(b.enemy.map(r=>[r.id,number(r)])),available=Object.fromEntries(['food','wood','stone','iron'].map(id=>[id,Math.floor(s.res[id]*C.raidFraction)]));Object.assign(robbed,api.capLoot(available,api.carry(enemies)));for(const [id,n] of Object.entries(robbed))s.res[id]-=n;}
-      api.addXp(b.general,b.level*C.xpPerLevel);d.nextAt=now+C.intervalMs;
+      api.addXp(b.general,b.level*C.xpPerLevel);if(d.autoEnabled)d.nextAt=now+C.intervalMs;
     }
-    const report={id:now,kind:'defense',drill:b.drill,wave:b.wave,level:b.level,general:b.general,round:b.round,won,lost,wounded,back,defenseLost,repaired,robbed,resourceReceipt,xp:b.drill?0:b.level*C.xpPerLevel};
+    const enemyRemaining=total(living(b.enemy).map(number)),victoryReason=won?(enemyRemaining?'held':'cleared'):'gate';
+    const report={id:now,kind:'defense',drill:b.drill,wave:b.wave,level:b.level,general:b.general,round:b.round,won,victoryReason,enemyRemaining,...(b.contribution?{contribution:b.contribution}:{}),lost,wounded,back,defenseLost,repaired,robbed,resourceReceipt,xp:b.drill?0:b.level*C.xpPerLevel};
     if(!b.drill){d.reports.unshift(report);d.reports=d.reports.slice(0,20);}else d.drillResult=report;
     d.battle=null;return report;
   }
@@ -83,13 +113,16 @@ const NPCDefense=(()=>{
     const counts=(a,ids,full=false)=>obj(a)&&(!full||Object.keys(ids).every(id=>int(a[id])))&&Object.entries(a).every(([id,n])=>Object.hasOwn(ids,id)&&int(n));
     const wave=w=>obj(w)&&int(w.wave)&&int(w.level)&&w.level>=1&&w.level<=C.maxLevel&&finite(w.arriveAt)&&counts(w.army,units);
     const report=r=>obj(r)&&finite(r.id)&&r.kind==='defense'&&typeof r.drill==='boolean'&&int(r.wave)&&int(r.level)&&r.level>=1&&r.level<=C.maxLevel&&s.generals.includes(r.general)&&int(r.round)&&r.round<=C.maxRounds&&typeof r.won==='boolean'&&counts(r.back,units,true)&&counts(r.lost,units,true)&&counts(r.wounded,units,true)&&counts(r.defenseLost,defenses)&&counts(r.repaired,defenses)&&obj(r.robbed)&&Object.entries(r.robbed).every(([id,n])=>['food','wood','stone','iron'].includes(id)&&int(n))&&finite(r.xp)&&(r.drill?r.resourceReceipt===null:receiptValid(r.resourceReceipt));
-    if(!obj(d)||!finite(d.nextAt)||!int(d.wave)||!int(d.wins)||!(d.incoming===null||wave(d.incoming))||!Array.isArray(d.reports)||d.reports.length>20||!d.reports.every(report)||(d.drillResult!==undefined&&!report(d.drillResult)))return false;
+    const contribution=c=>c===undefined||obj(c)&&['wallBonus','gateDamage','abatisDelayed','armyDamage'].every(k=>finite(c[k]))&&obj(c.forts)&&Object.entries(c.forts).every(([id,r])=>Object.hasOwn(defenses,id)&&obj(r)&&finite(r.damage)&&finite(r.absorbed));
+    const outcome=r=>(r.enemyRemaining===undefined||int(r.enemyRemaining))&&(r.victoryReason===undefined||int(r.enemyRemaining)&&(r.victoryReason==='cleared'?r.won&&r.enemyRemaining===0:r.victoryReason==='held'?r.won&&r.enemyRemaining>0&&r.round===C.maxRounds:r.victoryReason==='gate'&&!r.won));
+    const recorded=r=>report(r)&&contribution(r.contribution)&&outcome(r);
+    if(!obj(d)||(d.autoEnabled!==undefined&&typeof d.autoEnabled!=='boolean')||!finite(d.nextAt)||!int(d.wave)||!int(d.wins)||!(d.incoming===null||wave(d.incoming))||!Array.isArray(d.reports)||d.reports.length>20||!d.reports.every(recorded)||(d.drillResult!==undefined&&!recorded(d.drillResult)))return false;
     if(d.battle!==null){
       const b=d.battle,rows=(a,army)=>Array.isArray(a)&&new Set(a.map(r=>r.id)).size===a.length&&a.every(r=>obj(r)&&Object.hasOwn(units,r.id)&&int(r.count)&&r.count>0&&r.count===army[r.id]&&obj(r.stats)&&['hp','atk','def','range','speed'].every(k=>finite(r.stats[k]))&&r.stats.hp>0&&finite(r.hp)&&r.hp<=r.count*r.stats.hp)&&Object.entries(army).filter(([,n])=>n>0).every(([id])=>a.some(r=>r.id===id));
-      if(!obj(b)||typeof b.drill!=='boolean'||!int(b.wave)||!int(b.level)||b.level<1||b.level>C.maxLevel||!s.generals.includes(b.general)||!counts(b.army,units,true)||!counts(b.defenses,defenses,true)||!int(b.round)||b.round>=C.maxRounds||!finite(b.fortification)||b.fortification<1||b.fortification>2||!finite(b.gateMax)||b.gateMax<=0||!finite(b.gateHp)||b.gateHp<=0||b.gateHp>b.gateMax||!finite(b.distance)||b.distance>C.distance||!rows(b.player,b.army)||!Array.isArray(b.enemy)||!rows(b.enemy,Object.fromEntries(b.enemy.map(r=>[r.id,r.count])))||!Array.isArray(b.forts)||new Set(b.forts.map(f=>f.id)).size!==b.forts.length||!b.forts.every(f=>obj(f)&&Object.hasOwn(defenses,f.id)&&int(f.count)&&f.count>0&&f.count===b.defenses[f.id]&&int(f.used)&&f.used<=f.count&&finite(f.hp)&&f.hp<=f.count*defenses[f.id].hp*b.fortification)||!Object.entries(b.defenses).filter(([,n])=>n>0).every(([id])=>b.forts.some(f=>f.id===id))||!Array.isArray(b.log)||b.log.length>20||!b.log.every(t=>typeof t==='string'&&t.length<1000)||(!b.drill&&d.incoming))return false;
+      if(!obj(b)||!contribution(b.contribution)||typeof b.drill!=='boolean'||!int(b.wave)||!int(b.level)||b.level<1||b.level>C.maxLevel||!s.generals.includes(b.general)||!counts(b.army,units,true)||!counts(b.defenses,defenses,true)||!int(b.round)||b.round>=C.maxRounds||!finite(b.fortification)||b.fortification<1||b.fortification>2||!finite(b.gateMax)||b.gateMax<=0||!finite(b.gateHp)||b.gateHp<=0||b.gateHp>b.gateMax||!finite(b.distance)||b.distance>C.distance||!rows(b.player,b.army)||!Array.isArray(b.enemy)||!rows(b.enemy,Object.fromEntries(b.enemy.map(r=>[r.id,r.count])))||!Array.isArray(b.forts)||new Set(b.forts.map(f=>f.id)).size!==b.forts.length||!b.forts.every(f=>obj(f)&&Object.hasOwn(defenses,f.id)&&int(f.count)&&f.count>0&&f.count===b.defenses[f.id]&&int(f.used)&&f.used<=f.count&&finite(f.hp)&&f.hp<=f.count*defenses[f.id].hp*b.fortification)||!Object.entries(b.defenses).filter(([,n])=>n>0).every(([id])=>b.forts.some(f=>f.id===id))||!Array.isArray(b.log)||b.log.length>20||!b.log.every(t=>typeof t==='string'&&t.length<1000)||(!b.drill&&d.incoming))return false;
     }
     return true;
   }
   function valid(...args){try{return validate(...args);}catch{return false;}}
-  return {init,tick,makeWave,heldArmy,heldDefenses,begin,round,endDrill,valid};
+  return {init,tick,makeWave,unlocked,requestChallenge,setAutomatic,heldArmy,heldDefenses,begin,round,endDrill,valid};
 })();

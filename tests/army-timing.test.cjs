@@ -67,16 +67,16 @@ test('arrival clamps at the deadline, stays a waiting march, and never starts ba
 
 test('checked occupation returns and manual garrison recalls use their own actual route durations',()=>{
  const selected=setup(),r=win(selected,'wild_31_32',true),g=selected.Game;
- const returning=overview(selected).rows[0],t=timing(selected,returning);
+ const returning=overview(selected).rows[0],t=timing(selected,returning),returnMs=returning.end-returning.start;
  assert.equal(r.returnAfterOccupy,true);assert.equal(returning.kind,'expedition');assert.equal(returning.phase,'return');
- assert.equal(t.totalMs,5000);assert.equal(t.arrived,false);
- selected.advance(1300);assert.equal(timing(selected,returning).remainingMs,3700);
+ assert.equal(t.totalMs,returnMs);assert.equal(t.arrived,false);
+ selected.advance(1300);assert.equal(timing(selected,returning).remainingMs,returnMs-1300);
  const stayed=setup();win(stayed);const s=stayed.Game;
  assert.equal(timing(stayed,overview(stayed).rows[0]),null,'stationed armies have no travel deadline');
  assert.equal(s.recallGarrison('wild_31_32'),null);
  const recalled=overview(stayed).rows[0];assert.equal(recalled.kind,'garrison');assert.equal(recalled.phase,'return');
- assert.equal(timing(stayed,recalled).totalMs,5000);
- stayed.advance(1251);assert.equal(timing(stayed,recalled).elapsedMs,1251);assert.equal(timing(stayed,recalled).remainingMs,3749);
+ assert.equal(timing(stayed,recalled).totalMs,recalled.end-recalled.start);
+ stayed.advance(1251);assert.equal(timing(stayed,recalled).elapsedMs,1251);assert.equal(timing(stayed,recalled).remainingMs,recalled.end-recalled.start-1251);
  assert.equal(g.validSave(g.state),true);assert.equal(s.validSave(s.state),true);
 });
 
@@ -99,7 +99,7 @@ test('offline return settlement removes the route rather than leaving a zero-tim
  const e=setup(),r=win(e,'wild_31_32',true),g=e.Game,before=g.state.army.archer;
  const deadline=g.state.expedition.end;
  e.offline(1200);
- assert.equal(timing(e,overview(e).rows[0]).remainingMs,3800);
+ assert.equal(timing(e,overview(e).rows[0]).remainingMs,deadline-e.now());
  e.offline(deadline-e.now()+1);
  assert.equal(overview(e).rows.length,0);assert.equal(g.state.army.archer,before+r.back.archer);
  e.offline(1000);assert.equal(overview(e).rows.length,0);assert.equal(g.state.army.archer,before+r.back.archer);
@@ -119,7 +119,7 @@ test('independent marching and recalled rows retain distinct timing after choosi
  const recalled=timing(e,rows.find(row=>row.kind==='garrison'));
  const first=timing(e,rows.find(row=>row.node==='wild_0_0'));
  const second=timing(e,rows.find(row=>row.node==='wild_8_8'));
- assert.equal(recalled.remainingMs,3000);assert.equal(first.elapsedMs,2000);assert.equal(first.remainingMs,88000);
+ assert.equal(recalled.remainingMs,recalled.totalMs-2000);assert.equal(first.elapsedMs,2000);assert.equal(first.remainingMs,88000);
  assert.equal(second.elapsedMs,0);assert.equal(second.remainingMs,74000);
  assert.equal(rows.find(row=>row.node==='wild_0_0').returnAfterOccupy,true);
  assert.equal(rows.find(row=>row.node==='wild_8_8').returnAfterOccupy,false);
@@ -197,7 +197,7 @@ test('live army refresh advances separate route fields and accessible bars while
  e.evaluate(`refreshArmyDeploymentValues(${e.now()+1251});`);
  const snapshot=clone(e.evaluate(`liveBlocks.map(block=>({phase:block.dataset.deploymentPhase,start:block.dataset.deploymentStart,end:block.dataset.deploymentEnd,remaining:block.parts['[data-deployment-remaining]'].textContent,elapsed:block.parts['[data-deployment-elapsed]'].textContent,percent:block.parts['[data-deployment-percent]'].textContent,width:block.parts['[data-deployment-progress]'].style.width,aria:block.parts['[role="progressbar"]'].attributes,focused:block.action.focused,arrival:block.arrival.textContent}))`));
  const returning=snapshot.find(row=>row.phase==='return'),marching=snapshot.find(row=>row.phase==='march');
- assert.equal(returning.remaining,'4 秒');assert.equal(returning.elapsed,'1 秒');assert.equal(returning.percent,'25%');assert.equal(returning.aria['aria-valuenow'],'25');assert.equal(returning.aria['aria-valuetext'],'返城剩余 4 秒');
+ assert.equal(returning.remaining,'3 秒');assert.equal(returning.elapsed,'1 秒');assert.equal(returning.percent,'31%');assert.equal(returning.aria['aria-valuenow'],'31');assert.equal(returning.aria['aria-valuetext'],'返城剩余 3 秒');
  assert.equal(marching.remaining,'1 分 29 秒');assert.equal(marching.elapsed,'1 秒');assert.equal(marching.percent,'1%');assert.equal(marching.aria['aria-valuetext'],'抵达剩余 1 分 29 秒');
  for(const row of snapshot){const saved=rows.find(source=>source.phase===row.phase);assert.equal(row.start,String(saved.start));assert.equal(row.end,String(saved.end));assert.equal(row.focused,true);assert.equal(row.arrival,e.evaluate(`ArmyOverview.formatArrival(${saved.end})`));assert.ok(parseFloat(row.width)>0&&parseFloat(row.width)<100);}
  e.evaluate(`refreshArmyDeploymentValues(${e.now()+100000});`);

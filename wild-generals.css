@@ -1,0 +1,16 @@
+.wild-general-overview{margin-bottom:20px}
+.wild-general-list{display:grid;gap:12px;margin:12px 0 24px}
+.wild-general-card{padding:16px;border:1px solid var(--line,#615b45);border-radius:8px;background:rgba(20,28,22,.25);min-width:0}
+.wild-general-heading{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.wild-general-heading h3{margin:0 0 6px}
+.wild-general-heading p{margin:0}
+.wild-general-portrait{width:48px;height:60px;object-fit:cover;border-radius:5px;flex-shrink:0}
+.wild-initial-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.wild-initial-stats>span{display:flex;flex-direction:column;gap:5px;align-items:center;padding:8px 4px;background:rgba(0,0,0,.14);border-radius:5px}
+.wild-initial-stats small{font-size:12px;color:var(--muted,#b2b4a3)}
+.wild-initial-stats .inn-stat{white-space:normal;text-align:center}
+.wild-general-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.wild-general-actions .btn{min-height:44px}
+.wild-node-lead h3{margin:0 0 8px}
+.wild-battle-receipt p{margin:8px 0}
+@media(max-width:600px){.wild-general-card{padding:12px}.wild-general-heading{gap:8px}.wild-general-heading h3 .label{display:block;margin-top:4px}.wild-initial-stats{gap:4px}.wild-initial-stats small{font-size:11px}.wild-general-actions{display:grid;grid-template-columns:1fr;width:100%}.wild-general-actions .btn{width:100%;white-space:normal;min-height:44px}.wild-general-list .coordinate-tag{white-space:normal}.wild-node-lead{padding:12px}}

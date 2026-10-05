@@ -186,7 +186,7 @@ test('safe numeric ceiling prevents overflowing saved resource values while pres
 
 
 test('formal city defense retains its existing limited warehouse settlement',()=>{
- const e=setup(),g=e.Game;g.state.stats.victories=1;g.tick(e.now(),false);
+ const e=setup(),g=e.Game;g.state.stats.victories=1;assert.equal(g.setAutoCityDefense(true),null);g.tick(e.now(),false);
  e.advance(e.evaluate('NPCDefenseData.intervalMs')+1);assert.ok(g.state.cityDefense.incoming);
  e.advance(g.state.cityDefense.incoming.arriveAt-e.now()+1);assert.equal(g.startCityDefense(false),null);
  stock(g,'full');const before={...g.state.res};let r;

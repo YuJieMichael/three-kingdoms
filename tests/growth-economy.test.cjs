@@ -58,16 +58,16 @@ test('governor advice accounts for an active politics modifier rather than promi
 // These following checkpoints only exercise the read-only planner's choices.
 // They do not establish economic affordability or normal campaign clear times.
 function prepared(e){const g=e.Game;for(const id of Object.keys(g.state.tech))g.state.tech[id]=10;city(g,{house:10,barracks:10,academy:10,smith:10});g.state.army.archer=1200;g.state.army.shield=400;g.state.army.ram=5;return g;}
-test('ten-hall guidance leads to the camp, then explicit epic prerequisites, without re-running the first battle',()=>{
- const e=earnedHall(),g=prepared(e);let m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'camp');assert.equal(m.phase,'campaign');
+test('ten-hall guidance follows discovered sites, then explicit epic prerequisites, without re-running the first battle',()=>{
+ const e=earnedHall(),g=prepared(e);let m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'wood');assert.equal(m.phase,'campaign');
  g.state.conquered.camp=true;m=inspect(e);assert.equal(m.kind,'epic');assert.equal(m.id,'kills');assert.match(m.reason,/四项史诗/);
  g.state.epic.kills=1500;m=inspect(e);assert.equal(m.id,'resources');assert.ok(m.shortages.every(x=>x.amount===0));
- g.state.epic.legacyAccess=true;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'fort');
+ g.state.epic.legacyAccess=true;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'mine');
 });
 
 test('campaign preparation exposes actual research, population and army shortages instead of generic completion text',()=>{
  const e=earnedHall(),g=e.Game;let m=inspect(e);assert.equal(m.phase,'campaign');assert.equal(m.kind,'tech');assert.equal(m.id,'combat');
- g.state.tech.combat=2;g.state.tech.shooting=2;m=inspect(e);assert.equal(m.id,'archer');assert.equal(m.kind,'train');assert.equal(m.count,70);
+ g.state.tech.combat=2;g.state.tech.shooting=2;m=inspect(e);assert.equal(m.id,'archer');assert.equal(m.kind,'train');assert.equal(m.count,30);
  g.state.population=0;m=inspect(e);assert.equal(m.kind,'population');assert.ok(m.people>0);
 });
 
@@ -90,7 +90,7 @@ test('growth UI keeps governor training optional and campaign buttons open the c
  e.evaluate(`function S(){return Game.state;}function esc(x){return String(x);}function num(x){return String(x);}function duration(x){return String(x);}function btn(label,action,id){return '<button data-action="'+action+'" data-id="'+id+'">'+label+'</button>';}let page='',selectedNode='',selectedChapter=2,taskTab='',opened='',worldView={x:0,y:0};function render(){}function worldNodeModal(id){opened='node:'+id;}function classicMissionModal(){opened='tasks:'+taskTab;}function chapterMissionModal(){opened='chapter:'+selectedChapter;}function actResult(error){return !error;}`);
  e.evaluate(fs.readFileSync(path.join(__dirname,'../onboarding-ui.js'),'utf8'));
  let html=e.evaluate('growthGuideHTML()');assert.match(html,/战役成长/);assert.match(html,/培养城守 · 15 点/);assert.match(html,/data-action="heroDetail"/);assert.match(html,/已开工队列不重算/);
- const before=JSON.stringify(g.state);e.evaluate('guideGo()');assert.equal(e.evaluate('opened'),'node:camp');assert.equal(e.evaluate('worldView.x'),g.getNode('camp').x);assert.equal(JSON.stringify(g.state),before);
+ const before=JSON.stringify(g.state);e.evaluate('guideGo()');assert.equal(e.evaluate('opened'),'node:wood');assert.equal(e.evaluate('worldView.x'),g.getNode('wood').x);assert.equal(JSON.stringify(g.state),before);
  g.state.conquered.camp=true;e.evaluate('guideGo()');assert.equal(e.evaluate('opened'),'tasks:epic');
  g.state.conquered.fort=true;for(const n of e.Chapter.allNodes())g.state.conquered[n.id]=true;g.state.missionClaims.push(...e.Chapter.allNodes().map(n=>'chapter'+n.chapter+'_'+n.id));e.evaluate('guideGo()');assert.equal(e.evaluate('opened'),'tasks:orders');
 });

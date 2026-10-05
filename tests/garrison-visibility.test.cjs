@@ -158,7 +158,7 @@ test('the overview counts formal city defense once and does not add a duplicate 
  let m=assertTotals(e);assert.equal(m.city,1500);assert.equal(m.defense,0);assert.equal(m.total,1500);
  assert.equal(g.endDefenseDrill(),null);
  // Let the regular warning timer create a real incoming wave.
- g.state.stats.victories=1;g.tick(e.now(),false);
+ g.state.stats.victories=1;assert.equal(g.setAutoCityDefense(true),null);g.tick(e.now(),false);
  e.advance(e.evaluate('NPCDefenseData.intervalMs')+1);
  assert.ok(g.state.cityDefense.incoming);
  e.advance(g.state.cityDefense.incoming.arriveAt-e.now()+1);

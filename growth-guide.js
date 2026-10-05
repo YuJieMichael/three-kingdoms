@@ -85,7 +85,8 @@ const GrowthGuide=(()=>{
         const challenge=game.warOrders.challenges.find(c=>!s.warOrders.challenges.completed[c.id]);if(challenge)return {kind:'orders',id:challenge.id,route:challenge.route,title:'战术挑战 · '+challenge.name,reason:challenge.condition+'首次达标奖励军功 '+challenge.bonus+'；普通胜利保留基础收益。'};
         return {kind:'orders',id:'repeat',title:'军令循环 · 选择补给与战术目标',reason:'三路十阶与全部战术挑战已达成。按军功兑换需求选择复战路线；培养将领、强化装备，并留意补兵资源与耗粮。'};
       }
-      const n=game.getNode(id),archers=id==='camp'?100:id==='fort'?300:chapter===2?700:1100,front=id==='camp'?0:id==='fort'?60:chapter===2?250:350,technology=id==='camp'?2:id==='fort'?3:5;
+      if(!game.landmarkVisible(id))id=game.nextLandmark()?.id||id;
+      const n=game.getNode(id),archers=chapter===1?(id==='fort'?300:n.level<=1?60:n.level===2?100:160):chapter===2?700:1100,front=chapter===1?(id==='fort'?60:id==='pass'||id==='mine'?30:0):chapter===2?250:350,technology=chapter===1?(id==='fort'?3:n.level<=1?1:2):5;
       for(const [tech,level]of [['combat',technology],['shooting',technology],...(front?[['protection',technology]]:[])]){const goal=resolve('tech',tech,level);if(goal)return {...goal,reason:'准备'+n.name+'：提升弓兵输出与前排防护；'+goal.reason};}
       for(const [unit,count]of [['archer',archers],...(front?[['shield',front]]:[]),...(n.fortification?[['ram',5]]:[])]){
         if(s.army[unit]<count){const away=Object.entries(s.garrisons).find(([,g])=>g.army[unit]>0);if(away)return {kind:'garrison',id:away[0],title:'查看外驻'+game.units[unit].name+'，准备'+n.name,reason:'该兵种已有部队在外驻守；可先收获采集并召回，或保留驻军另行练兵。不要将驻军误当成损失。'};}
