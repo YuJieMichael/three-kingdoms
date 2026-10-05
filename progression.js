@@ -110,7 +110,7 @@ const Progression = (() => {
   function abandon(s,uid,now=Date.now()){
     ensureDaily(s,now);const t=s.daily.tasks.find(t=>t.uid===uid);
     if(!t||t.status!=='accepted')return '任务已刷新或未接取';
-    s.daily.tasks=s.daily.tasks.filter(t=>t!==t);return null;
+    s.daily.tasks=s.daily.tasks.filter(task=>task!==t);return null;
   }
   function claim(s,uid,now=Date.now()){
     ensureDaily(s,now);const t=s.daily.tasks.find(t=>t.uid===uid);
@@ -119,7 +119,7 @@ const Progression = (() => {
     s.prestige+=r.prestige;s.copper+=r.copper;s.res.gold+=r.gold;
     for(const [id,n] of Object.entries(r.resources))s.res[id]+=n;
     const item=taskItem(s,t);s.inventory[item.id]=(s.inventory[item.id]||0)+1;
-    s.daily.claimed++;s.daily.tasks=s.daily.tasks.filter(t=>t!==t);return null;
+    s.daily.claimed++;s.daily.tasks=s.daily.tasks.filter(task=>task!==t);return null;
   }
   function claimMilestone(s,count,now=Date.now()){ensureDaily(s,now);const m=milestones.find(m=>m.count===count);if(!m)return '奖励不存在';if(s.daily.milestoneClaims.includes(count))return '今日奖励已领取';if(s.daily.claimed<count)return '今日完成任务数量不足';
     for(const id of ['food','wood','stone','iron'])s.res[id]+=m.resources;s.res.gold+=m.gold;

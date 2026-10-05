@@ -14,9 +14,19 @@ function dispatchStorageHTML(cargo){
 function battleDropHint(n){const info=Game.battleDropInfo(n.id);return `战斗胜利：${Math.round(info.itemChance*1000)/10}% 概率掉落商城道具 · ${Math.round(info.resourceChance*1000)/10}% 概率获得额外资源。另有 ${Math.round(Math.min(.55,.25+n.level*.03)*100)}% 概率掉落装备；强敌奖励更高，高级道具更稀有；资源受幸存部队负重与仓储限制${n.orderRoute?'。':'；掠夺基础资源 +30%。'}`; }
 function siegeIntelHTML(n){return n.commander?`<p class="notice">敌将 ${n.commander.name} · ${n.commander.title} · 攻击 ×${n.commander.attack} / 防御 ×${n.commander.defense}${n.fortification?`<br>${n.fortification.name}：耐久 ${num(n.fortification.hp)} · 掩护 ×${n.fortification.protection} · 箭楼射程 ${n.fortification.range}<br>${n.orderRoute?'讨伐':'占领'}需要破城并歼敌；冲车近战破门，投石车远射破墙。${n.orderRoute?'':'掠夺不启用城防。'}`:''}</p>`:'';}
 function battleCargoHTML(result){if(!result.won||result.cargoCapacity===undefined)return '';return `<p class="notice cargo-summary">幸存部队负重 ${num(result.cargoCapacity)} · 装载资源 ${num(result.cargoLoaded)} / ${num(result.cargoCapacity)}${result.lootDiscarded?`<br>负重不足，${num(result.lootDiscarded)} 基础资源未能带回。`:''}<br><span class="hint">伤兵不参与搬运；额外资源与基础战利品共用负重。</span></p>`;}
+function battleFailureHTML(result){
+  const f=result.failure;if(!f)return '';
+  const reason={retreat:'主动撤退',army:'我军已失去战斗力',gate:'达到回合上限，城防未破',enemy:'达到回合上限，守军未清空',gate_and_enemy:'达到回合上限，城防和守军均未清除'}[f.reason];
+  return `<p class="notice">${reason} · 剩余守军 ${num(f.enemyRemaining)} 人${f.gateHp?` · 城防耐久 ${num(f.gateHp)}`:''}${f.outOfRange?'<br>部分坚守部队无法覆盖敌军。下次可先「向前」接敌，进入射程后再坚守。':''}${f.gateHp?'<br>攻城需同时破城歼敌；可带冲车或投石车，并用步兵保护器械。':''}</p>`;
+}
+function battleChallengeHTML(result){
+  const c=result.warOrder?.challenge;if(!c)return '';
+  const metrics=`${c.round} 回合 · 永久损失 ${c.lost} / ${c.deployed} 人${c.machines?` · 器械存活 ${c.machineAlive} / ${c.machines} 架`:''}`;
+  return `<p class="notice">${c.met?(c.first?'挑战首次达标 · 额外军功 +'+c.bonus:'挑战再次达标 · 首奖已领'):'普通讨伐胜利 · 挑战未达标，额外军功 +0'}<br>${metrics}</p>`;
+}
 function battleDropsHTML(result){
   const orderReward=result.warOrder?'<p class="notice">军令军功 +'+result.warOrder.points+' · '+(result.warOrder.first?'首次通关双倍':'重复讨伐')+' · 已保存</p>':'';
-  const progress=orderReward+(result.prestigeDelta===undefined?'':`<p class="notice">声望 ${result.prestigeDelta>=0?'+':''}${num(result.prestigeDelta)}${Object.entries(result.jewelDrops||{}).map(([id,count])=>' · '+Game.progression.jewels[id].name+' ×'+count).join('')}</p>`);
+  const progress=orderReward+battleChallengeHTML(result)+(result.prestigeDelta===undefined?'':`<p class="notice">声望 ${result.prestigeDelta>=0?'+':''}${num(result.prestigeDelta)}${Object.entries(result.jewelDrops||{}).map(([id,count])=>' · '+Game.progression.jewels[id].name+' ×'+count).join('')}</p>`);
   if(result.itemDrops===undefined&&result.bonusLoot===undefined)return progress+heroEquipmentDropsHTML(result);
   if(!result.won)return progress;
   const items=Object.entries(result.itemDrops||{}),bonus=Object.fromEntries(Object.entries(result.bonusLoot||{}).filter(([,count])=>count>0));
