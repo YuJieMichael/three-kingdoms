@@ -1,7 +1,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {loadGame,city}=require('./helpers/game.cjs');
-const clone=value=>JSON.parse(JSON.stringify(value));
+const {loadGame,city,cloneActiveSave}=require('./helpers/game.cjs');
+const clone=cloneActiveSave;
 const forest='wild_31_32';
 
 // City levels, troop reserves and population are checkpoints. Deployments,

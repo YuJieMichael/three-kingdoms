@@ -8,10 +8,21 @@ const NPCDefense=(()=>{
     else if(s.cityDefense&&typeof s.cityDefense==='object'&&s.cityDefense.autoEnabled===undefined)s.cityDefense.autoEnabled=true;
   }
   const unlocked=s=>s.buildings.hall>=C.unlockHall&&s.stats.victories>=1;
-  function requestChallenge(s,now){
+  const profile=id=>C.profiles.find(p=>p.id===id);
+  function challengeQuote(s,profileId='classic',selectedLevel){
+    const p=profile(profileId);if(!p)return null;
+    const level=selectedLevel===undefined?Math.min(profileId==='classic'?C.classicMaxLevel:C.maxLevel,Math.max(1,s.buildings.hall)):selectedLevel;
+    if(!Number.isInteger(level)||level<1||level>(profileId==='classic'?C.classicMaxLevel:C.maxLevel))return null;
+    const army=Object.fromEntries(Object.entries(p.army).map(([id,n])=>[id,n*level]));if(profileId==='classic'&&level>=C.cavalryMinLevel)army.cavalry=C.cavalryPerLevel*level;
+    const cost={gold:p.gold*level*level,food:p.food*level},reward=Object.fromEntries(Object.entries(p.reward).map(([id,n])=>[id,n*level]));
+    const reason=!unlocked(s)?'官府达到 2 级并赢得一次出征后可发起黄巾挑战':s.buildings.hall<p.hall?'需要 '+p.hall+' 级官府':profileId!=='classic'&&level>s.buildings.hall?'挑战难度不能超过官府等级':s.cityDefense.incoming||s.cityDefense.battle?'已有来袭或守城战，请先处理当前事件':s.res.gold<cost.gold?'黄金不足':s.res.food<cost.food?'粮食不足':'';
+    return {profile:profileId,name:p.name,description:p.description,level,maxLevel:profileId==='classic'?C.classicMaxLevel:Math.min(C.maxLevel,s.buildings.hall),army,cost,reward,xp:level*C.xpPerLevel,warningSeconds:C.warningMs/1000,reason,key:[profileId,level,s.buildings.hall,s.cityDefense.wave,!!s.cityDefense.incoming,!!s.cityDefense.battle].join('|')};
+  }
+  function requestChallenge(s,now,profileId='classic',level,key){
     const d=s.cityDefense;if(!unlocked(s))return '官府达到 2 级并赢得一次出征后可发起黄巾挑战';
     if(d.incoming||d.battle)return '已有来袭或守城战，请先处理当前事件';
-    d.incoming=makeWave(s,now);d.wave=d.incoming.wave;d.nextAt=0;return null;
+    const q=challengeQuote(s,profileId,level);if(!q||key!==undefined&&key!==q.key)return '挑战条件已变化，请重新查看';if(q.reason)return q.reason;
+    s.res.gold-=q.cost.gold;s.res.food-=q.cost.food;d.incoming=makeWave(s,now,false,profileId,q.level);d.wave=d.incoming.wave;d.nextAt=0;return null;
   }
   function setAutomatic(s,now,enabled){
     if(typeof enabled!=='boolean')return '请选择是否开启周期来袭';
@@ -20,11 +31,14 @@ const NPCDefense=(()=>{
     if(enabled&&!s.cityDefense.nextAt&&!s.cityDefense.incoming&&!s.cityDefense.battle)s.cityDefense.nextAt=now+C.intervalMs;
     return null;
   }
-  function makeWave(s,now,drill=false){
-    const level=Math.min(C.maxLevel,Math.max(1,s.buildings.hall));
-    const army=Object.fromEntries(Object.entries(C.waveArmy).map(([id,n])=>[id,n*level]));
-    if(level>=C.cavalryMinLevel)army.cavalry=C.cavalryPerLevel*level;
-    return {wave:drill?0:s.cityDefense.wave+1,level,army,arriveAt:now+(drill?0:C.warningMs)};
+  function makeWave(s,now,drill=false,profileId='classic',selectedLevel){
+    const q=challengeQuote(s,profileId,selectedLevel);if(!q)return null;
+    return {wave:drill?0:s.cityDefense.wave+1,level:q.level,army:q.army,arriveAt:now+(drill?0:C.warningMs),...(profileId==='classic'?{}:{profile:profileId,rewardSnapshot:q.reward,costSnapshot:q.cost})};
+  }
+  function beaconIntel(s,w=s.cityDefense.incoming){
+    if(!w)return null;const beacon=s.buildings.beacon||0,precision=beacon>=7?'exact':beacon>=4?'bands':beacon>=1?'types':'warning';
+    const types=Object.keys(w.army).filter(id=>w.army[id]>0),army=precision==='exact'?{...w.army}:precision==='bands'?Object.fromEntries(types.map(id=>{const n=w.army[id],band=Math.max(10,10**Math.floor(Math.log10(n||1)));return [id,{min:Math.floor(n/band)*band,max:(Math.floor(n/band)+1)*band-1}];})):null;
+    return {precision,exact:precision==='exact',profile:w.profile||'classic',name:profile(w.profile||'classic').name,level:w.level,arriveAt:w.arriveAt,types:precision==='warning'?[]:types,army};
   }
   function tick(s,now){
     const d=s.cityDefense;
@@ -55,7 +69,8 @@ const NPCDefense=(()=>{
     const gateMax=(C.baseGateHp+s.buildings.wall*C.wallHp)*fortified;
     delete d.drillResult;
     const contribution={wallBonus:Math.max(0,gateMax-C.baseGateHp*fortified),gateDamage:0,abatisDelayed:0,armyDamage:0,forts:{}};
-    d.battle={fortification:fortified,drill,wave:wave.wave,level:wave.level,general,army,defenses,player:rows(army,true),enemy:rows(wave.army,false),forts,gateMax,gateHp:gateMax,distance:C.distance,round:0,contribution,log:['黄巾军逼近青溪城，'+api.general(general).name+'率所选 '+total(army)+' 人迎敌；未参战部队留城。','城墙增加城门耐久 '+Math.round(contribution.wallBonus)+'，总耐久 '+Math.round(gateMax)+'。']};
+    const g=api.general(general),generalSnapshot={id:general,name:g.name,atk:g.atk,def:g.def},skillProfile=typeof GeneralGrowth!=='undefined'?GeneralGrowth.profile(s,general):undefined;
+    d.battle={fortification:fortified,drill,wave:wave.wave,level:wave.level,general,generalSnapshot,...(skillProfile?{skillProfile}:{}),...(wave.profile?{profile:wave.profile,rewardSnapshot:{...wave.rewardSnapshot},costSnapshot:{...wave.costSnapshot}}:{}),army,defenses,player:rows(army,true),enemy:rows(wave.army,false),forts,gateMax,gateHp:gateMax,distance:C.distance,round:0,contribution,log:[(profile(wave.profile||'classic').name)+'逼近城池，'+g.name+'率所选 '+total(army)+' 人迎敌；未参战部队留城。','城墙增加城门耐久 '+Math.round(contribution.wallBonus)+'，总耐久 '+Math.round(gateMax)+'。']};
     if(!drill){for(const id of Object.keys(s.army))s.army[id]-=army[id];for(const id of Object.keys(s.defenses))s.defenses[id]=0;d.incoming=null;}
     return null;
   }
@@ -66,9 +81,9 @@ const NPCDefense=(()=>{
   function fortImpact(b,id,key,amount){if(!b.contribution)return;const row=b.contribution.forts[id]||(b.contribution.forts[id]={damage:0,absorbed:0});row[key]+=amount;}
   function round(s,api,now){
     const b=s.cityDefense.battle;if(!b)return '当前没有守城战';
-    b.round++;const g=api.general(b.general),abatis=b.forts.some(f=>f.id==='abatis'&&f.hp>0);
+    b.round++;const g=b.generalSnapshot||api.general(b.general),abatis=b.forts.some(f=>f.id==='abatis'&&f.hp>0);
     const beforeDistance=b.distance,slowed=abatis&&b.distance<=api.defenses.abatis.range;
-    b.distance=Math.max(0,b.distance-C.marchPerRound*(slowed?C.abatisSlow:1));
+    b.distance=Math.max(0,b.distance-C.marchPerRound*(b.profile==='cavalry'?1.5:1)*(slowed?C.abatisSlow:1));
     log(b,'第 '+b.round+' 回合 · 敌军距城门 '+b.distance);
     if(slowed){const delayed=Math.max(0,Math.min(beforeDistance,C.marchPerRound)-(beforeDistance-b.distance));if(b.contribution)b.contribution.abatisDelayed+=delayed;if(delayed)log(b,'拒马阻滞，本回合敌军少前进 '+delayed+' 距离。');}
     for(const f of b.forts){
@@ -76,14 +91,14 @@ const NPCDefense=(()=>{
       if(cfg.oneUse){if(f.used>=f.count)continue;const count=Math.min(f.count-f.used,total(living(b.enemy).map(number)));f.used+=count;const hit=count*(f.id==='trap'?C.trapDamage:cfg.atk),actual=damage(b.enemy,hit);fortImpact(b,f.id,'damage',actual);log(b,cfg.name+' 消耗 '+count+' 个，攻击 '+hit+' 点，实际削减敌军生命 '+Math.round(actual)+'。');}
       else if(f.hp>0&&cfg.atk){const hit=Math.ceil(f.hp/(cfg.hp*b.fortification))*cfg.atk,actual=damage(b.enemy,hit);fortImpact(b,f.id,'damage',actual);log(b,cfg.name+' 射击，攻击 '+hit+' 点，实际削减敌军生命 '+Math.round(actual)+'。');}
     }
-    const attack=living(b.player).filter(r=>r.stats.range>=b.distance).reduce((sum,r)=>sum+number(r)*r.stats.atk,0)*(1+g.atk/C.generalAttackDivisor);
+    const attack=living(b.player).filter(r=>r.stats.range>=b.distance).reduce((sum,r)=>sum+number(r)*r.stats.atk*(b.skillProfile?.attackByUnit?.[r.id]||1),0)*(1+g.atk/C.generalAttackDivisor);
     if(attack){const actual=damage(b.enemy,attack);if(b.contribution)b.contribution.armyDamage+=actual;log(b,'守军攻击 '+Math.round(attack)+' 点，实际削减敌军生命 '+Math.round(actual)+'。');}
     if(!living(b.enemy).length)return finish(s,api,now,true);
     let hit=living(b.enemy).filter(r=>r.stats.range>=b.distance).reduce((sum,r)=>sum+number(r)*r.stats.atk,0)/(1+g.def/C.generalDefenseDivisor);
     if(hit){
       for(const f of b.forts.filter(f=>f.hp>0)){const cfg=api.defenses[f.id],dealt=Math.min(f.hp,hit/(1+cfg.def/200));f.hp-=dealt;fortImpact(b,f.id,'absorbed',dealt);if(dealt)log(b,cfg.name+' 承受 '+Math.round(dealt)+' 点耐久损伤。');hit=Math.max(0,hit-dealt*(1+cfg.def/200));if(!hit)break;}
       for(const r of living(b.player)){const dealt=Math.min(r.hp,hit/(1+r.stats.def/200));r.hp-=dealt;hit=Math.max(0,hit-dealt*(1+r.stats.def/200));if(!hit)break;}
-      if(b.distance===0){const before=b.gateHp;b.gateHp=Math.max(0,b.gateHp-hit);if(b.contribution)b.contribution.gateDamage+=before-b.gateHp;}
+      if(b.distance===0||b.profile==='siege'&&b.distance<=600){const before=b.gateHp;b.gateHp=Math.max(0,b.gateHp-hit);if(b.contribution)b.contribution.gateDamage+=before-b.gateHp;}
       log(b,'敌军进攻，城门耐久 '+Math.ceil(b.gateHp)+' / '+Math.ceil(b.gateMax)+'。');
     }
     if(b.gateHp<=0)return finish(s,api,now,false);
@@ -95,15 +110,15 @@ const NPCDefense=(()=>{
     const lost=blank(api.units),wounded=blank(api.units),back=blank(api.units),defenseLost={},repaired={},robbed={};
     for(const id of Object.keys(api.units)){const row=b.player.find(r=>r.id===id),alive=row?number(row):0;wounded[id]=Math.floor((b.army[id]-alive)*(won?C.wonWounded:C.lostWounded));back[id]=alive+wounded[id];lost[id]=b.army[id]-back[id];}
     for(const f of b.forts){const cfg=api.defenses[f.id],alive=cfg.oneUse?f.count-f.used:Math.ceil(f.hp/(cfg.hp*b.fortification)),destroyed=f.count-alive;repaired[f.id]=cfg.oneUse?0:Math.floor(destroyed*s.tech.repair*C.repairPerLevel);defenseLost[f.id]=destroyed-repaired[f.id];}
-    const reward=won?{food:b.level*C.rewardPerLevel,wood:b.level*C.rewardPerLevel}:{},resourceReceipt=b.drill?null:api.settleLoot(reward);
+    const reward=won?(b.rewardSnapshot||{food:b.level*C.rewardPerLevel,wood:b.level*C.rewardPerLevel}):{},resourceReceipt=b.drill?null:api.settleLoot(reward);
     if(!b.drill){
       for(const id of Object.keys(back))s.army[id]+=back[id];
       for(const id of Object.keys(b.defenses))s.defenses[id]+=b.defenses[id]-(defenseLost[id]||0);
       if(won)d.wins++;else {const enemies=Object.fromEntries(b.enemy.map(r=>[r.id,number(r)])),available=Object.fromEntries(['food','wood','stone','iron'].map(id=>[id,Math.floor(s.res[id]*C.raidFraction)]));Object.assign(robbed,api.capLoot(available,api.carry(enemies)));for(const [id,n] of Object.entries(robbed))s.res[id]-=n;}
-      api.addXp(b.general,b.level*C.xpPerLevel);if(d.autoEnabled)d.nextAt=now+C.intervalMs;
+      if(won)api.addXp(b.general,b.level*C.xpPerLevel);if(d.autoEnabled)d.nextAt=now+C.intervalMs;
     }
     const enemyRemaining=total(living(b.enemy).map(number)),victoryReason=won?(enemyRemaining?'held':'cleared'):'gate';
-    const report={id:now,kind:'defense',drill:b.drill,wave:b.wave,level:b.level,general:b.general,round:b.round,won,victoryReason,enemyRemaining,...(b.contribution?{contribution:b.contribution}:{}),lost,wounded,back,defenseLost,repaired,robbed,resourceReceipt,xp:b.drill?0:b.level*C.xpPerLevel};
+    const report={id:now,kind:'defense',drill:b.drill,wave:b.wave,level:b.level,...(b.profile?{profile:b.profile,costSnapshot:b.costSnapshot,rewardSnapshot:b.rewardSnapshot}:{}),general:b.general,round:b.round,won,victoryReason,enemyRemaining,...(b.contribution?{contribution:b.contribution}:{}),lost,wounded,back,defenseLost,repaired,robbed,resourceReceipt,xp:b.drill||!won?0:b.level*C.xpPerLevel};
     if(!b.drill){d.reports.unshift(report);d.reports=d.reports.slice(0,20);}else d.drillResult=report;
     d.battle=null;return report;
   }
@@ -111,18 +126,22 @@ const NPCDefense=(()=>{
   function validate(s,units,defenses,receiptValid){
     const d=s.cityDefense,obj=x=>x&&typeof x==='object'&&!Array.isArray(x),finite=n=>Number.isFinite(n)&&n>=0&&n<=Number.MAX_SAFE_INTEGER,int=n=>Number.isSafeInteger(n)&&n>=0;
     const counts=(a,ids,full=false)=>obj(a)&&(!full||Object.keys(ids).every(id=>int(a[id])))&&Object.entries(a).every(([id,n])=>Object.hasOwn(ids,id)&&int(n));
-    const wave=w=>obj(w)&&int(w.wave)&&int(w.level)&&w.level>=1&&w.level<=C.maxLevel&&finite(w.arriveAt)&&counts(w.army,units);
+    const same=(a,b)=>obj(a)&&Object.keys(a).length===Object.keys(b).length&&Object.entries(b).every(([k,n])=>a[k]===n);
+    const metadata=w=>{if(w.profile===undefined)return w.level<=C.classicMaxLevel&&w.rewardSnapshot===undefined&&w.costSnapshot===undefined;const p=profile(w.profile);return !!p&&p.id!=='classic'&&same(w.rewardSnapshot,Object.fromEntries(Object.entries(p.reward).map(([id,n])=>[id,n*w.level])))&&same(w.costSnapshot,{gold:p.gold*w.level*w.level,food:p.food*w.level});};
+    const wave=w=>obj(w)&&int(w.wave)&&int(w.level)&&w.level>=1&&w.level<=C.maxLevel&&finite(w.arriveAt)&&counts(w.army,units)&&metadata(w)&&(w.profile===undefined||same(w.army,Object.fromEntries(Object.entries(profile(w.profile).army).map(([id,n])=>[id,n*w.level]))));
     const report=r=>obj(r)&&finite(r.id)&&r.kind==='defense'&&typeof r.drill==='boolean'&&int(r.wave)&&int(r.level)&&r.level>=1&&r.level<=C.maxLevel&&s.generals.includes(r.general)&&int(r.round)&&r.round<=C.maxRounds&&typeof r.won==='boolean'&&counts(r.back,units,true)&&counts(r.lost,units,true)&&counts(r.wounded,units,true)&&counts(r.defenseLost,defenses)&&counts(r.repaired,defenses)&&obj(r.robbed)&&Object.entries(r.robbed).every(([id,n])=>['food','wood','stone','iron'].includes(id)&&int(n))&&finite(r.xp)&&(r.drill?r.resourceReceipt===null:receiptValid(r.resourceReceipt));
     const contribution=c=>c===undefined||obj(c)&&['wallBonus','gateDamage','abatisDelayed','armyDamage'].every(k=>finite(c[k]))&&obj(c.forts)&&Object.entries(c.forts).every(([id,r])=>Object.hasOwn(defenses,id)&&obj(r)&&finite(r.damage)&&finite(r.absorbed));
     const outcome=r=>(r.enemyRemaining===undefined||int(r.enemyRemaining))&&(r.victoryReason===undefined||int(r.enemyRemaining)&&(r.victoryReason==='cleared'?r.won&&r.enemyRemaining===0:r.victoryReason==='held'?r.won&&r.enemyRemaining>0&&r.round===C.maxRounds:r.victoryReason==='gate'&&!r.won));
-    const recorded=r=>report(r)&&contribution(r.contribution)&&outcome(r);
+    const recorded=r=>report(r)&&metadata(r)&&contribution(r.contribution)&&outcome(r);
     if(!obj(d)||(d.autoEnabled!==undefined&&typeof d.autoEnabled!=='boolean')||!finite(d.nextAt)||!int(d.wave)||!int(d.wins)||!(d.incoming===null||wave(d.incoming))||!Array.isArray(d.reports)||d.reports.length>20||!d.reports.every(recorded)||(d.drillResult!==undefined&&!recorded(d.drillResult)))return false;
     if(d.battle!==null){
       const b=d.battle,rows=(a,army)=>Array.isArray(a)&&new Set(a.map(r=>r.id)).size===a.length&&a.every(r=>obj(r)&&Object.hasOwn(units,r.id)&&int(r.count)&&r.count>0&&r.count===army[r.id]&&obj(r.stats)&&['hp','atk','def','range','speed'].every(k=>finite(r.stats[k]))&&r.stats.hp>0&&finite(r.hp)&&r.hp<=r.count*r.stats.hp)&&Object.entries(army).filter(([,n])=>n>0).every(([id])=>a.some(r=>r.id===id));
-      if(!obj(b)||!contribution(b.contribution)||typeof b.drill!=='boolean'||!int(b.wave)||!int(b.level)||b.level<1||b.level>C.maxLevel||!s.generals.includes(b.general)||!counts(b.army,units,true)||!counts(b.defenses,defenses,true)||!int(b.round)||b.round>=C.maxRounds||!finite(b.fortification)||b.fortification<1||b.fortification>2||!finite(b.gateMax)||b.gateMax<=0||!finite(b.gateHp)||b.gateHp<=0||b.gateHp>b.gateMax||!finite(b.distance)||b.distance>C.distance||!rows(b.player,b.army)||!Array.isArray(b.enemy)||!rows(b.enemy,Object.fromEntries(b.enemy.map(r=>[r.id,r.count])))||!Array.isArray(b.forts)||new Set(b.forts.map(f=>f.id)).size!==b.forts.length||!b.forts.every(f=>obj(f)&&Object.hasOwn(defenses,f.id)&&int(f.count)&&f.count>0&&f.count===b.defenses[f.id]&&int(f.used)&&f.used<=f.count&&finite(f.hp)&&f.hp<=f.count*defenses[f.id].hp*b.fortification)||!Object.entries(b.defenses).filter(([,n])=>n>0).every(([id])=>b.forts.some(f=>f.id===id))||!Array.isArray(b.log)||b.log.length>20||!b.log.every(t=>typeof t==='string'&&t.length<1000)||(!b.drill&&d.incoming))return false;
+      const snapshot=b?.generalSnapshot,snapshotValid=snapshot===undefined||obj(snapshot)&&snapshot.id===b.general&&typeof snapshot.name==='string'&&snapshot.name.length<=100&&finite(snapshot.atk)&&finite(snapshot.def);
+      const skillValid=b?.skillProfile===undefined||typeof GeneralGrowth!=='undefined'&&GeneralGrowth.validProfile(b.skillProfile);
+      if(!obj(b)||!metadata(b)||!snapshotValid||!skillValid||!contribution(b.contribution)||typeof b.drill!=='boolean'||!int(b.wave)||!int(b.level)||b.level<1||b.level>C.maxLevel||!s.generals.includes(b.general)||!counts(b.army,units,true)||!counts(b.defenses,defenses,true)||!int(b.round)||b.round>=C.maxRounds||!finite(b.fortification)||b.fortification<1||b.fortification>2||!finite(b.gateMax)||b.gateMax<=0||!finite(b.gateHp)||b.gateHp<=0||b.gateHp>b.gateMax||!finite(b.distance)||b.distance>C.distance||!rows(b.player,b.army)||!Array.isArray(b.enemy)||!rows(b.enemy,Object.fromEntries(b.enemy.map(r=>[r.id,r.count])))||!Array.isArray(b.forts)||new Set(b.forts.map(f=>f.id)).size!==b.forts.length||!b.forts.every(f=>obj(f)&&Object.hasOwn(defenses,f.id)&&int(f.count)&&f.count>0&&f.count===b.defenses[f.id]&&int(f.used)&&f.used<=f.count&&finite(f.hp)&&f.hp<=f.count*defenses[f.id].hp*b.fortification)||!Object.entries(b.defenses).filter(([,n])=>n>0).every(([id])=>b.forts.some(f=>f.id===id))||!Array.isArray(b.log)||b.log.length>20||!b.log.every(t=>typeof t==='string'&&t.length<1000)||(!b.drill&&d.incoming))return false;
     }
     return true;
   }
   function valid(...args){try{return validate(...args);}catch{return false;}}
-  return {init,tick,makeWave,unlocked,requestChallenge,setAutomatic,heldArmy,heldDefenses,begin,round,endDrill,valid};
+  return {profiles:C.profiles,init,tick,makeWave,unlocked,challengeQuote,beaconIntel,requestChallenge,setAutomatic,heldArmy,heldDefenses,begin,round,endDrill,valid};
 })();

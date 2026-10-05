@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const KEY='sanguo-city-v2',WRITER=KEY+'-writer',BACKUP=KEY+'-backup',REQUEST=KEY+'-handoff';
 let serial=0;
-const files=['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','onboarding-data.js','onboarding-system.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','chapter-data.js','siege-data.js','war-orders.js','automation-system.js','yellow-city-data.js','plot-template-data.js','engine.js'];
+const files=['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','onboarding-data.js','onboarding-system.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','chapter-data.js','siege-data.js','war-orders.js','automation-system.js','yellow-city-data.js','plot-template-data.js','city-system.js','general-growth-data.js','general-growth-system.js','scout-system.js','engine.js'];
 function page(store=new Map(),fault={},browser,abortController=AbortController){
   let now=1791194400000;const owner='page-'+(++serial);
   const globals={console,crypto:{randomUUID:()=>owner},Date:class extends Date{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}},localStorage:{getItem(key){if(fault.read){fault.read--;throw Error('read unavailable');}return store.has(key)?store.get(key):null;},setItem(key,value){if(fault.beforeWrite)fault.beforeWrite(key,value);if(fault.writeKey===key)throw Error('write unavailable');store.set(key,value);if(fault.afterWrite)fault.afterWrite(key,value);}},document:{addEventListener(){}}};
@@ -67,7 +67,7 @@ test('an expired foreign fallback lease cannot be stolen; an explicit release pe
   assert.equal(a.g.saveSessionInfo().writable,true);a.g.releaseSaveSession();const c=page(a.store);assert.equal(c.g.saveSessionInfo().writable,true);assert.equal(c.g.state.starterGiftClaimed,true);
 });
 test('uncoordinated payload changes cause a version conflict rather than a stale overwrite',()=>{
-  const a=page(),changed=copy(a.g.state);changed.res.gold=43210;const raw=JSON.stringify(changed);a.store.set(KEY,raw);
+  const a=page(),changed=copy(a.g.state);changed.res.gold=43210;changed.realm.cities[changed.realm.activeCity].data.res.gold=43210;const raw=JSON.stringify(changed);a.store.set(KEY,raw);
   assert.match(a.g.setTax(30),/变化/);assert.equal(a.g.saveSessionInfo().mode,'conflict');assert.equal(a.g.save(),false);assert.equal(a.store.get(KEY),raw);
   assert.equal(a.g.takeOverSaveSession(),null);assert.equal(a.g.state.res.gold,43210);assert.equal(a.g.setTax(30),undefined);
 });
@@ -94,7 +94,7 @@ test('import validates before replacing, retains original progress and is refuse
   const a=page();a.g.claimStarterGift();const before=a.store.get(KEY),bad=copy(a.g.state);bad.res.food=-1;
   assert.throws(()=>a.g.importSave(bad),/Invalid save/);assert.equal(a.store.get(KEY),before);
   const b=page(a.store);assert.throws(()=>b.g.importSave(copy(a.g.state)),/另一页面/);assert.equal(a.store.get(KEY),before);
-  const imported=copy(a.g.state);imported.tax=33;a.g.importSave(imported);assert.equal(a.g.state.tax,33);
+  const imported=copy(a.g.state);imported.tax=33;imported.realm.cities[imported.realm.activeCity].data.tax=33;a.g.importSave(imported);assert.equal(a.g.state.tax,33);
   assert.ok([...a.store.entries()].some(([key,value])=>key.startsWith(KEY+'-recovery-')&&value===before));assert.equal(a.g.validSave(a.g.state),true);
 });
 test('an explicit new city retains replaced data and cannot reset an active foreign city',()=>{

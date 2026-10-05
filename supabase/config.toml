@@ -1,0 +1,9 @@
+project_id = "three-kingdoms"
+
+[functions.game-api]
+# Auth identity and live session are verified inside the function. This also
+# supports the newer publishable keys, which are not legacy JWT API keys.
+verify_jwt = false
+
+[functions.game-tick]
+verify_jwt = false

@@ -63,7 +63,12 @@ const GrowthGuide=(()=>{
       if(s.stats.victories>0){const promotion=HeritageSystem.promotionQuote(s,'office');return {kind:'firstBattleComplete',id:target,title:'首战闭环完成，查看收获与官职晋升',reason:'首胜会获得珍珠，晋升伍长需声望 1000 与珍珠 1 枚，确认后消耗珍珠。可先领取首胜任务、查看官爵；条件不足时继续官府成长。',promotionReady:!!promotion?.next&&!promotion.reason};}
       const drill=resolve('building','drill',1);if(drill)return drill;
       const scouting=resolve('tech','scouting',1);if(scouting)return {...scouting,reason:'出征前先探明敌情。研究侦察 1 级后，训练一名斥候；'+scouting.reason};
-      if(!s.scouted[target]){const scout=train('scout',1,'斥候用于查看敌军数量区间，留在城内执行侦察，不承担弓兵输出。');if(scout)return scout;return {kind:'scout',id:target,cost:{food:10},title:'侦察河畔荒田，查看敌军情报',reason:'打开河畔荒田，点击斥候侦察，再查看守军兵种与数量区间。侦察 1 级不会显示精确数量。'};}
+      if(!game.intel(target)){
+        const mission=s.scoutQueue.find(m=>m.node===target);
+        if(mission)return {kind:'scoutMarch',id:target,end:mission.end,title:mission.phase==='out'?'斥候正在前往河畔荒田':'侦察未获情报，等待幸存斥候返城',reason:mission.phase==='out'?'抵达后获得报告，先查看兵种与情报有效期。当前已有队伍，不必重复训练或派遣。':'返城后查看失败原因，增加斥候或提高侦察科技，再确认重新派遣。'};
+        const scout=train('scout',1,'斥候需实际派往目标，抵达后取得情报；不承担弓兵输出。');if(scout)return scout;
+        return {kind:'scout',id:target,cost:game.scoutQuote(target,1)?.cost,title:'侦察河畔荒田，查看敌军情报',reason:'打开河畔荒田，核对用时、耗粮与预计损失，再派遣斥候。一名斥候配侦察 1 级可获兵种情报；更多斥候和更高科技可提高精度。'};
+      }
       const free=s.generals.filter(id=>!HeritageSystem.roleOf(s,id)&&!game.generalBusy(id));
       if(!free.length){const stationed=Object.entries(s.garrisons)[0];return stationed?{kind:'garrison',id:stationed[0],title:'召回驻将，准备首战主将',reason:'当前没有空闲主将。驻将不能出征，先查看驻军并确认召回；已在返城的驻将需要等待。'}:{kind:'roles',title:'安排一位空闲出征主将',reason:'城守、城内主将与军师需留守。到城内任职调整职位，保留城守，并让一位将领空闲。'};}
       if(s.cooldowns[target]>Date.now())return {kind:'battleCooldown',id:target,end:s.cooldowns[target],title:'河畔荒田正在恢复',reason:'等待据点恢复后再战；期间可以补兵或发展城池。'};

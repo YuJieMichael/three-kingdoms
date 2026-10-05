@@ -1,8 +1,8 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {loadGame,city}=require('./helpers/game.cjs');
+const {loadGame,city,cloneActiveSave}=require('./helpers/game.cjs');
 const sum=map=>Object.values(map).reduce((a,b)=>a+b,0);
-const clone=value=>JSON.parse(JSON.stringify(value));
+const clone=cloneActiveSave;
 const resources=['food','wood','stone','iron','gold'];
 const forest='wild_31_32';
 

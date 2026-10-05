@@ -51,7 +51,7 @@ document.addEventListener('click',event=>{
   if(a==='speedupBuy'){const [itemId,key]=id.split('|'),item=Game.manual.shop.find(i=>i.id===itemId);if(!item)return;const error=Game.buyItem(itemId);speedupPickerModal(item.queueKind,key||'');actResult(error,'加速道具已收入行囊');}
   if(a==='speedupUse'){
     const key=document.getElementById('speedup-target')?.value,result=Game.useSpeedup(id,key),item=Game.manual.shop.find(i=>i.id===id);
-    if(result.error){speedupPlanModal(id,key);actResult(result.error);return;}
+    if(result.pending){refreshOnlineStatus();return;}if(result.error){speedupPlanModal(id,key);actResult(result.error);return;}
     if(result.completed)modal.close();else speedupPickerModal(item.queueKind,key);
     actResult(null,'已缩短 '+duration(result.removedMs/1000)+(result.completed?'，任务已完成':result.waitMs>0?'，等待前一批后开训':'')+(result.requestedMs>result.removedMs?'；超出部分未保留':''));
   }

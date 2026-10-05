@@ -16,7 +16,7 @@ function run(seed=123,accelerate=true,target='archer',options={}){
   if(m.kind==='queue'){finish(m.queueKind,m.queue);continue;}
   if(m.kind==='population'){if(accelerate&&(Game.state.inventory.population||0)>0)use('population');else env.advance(60000);continue;}
   if(m.kind==='trade'){const count=Math.min(m.amount,Game.tradeQuote(m.id,true).limit);ok(Game.trade(m.id,count,true));spent.gold+=count;log.push({target:m.title,count,minutes:(env.now()-start)/60000});continue;}
-  if(m.kind==='battleMarch'||m.kind==='battleReturn'){env.advance(Math.max(1,Math.ceil(m.end-env.now())+1));collect();log.push({target:m.title,minutes:(env.now()-start)/60000});continue;}
+  if(m.kind==='scoutMarch'||m.kind==='battleMarch'||m.kind==='battleReturn'){env.advance(Math.max(1,Math.ceil(m.end-env.now())+1));collect();log.push({target:m.title,minutes:(env.now()-start)/60000});continue;}
   if(m.kind==='battleArrival'){ok(Game.selectExpedition(m.id));ok(Game.startBattle());log.push({target:m.title,minutes:(env.now()-start)/60000});continue;}
   if(m.kind==='battle'){if(Game.state.battle.orders.archer)ok(Game.setBattleOrder('archer',m.inRange?'hold':'advance'));Game.battleRound();collect();continue;}
   if(m.kind==='battleCooldown'){env.advance(Math.max(1,Math.ceil(m.end-env.now())+1));continue;}

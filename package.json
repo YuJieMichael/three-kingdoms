@@ -1,13 +1,19 @@
 {
   "name": "three-kingdoms-city",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "private": true,
-  "description": "三国城志：单机 PVE 策略游戏原型",
+  "description": "三国城志：多城经营、单机 PVE 与共享世界策略原型",
   "scripts": {
     "start": "node server.cjs",
-    "test": "node --test tests/*.test.cjs"
+    "test": "node --test tests/*.test.cjs",
+    "online:build": "node scripts/build-online-runtime.cjs",
+    "online:serve": "node online/local-server.mjs",
+    "online:sql-check": "node scripts/verify-online-sql.mjs"
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8"
   }
 }

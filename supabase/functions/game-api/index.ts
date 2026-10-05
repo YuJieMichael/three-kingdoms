@@ -1,0 +1,10 @@
+import {SupabaseStore} from '../_shared/online/supabase-store.mjs';
+import {createHandler} from '../_shared/online/http.mjs';
+import {createSupabaseAuthenticator} from '../_shared/online/auth.mjs';
+const url=Deno.env.get('SUPABASE_URL')||'';
+const publicKey=Deno.env.get('SUPABASE_PUBLISHABLE_KEY')||Deno.env.get('SUPABASE_ANON_KEY')||'';
+const secretKey=Deno.env.get('SUPABASE_SECRET_KEY')||Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||'';
+const store=new SupabaseStore({url,key:secretKey});
+const origins=(Deno.env.get('GAME_ALLOWED_ORIGINS')||'https://yujiemichael.github.io,http://127.0.0.1:8137,http://localhost:8137').split(',').map(s=>s.trim()).filter(Boolean);
+const authenticate=createSupabaseAuthenticator({url,publicKey,store});
+Deno.serve(createHandler({store,authenticate,allowedOrigins:origins}));
