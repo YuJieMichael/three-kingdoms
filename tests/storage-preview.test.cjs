@@ -1,66 +1,68 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const vm=require('node:vm');
 const fs=require('node:fs');
 const path=require('node:path');
-const root=path.resolve(__dirname,'..');
+const {loadGame:load,city}=require('./helpers/game.cjs');
 function loadGame(){
-  const saved=new Map(),now=1791194400000;
-  const context=vm.createContext({console,Date:class extends Date{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}},localStorage:{getItem:key=>saved.get(key)||null,setItem:(key,value)=>saved.set(key,value)},document:{addEventListener(){}}});
-  for(const file of ['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','onboarding-data.js','onboarding-system.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','chapter-data.js','siege-data.js','war-orders.js','automation-system.js','engine.js','campaign-ui.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
-  vm.runInContext("Math.random=()=>0.999999; const num=n=>Math.floor(n).toLocaleString('zh-CN');",context);
-  const Game=vm.runInContext('Game',context);Game.init();
-  return {Game,html:quote=>{context.quote=quote;return vm.runInContext('dispatchStorageHTML(quote)',context);}};
+  const e=load(),Game=e.Game;
+  e.evaluate("Math.random=()=>0.999999; const num=n=>Math.floor(n).toLocaleString('zh-CN');");
+  e.evaluate(fs.readFileSync(path.join(__dirname,'..','campaign-ui.js'),'utf8'));
+  return {...e,html:quote=>e.evaluate(`dispatchStorageHTML(${JSON.stringify(quote)})`)};
 }
-const army={militia:100};
-function assertSettlement(Game,quote,mode='raid'){
-  const s=Game.state;s.cityLayout[0]='drill';s.cityLevels[0]=1;s.buildings.drill=1;s.army.militia=100;
+const army={archer:300};
+function assertSettlement(e,quote,mode='raid'){
+  const {Game}=e,s=Game.state;city(Game,{drill:1});s.army.archer=army.archer;
   assert.equal(Game.dispatch('field','lin',army,mode),null);
-  s.expedition.end=0; // Arrival without advancing the economic clock.
+  e.advance(s.expedition.end-e.now()+1);
   assert.equal(Game.startBattle(),null);
-  for(const row of s.battle.enemy)row.hp=0; // Isolate storage from casualties and random combat.
-  const before={...s.res};Game.battleRound();
+  const before={...s.res};
+  for(let i=0;i<30&&!s.battle.finished;i++)Game.battleRound();
   assert.equal(s.battle.result.won,true);
-  assert.equal(s.battle.result.overflow,quote.storage.overflow);
-  for(const row of quote.storage.rows)assert.ok(Math.abs(s.res[row.id]-before[row.id]-row.received)<1e-8,`${row.id} settlement differs from preview`);
+  assert.equal(s.battle.result.overflow,0);
+  for(const row of quote.storage.rows){
+    assert.equal(s.battle.result.resourceReceipt.base.received[row.id],row.received);
+    assert.ok(Math.abs(s.res[row.id]-before[row.id]-row.received)<1e-8,`${row.id} settlement differs from preview`);
+  }
 }
-test('over-cap stock: zero receipt, warning, preview is read-only, settlement agrees',()=>{
-  const {Game,html}=loadGame();Game.state.res.food=40000;Game.state.res.wood=40000;
+test('over-cap stock accepts cargo, previews excess and remains read-only',()=>{
+  const e=loadGame(),{Game,html}=e;Game.state.res.food=40000;Game.state.res.wood=40000;
   const before=JSON.stringify(Game.state),q=Game.lootPreview('field','raid',army);
-  assert.equal(q.loaded,546);assert.equal(q.storage.received,0);assert.equal(q.storage.overflow,546);
-  assert.equal(JSON.stringify(Game.state),before);assert.match(html(q).warning,/已满仓/);assertSettlement(Game,q);
+  assert.equal(q.loaded,546);assert.equal(q.storage.received,546);assert.equal(q.storage.overflow,0);assert.equal(q.storage.overCapacity,546);
+  assert.equal(JSON.stringify(Game.state),before);assert.match(html(q).warning,/爆仓/);assertSettlement(e,q);
 });
-test('partial room: separate resource limits and food provision deduction',()=>{
-  const {Game,html}=loadGame();Game.state.res.food=10000;Game.state.res.wood=9950;
-  const q=Game.lootPreview('field','raid',army);
-  assert.equal(q.storage.rows.find(r=>r.id==='food').received,140);
-  assert.equal(q.storage.rows.find(r=>r.id==='wood').received,50);
-  assert.equal(q.storage.received,190);assert.equal(q.storage.overflow,356);assert.match(html(q).warning,/部分基础资源/);assertSettlement(Game,q);
+test('partial room previews over-capacity receipts after food provisions',()=>{
+  const e=loadGame(),{Game,html}=e;Game.state.res.food=10000;Game.state.res.wood=9950;
+  const q=Game.lootPreview('field','raid',army),food=q.storage.rows.find(r=>r.id==='food'),wood=q.storage.rows.find(r=>r.id==='wood');
+  assert.equal(food.received,429);assert.equal(food.overCapacity,49);
+  assert.equal(wood.received,117);assert.equal(wood.overCapacity,67);
+  assert.equal(q.storage.received,546);assert.equal(q.storage.overflow,0);assert.equal(q.storage.overCapacity,116);assert.match(html(q).warning,/爆仓/);assertSettlement(e,q);
 });
-test('ample capacity: all cargo received with no warehouse warning',()=>{
-  const {Game,html}=loadGame(),q=Game.lootPreview('field','raid',army);
-  assert.equal(q.storage.received,546);assert.equal(q.storage.overflow,0);assert.equal(html(q).warning,'');assertSettlement(Game,q);
+test('ample capacity receives all cargo with no warehouse warning',()=>{
+  const e=loadGame(),q=e.Game.lootPreview('field','raid',army);
+  assert.equal(q.storage.received,546);assert.equal(q.storage.overflow,0);assert.equal(q.storage.overCapacity,0);assert.equal(e.html(q).warning,'');assertSettlement(e,q);
 });
-test('cargo limit is applied before storage limit',()=>{
-  const {Game}=loadGame();const q=Game.lootPreview('field','raid',{militia:1});
-  assert.ok(q.loaded<=20);assert.ok(q.discarded>0);assert.equal(q.storage.received,q.loaded);assert.equal(q.storage.overflow,0);
+test('cargo limits still apply before allowing warehouse excess',()=>{
+  const {Game}=loadGame();Game.state.res.food=40000;Game.state.res.wood=40000;
+  const q=Game.lootPreview('field','raid',{militia:1});
+  assert.ok(q.loaded<=20);assert.ok(q.discarded>0);assert.equal(q.storage.received,q.loaded);assert.equal(q.storage.overflow,0);assert.equal(q.storage.overCapacity,q.loaded);
 });
-test('occupation includes gold and uses hall storage independently',()=>{
-  const {Game}=loadGame();Game.state.res.gold=Game.capacity('gold')-10;
+test('occupation gold can exceed the independent hall capacity',()=>{
+  const e=loadGame(),{Game}=e;Game.state.res.gold=Game.capacity('gold')-10;
   const q=Game.lootPreview('field','occupy',army),gold=q.storage.rows.find(r=>r.id==='gold');
-  assert.ok(gold.amount>10);assert.equal(gold.received,10);assertSettlement(Game,q,'occupy');
+  assert.equal(gold.amount,80);assert.equal(gold.received,80);assert.equal(gold.overCapacity,70);assertSettlement(e,q,'occupy');
 });
-test('fractional capacity remains consistent with settlement',()=>{
-  const {Game,html}=loadGame();Game.state.res.food=40000;Game.state.res.wood=9999.75;
-  const q=Game.lootPreview('field','raid',army);assert.equal(q.storage.received,.25);assert.match(html(q).details,/0\.25/);assertSettlement(Game,q);
+test('fractional warehouse room reports excess without discarding cargo',()=>{
+  const e=loadGame(),{Game,html}=e;Game.state.res.food=40000;Game.state.res.wood=9999.75;
+  const q=Game.lootPreview('field','raid',army),wood=q.storage.rows.find(r=>r.id==='wood');
+  assert.equal(wood.received,117);assert.equal(wood.overCapacity,116.75);assert.equal(q.storage.received,546);assert.match(html(q).details,/116\.75/);assertSettlement(e,q);
 });
-test('zero troops produces no false full-warehouse warning',()=>{
+test('zero troops do not produce a false over-capacity warning',()=>{
   const {Game,html}=loadGame();Game.state.res.food=40000;Game.state.res.wood=40000;
-  const q=Game.lootPreview('field','raid',{});assert.equal(q.loaded,0);assert.equal(q.storage.received,0);assert.equal(html(q).warning,'');
+  const q=Game.lootPreview('field','raid',{});assert.equal(q.loaded,0);assert.equal(q.storage.received,0);assert.equal(q.storage.overCapacity,0);assert.equal(html(q).warning,'');
 });
-test('preview responds to changed stocks and storage technology',()=>{
+test('storage technology changes excess forecast without changing cargo received',()=>{
   const {Game}=loadGame();Game.state.res.wood=10000;
-  assert.equal(Game.lootPreview('field','raid',army).storage.rows.find(r=>r.id==='wood').received,0);
+  let row=Game.lootPreview('field','raid',army).storage.rows.find(r=>r.id==='wood');assert.equal(row.received,117);assert.equal(row.overCapacity,117);
   Game.state.tech.storage=1;
-  assert.equal(Game.lootPreview('field','raid',army).storage.rows.find(r=>r.id==='wood').received,117);
+  row=Game.lootPreview('field','raid',army).storage.rows.find(r=>r.id==='wood');assert.equal(row.received,117);assert.equal(row.overCapacity,0);
 });

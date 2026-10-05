@@ -1,12 +1,13 @@
 'use strict';
 function receiptTableHTML(receipt,title){
   const ids=Object.keys(receipt.loaded).filter(id=>receipt.loaded[id]>0);if(!ids.length)return `<p class="hint">${title}：无资源。</p>`;
-  return `<table class="storage-preview-table"><caption>${title}</caption><thead><tr><th scope="col">资源</th><th scope="col">装载</th><th scope="col">实际入库</th><th scope="col">仓储损失</th></tr></thead><tbody>${ids.map(id=>`<tr><th scope="row">${Game.resources[id].name}</th><td>${resourceAmount(receipt.loaded[id])}</td><td class="storage-received">${resourceAmount(receipt.received[id])}</td><td class="${receipt.overflow[id]>0?'storage-loss':''}">${resourceAmount(receipt.overflow[id])}</td></tr>`).join('')}</tbody></table>`;
+  const over=receipt.overCapacity!==undefined;
+  return `<table class="storage-preview-table"><caption>${title}</caption><thead><tr><th scope="col">资源</th><th scope="col">装载</th><th scope="col">实际入库</th><th scope="col">${over?'爆仓入库':'仓储损失'}</th></tr></thead><tbody>${ids.map(id=>`<tr><th scope="row">${Game.resources[id].name}</th><td>${resourceAmount(receipt.loaded[id])}</td><td class="storage-received">${resourceAmount(receipt.received[id])}</td><td class="${over?'storage-received':receipt.overflow[id]>0?'storage-loss':''}">${resourceAmount(over?receipt.overCapacity[id]:receipt.overflow[id])}</td></tr>`).join('')}</tbody></table>`;
 }
 function battleResourceHTML(r){
   if(!r.won)return '';
   if(!r.resourceReceipt)return `${lootHtml(r.loot)}<p class="hint">旧战报未记录分资源入库明细${r.cargoLoaded!==undefined?'；实际入库合计 '+resourceAmount(Math.max(0,r.cargoLoaded-r.overflow)):''}。</p>${r.overflow?`<p class="storage-loss">仓储不足，${resourceAmount(r.overflow)} 资源未能入库。${btn('前往仓储','manualStorage','','small secondary')}</p>`:''}`;
-  return `<section class="storage-preview" aria-label="战利品实际入库"><h3>战利品实际入库</h3>${receiptTableHTML(r.resourceReceipt.base,'基础战利品')}${receiptTableHTML(r.resourceReceipt.bonus,'随机资源掉落')}${r.overflow?`<p class="storage-loss">仓储损失合计 ${resourceAmount(r.overflow)}。${btn('前往仓储','manualStorage','','small secondary')}</p>`:'<p class="hint">已装载资源全部入库。</p>'}</section>`;
+  return `<section class="storage-preview" aria-label="战利品实际入库"><h3>战利品实际入库</h3>${receiptTableHTML(r.resourceReceipt.base,'基础战利品')}${receiptTableHTML(r.resourceReceipt.bonus,'随机资源掉落')}${r.overCapacity?`<p class="notice">爆仓入库 ${resourceAmount(r.overCapacity)}，已计入实际入库，资源已到账。</p>`:''}${r.overflow?`<p class="storage-loss">${r.overCapacity===undefined?'仓储损失合计':'资源数值达到上限，未入库'} ${resourceAmount(r.overflow)}。${btn('前往仓储','manualStorage','','small secondary')}</p>`:'<p class="hint">已装载资源全部入库。</p>'}</section>`;
 }
 function npcDefenseNoticeHTML(){
   const d=S().cityDefense,b=d.battle,w=d.incoming;

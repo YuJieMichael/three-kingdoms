@@ -66,8 +66,8 @@ test('save validation rejects invalid resource receipts and defense state',()=>{
 });
 test('new offensive report preserves separate base and random receipts, validates and restores them',()=>{
   const e=load(),s=e.Game.state;s.buildings.drill=1;s.cityLayout[0]='drill';s.cityLevels[0]=1;s.army.militia=1000;s.res.food=12000;s.res.wood=9950;
-  assert.equal(e.Game.dispatch('field','lin',{militia:1000}),null);e.advance(11000);assert.equal(e.Game.startBattle(),null);s.res.wood=9950;for(const r of s.battle.enemy)r.hp=0;e.eval('Math.random=()=>0');const before={...s.res};e.Game.battleRound();const r=s.reports[0];
-  assert.equal(r.resourceReceipt.base.loaded.food,r.loot.food);assert.equal(r.resourceReceipt.base.received.wood,50);assert.ok(r.resourceReceipt.bonus.loaded.food>0);assert.equal(r.resourceReceipt.bonus.received.wood,0);
+  assert.equal(e.Game.dispatch('field','lin',{militia:1000}),null);e.advance(11000);assert.equal(e.Game.startBattle(),null);s.res.wood=9950;e.eval('Math.random=()=>0');const before={...s.res};for(let i=0;i<30&&!s.battle.finished;i++)e.Game.battleRound();const r=s.reports[0];assert.equal(r.won,true);
+  assert.equal(r.resourceReceipt.base.loaded.food,r.loot.food);assert.equal(r.resourceReceipt.base.received.wood,r.loot.wood);assert.equal(r.resourceReceipt.base.overCapacity.wood,r.loot.wood-50);assert.ok(r.resourceReceipt.bonus.loaded.food>0);assert.equal(r.resourceReceipt.bonus.received.wood,r.bonusLoot.wood);assert.equal(r.resourceReceipt.bonus.overCapacity.wood,r.bonusLoot.wood);assert.equal(r.overflow,0);
   for(const id of ['food','wood'])assert.ok(Math.abs(s.res[id]-before[id]-r.resourceReceipt.base.received[id]-r.resourceReceipt.bonus.received[id])<1e-6);
   assert.equal(e.Game.validSave(s),true);e.Game.save();e.Game.init();assert.equal(JSON.stringify(e.Game.state.reports[0].resourceReceipt),JSON.stringify(r.resourceReceipt));
   const bad=JSON.parse(JSON.stringify(e.Game.state));bad.reports[0].resourceReceipt.base.received.food+=1;assert.equal(e.Game.validSave(bad),false);

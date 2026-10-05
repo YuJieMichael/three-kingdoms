@@ -47,3 +47,4 @@ dialog,dialog.bag-dialog{max-width:calc(100% - 20px);box-sizing:border-box;overf
 .war-order-intel h4{margin:12px 0 8px;font-size:14px}
 .war-order-intel .enemy-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin:8px 0 12px}
 .war-order-intel .enemy-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(181,175,128,.14);padding:5px 0}
+.estimate{background:#283627;border-color:#657147;color:#dedec8}.storage-preview-table caption,.storage-preview-table small{color:#b4bea6}
