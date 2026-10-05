@@ -181,19 +181,36 @@ test('chapter modal hides third-stage cards and rejects stale chapter buttons un
  g.state.conquered.north_keep=true;
  e.evaluate('uiButtons=[];chapterMissionModal()');
  assert.equal(e.evaluate("uiButtons.find(button=>button.action==='chapterSelect'&&button.id==='3').disabled"),false);
- clickChapter(e,'chapterSelect','3');shown=clone(e.evaluate('uiShows.at(-1)'));
+ e.evaluate('uiButtons=[]');clickChapter(e,'chapterSelect','3');shown=clone(e.evaluate('uiShows.at(-1)'));
  assert.equal(e.evaluate('selectedChapter'),3);assert.match(shown.title,/第三章/);
- for(const node of e.Chapter.chapterThreeNodes)assert.ok(shown.body.includes(node.name));
+ assert.ok(shown.body.includes(e.Chapter.chapterThreeNodes[0].name));
+ for(const node of e.Chapter.chapterThreeNodes.slice(1))assert.ok(!shown.body.includes(node.name));
+ assert.deepEqual(clone(e.evaluate("uiButtons.filter(button=>button.action==='chapterGo').map(button=>button.id)")),['luo_outpost']);
  assert.equal(g.state.missionClaims.length,0);
- // Once the chapter opens, players may inspect a later, still locked stage.
+ // Opening the chapter reveals its current station, not a stale future-stage button.
  assert.ok(g.attackBlocked('luo_gate','occupy'));
+ const unopened=JSON.stringify(g.state);
+ clickChapter(e,'chapterGo','luo_gate');
+ assert.equal(e.evaluate('page'),'city');assert.equal(e.evaluate('selectedNode'),null);
+ assert.equal(e.evaluate('uiRenders'),0);assert.equal(e.evaluate('uiCloses'),0);
+ assert.match(e.evaluate('uiToasts.at(-1)'),/当前任务据点/);
+ assert.equal(JSON.stringify(g.state),unopened);
+ // Prepared ownership checkpoints isolate progressive UI visibility from combat balance.
+ g.state.conquered.luo_outpost=true;e.evaluate('uiButtons=[];chapterMissionModal()');
+ assert.deepEqual(clone(e.evaluate("uiButtons.filter(button=>button.action==='chapterGo').map(button=>button.id)")),['luo_outpost','luo_gate']);
  clickChapter(e,'chapterGo','luo_gate');
  assert.equal(e.evaluate('page'),'world');assert.equal(e.evaluate('selectedNode'),'luo_gate');
  assert.deepEqual(clone(e.evaluate('worldView')),{x:46,y:12});
  assert.equal(e.evaluate('uiRenders'),1);assert.equal(e.evaluate('uiCloses'),1);
+ for(let i=1;i<e.Chapter.chapterThreeNodes.length;i++){
+  g.state.conquered[e.Chapter.chapterThreeNodes[i].id]=true;
+  e.evaluate('uiButtons=[];chapterMissionModal()');
+  assert.deepEqual(clone(e.evaluate("uiButtons.filter(button=>button.action==='chapterGo').map(button=>button.id)")),clone(e.Chapter.chapterThreeNodes.slice(0,i+2).map(node=>node.id)));
+ }
+ assert.equal(g.state.missionClaims.length,0,'revealing stations does not claim their rewards');
 });
 
-test('world shortcuts and the scouting button reflect whole-chapter unlock without removing map landmarks',()=>{
+test('world shortcuts reveal only explored and current stations while chapter unlock protects scouting',()=>{
  const e=setup(),g=e.Game;own(e,e.Chapter.nodes.slice(0,-1));uiStubs(e);
  e.evaluate(`
   globalThis.selectedNode='field';
@@ -202,11 +219,12 @@ test('world shortcuts and the scouting button reflect whole-chapter unlock witho
   globalThis.epicWorldBanner=()=>'';globalThis.chapterWorldBanner=()=>'';
   globalThis.expeditionStrip=()=>'';globalThis.classicTargetActions=()=>'';
  `);
- // Use the real text-escaping helper and shared art dependency used by index.html.
+ // Use the real helpers and UI dependencies loaded before app.js first renders index.html.
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8').split('\n').find(line=>line.startsWith('const esc=')));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','art-assets.js'),'utf8'));
- e.evaluate(fs.readFileSync(path.join(__dirname,'..','manual-ui.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','grid-world.js'),'utf8'));
+ e.evaluate(fs.readFileSync(path.join(__dirname,'..','manual-ui.js'),'utf8'));
+ e.evaluate(fs.readFileSync(path.join(__dirname,'..','wild-general-ui.js'),'utf8'));
  let html=e.evaluate('worldPage()');
  for(const node of e.Chapter.chapterThreeNodes){
   assert.ok(!html.includes('data-action="mapLandmark" data-id="'+node.id+'"'));
@@ -219,8 +237,13 @@ test('world shortcuts and the scouting button reflect whole-chapter unlock witho
  e.evaluate('worldPage()');assert.equal(JSON.stringify(g.state),before);
  g.state.conquered.north_keep=true;
  html=e.evaluate('worldPage()');
- for(const node of e.Chapter.chapterThreeNodes)assert.ok(html.includes('data-action="mapLandmark" data-id="'+node.id+'"'));
+ for(const [i,node] of e.Chapter.chapterThreeNodes.entries())assert.equal(html.includes('data-action="mapLandmark" data-id="'+node.id+'"'),i===0);
  e.evaluate("uiButtons=[];enemyIntelHTML(Game.getNode('luo_outpost'))");
  assert.equal(e.evaluate("uiButtons.find(button=>button.action==='manualScout').disabled"),false);
  assert.equal(e.evaluate("uiButtons.find(button=>button.action==='manualScout').label"),'斥候侦察 · 10粮');
+ for(let i=0;i<e.Chapter.chapterThreeNodes.length;i++){
+  g.state.conquered[e.Chapter.chapterThreeNodes[i].id]=true;
+  html=e.evaluate('worldPage()');
+  for(const [j,node] of e.Chapter.chapterThreeNodes.entries())assert.equal(html.includes('data-action="mapLandmark" data-id="'+node.id+'"'),j<=i+1);
+ }
 });

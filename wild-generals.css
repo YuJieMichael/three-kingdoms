@@ -14,3 +14,5 @@
 .wild-node-lead h3{margin:0 0 8px}
 .wild-battle-receipt p{margin:8px 0}
 @media(max-width:600px){.wild-general-card{padding:12px}.wild-general-heading{gap:8px}.wild-general-heading h3 .label{display:block;margin-top:4px}.wild-initial-stats{gap:4px}.wild-initial-stats small{font-size:11px}.wild-general-actions{display:grid;grid-template-columns:1fr;width:100%}.wild-general-actions .btn{width:100%;white-space:normal;min-height:44px}.wild-general-list .coordinate-tag{white-space:normal}.wild-node-lead{padding:12px}}
+
+.wild-portrait-status{margin:10px 0;padding:10px;border:1px solid var(--line,#615b45);border-radius:5px}.wild-portrait-status p{margin:0 0 8px}.wild-portrait-status .btn{max-width:100%;white-space:normal}
