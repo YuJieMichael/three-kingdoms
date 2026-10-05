@@ -24,6 +24,6 @@ function resourceIcon(id,classes='icon-mini'){const i=HistoricalArt.icons.ids.in
 function terrainIcon(type){const i=HistoricalArt.terrain.ids.indexOf(type);return artSprite('terrain',i<0?6:i,Game.terrainTypes[type]?.name||'城池','terrain-image');}
 function itemIcon(item,classes='item-art'){
   const byId={heal:'scroll',labor:'order',population:'order',peace:'letter',blueprint:'blueprint',politics:'scroll',valor:'weapons',wisdom:'scroll',tiger:'order',recruit:'letter',drum:'order',drum7:'order',formation:'blueprint',formation7:'blueprint',flag:'order',rename:'letter',banner:'order',fire:'medicine',treasure:'blueprint',tradeContract:'crate',refine:'medicine',resetHero:'medicine',life:'medicine',horseCharm:'bridle',horseNeedle:'bridle',pearl:'gems',protectPearl:'gems',drillGem:'gems',drillGemAdvanced:'gems',powder:'stone',rack:'weapons',rackAdvanced:'weapons',tactic:'letter'};
-  const key=byId[item.id]||({建造加速:'blueprint',研究加速:'scroll',练兵加速:'order',内政:'letter',军事:'order',将领:'scroll',宝物:'gift',装备:'weapons',社交:'letter'}[item.category])||'gift';
+  const key=(item.effect==='gold'?'gold':byId[item.id])||({建造加速:'blueprint',研究加速:'scroll',练兵加速:'order',内政:'letter',军事:'order',将领:'scroll',宝物:'gift',装备:'weapons',社交:'letter'}[item.category])||'gift';
   return artSprite('icons',HistoricalArt.icons.ids.indexOf(key),item.name,classes);
 }

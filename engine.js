@@ -91,12 +91,13 @@ const Game = (() => {
     {id:'victories10',stage:'征战里程',title:'威震乡野',desc:'累计赢得 10 场战斗',route:'world',check:s=>s.stats.victories>=10,reward:{food:5000,iron:3000,gold:25000}},
     {id:'fort',stage:'征战里程',title:'一县之主',desc:'占领古渡县城',route:'world',check:s=>!!s.conquered.fort,reward:{food:6000,wood:4000,stone:4000,iron:4000,gold:30000}}
   ];
+  RewardData.extendMissions(missions);
   const missionClaimed=(id,s=state)=>s.missionClaims.includes(id);
   const missionReady=(m,s=state)=>!missionClaimed(m.id,s)&&m.check(s);
   const currentMission=()=>missions.find(m=>missionReady(m))||missions.find(m=>!missionClaimed(m.id));
   let state,economyClock=null;
   const blankArmy = () => Object.fromEntries(Object.keys(units).map(k=>[k,0]));
-  const newState=()=>{const fresh=({version:2,manualSchema:1,last:Date.now(),speed:1,autoUpgrade:false,starterGiftClaimed:false,starterGiftVersion:0,missionSchema:2,missionClaims:[],res:{food:5000,wood:5000,stone:5000,iron:5000,gold:5000},buildings:Object.fromEntries(cityIds.map(id=>[id,id==='hall'?1:0])),cityLayout:defaultCityLayout(),cityLevels:Array.from({length:36},(_,i)=>i===14?1:0),tactics:Object.fromEntries(Object.keys(units).map(id=>[id,{command:defaultOrder(id),target:''}])),plots:newPlots(),army:blankArmy(),buildQueue:[],trainQueue:[],researchQueue:null,tech:Object.fromEntries(Object.keys(ManualData.technology).map(id=>[id,0])),generals:['lin','su'],generalLevels:{lin:1,su:1},generalXp:{lin:0,su:0},customGenerals:[],innCandidates:[],governor:'su',population:0,morale:80,unrest:0,tax:20,storageAllocation:{food:25,wood:25,stone:25,iron:25},gems:1000,inventory:{},buffs:{},itemCooldowns:{},civicCooldowns:{comfort:0,levy:0},trialGiftAt:0,ruler:'青溪城主',banner:'青',scouted:{},defenses:Object.fromEntries(Object.keys(ManualData.defenses).map(id=>[id,0])),defenseQueue:[],landClaims:{},conquered:{},raided:{},garrisons:{},towns:{fort:{morale:100,unrest:0,population:400}},cooldowns:{},expedition:null,expeditions:[],battle:null,reports:[],mission:0,stats:{trained:0,victories:0},seen:[],tutorial:false});Progression.init(fresh);fresh.prestige=0;return fresh;};
+  const newState=()=>{const fresh=({version:2,manualSchema:1,last:Date.now(),speed:1,autoUpgrade:false,starterGiftClaimed:false,starterGiftVersion:0,missionSchema:2,missionClaims:[],res:{food:5000,wood:5000,stone:5000,iron:5000,gold:5000},buildings:Object.fromEntries(cityIds.map(id=>[id,id==='hall'?1:0])),cityLayout:defaultCityLayout(),cityLevels:Array.from({length:36},(_,i)=>i===14?1:0),tactics:Object.fromEntries(Object.keys(units).map(id=>[id,{command:defaultOrder(id),target:''}])),plots:newPlots(),army:blankArmy(),captives:blankArmy(),buildQueue:[],trainQueue:[],researchQueue:null,tech:Object.fromEntries(Object.keys(ManualData.technology).map(id=>[id,0])),generals:['lin','su'],generalLevels:{lin:1,su:1},generalXp:{lin:0,su:0},customGenerals:[],innCandidates:[],governor:'su',population:0,morale:80,unrest:0,tax:20,storageAllocation:{food:25,wood:25,stone:25,iron:25},gems:1000,inventory:{},buffs:{},itemCooldowns:{},civicCooldowns:{comfort:0,levy:0},trialGiftAt:0,ruler:'青溪城主',banner:'青',scouted:{},defenses:Object.fromEntries(Object.keys(ManualData.defenses).map(id=>[id,0])),defenseQueue:[],landClaims:{},conquered:{},raided:{},garrisons:{},towns:{fort:{morale:100,unrest:0,population:400}},cooldowns:{},expedition:null,expeditions:[],battle:null,reports:[],mission:0,stats:{trained:0,victories:0},seen:[],tutorial:false});Progression.init(fresh);fresh.prestige=0;return fresh;};
   function migrateSave(data){
     if(!data||![1,2].includes(data.version))return data;
     const old=JSON.parse(JSON.stringify(data));
@@ -132,6 +133,7 @@ const Game = (() => {
       old.missionSchema=2;old.mission=old.missionClaims.length;
     }
     for(const id of Object.keys(ManualData.technology))if(old.tech[id]===undefined)old.tech[id]=0;
+    if(old.captives===undefined)old.captives=blankArmy();
     Progression.init(old);
     return old;
   }
@@ -146,9 +148,9 @@ const Game = (() => {
     const node=id=>!!getNode(id);
     const timing=q=>finite(q.start)&&finite(q.end)&&q.end>q.start;
     const itemDrops=a=>object(a)&&Object.entries(a).every(([id,n])=>ManualData.shop.some(x=>x.id===id)&&integer(n)&&n>0&&n<=2);
-    const result=r=>object(r)&&(r.prestigeDelta===undefined||Number.isSafeInteger(r.prestigeDelta))&&(r.jewelDrops===undefined||object(r.jewelDrops)&&Object.entries(r.jewelDrops).every(([id,n])=>Progression.jewels[id]&&integer(n)&&n<=2))&&['raid','occupy'].includes(r.mode)&&typeof r.won==='boolean'&&loot(r.loot)&&(r.itemDrops===undefined||itemDrops(r.itemDrops))&&(r.bonusLoot===undefined||loot(r.bonusLoot))&&(r.bonusDiscarded===undefined||finite(r.bonusDiscarded))&&(r.cargoCapacity===undefined||integer(r.cargoCapacity))&&(r.cargoLoaded===undefined||integer(r.cargoLoaded)&&r.cargoLoaded<=r.cargoCapacity)&&(r.lootDiscarded===undefined||integer(r.lootDiscarded))&&army(r.back)&&army(r.lost)&&army(r.wounded)&&finite(r.xp)&&finite(r.overflow)&&(r.recruit===null||generals.some(g=>g.id===r.recruit));
+    const result=r=>object(r)&&(r.prestigeDelta===undefined||Number.isSafeInteger(r.prestigeDelta))&&(r.jewelDrops===undefined||object(r.jewelDrops)&&Object.entries(r.jewelDrops).every(([id,n])=>Progression.jewels[id]&&integer(n)&&n<=2))&&(r.captures===undefined||army(r.captures))&&(r.captureDiscarded===undefined||integer(r.captureDiscarded))&&['raid','occupy'].includes(r.mode)&&typeof r.won==='boolean'&&loot(r.loot)&&(r.itemDrops===undefined||itemDrops(r.itemDrops))&&(r.bonusLoot===undefined||loot(r.bonusLoot))&&(r.bonusDiscarded===undefined||finite(r.bonusDiscarded))&&(r.cargoCapacity===undefined||integer(r.cargoCapacity))&&(r.cargoLoaded===undefined||integer(r.cargoLoaded)&&r.cargoLoaded<=r.cargoCapacity)&&(r.lootDiscarded===undefined||integer(r.lootDiscarded))&&army(r.back)&&army(r.lost)&&army(r.wounded)&&finite(r.xp)&&finite(r.overflow)&&(r.recruit===null||generals.some(g=>g.id===r.recruit));
     const rows=(a,length)=>Array.isArray(a)&&a.length<=12&&new Set(a.map(r=>r.id)).size===a.length&&a.every(r=>object(r)&&Object.hasOwn(units,r.id)&&integer(r.initial)&&r.initial>0&&finite(r.hp)&&object(r.stats)&&['hp','atk','def','range','speed'].every(k=>finite(r.stats[k]))&&r.stats.hp>0&&r.maxHp===r.initial*r.stats.hp&&r.hp<=r.maxHp&&Number.isInteger(r.pos)&&r.pos>=0&&r.pos<=length);
-    if(!object(d)||!Progression.valid(d)||d.version!==2||typeof d.autoUpgrade!=='boolean'||typeof d.starterGiftClaimed!=='boolean'||!finite(d.last)||!loot(d.res)||!Object.keys(resources).every(k=>finite(d.res[k]))||!object(d.buildings)||!cityIds.every(k=>Number.isInteger(d.buildings[k])&&d.buildings[k]>=(k==='hall'?1:0)&&d.buildings[k]<=10)||!army(d.army))return false;
+    if(!object(d)||!Progression.valid(d)||d.version!==2||typeof d.autoUpgrade!=='boolean'||typeof d.starterGiftClaimed!=='boolean'||!finite(d.last)||!loot(d.res)||!Object.keys(resources).every(k=>finite(d.res[k]))||!object(d.buildings)||!cityIds.every(k=>Number.isInteger(d.buildings[k])&&d.buildings[k]>=(k==='hall'?1:0)&&d.buildings[k]<=10)||!army(d.army)||!army(d.captives)||Object.entries(d.captives).some(([id,n])=>n>0&&!RewardData.captives.units.includes(id)))return false;
     if(!Array.isArray(d.plots)||d.plots.length!==PLOT_COUNT||!d.plots.every(p=>object(p)&&(p.type===null?p.level===0:Object.hasOwn(plotTypes,p.type)&&Number.isInteger(p.level)&&p.level>=1&&p.level<=10)))return false;
     if(d.manualSchema!==1||!Array.isArray(d.cityLayout)||d.cityLayout.length!==36||!d.cityLayout.every(id=>id===null||id==='reserved'||cityIds.includes(id))||d.cityLayout.filter(x=>x==='hall').length!==1||d.cityLayout.filter(x=>x==='reserved').length!==3||!Array.isArray(d.cityLevels)||d.cityLevels.length!==36||!d.cityLevels.every((lv,i)=>integer(lv)&&lv<=10&&(d.cityLayout[i]===null||d.cityLayout[i]==='reserved'?lv===0:true)))return false;
     if(![1,10,60].includes(d.speed)||!object(d.tech)||!Object.keys(ManualData.technology).every(id=>integer(d.tech[id])&&d.tech[id]<=10)||!finite(d.population)||!finite(d.morale)||d.morale>100||!finite(d.unrest)||d.unrest>100||!finite(d.gems)||!object(d.inventory)||!Object.entries(d.inventory).every(([id,n])=>ManualData.shop.some(x=>x.id===id)&&integer(n))||!object(d.buffs)||!object(d.itemCooldowns)||!object(d.scouted)||!object(d.landClaims)||!object(d.defenses)||!Object.keys(ManualData.defenses).every(id=>integer(d.defenses[id]))||!Array.isArray(d.defenseQueue)||d.defenseQueue.length>5||!object(d.storageAllocation)||Object.values(d.storageAllocation).reduce((v,n)=>v+n,0)!==100)return false;
@@ -207,7 +209,7 @@ const Game = (() => {
     let cursor=start;
     function accrue(end){while(cursor<end){const next=Math.min(end,cursor+30000),dt=(next-cursor)/60000;economyClock=cursor;const r=rates();for(const k of Object.keys(resources)){if(r[k]<0)state.res[k]=Math.max(0,state.res[k]+r[k]*dt);else if(state.res[k]<capacity(k))state.res[k]=Math.min(capacity(k),state.res[k]+r[k]*dt);}const change=dt*state.speed/6,target=100-state.tax;state.morale+=Math.sign(target-state.morale)*Math.min(Math.abs(target-state.morale),change);const popTarget=maxPop()*state.morale/100;state.population=Math.max(0,Math.min(maxPop(),state.population+Math.sign(popTarget-state.population)*Math.min(Math.abs(popTarget-state.population),Math.max(1,maxPop()*.01)*dt*state.speed)));cursor=next;}economyClock=null;}
 
-    for(const e of events){accrue(Math.max(start,e.q.end));if(e.type==='build'){if(e.q.plot!==undefined)state.plots[e.q.plot]={type:e.q.id,level:e.q.level};else{state.cityLevels[e.q.site]=e.q.level;refreshBuildings();}state.buildQueue=state.buildQueue.filter(q=>q!==e.q);state.prestige+=e.q.level*50;Progression.record(state,'build',1,e.q.end);}else if(e.type==='train'){state.army[e.q.id]+=e.q.count;state.stats.trained+=e.q.count;state.prestige+=Math.ceil(e.q.count/5);Progression.record(state,'train',e.q.count,e.q.end);state.trainQueue=state.trainQueue.filter(q=>q!==e.q);}else if(e.type==='research'){state.tech[e.q.id]=e.q.level;state.researchQueue=null;state.prestige+=e.q.level*100;Progression.record(state,'research',1,e.q.end);}else if(e.type==='defense'){state.defenses[e.q.id]+=e.q.count;state.defenseQueue=state.defenseQueue.filter(q=>q!==e.q);}else if(['expeditionReturn','garrisonReturn'].includes(e.type)){for(const [id,n] of Object.entries(e.q.army))state.army[id]+=n;if(e.type==='garrisonReturn')delete state.garrisons[e.id];else if(state.expedition===e.q)state.expedition=null;else state.expeditions=state.expeditions.filter(q=>q!==e.q);}}
+    for(const e of events){accrue(Math.max(start,e.q.end));if(e.type==='build'){if(e.q.plot!==undefined)state.plots[e.q.plot]={type:e.q.id,level:e.q.level};else{state.cityLevels[e.q.site]=e.q.level;refreshBuildings();}state.buildQueue=state.buildQueue.filter(q=>q!==e.q);state.prestige+=e.q.level*50;Progression.record(state,'build',1,e.q.end);if(e.q.plot!==undefined)Progression.record(state,'field_build',1,e.q.end);}else if(e.type==='train'){state.army[e.q.id]+=e.q.count;state.stats.trained+=e.q.count;state.prestige+=Math.ceil(e.q.count/5);Progression.record(state,'train',e.q.count,e.q.end);if(['archer','cavalry'].includes(e.q.id))Progression.record(state,'train_'+e.q.id,e.q.count,e.q.end);state.trainQueue=state.trainQueue.filter(q=>q!==e.q);}else if(e.type==='research'){state.tech[e.q.id]=e.q.level;state.researchQueue=null;state.prestige+=e.q.level*100;Progression.record(state,'research',1,e.q.end);}else if(e.type==='defense'){state.defenses[e.q.id]+=e.q.count;Progression.record(state,'defense',e.q.count,e.q.end);state.defenseQueue=state.defenseQueue.filter(q=>q!==e.q);}else if(['expeditionReturn','garrisonReturn'].includes(e.type)){for(const [id,n] of Object.entries(e.q.army))state.army[id]+=n;if(e.type==='garrisonReturn')delete state.garrisons[e.id];else if(state.expedition===e.q)state.expedition=null;else state.expeditions=state.expeditions.filter(q=>q!==e.q);}}
     accrue(now);state.last=now;Progression.ensureDaily(state,now);
     for(const [id,g] of Object.entries(state.garrisons))if(g.phase==='return'&&g.end<=now){for(const [k,n] of Object.entries(g.army))state.army[k]+=n;delete state.garrisons[id];}
     if(state.expedition?.phase==='return'&&state.expedition.end<=now){for(const [k,n] of Object.entries(state.expedition.army))state.army[k]+=n;state.expedition=null;}
@@ -326,7 +328,7 @@ const Game = (() => {
     state.morale=Math.max(0,Math.min(100,state.morale+order.effects.morale));
     state.unrest=Math.max(0,Math.min(100,state.unrest+order.effects.unrest));
     state.population=Math.min(maxPop(),state.population+order.effects.population);
-    state.civicCooldowns[order.kind]=Date.now()+ManualData.civic.cooldownSeconds*1000;Progression.record(state,'civic');
+    state.civicCooldowns[order.kind]=Date.now()+ManualData.civic.cooldownSeconds*1000;Progression.record(state,'civic');Progression.record(state,order.kind);
     save();return null;
   }
   const power=a=>Math.round(Object.entries(a).reduce((v,[k,n])=>v+n*(units[k].atk+units[k].hp/10),0));
@@ -438,17 +440,20 @@ const Game = (() => {
       state.stats.victories++;state.raided[n.id]=true;state.cooldowns[n.id]=Date.now()+90000;
       if(isCity(n)){const town=state.towns[n.id];if(mode==='occupy'){moraleBefore=town.morale;town.morale=Math.max(-100,town.morale-35);town.population=Math.max(0,town.population-40);moraleAfter=town.morale;claimed=town.morale<0&&!state.conquered[n.id];}else town.unrest=Math.min(100,town.unrest+10);}
       else if(mode==='occupy')claimed=!state.conquered[n.id];
-      if(claimed){state.conquered[n.id]=true;if(n.wild)state.landClaims[n.id]={at:Date.now(),level:n.level};}
+      if(claimed){Progression.record(state,'occupy');state.conquered[n.id]=true;if(n.wild)state.landClaims[n.id]={at:Date.now(),level:n.level};}
       if(claimed&&n.capture&&!state.generals.includes(n.capture)){state.generals.push(n.capture);state.generalLevels[n.capture]=1;state.generalXp[n.capture]=0;recruit=n.capture;}
       if(n.wild&&mode==='occupy'&&claimed&&totalArmy(back)>0){state.garrisons[n.id]={general:e.general,army:{...back},phase:'stationed',start:Date.now(),end:null};stationed=true;}
     }
+    const {captures,captureDiscarded}=won?rollCaptives(b,alive,n):{captures:blankArmy(),captureDiscarded:0};
     const received=Object.fromEntries(Object.keys(resources).map(id=>[id,Math.max(0,Math.floor(state.res[id]-resourceBefore[id]))])),progressionResult=Progression.battle(state,n,b,won,received);
     const xp=won?n.level*45:15;state.generalXp[e.general]=(state.generalXp[e.general]||0)+xp;
     while(state.generalXp[e.general]>=general(e.general).level*80){state.generalXp[e.general]-=general(e.general).level*80;state.generalLevels[e.general]++;}
     if(stationed)state.expedition=null;else{e.army=back;e.phase='return';e.start=Date.now();e.end=Date.now()+Math.max(1,Math.max(5,n.time/2)/state.speed)*1000;}
-    b.finished=true;b.auto=false;b.result={...progressionResult,won,mode,claimed,stationed,moraleBefore,moraleAfter,retreated,loot,itemDrops:drops.items,bonusLoot,bonusDiscarded,cargoCapacity,cargoLoaded:Object.values(loot).reduce((v,n)=>v+n,0)+Object.values(bonusLoot).reduce((v,n)=>v+n,0),lootDiscarded,lost,wounded,back,xp,first:claimed,recruit,overflow};
+    b.finished=true;b.auto=false;b.result={...progressionResult,won,mode,claimed,stationed,moraleBefore,moraleAfter,retreated,loot,captures,captureDiscarded,itemDrops:drops.items,bonusLoot,bonusDiscarded,cargoCapacity,cargoLoaded:Object.values(loot).reduce((v,n)=>v+n,0)+Object.values(bonusLoot).reduce((v,n)=>v+n,0),lootDiscarded,lost,wounded,back,xp,first:claimed,recruit,overflow};
     state.reports.unshift({id:Date.now(),node:n.id,general:e.general,round:b.round,...b.result});state.reports=state.reports.slice(0,20);
     pushLog(b,!won?'战斗失利，幸存部队返城整顿。':mode==='raid'?'掠夺成功，未改变领地归属，部队携战利品返城。':stationed?'占领成功，部队留守野地，耗粮翻倍。':claimed?'占领成功，领地归属变更。':moraleAfter!==null?'攻城获胜，民心 '+moraleBefore+' → '+moraleAfter+'，尚未易主。':'本次战斗结束。');
+    if(totalArmy(captures))pushLog(b,'收容俘虏：'+Object.entries(captures).filter(([,n])=>n>0).map(([id,n])=>units[id].name+' ×'+n).join('、')+'；可在军队的俘虏营招降。');
+    if(captureDiscarded)pushLog(b,'押解或俘虏营名额不足，释放 '+captureDiscarded+' 名俘虏。');
     if(Object.keys(drops.items).length)pushLog(b,'缴获道具：'+Object.entries(drops.items).map(([id,count])=>ManualData.shop.find(x=>x.id===id).name+' ×'+count).join('、')+'，已收入道具行囊。');
     if(Object.values(bonusLoot).some(n=>n>0))pushLog(b,'额外资源：'+Object.entries(bonusLoot).filter(([,count])=>count>0).map(([id,count])=>resources[id].name+' +'+count).join('、')+'。');
     if(won)pushLog(b,'幸存部队负重 '+cargoCapacity+'，装载资源 '+b.result.cargoLoaded+'；伤兵不参与搬运。');
@@ -457,6 +462,31 @@ const Game = (() => {
     pushLog(b,'声望 '+(progressionResult.prestigeDelta>=0?'+':'')+progressionResult.prestigeDelta+(won?'；获得珍珠 ×1，可用于进献珍宝。':''));
     save();return b.result;
   }
+  function captiveCapacity(){return Math.min(RewardData.captives.maxCapacity,Math.max(100,state.buildings.hall*100+state.buildings.drill*50));}
+  function captiveChance(nodeId){const n=getNode(nodeId),r=RewardData.captives;return Math.min(r.maxChance,r.baseChance+Math.max(0,n?.level||0)*r.perLevel);}
+  function rollCaptives(b,alive,n){
+    const captures=blankArmy(),r=RewardData.captives;
+    if(Math.random()>=captiveChance(n.id))return {captures,captureDiscarded:0};
+    let escort=Math.min(r.maxPerBattle,Math.floor(totalArmy(alive)*r.escortRatio)),room=Math.max(0,captiveCapacity()-totalArmy(state.captives)),captureDiscarded=0;
+    // Shuffle troop types so a large first stack does not always use every escort slot.
+    const candidates=b.enemy.filter(row=>r.units.includes(row.id)).map(row=>({row,sort:Math.random()})).sort((a,b)=>a.sort-b.sort);
+    for(const {row} of candidates){const eligible=Math.max(0,row.initial-(row.id==='militia'?b.militia:0));if(!eligible)continue;
+      const possible=Math.max(1,Math.floor(eligible*(r.minRatio+Math.random()*(r.maxRatio-r.minRatio)))),count=Math.min(possible,escort,room);
+      captures[row.id]+=count;state.captives[row.id]+=count;escort-=count;room-=count;captureDiscarded+=possible-count;
+    }
+    Progression.record(state,'capture',totalArmy(captures));return {captures,captureDiscarded};
+  }
+  function captiveRecruitQuote(id,count){
+    const r=RewardData.captives,u=units[id];count=Math.floor(count);let reason='';
+    if(!r.units.includes(id)||!Number.isSafeInteger(count)||count<1||count>state.captives[id])return {reason:'俘虏数量不足',cost:{},people:0};
+    const cost={food:count*r.food,gold:count*Math.max(r.minGold,Math.ceil((u.cost.gold||0)*r.goldRatio))},people=count*(u.people||1);
+    if(unitRequirements(id))reason='需要 '+unitRequirements(id);else if(people>freePopulation())reason='空闲人口不足，需要 '+people+' 人口';else if(!canPay(cost))reason='招降所需粮食或黄金不足';
+    return {reason,cost,people};
+  }
+  function recruitCaptives(id,count){tick(Date.now(),false);count=Math.floor(count);const q=captiveRecruitQuote(id,count);if(q.reason)return q.reason;
+    pay(q.cost);state.population-=q.people;state.captives[id]-=count;state.army[id]+=count;Progression.record(state,'captive_recruit',count);save();return null;
+  }
+  function releaseCaptives(id,count){tick(Date.now(),false);count=Math.floor(count);if(!RewardData.captives.units.includes(id)||!Number.isSafeInteger(count)||count<1||count>state.captives[id])return '俘虏数量不足';state.captives[id]-=count;save();return null;}
   function battleDropInfo(nodeId){
     const n=getNode(nodeId),level=Math.max(0,Math.min(10,n?.level||0)),d=ManualData.battleDrops;
     return {level,itemChance:Math.min(d.itemChanceMax,d.itemChanceBase+level*d.itemChancePerLevel),resourceChance:Math.min(d.resourceChanceMax,d.resourceChanceBase+level*d.resourceChancePerLevel)};
@@ -487,7 +517,7 @@ const Game = (() => {
   function npcName(id,n){return n?.wild?ManualData.npcNames[id]||units[id].name:units[id].name;}
   function refreshInn(){tick();if(state.buildings.inn<1)return '请先建造客栈';const surnames=['魏','邵','程','陆','叶','夏','徐','陶'],given=['衡','舟','川','岚','松','宁','瑜','晏'];state.innCandidates=Array.from({length:state.buildings.inn},(_,i)=>{const number=Date.now()+i,seed=hash(number%10000,i),level=1+seed%Math.max(1,state.buildings.inn*2);return {id:'local_'+number,name:surnames[seed%8]+given[Math.floor(seed/8)%8],level,atk:35+seed%46,def:35+Math.floor(seed/5)%46,pol:35+Math.floor(seed/13)%46,wis:35+Math.floor(seed/17)%46,lead:level*10,price:level*1000,type:'将',title:'客栈游士',desc:'愿以一身所学，助城池安稳发展。',bonus:['spear','archer','shield'][seed%3]};});save();return null;}
   function recruit(id){tick();const hero=state.innCandidates.find(g=>g.id===id);if(!hero)return '候选已离开';if(state.generals.length>=state.buildings.tavern)return '招贤馆没有空闲房间';if(state.res.gold<hero.price)return '黄金不足';state.res.gold-=hero.price;state.customGenerals.push(hero);state.generals.push(hero.id);state.generalLevels[hero.id]=hero.level;state.generalXp[hero.id]=0;state.innCandidates=state.innCandidates.filter(g=>g.id!==id);save();return null;}
-  function trade(resource,count,buy){tick();count=Math.floor(count);if(state.buildings.market<1)return '请先建造市场';if(resource==='gold'||!resources[resource]||count<1||count>state.buildings.market*100000)return '交易数量超出商队规模';if(buy){if(state.res.gold<count)return '黄金不足';if(state.res[resource]+count>capacity(resource))return '资源容量不足';state.res.gold-=count;state.res[resource]+=count;}else{if(state.res[resource]<count)return '资源不足';if(state.res.gold+count>capacity('gold'))return '黄金容量不足';state.res[resource]-=count;state.res.gold+=count;}save();return null;}
+  function trade(resource,count,buy){tick();count=Math.floor(count);if(state.buildings.market<1)return '请先建造市场';if(resource==='gold'||!resources[resource]||count<1||count>state.buildings.market*100000)return '交易数量超出商队规模';if(buy){if(state.res.gold<count)return '黄金不足';if(state.res[resource]+count>capacity(resource))return '资源容量不足';state.res.gold-=count;state.res[resource]+=count;}else{if(state.res[resource]<count)return '资源不足';if(state.res.gold+count>capacity('gold'))return '黄金容量不足';state.res[resource]-=count;state.res.gold+=count;}Progression.record(state,'trade',count);save();return null;}
   function buyItem(id,count=1){const item=ManualData.shop.find(x=>x.id===id);count=Math.floor(count);if(!item?.effect)return '该道具依赖尚未接入的系统，暂不出售';if(count<1||count>99)return '请选择购买数量';if(state.gems<item.price*count)return '试玩元宝不足';state.gems-=item.price*count;state.inventory[id]=(state.inventory[id]||0)+count;save();return null;}
   function speedupKey(kind,q){return kind+':'+(kind==='build'?(q.plot===undefined?'site'+q.site:'plot'+q.plot):q.id)+':'+q.start;}
   function speedupQueue(kind){return kind==='build'?state.buildQueue:kind==='train'?state.trainQueue:kind==='research'&&state.researchQueue?[state.researchQueue]:[];}
@@ -519,7 +549,8 @@ const Game = (() => {
     if(effect==='speedup')return useSpeedup(id,text).error;
     if(effect==='blueprint')return '图纸在建筑升至 10 级时自动消耗，请在建筑页面使用';
     if(['politics','valor','wisdom','tiger'].includes(effect)&&!state.generals.includes(heroId))return '请选择将领';
-    if(effect==='population'){if(state.population>=maxPop())return '人口已达上限';state.population=Math.min(maxPop(),state.population+Math.max(100,maxPop()*.2));}
+    if(effect==='gold'){state.res.gold+=item.gold;}
+    else if(effect==='population'){if(state.population>=maxPop())return '人口已达上限';state.population=Math.min(maxPop(),state.population+Math.max(100,maxPop()*.2));}
     else if(effect==='peace'){if((state.itemCooldowns.peace||0)>Date.now())return '安民告示仍在 3 天冷却';state.morale=100;state.unrest=0;state.itemCooldowns.peace=Date.now()+259200000;}
     else if(effect==='recruit'){const error=refreshInn();if(error)return error;}
     else if(['rename','banner'].includes(effect)){const value=String(text||'').trim();if(!value||value.length>(effect==='rename'?12:2))return '名称长度不合适';state[effect==='rename'?'ruler':'banner']=value;}
@@ -541,18 +572,21 @@ const Game = (() => {
   function setStorage(allocation){const keys=['food','wood','stone','iron'];if(!keys.every(k=>Number.isInteger(Number(allocation[k]))&&Number(allocation[k])>=0&&Number(allocation[k])<=100)||keys.reduce((v,k)=>v+Number(allocation[k]),0)!==100)return '四项比例之和必须是 100%';state.storageAllocation=Object.fromEntries(keys.map(k=>[k,Number(allocation[k])]));save();return null;}
   function buildDefense(id,count){tick();count=Math.floor(count);const d=ManualData.defenses[id];if(!d||count<1||count>10000)return '请输入城防数量';if(state.buildings.wall<d.wall)return '需要城墙 '+d.wall+' 级';for(const [key,level] of Object.entries(d.tech||{}))if(state.tech[key]<level)return '需要 '+ManualData.technology[key].name+' '+level+' 级';const requirement=defenseRequirements(id,count);if(requirement)return '需要 '+requirement;if(state.defenseQueue.length>=1)return '城防工队正在忙碌';const cost=Object.fromEntries(Object.entries(d.cost).map(([k,v])=>[k,v*count]));if(!canPay(cost))return '城防资源不足';pay(cost);const start=Date.now();state.defenseQueue.push({id,count,start,end:start+Math.max(1,count*d.time/(1+state.tech.construction*.1+general(state.governor).pol/100)/state.speed)*1000});save();return null;}
 
+  function awardMission(m){addSupplies(m.reward);state.prestige+=300;for(const [id,n] of Object.entries(m.items||{}))state.inventory[id]=(state.inventory[id]||0)+n;state.missionClaims.push(m.id);state.mission=state.missionClaims.length;}
   function claimMission(id){
     tick(Date.now(),false);const m=id?missions.find(x=>x.id===id):currentMission();
     if(!m)return '任务已全部完成';if(missionClaimed(m.id))return '该任务奖励已领取';if(!m.check(state))return '目标尚未达成';
-    addSupplies(m.reward);state.prestige+=300;state.missionClaims.push(m.id);state.mission=state.missionClaims.length;save();return null;
+    awardMission(m);save();return null;
   }
   function claimReadyMissions(){
     tick(Date.now(),false);const ready=missions.filter(m=>missionReady(m));if(!ready.length)return '暂无可领取奖励';
-    for(const m of ready){addSupplies(m.reward);state.prestige+=300;state.missionClaims.push(m.id);}state.mission=state.missionClaims.length;save();return null;
+    for(const m of ready)awardMission(m);save();return null;
   }
   function progressionAction(action,...args){tick(Date.now(),false);const error=Progression[action](state,...args);if(!error)save();return error;}
   const acceptDaily=uid=>progressionAction('accept',uid),abandonDaily=uid=>progressionAction('abandon',uid),claimDaily=uid=>progressionAction('claim',uid),donateEpic=(kind,id)=>progressionAction('donate',kind,id),exchangeCopper=id=>progressionAction('exchange',id);
+  const claimDailyMilestone=count=>progressionAction('claimMilestone',Number(count));
+  const claimReadyDaily=()=>progressionAction('claimReady');
   function reset(){state=newState();save();}
-  return {defenseCapacity,defenseUsed,defenseRequirements,armyPeople,buildingRuleText,researchRequirements,researchRuleText,buildingRequirements,speedupKey,speedupTargets,speedupQuote,useSpeedup,progression:Progression,acceptDaily,abandonDaily,claimDaily,donateEpic,exchangeCopper,countyUnlocked:()=>Progression.countyUnlocked(state),init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},allExpeditions,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,civicOrderPreview,executeCivicOrder,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setTactic,recall,dismissBattle,claimMission};
+  return {captiveCapacity,captiveChance,captiveRecruitQuote,recruitCaptives,releaseCaptives,claimDailyMilestone,claimReadyDaily,defenseCapacity,defenseUsed,defenseRequirements,armyPeople,buildingRuleText,researchRequirements,researchRuleText,buildingRequirements,speedupKey,speedupTargets,speedupQuote,useSpeedup,progression:Progression,acceptDaily,abandonDaily,claimDaily,donateEpic,exchangeCopper,countyUnlocked:()=>Progression.countyUnlocked(state),init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},allExpeditions,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,civicOrderPreview,executeCivicOrder,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setTactic,recall,dismissBattle,claimMission};
 })();
 if(typeof module!=='undefined')module.exports=Game;

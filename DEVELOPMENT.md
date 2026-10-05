@@ -21,6 +21,9 @@ npm start
 | 游戏规则、生产、掠夺、负重、战斗结算 | `engine.js` |
 | 建筑、兵种、商城与掉落基础数据 | `manual-data.js` |
 | 本地游戏包接入规则与差异 | `reference-rules.js`、`REFERENCE-NOTES.md` |
+| 成长任务、任务奖励、金砖与俘虏数值 | `reward-data.js` |
+| 每日任务、声望、史诗与奖励领取 | `progression.js`、`progression-ui.js` |
+| 俘虏营、招降、释放及战报展示 | `captive-ui.js`、`engine.js` |
 | 加速道具时长、价格、城墙前置与使用窗口 | `speedup-data.js`、`speedup-ui.js` |
 | 城外资源田 | `outskirts.js` |
 | 世界地图 | `grid-world.js` |
