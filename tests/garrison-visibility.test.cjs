@@ -133,6 +133,12 @@ test('older sparse garrison army saves migrate without hiding or duplicating the
  const e=setup(),g=e.Game,node='wild_31_32';winOccupation(e,node,'lin');
  const older=JSON.parse(JSON.stringify(g.state));
  for(const [unit,count]of Object.entries(older.garrisons[node].army))if(count===0)delete older.garrisons[node].army[unit];
+ // Sparse garrisons were written before the multi-city realm was introduced.
+ // A modern mirror with a different army must remain invalid, not be repaired.
+ assert.equal(g.validSave(g.migrateSave(older)),false);
+ delete older.realm;
+ const original=JSON.stringify(older),migrated=g.migrateSave(older);
+ assert.equal(JSON.stringify(older),original);assert.equal(g.validSave(migrated),true);
  g.importSave(older);
  const m=assertTotals(e);
  assert.equal(m.total,1500);assert.equal(m.stationed,300);assert.equal(m.rows.length,1);

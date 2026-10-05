@@ -23,7 +23,7 @@
 
 背包与商城同时压缩移动端卡片：背包手机图标26px、统一96px格子，电脑图标28px；保留长名称、数量和物品详情。
 
-范围、规则与必要验收见 [六项规格](design/quick-specs/realm-online-v0.28.0.md)、[当前规则](RULES.md)、[v0.28.0 验收记录](production/qa/realm-online-v0.28.0.md)。本轮没有运行全量回归或长局。100条同时 mock 命令验证修订冲突，不是线上百人容量测试；原样 SQL 在本地 PostgreSQL WASM 通过10组校验，也不替代远程 Supabase 验收。
+范围、规则与必要验收见 [六项规格](design/quick-specs/realm-online-v0.28.0.md)、[当前规则](RULES.md)、[v0.28.0 验收记录](production/qa/realm-online-v0.28.0.md)。本轮没有运行本地全量回归或自然长局；既有GitHub发布回归的精确提交结果另见工作区发布回执。100条同时 mock 命令验证修订冲突，不是线上百人容量测试；原样 SQL 在本地 PostgreSQL WASM 通过10组校验，也不替代远程 Supabase 验收。
 
 本轮另外完成[CCGS游戏测评](production/qa/game-evaluation-v0.28.0.md)和[工作室设计资料](design/STUDIO_DESIGN.zh.md)，包括核心循环、经济与质量复核、[名将／计谋草案](design/gdd/hero-stratagems.md)。草案尚未实现，不改变当前战斗规则。
 

@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),fs=requir
 const {loadGame,city}=require('./helpers/game.cjs');
 const copy=x=>JSON.parse(JSON.stringify(x));
 function battle(){const e=loadGame(123),g=e.Game;city(g,{drill:1});Object.assign(g.state.army,{archer:30,spear:5,shield:5});assert.equal(g.dispatch('field','lin',{archer:30,spear:5,shield:5},'raid'),null);e.advance(g.state.expedition.end-e.now()+1);assert.equal(g.startBattle(),null);return e;}
-function captives(){const e=loadGame(123),g=e.Game;city(g,{hall:3,drill:2,barracks:7,house:10});Object.assign(g.state.tech,{combat:1,protection:5,shooting:1,riding:5});g.state.population=g.workers()+100;g.state.res.food=100000;g.state.res.gold=100000;return e;}
+function captives(){const e=loadGame(123),g=e.Game;city(g,{hall:3,drill:2,barracks:7,house:10});Object.assign(g.state.tech,{combat:1,protection:5,shooting:1,riding:5});g.state.population=g.workers()+100;g.state.res.food=100000;g.state.res.gold=100000;g.save();assert.equal(g.validSave(g.state),true);return e;}
 
 test('batch orders affect living player units only, preserve targets, and allow later individual orders',()=>{
  const e=battle(),g=e.Game,b=g.state.battle;assert.equal(g.setBattleOrder('archer',undefined,'archer'),null);b.player.find(r=>r.id==='shield').hp=0;const enemy=JSON.stringify(b.enemy),dead=copy(b.orders.shield),round=b.round;
@@ -25,7 +25,7 @@ test('batch recruitment skips locked units, commits the exact price once and pre
 });
 test('confirmation revalidates funds and population, and invalid/no-op plans never deduct resources',()=>{
  for(const shrink of [g=>g.state.res.food=0,g=>g.state.res.gold=0,g=>g.state.population=g.workers(),g=>g.state.tech.shooting=0]){
-  const e=captives(),g=e.Game;g.state.captives.archer=10;const q=g.captiveRecruitAllQuote();shrink(g);const before=JSON.stringify(g.state);assert.match(g.recruitAllCaptives(q.key),/计划已变化/);assert.equal(JSON.stringify(g.state),before);
+  const e=captives(),g=e.Game;g.state.captives.archer=10;const q=g.captiveRecruitAllQuote();shrink(g);g.save();assert.equal(g.validSave(g.state),true);const before=JSON.stringify(g.state);assert.match(g.recruitAllCaptives(q.key),/计划已变化/);assert.equal(JSON.stringify(g.state),before);
  }
  const e=captives(),g=e.Game;for(const key of [undefined,null,{},-1,'invalid']){const before=JSON.stringify(g.state);assert.match(g.recruitAllCaptives(key),/计划已变化/);assert.equal(JSON.stringify(g.state),before);}const q=g.captiveRecruitAllQuote(),before=JSON.stringify(g.state);assert.match(g.recruitAllCaptives(q.key),/暂未/);assert.equal(JSON.stringify(g.state),before);
 });

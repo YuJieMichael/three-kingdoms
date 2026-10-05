@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-const {loadGame,city}=require('./helpers/game.cjs');
+const {loadGame,city,cloneActiveSave}=require('./helpers/game.cjs');
 function battle(){
   const e=loadGame(123),g=e.Game;city(g,{drill:1});g.state.army.archer=100;
   assert.equal(g.dispatch('field','lin',{archer:100},'raid'),null);e.advance(g.state.expedition.end-e.now()+1);assert.equal(g.startBattle(),null);g.setBattleOrders('advance');assert.equal(g.setBattleOrder('archer',undefined,'archer'),null);
@@ -8,7 +8,7 @@ function battle(){
   return e;
 }
 function ui(e){
-  e.evaluate('function S(){return Game.state;} function num(n){return String(n);} function esc(s){return String(s);} function resourceAmount(n){return String(n);} function btn(label,action,id=""){return `<button data-action="${action}" data-id="${id}">${label}</button>`;} function troopPortrait(){return "";} function battleTimerText(){return "30 秒";} function battleOutcomeText(){return "";} function battleFailureHTML(){return "";} function battleCargoHTML(){return "";} function battleResourceHTML(){return "";} function battleDropsHTML(){return "";}');
+  e.evaluate('function S(){return Game.state;} function num(n){return String(n);} function esc(s){return String(s);} function resourceAmount(n){return String(n);} function btn(label,action,id=""){return `<button data-action="${action}" data-id="${id}">${label}</button>`;} function troopPortrait(){return "";} function battleAutoEnabled(){return !!S().battle?.auto;} function battleTimerText(){return "30 秒";} function battleOutcomeText(){return "";} function battleFailureHTML(){return "";} function battleCargoHTML(){return "";} function battleResourceHTML(){return "";} function battleDropsHTML(){return "";}');
   e.evaluate(fs.readFileSync(path.join(__dirname,'../combat-ui.js'),'utf8'));
 }
 test('one contact round records typed feedback, retains targeting and preserves old-save compatibility',()=>{
@@ -18,8 +18,8 @@ test('one contact round records typed feedback, retains targeting and preserves 
   assert.deepEqual(logDamage,eventDamage,'the visible log and typed round feedback must use the same actual damage');
   const killed=b.currentRoundSummary.events.filter(e=>e.type==='strike'&&e.side==='player').reduce((n,e)=>n+e.killed,0),remaining=b.enemy.reduce((n,r)=>n+Math.ceil(r.hp/r.stats.hp),0);
   assert.equal(killed,Object.values(before).reduce((n,v)=>n+v,0)-remaining);assert.equal(b.orders.archer.target,'archer');assert.equal(g.validSave(g.state),true);
-  const old=JSON.parse(JSON.stringify(g.state));delete old.battle.currentRoundSummary;assert.equal(g.validSave(old),true);
-  const invalid=JSON.parse(JSON.stringify(g.state));invalid.battle.currentRoundSummary.events[0].damage=-1;assert.equal(g.validSave(invalid),false);g.save();g.init();assert.equal(g.state.battle.currentRoundSummary.round,b.round);assert.equal(g.validSave(g.state),true);
+  const old=cloneActiveSave(g.state);delete old.battle.currentRoundSummary;assert.equal(g.validSave(old),true);
+  const invalid=cloneActiveSave(g.state);invalid.battle.currentRoundSummary.events[0].damage=-1;assert.equal(g.validSave(invalid),false);g.save();g.init();assert.equal(g.state.battle.currentRoundSummary.round,b.round);assert.equal(g.validSave(g.state),true);
 });
 test('a new round animates once; rerenders and reloaded saved rounds retain summary without replay',()=>{
   const e=battle(),g=e.Game;ui(e);assert.ok(!e.evaluate('battlePage()').includes('class="combat-effects"'));g.battleRound();

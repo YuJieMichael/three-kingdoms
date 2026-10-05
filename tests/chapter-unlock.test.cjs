@@ -101,19 +101,55 @@ test('reward collection remains optional for chapter unlock while chapter three 
 
 test('locked third-chapter scouting does not spend food or record intel, then normal scouting resumes after unlock',()=>{
  const e=setup(),g=e.Game;own(e,e.Chapter.nodes.slice(0,-1));
- const food=g.state.res.food,metrics=clone(g.state.activityMetrics);
+ // Prepared scouting technology isolates the campaign gate from counter-scout
+ // risk. Successful intelligence now requires an actual outward journey.
+ g.state.tech.scouting=8;
+ const food=g.state.res.food,scouts=g.state.army.scout,metrics=clone(g.state.activityMetrics);
  for(const node of e.Chapter.chapterThreeNodes){
+  assert.equal(g.scoutQuote(node.id,1).reason,e.Chapter.blocked(g.state,node.id));
   assert.equal(g.scout(node.id),e.Chapter.blocked(g.state,node.id));
   assert.equal(g.state.scouted[node.id],undefined);
+  assert.equal(g.state.scoutIntel[node.id],undefined);
  }
- assert.equal(g.state.res.food,food);assert.deepEqual(clone(g.state.activityMetrics),metrics);
+ assert.equal(g.state.res.food,food);assert.equal(g.state.army.scout,scouts);
+ assert.equal(g.state.scoutQueue.length,0);assert.deepEqual(clone(g.state.activityMetrics),metrics);
  g.state.conquered.north_keep=true;
- assert.equal(g.scout('luo_outpost'),null);assert.equal(g.state.res.food,food-10);
- assert.ok(g.state.scouted.luo_outpost);assert.ok(g.intel('luo_outpost'));
- // Pre-scouting later stages is still allowed after the whole chapter opens.
+
+ function scoutAndReturn(node){
+  const before=JSON.stringify(g.state),quote=g.scoutQuote(node,1),departureFood=g.state.res.food;
+  assert.equal(JSON.stringify(g.state),before,'a scout quote must remain readonly');
+  assert.equal(quote.reason,'');assert.equal(quote.success,true);
+  assert.ok(quote.cost.food>10,'the quote includes distance supply, not the old flat ten food');
+  assert.equal(g.scout(node,1,quote.key),null);
+  assert.equal(g.state.res.food,departureFood-quote.cost.food);
+  assert.equal(g.state.army.scout,scouts-1);assert.equal(g.state.scouted[node],undefined);
+  assert.equal(g.state.scoutIntel[node],undefined);assert.equal(g.intel(node),null);
+  const mission=g.state.scoutQueue.find(m=>m.node===node);
+  assert.equal(mission.phase,'out');assert.equal(mission.end,mission.start+quote.seconds*1000);
+  assert.equal(g.validSave(g.state),true);
+  e.advance(mission.end-e.now()-1);
+  assert.equal(mission.phase,'out');assert.equal(g.intel(node),null);
+  e.advance(1);
+  assert.equal(mission.phase,'return');assert.ok(g.state.scoutIntel[node]);
+  assert.equal(g.intel(node).precision,quote.precision);
+  assert.equal(g.state.army.scout,scouts-1,'outward arrival does not return the scout yet');
+  assert.equal(g.validSave(g.state),true);
+  e.advance(mission.end-e.now());
+  assert.equal(g.state.scoutQueue.length,0);
+  assert.equal(g.state.army.scout,scouts-quote.expectedLost);
+  assert.equal(g.validSave(g.state),true);
+ }
+
+ scoutAndReturn('luo_outpost');
+ // The chapter gate opens the route, but later stations remain hidden until
+ // the preceding occupation; dispatching to a hidden station stays atomic.
  assert.ok(g.attackBlocked('luo_gate','occupy'));
- assert.equal(g.scout('luo_gate'),null);assert.equal(g.state.res.food,food-20);
- assert.ok(g.state.scouted.luo_gate);assert.equal(g.validSave(g.state),true);
+ const hiddenBefore=JSON.stringify(g.state);
+ assert.equal(g.scoutQuote('luo_gate',1).reason,'此任务据点尚未开启');
+ assert.equal(g.scout('luo_gate'),'此任务据点尚未开启');
+ assert.equal(JSON.stringify(g.state),hiddenBefore);
+ g.state.conquered.luo_outpost=true;
+ scoutAndReturn('luo_gate');
 });
 
 test('importing an older progressed save preserves rewards, ownership, reports and army while applying the full campaign gate',()=>{
@@ -222,6 +258,7 @@ test('world shortcuts reveal only explored and current stations while chapter un
  // Use the real helpers and UI dependencies loaded before app.js first renders index.html.
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8').split('\n').find(line=>line.startsWith('const esc=')));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','art-assets.js'),'utf8'));
+ e.evaluate(fs.readFileSync(path.join(__dirname,'..','city-ui.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','grid-world.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','manual-ui.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','wild-general-ui.js'),'utf8'));
@@ -231,16 +268,16 @@ test('world shortcuts reveal only explored and current stations while chapter un
   assert.equal(g.getWorldTile(node.x,node.y).id,node.id,'locked landmarks remain addressable for a lock explanation');
  }
  e.evaluate("uiButtons=[];enemyIntelHTML(Game.getNode('luo_outpost'))");
- assert.equal(e.evaluate("uiButtons.find(button=>button.action==='manualScout').disabled"),true);
- assert.equal(e.evaluate("uiButtons.find(button=>button.action==='manualScout').label"),'第三章尚未开启');
+ assert.equal(e.evaluate("uiButtons.find(button=>button.action==='scoutPlan').disabled"),true);
+ assert.equal(e.evaluate("uiButtons.find(button=>button.action==='scoutPlan').label"),'第三章尚未开启');
  const before=JSON.stringify(g.state);
  e.evaluate('worldPage()');assert.equal(JSON.stringify(g.state),before);
  g.state.conquered.north_keep=true;
  html=e.evaluate('worldPage()');
  for(const [i,node] of e.Chapter.chapterThreeNodes.entries())assert.equal(html.includes('data-action="mapLandmark" data-id="'+node.id+'"'),i===0);
  e.evaluate("uiButtons=[];enemyIntelHTML(Game.getNode('luo_outpost'))");
- assert.equal(e.evaluate("uiButtons.find(button=>button.action==='manualScout').disabled"),false);
- assert.equal(e.evaluate("uiButtons.find(button=>button.action==='manualScout').label"),'斥候侦察 · 10粮');
+ assert.equal(e.evaluate("uiButtons.find(button=>button.action==='scoutPlan').disabled"),false);
+ assert.equal(e.evaluate("uiButtons.find(button=>button.action==='scoutPlan').label"),'派斥候侦察');
  for(let i=0;i<e.Chapter.chapterThreeNodes.length;i++){
   g.state.conquered[e.Chapter.chapterThreeNodes[i].id]=true;
   html=e.evaluate('worldPage()');

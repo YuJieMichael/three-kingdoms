@@ -11,7 +11,7 @@ function load(){
 function ready(env){const {Game,advance}=env,s=Game.state;s.buildings.hall=2;s.cityLevels[14]=2;s.stats.victories=1;assert.equal(Game.setAutoCityDefense(true),null);Game.tick();advance(30*60*1000);advance(5*60*1000);assert.ok(s.cityDefense.incoming);}
 function finish(Game){let result;for(let i=0;i<30&&Game.state.cityDefense.battle;i++)result=Game.cityDefenseRound();assert.ok(!Game.state.cityDefense.battle);return result;}
 test('legacy saves migrate without fabricating per-resource receipts or resetting progress',()=>{
-  const {Game}=load(),old=JSON.parse(JSON.stringify(Game.state));delete old.cityDefense;old.res.food=54321;const migrated=Game.migrateSave(old);
+  const {Game}=load(),old=JSON.parse(JSON.stringify(Game.state));delete old.cityDefense;delete old.realm;old.res.food=54321;const migrated=Game.migrateSave(old);
   assert.equal(migrated.res.food,54321);assert.equal(migrated.cityDefense.nextAt,0);assert.equal(Game.validSave(migrated),true);Game.importSave(old);assert.equal(Game.state.res.food,54321);
 });
 test('first victory and hall level gate waves, 30 minute interval and 5 minute warning use real time',()=>{

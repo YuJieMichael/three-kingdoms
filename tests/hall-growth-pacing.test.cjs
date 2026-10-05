@@ -36,8 +36,13 @@ test('a saved hall queue retains its paid work and original completion time acro
   const old=copy(g.state),queue=old.buildQueue.find(q=>q.id==='hall');
   const referenceSeconds=g.buildRecord('hall',10).seconds/(1+g.state.tech.construction*.1+g.general(g.state.governor).pol/100);
   queue.end=queue.start+referenceSeconds*1000;
+  // The pre-pacing queue predates multi-city saves, so it has no realm mirror.
+  // A modern queue changed in only one projection must continue to be rejected.
+  assert.equal(g.validSave(g.migrateSave(old)),false);
+  delete old.realm;
   const originalEnd=queue.end,paid=copy(queue.paid),inventory=copy(old.inventory);
-  assert.equal(g.validSave(old),true);
+  const original=JSON.stringify(old),migrated=g.migrateSave(old);
+  assert.equal(JSON.stringify(old),original);assert.equal(g.validSave(migrated),true);
   g.importSave(old);g.save();g.init();
   assert.equal(g.state.buildQueue[0].end,originalEnd);
   assert.deepEqual(copy(g.state.buildQueue[0].paid),paid);

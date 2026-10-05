@@ -5,11 +5,13 @@ const first='yellow_qingshi',resources=['food','wood','stone','iron','gold'];
 // Prepared troop/stock checkpoints verify interactions, not natural growth pace.
 // Every battle retains its generated defenders and runs the normal battle APIs.
 function setup(seed=723){
- const e=loadGame(seed),g=e.Game;city(g,{drill:1});g.state.army.archer=2500;g.state.res.food=1000000;
+ const e=loadGame(seed),g=e.Game;city(g,{drill:1});g.state.honors.noble=1;g.state.army.archer=2500;g.state.res.food=1000000;
  e.evaluate('Math.random=()=>.999999');assert.equal(g.validSave(g.state),true);return e;
 }
 function arrive(e,id=first,mode='occupy',count=1000){
- const g=e.Game;assert.equal(g.setTactic('archer','advance',''),null);assert.equal(g.dispatch(id,'lin',{archer:count},mode),null);
+ // These cargo/morale checks keep the source army returning; unchecked capture
+ // now stations it in the independently owned city (covered by city-capture).
+ const g=e.Game;assert.equal(g.setTactic('archer','advance',''),null);assert.equal(g.dispatch(id,'lin',{archer:count},mode,true),null);
  e.advance(Math.ceil(g.state.expedition.end-e.now())+1);assert.equal(g.startBattle(),null);assert.ok(g.state.battle.enemy.some(r=>r.hp>0));
 }
 function finish(e){const g=e.Game;for(let i=0;i<30&&!g.state.battle.finished;i++)g.battleRound();assert.equal(g.state.battle.finished,true);assert.equal(g.validSave(g.state),true);return copy(g.state.battle.result);}
@@ -18,6 +20,8 @@ function missionProgress(e){const g=e.Game;return copy({next:g.nextLandmark()?.i
 test('three open Yellow Turban cities use real map nodes and stay separate from the locked mission route',()=>{
  const e=loadGame(),g=e.Game,defs=copy(e.evaluate('YellowCityData.nodes'));
  assert.deepEqual(defs.map(n=>[n.id,n.x,n.y,n.level,n.population]),[[first,26,31,2,200],['yellow_baisha',41,38,3,300],['yellow_chigang',21,20,4,400]]);
+ assert.match(g.attackBlocked(first,'occupy'),/爵位.*数量/);
+ g.state.honors.noble=1; // A rank with one spare city slot, without unlocking campaign tasks.
  const before=JSON.stringify(g.state);assert.equal(g.countyUnlocked(),false);assert.ok(g.attackBlocked('fort','occupy'));assert.ok(g.attackBlocked('north_road','raid'));
  for(const n of defs){assert.equal(n.openCity,true);assert.equal(n.faction,'yellow_turban');assert.equal(n.terrain,'fort');assert.equal(g.nodes.some(x=>x.id===n.id),true);assert.equal(g.landmarkVisible(n.id),true);assert.equal(g.attackBlocked(n.id,'raid'),null);assert.equal(g.attackBlocked(n.id,'occupy'),null);assert.equal(g.isCity(g.getNode(n.id)),true);assert.equal(g.getWorldTile(n.x,n.y).id,n.id);assert.equal(g.getWorldTile(n.x,n.y).wild,false);assert.equal(g.getNode(`wild_${n.x}_${n.y}`),null);assert.deepEqual(copy(g.state.towns[n.id]),{morale:100,unrest:0,population:n.population});}
  assert.equal(g.nextLandmark().id,'field');assert.equal(JSON.stringify(g.state),before);
@@ -87,6 +91,9 @@ test('pre-handbook migration rebuilds a marching wild army from its original for
   const e=setup(),g=e.Game,node='wild_41_38',checkpoint=copy(g.state);checkpoint.openCitySites.yellow_baisha={x:41,y:37};g.importSave(checkpoint);
   assert.equal(g.getNode(node).type,'forest');assert.equal(g.setTactic('archer','advance',''),null);assert.equal(g.dispatch(node,'lin',{archer:300},'raid'),null);assert.equal(g.state.expedition.phase,'march');
   const old=copy(g.state),march=copy(old.expedition);if(manualSchema===undefined)delete old.manualSchema;else old.manualSchema=manualSchema;delete old.openCitySites;
+  // A pre-handbook save predates realm. Keeping a modern city mirror while
+  // replacing only its top-level layout would be an inconsistent modern save.
+  delete old.realm;
   // The older layout has no reserved slots; the handbook migration creates them.
   old.cityLayout=Array(16).fill(null);old.cityLayout[5]='hall';old.cityLayout[10]='drill';for(const n of e.evaluate('YellowCityData.nodes'))delete old.towns[n.id];
   const untouched=JSON.stringify(old),fresh=loadGame(),other=fresh.Game;assert.equal(other.getWorldTile(41,38).terrain,'fort');const migrated=other.migrateSave(old);
