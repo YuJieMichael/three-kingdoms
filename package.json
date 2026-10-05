@@ -1,10 +1,11 @@
 {
   "name": "three-kingdoms-city",
-  "version": "0.15.2",
+  "version": "0.16.0",
   "private": true,
   "description": "三国城志：单机 PVE 策略游戏原型",
   "scripts": {
-    "start": "node server.cjs"
+    "start": "node server.cjs",
+    "test": "node --test tests/*.test.cjs"
   },
   "engines": {
     "node": ">=18"

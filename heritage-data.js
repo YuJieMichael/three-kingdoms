@@ -18,8 +18,11 @@ const HeritageData={
         "office": 0,
         "hall": 0,
         "gold": 0,
-        "jewels": {},
-        "trial": false
+        "jewels": {
+          "pearl": 1
+        },
+        "trial": false,
+        "jewelTrial": true
       }
     },
     {
@@ -32,8 +35,11 @@ const HeritageData={
         "office": 0,
         "hall": 0,
         "gold": 0,
-        "jewels": {},
-        "trial": false
+        "jewels": {
+          "pearl": 2
+        },
+        "trial": false,
+        "jewelTrial": true
       }
     },
     {
@@ -46,8 +52,11 @@ const HeritageData={
         "office": 0,
         "hall": 0,
         "gold": 0,
-        "jewels": {},
-        "trial": false
+        "jewels": {
+          "pearl": 3
+        },
+        "trial": false,
+        "jewelTrial": true
       }
     },
     {
@@ -60,8 +69,11 @@ const HeritageData={
         "office": 0,
         "hall": 0,
         "gold": 0,
-        "jewels": {},
-        "trial": false
+        "jewels": {
+          "pearl": 4
+        },
+        "trial": false,
+        "jewelTrial": true
       }
     },
     {
@@ -74,8 +86,11 @@ const HeritageData={
         "office": 0,
         "hall": 0,
         "gold": 0,
-        "jewels": {},
-        "trial": false
+        "jewels": {
+          "pearl": 5
+        },
+        "trial": false,
+        "jewelTrial": true
       }
     },
     {
@@ -88,8 +103,11 @@ const HeritageData={
         "office": 0,
         "hall": 0,
         "gold": 0,
-        "jewels": {},
-        "trial": false
+        "jewels": {
+          "pearl": 6
+        },
+        "trial": false,
+        "jewelTrial": true
       }
     },
     {
@@ -102,8 +120,11 @@ const HeritageData={
         "office": 0,
         "hall": 0,
         "gold": 0,
-        "jewels": {},
-        "trial": false
+        "jewels": {
+          "pearl": 7
+        },
+        "trial": false,
+        "jewelTrial": true
       }
     },
     {
@@ -116,8 +137,11 @@ const HeritageData={
         "office": 0,
         "hall": 2,
         "gold": 10000,
-        "jewels": {},
-        "trial": false
+        "jewels": {
+          "pearl": 8
+        },
+        "trial": false,
+        "jewelTrial": true
       }
     },
     {
@@ -194,9 +218,13 @@ const HeritageData={
         "office": 12,
         "hall": 10,
         "gold": 200000,
-        "jewels": {},
+        "jewels": {
+          "jade": 5,
+          "nightPearl": 1
+        },
         "county": true,
-        "trial": true
+        "trial": true,
+        "jewelTrial": true
       }
     },
     {
@@ -209,9 +237,13 @@ const HeritageData={
         "office": 13,
         "hall": 10,
         "gold": 500000,
-        "jewels": {},
+        "jewels": {
+          "jade": 10,
+          "nightPearl": 5
+        },
         "county": true,
-        "trial": true
+        "trial": true,
+        "jewelTrial": true
       }
     }
   ],

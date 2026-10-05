@@ -18,6 +18,7 @@ npm start
 
 | 目标 | 文件 |
 | --- | --- |
+| 山匪来袭与守城数据、战斗、界面 | `npc-data.js`、`npc-defense.js`、`npc-ui.js` |
 | 游戏规则、生产、掠夺、负重、战斗结算 | `engine.js` |
 | 建筑、兵种、商城与掉落基础数据 | `manual-data.js` |
 | 本地游戏包接入规则与差异 | `reference-rules.js`、`REFERENCE-NOTES.md` |
@@ -42,6 +43,10 @@ npm start
 | 页面入口与加载顺序 | `index.html` |
 
 当前产出系数与掠夺系数集中在 `engine.js` 的 `ECONOMY_OUTPUT_FACTOR`、`RAID_LOOT_FACTOR`。资源收入按真实时间计算，试玩倍率用于人口、队列与行军。
+
+## 验证
+
+运行 `npm test` 检查资源结算、来袭计时、守城损失、演练、官职珠宝校验与扣除及旧存档兼容。浏览器中从「来袭与守城」开始演练，并完成一次出征查看新战报和仓储入口；按桌面和手机宽度检查页面。
 
 ## 把修改保存到 GitHub
 

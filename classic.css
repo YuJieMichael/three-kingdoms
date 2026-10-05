@@ -51,3 +51,14 @@ body{background:#28261f;color:var(--ink);font-size:12px;overflow:hidden}button,i
 .quest-pagination{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0}
 .quest-pagination .label{text-align:center}
 @media(max-width:680px){.daily-milestones{grid-template-columns:1fr}}
+
+/* Dispatch cargo and warehouse estimates share the existing parchment palette. */
+.storage-warning{border-left:4px solid #a2572d;background:#f6e6c9;color:#713916;margin:12px 0;line-height:1.65}
+.storage-preview{margin-top:16px}.storage-preview h3{font-size:16px;margin:0 0 8px}.storage-preview-table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.storage-preview-table caption{text-align:left;color:#77664c;font-size:12px;padding-bottom:8px}.storage-preview-table th,.storage-preview-table td{padding:9px 6px;border-bottom:1px solid #d2c4a6;text-align:right;vertical-align:top}
+.storage-preview-table th:first-child{text-align:left}.storage-preview-table small{display:block;font-weight:normal;font-size:11px;color:#77664c;margin-top:3px}.storage-received{font-weight:bold;color:#485b30}.storage-loss{color:#8a3b23}
+@media(max-width:480px){.storage-preview-table{font-size:12px}.storage-preview-table th,.storage-preview-table td{padding:8px 3px}.storage-preview-table th:first-child{width:38%}.storage-preview-table small{line-height:1.5}.storage-warning{font-size:13px}}
+
+.invasion-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;border-left:4px solid #9a4828;margin-bottom:12px}.invasion-notice p{margin:4px 0 0}
+.defense-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.defense-columns section{min-width:0}.defense-unit{border-bottom:1px solid #d2c4a6;padding:8px 0;display:grid;grid-template-columns:1fr auto;gap:4px}.defense-unit small{grid-column:1/-1;color:#77664c}.defense-roster{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.defense-roster span{padding:7px;border:1px solid #cbb991}.defense-log{max-height:190px;overflow:auto;font-size:12px}.defense-log p{margin:7px 0}.storage-preview-table+.storage-preview-table{margin-top:16px}
+@media(max-width:480px){.defense-columns{gap:10px}.defense-columns h3{font-size:14px}.invasion-notice{font-size:12px;gap:8px}}
