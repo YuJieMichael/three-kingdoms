@@ -1,0 +1,19 @@
+.army-overview{margin-bottom:18px}
+.army-overview-counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
+.army-overview-counts>div{background:#1b241d;border:1px solid #46533f;border-radius:5px;padding:11px;min-width:0}
+.army-overview-counts span{display:block;font-size:11px;color:#a9b39c;line-height:1.6}
+.army-overview-counts strong{display:block;font-size:22px;color:#e9ddbf;margin-top:4px;font-variant-numeric:tabular-nums}
+.deployment-title{margin-top:18px}
+.army-deployment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.army-deployment-card{background:#1c261e;border:1px solid #536149;border-radius:5px;padding:14px;min-width:0}
+.army-deployment-card .quest-heading{gap:9px;align-items:flex-start}
+.army-deployment-card h4{font-size:16px;margin:0;overflow-wrap:anywhere}
+.army-deployment-card h4 small{display:block;font-size:11px;color:#a9b39c;margin-top:5px}
+.deployment-commander{font-size:12px;color:#c8ceae;overflow-wrap:anywhere}
+.deployment-troops{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.deployment-troops span{font-size:11px;color:#b9c3aa;border:1px solid #46533f;border-radius:3px;padding:5px 8px;line-height:1.6}
+.deployment-troops strong{color:#e9ddbf;margin-left:5px}
+.deployment-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.deployment-actions .btn{white-space:normal}
+@media(max-width:800px){.army-deployment-grid{grid-template-columns:1fr}.army-overview-counts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.army-overview{padding:12px}.army-overview-counts{gap:7px}.army-deployment-card{padding:12px}.army-deployment-card .badge{white-space:normal;max-width:42%}.army-overview-counts strong{font-size:19px}}
