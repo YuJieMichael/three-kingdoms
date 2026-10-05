@@ -1,4 +1,4 @@
-# 三国城志 · 多城经营与共享世界策略原型 v0.28.0
+# 三国城志 · 多城经营与共享世界策略原型 v0.29.0
 
 城内建设、资源田经营、研究、招兵、配将和掠夺／占领的手机浏览器原型。以 4399 第一代《热血三国》现存手册为规则资料，包含历史名将与原创将领，视觉资产为本作制作。现存资料未锁定具体历史补丁，明确的数值使用手册表；缺失数值与新增玩法标为试玩值。
 
@@ -11,6 +11,14 @@
 静态部署保留全部前端 HTML、CSS、JavaScript、icon.svg、manifest.webmanifest 和完整 assets 目录，保持相对路径。server.cjs 仅供本地运行。
 
 **云端尚未远程启用。** 账号、私人云档与共享世界接口已实现并完成本地定向验证；需要先确认独立 Supabase 组织／项目与费用，再按 [后台部署指南](online/README.md) 启用。当前 Pages 单机试玩不代表已经开放多人服务器。
+
+## v0.29.0 更新
+
+普通单机新战斗加入三位名将的身份战法：黄忠蓄弦先射、魏延佯退诱追、徐庶料敌先机。普通将可使用察伏和火攻封路，每方每战3点筹策、每回合最多提交一次。费用、准备目标、攻击机会和反制原因随战斗保存。
+
+将领页新增「战术演练」：三场固定阵容复用正式逐队结算，至少观察两轮、目标达成后结束教学；可重试和比较指令，不消耗正式兵将或资源。战斗／将领／出征界面显示条件与破解方法，战报保留计谋经过。
+
+旧进行中战斗继续按原规则。NPC守城与共享世界保留既有机制，新计谋先在单机PvE验证。规格见[名将与计谋](design/gdd/hero-stratagems.md)，证据见[v0.29.0必要验收](production/qa/hero-stratagems-v0.29.0.md)。大型本地回归、自然长局和真人调平待统一安排。
 
 ## v0.28.0 更新
 
@@ -25,7 +33,7 @@
 
 范围、规则与必要验收见 [六项规格](design/quick-specs/realm-online-v0.28.0.md)、[当前规则](RULES.md)、[v0.28.0 验收记录](production/qa/realm-online-v0.28.0.md)。本轮没有运行本地全量回归或自然长局；既有GitHub发布回归的精确提交结果另见工作区发布回执。100条同时 mock 命令验证修订冲突，不是线上百人容量测试；原样 SQL 在本地 PostgreSQL WASM 通过10组校验，也不替代远程 Supabase 验收。
 
-本轮另外完成[CCGS游戏测评](production/qa/game-evaluation-v0.28.0.md)和[工作室设计资料](design/STUDIO_DESIGN.zh.md)，包括核心循环、经济与质量复核、[名将／计谋草案](design/gdd/hero-stratagems.md)。草案尚未实现，不改变当前战斗规则。
+本轮另外完成[CCGS游戏测评](production/qa/game-evaluation-v0.28.0.md)和[工作室设计资料](design/STUDIO_DESIGN.zh.md)，包括核心循环、经济与质量复核、[名将／计谋草案](design/gdd/hero-stratagems.md)。首批三将与两计谋已在v0.29.0接入普通单机战斗及独立演练；后续名将、内政身份与联网计谋仍是提案。
 
 以下版本章节保留历史记录；被后续版本替换的机制以最新规则为准。
 
@@ -267,11 +275,11 @@
 
 ## 当前范围与资料
 
-已实现单机多城、运输调遣、野将、守城、侦察和将领专长，以及待部署的云档／共享世界后台。在线部分尚未远程启用；坐骑、武魂、宝石镶嵌、计谋、剧情战场、24小时过渡占领、暴乱、玩家市场挂单与真实付费仍未接入。本项目不代表取得《热血三国》的商标或内容授权。
+已实现单机多城、运输调遣、野将、守城、侦察、将领专长与首批战术计谋，以及待部署的云档／共享世界后台。在线部分尚未远程启用；坐骑、武魂、宝石镶嵌、其余计谋与联网计谋、剧情战场、24小时过渡占领、暴乱、玩家市场挂单与真实付费仍未接入。本项目不代表取得《热血三国》的商标或内容授权。
 
 规则来源与全部试玩差异见 [RULES.md](RULES.md)。数据集中在 manual-data.js，日后找到历史数值可替换数据表。
 
-此前版本的回归记录保留在各版本验收文档；v0.28.0 只做必要定向检查和独立浏览器预览，没有重跑完整测试或自然成长长局。尚未完成真人数值平衡、实体手机及线上负载验收。
+此前版本的回归记录保留在各版本验收文档；v0.29.0只做必要定向检查和独立浏览器预览，没有运行本地全量回归或自然成长长局。尚未完成真人数值平衡、实体手机及线上负载验收。
 
 ## 文件
 
@@ -279,6 +287,7 @@
 - [general-growth-data.js](general-growth-data.js)、[general-growth-system.js](general-growth-system.js)：四条专长的门槛、费用、属性与战斗快照。
 - [hero-system.js](hero-system.js)、[hero-ui.js](hero-ui.js)：将领、装备、十二位野将、画像、俘获、招降与图鉴。
 - [scout-system.js](scout-system.js)：侦察派遣队列、分级情报、失败与有效期。
+- [battle-stratagems.js](battle-stratagems.js)、[tactical-lessons.js](tactical-lessons.js)、[battle-tactics-ui.js](battle-tactics-ui.js)：名将身份、公共计谋、独立教学与操作界面；正式与演练复用逐队结算。
 - [online-client.js](online-client.js)、[online-ui.js](online-ui.js)：账号、私人云档、共享世界与联盟交互。
 - [online/](online/)：权威命令、公开世界读模型、事务存储适配及本地 SQLite 开发服务。
 - [scripts/build-online-runtime.cjs](scripts/build-online-runtime.cjs)：按前端加载顺序生成隔离的服务端引擎；[Supabase 后台指南](online/README.md) 包含原样迁移、Edge 与部署步骤。
