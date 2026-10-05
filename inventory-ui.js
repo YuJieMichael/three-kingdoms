@@ -33,7 +33,7 @@ function bagDetailHTML(entry){
  }else{
   const x=entry.item,usable=!!x.effect&&entry.count>0;
   const label=['jewelBox','equipmentBox'].includes(x.effect)?'开启盒子':x.effect==='speedup'?'选择加速任务':x.effect==='equipmentMaterial'?'用于装备强化':x.effect==='gold'?'兑换黄金':'使用道具';
-  body=`<p class="hint">${esc(x.desc)}</p><p class="bag-detail-source hint">${x.rewardOnly?'获取：官府成长礼包。':x.effect?'获取：商城购买、战斗'+(x.price>=Game.manual.battleDrops.rarePrice?'稀有':'胜利')+'掉落。':'该宝物对应的系统尚未开放，暂不能使用或购买。'}</p>${x.effect==='heroReset'?'<p class="hint">每 10 级消耗 1 枚洗髓丹（向上取整），选择将领后确认使用。</p>':''}${x.effect==='blueprint'?'<p class="notice">建筑升至 10 级时自动扣除图纸。</p>':''}${x.effect==='equipmentMaterial'?'<p class="hint">在装备详情中选择强化，会按需求扣除宝珠。</p>':''}<div class="bag-detail-actions">${x.effect==='blueprint'?btn('前往城内建设','dailyGo','inner','block'):btn(x.effect?label:'未开放','manualUsePlan',x.id,'block',!usable)}${x.effect&&!x.rewardOnly?btn('前往商城购买','bagShop',x.id,'secondary block'):''}</div>`;
+  body=`<p class="hint">${esc(x.desc)}</p><p class="bag-detail-source hint">${x.rewardOnly?'获取：官府成长礼包、战役军令的军功兑换。':x.effect?'获取：商城购买、战斗'+(x.price>=Game.manual.battleDrops.rarePrice?'稀有':'胜利')+'掉落。':'该宝物对应的系统尚未开放，暂不能使用或购买。'}</p>${x.effect==='heroReset'?'<p class="hint">每 10 级消耗 1 枚洗髓丹（向上取整），选择将领后确认使用。</p>':''}${x.effect==='blueprint'?'<p class="notice">建筑升至 10 级时自动扣除图纸。</p>':''}${x.effect==='equipmentMaterial'?'<p class="hint">在装备详情中选择强化，会按需求扣除宝珠。</p>':''}<div class="bag-detail-actions">${x.effect==='blueprint'?btn('前往城内建设','dailyGo','inner','block'):btn(x.effect?label:'未开放','manualUsePlan',x.id,'block',!usable)}${x.effect&&!x.rewardOnly?btn('前往商城购买','bagShop',x.id,'secondary block'):''}</div>`;
  }
  return `<section class="bag-detail" aria-label="所选物品详情">${head}${body}</section>`;
 }

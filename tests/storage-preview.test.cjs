@@ -7,7 +7,7 @@ const root=path.resolve(__dirname,'..');
 function loadGame(){
   const saved=new Map(),now=1791194400000;
   const context=vm.createContext({console,Date:class extends Date{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}},localStorage:{getItem:key=>saved.get(key)||null,setItem:(key,value)=>saved.set(key,value)},document:{addEventListener(){}}});
-  for(const file of ['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','onboarding-data.js','onboarding-system.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','chapter-data.js','siege-data.js','automation-system.js','engine.js','campaign-ui.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
+  for(const file of ['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','onboarding-data.js','onboarding-system.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','chapter-data.js','siege-data.js','war-orders.js','automation-system.js','engine.js','campaign-ui.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
   vm.runInContext("Math.random=()=>0.999999; const num=n=>Math.floor(n).toLocaleString('zh-CN');",context);
   const Game=vm.runInContext('Game',context);Game.init();
   return {Game,html:quote=>{context.quote=quote;return vm.runInContext('dispatchStorageHTML(quote)',context);}};
