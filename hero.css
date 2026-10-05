@@ -1,0 +1,8 @@
+.equipment-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}
+.equipment-card{padding:16px;background:#f4eee3;border:1px solid #cfbea0;border-top:4px solid #8c8778;border-radius:8px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.equipment-card h3{margin:0;font-size:16px}.equipment-card .hint{margin:0;line-height:1.7}.equipment-card button{margin-top:auto}.equipment-card .item-art{align-self:center;width:60px;height:60px}
+.equipment-card.quality-2{border-top-color:#377650}.equipment-card.quality-3{border-top-color:#9165ad}.forge-grid .cost{flex-wrap:wrap}
+.hero-slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.hero-slots article{padding:12px;border:1px solid #cfbea0;border-radius:6px;display:flex;flex-direction:column;gap:8px}.hero-slots .item-art{width:44px;height:44px}
+.hero-allocation{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:14px 0}.hero-allocation label{display:flex;flex-direction:column;gap:7px;font-size:13px}.hero-allocation input{width:100%;min-width:0;padding:8px}.hero-detail-portrait{float:right;width:85px;height:85px;margin:0 0 10px 15px}
+@media(max-width:650px){.equipment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.equipment-card{padding:10px}.hero-allocation{grid-template-columns:repeat(3,minmax(0,1fr))}.hero-slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:360px){.equipment-grid,.hero-slots{grid-template-columns:1fr}}

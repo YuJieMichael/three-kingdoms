@@ -1,7 +1,7 @@
 'use strict';
 // Prototype economy, missions and prisoner rules requested for this game.
 const RewardData = {
-  dailyBrickLimit:5,
+  dailyBrickLimit:10,
   testSupplyAmount:1000000,
   constructionStoneFactor:1.5,
   goldBricks:[
