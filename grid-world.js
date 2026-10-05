@@ -15,6 +15,7 @@ function cityBuildingArt(id){
 function cityScene(){return manualCityScene();}
 function citySlotModal(index){manualCitySlotModal(index);}
 const worldSpan=()=>window.matchMedia('(max-width:760px)').matches?6:9;
+window.matchMedia('(max-width:760px)').addEventListener?.('change',()=>{if(document.querySelector('.screen-world'))render();});
 const worldBounds=()=>{const span=worldSpan(),half=Math.floor(span/2);return {x:Math.max(0,Math.min(Game.WORLD_SIZE-span,worldView.x-half)),y:Math.max(0,Math.min(Game.WORLD_SIZE-span,worldView.y-half))};};
 function terrainArt(type,tile){
   return tile?terrainScene(tile):terrainIcon(type);
@@ -34,12 +35,72 @@ function legacyTerrainArt(type){
   };
   return `<svg viewBox="0 0 56 56" aria-hidden="true">${arts[type]||arts.plain}</svg>`;
 }
+function worldLandscapeSeed(x,y){return (Math.imul(x+97,73856093)^Math.imul(y+131,19349663))>>>0;}
+function worldLandscapeTree(x,y,size){
+  return `<g transform="translate(${x} ${y}) scale(${size})"><ellipse cx="0" cy="10" rx="10" ry="4" fill="#26372a" opacity=".3"/><path d="M-1 0V12" stroke="#766448" stroke-width="3"/><path d="M0-17L-11 0-6-1-13 8H13L7-1 11 0Z" fill="#344f3b"/><path d="M0-17V8H13L7-1 11 0Z" fill="#587154"/><path d="M-5-2L0-9 6-1" fill="none" stroke="#a1af7d" opacity=".35"/></g>`;
+}
+function worldCityFlagArt(t,owned){
+  const x=t.x*100,y=t.y*100,home=t.id==='home',color=owned?'#63a6a0':t.openCity?'#d6b74f':'#a56959',letter=owned?'青':t.openCity?'黄':'城';
+  return `<g class="world-city-art ${owned?'city-allied':t.openCity?'city-yellow':'city-enemy'}" transform="translate(${x} ${y})"><ellipse cx="49" cy="77" rx="37" ry="14" fill="#28362b" opacity=".4"/><path d="M15 45L48 28 84 46V74L49 91 15 74Z" fill="#a5a089" stroke="#575f51" stroke-width="2"/><path d="M15 45L49 63 84 46M49 63V90" fill="none" stroke="#d3c7a4" stroke-width="2"/><path d="M15 40V52M27 33V46M39 27V39M62 31V44M74 38V51M84 43V55" stroke="#beb7a0" stroke-width="7"/><path d="M38 86V68Q47 55 57 69V87" fill="#39423b"/><path d="M32 39L49 24 66 39 49 48Z" fill="${home?'#476457':'#596055'}" stroke="#d5c293" stroke-width="1.5"/><path d="M36 40V52L49 60 62 52V41" fill="#c2b69a"/><path d="M31 39L49 21 68 39 49 49Z" fill="#566557"/><path d="M72 8V43" stroke="#dacb9b" stroke-width="2"/><path d="M73 9Q84 5 94 12L92 30Q83 23 73 27Z" fill="${color}" stroke="#ddcca3" stroke-width="1"/><text x="83" y="21" fill="#f5e6bd" font-size="10" font-weight="700" text-anchor="middle">${letter}</text></g>`;
+}
+function worldLandscapeSVG(start,span,read){
+  const originX=start.x*100,originY=start.y*100,size=span*100,terrainColors={forest:'#53694c',mountain:'#7a8170',hill:'#aea07d',lake:'#547780',swamp:'#637662',grass:'#89916a'},regions=Object.fromEntries(Object.keys(terrainColors).map(type=>[type,[]])),details=[],sites=[];
+  // Include a one-cell border so shores and vegetation do not change at the
+  // viewport edge. All positions remain in the original world coordinate space.
+  for(let y=start.y-1;y<=start.y+span;y++)for(let x=start.x-1;x<=start.x+span;x++){
+    const t=read(x,y);if(!t)continue;
+    const px=x*100,py=y*100,seed=worldLandscapeSeed(x,y),type=t.type;
+    if(regions[type])regions[type].push(`M${px} ${py}h100v100h-100Z`);
+    if(type==='forest'){
+      for(let i=0;i<5;i++)details.push(worldLandscapeTree(px+12+(seed+i*29)%79,py+27+(seed+i*19)%64,.8+(i%3)*.12));
+    }else if(type==='mountain'){
+      const peakX=px+24+seed%38,peakY=py+9+(seed>>>5)%20;
+      details.push(`<path d="M${px-10} ${py+98}L${peakX} ${peakY}L${px+110} ${py+98}Z" fill="#566456" opacity=".83"/><path d="M${peakX} ${peakY}L${peakX+8} ${py+96}L${px+110} ${py+98}Z" fill="#a7aa91" opacity=".78"/><path d="M${peakX} ${peakY}l-11 22 13-5 12 9Z" fill="#d1cbb2" opacity=".85"/><path d="M${px+2} ${py+90}Q${px+51} ${py+74} ${px+102} ${py+95}" fill="none" stroke="#57694e" stroke-width="4" opacity=".5"/>`);
+    }else if(type==='hill'){
+      const bend=py+35+seed%29;
+      details.push(`<path d="M${px-10} ${py+78}Q${px+46} ${bend} ${px+110} ${py+77}" fill="none" stroke="#d0bf94" stroke-width="5" opacity=".6"/><path d="M${px-10} ${py+87}Q${px+46} ${bend+21} ${px+110} ${py+89}" fill="none" stroke="#8b886b" stroke-width="2" opacity=".65"/>`);
+    }else if(type==='lake'){
+      for(let i=0;i<3;i++)details.push(`<path d="M${px-6} ${py+23+i*26}Q${px+24} ${py+15+i*26} ${px+53} ${py+23+i*26}T${px+108} ${py+23+i*26}" fill="none" stroke="#a3b9ae" stroke-width="1.6" opacity=".48"/>`);
+    }else if(type==='swamp'){
+      details.push(`<path d="M${px-5} ${py+68}Q${px+35} ${py+46} ${px+105} ${py+71}" fill="none" stroke="#486e64" stroke-width="16" opacity=".55"/><path d="M${px+24} ${py+68}v-21m0 8-6-7m6 13 7-9M${px+76} ${py+83}V59m0 9-6-7m6 13 7-9" fill="none" stroke="#c1b583" stroke-width="2" opacity=".75"/>`);
+    }else if(t.wild){
+      const tuftX=px+10+seed%66,tuftY=py+30+(seed>>>5)%50;
+      details.push(`<path d="M${tuftX} ${tuftY}l3-9 3 8m17 11 4-10 3 9" fill="none" stroke="#516748" stroke-width="2" opacity=".5"/>`);
+    }
+    if(t.id==='home'||(!t.wild&&t.terrain==='fort'))sites.push(worldCityFlagArt(t,t.id==='home'||!!S().conquered[t.id]));
+    else if(!t.wild){
+      details.push(`<g transform="translate(${px+50} ${py+48})"><path d="M-19 10L0-7 22 9H-19Z" fill="#586452" stroke="#c5b487" stroke-width="1.5"/><path d="M-15 10v19H17V10" fill="#b1a17d"/><path d="M-4 29V16H6v13" fill="#4d5444"/><path d="M25 3V-18m1 1 15 5-15 5" fill="${S().conquered[t.id]?'#63a6a0':'#918e76'}" stroke="#c7b78a" stroke-width="1.5"/></g>`);
+    }
+  }
+  const contours=[];
+  for(let row=Math.floor(start.y/2)-1;row<=Math.ceil((start.y+span)/2);row++){
+    let path='';
+    for(let column=start.x-1;column<=start.x+span+1;column++){
+      const px=column*100,py=row*200+35*Math.sin(column*.55+row*.8);
+      path+=(path?'L':'M')+px+' '+py.toFixed(1)+' ';
+    }
+    contours.push(`<path d="${path}" fill="none" stroke="#c3bd91" stroke-width="1.5" opacity=".18"/>`);
+  }
+  const roads=[],stops=['field','home','wood','camp','mine','pass','home','fort',...Game.nodes.filter(n=>n.chapter).map(n=>n.id)].filter(id=>id==='home'||Game.landmarkVisible(id));
+  for(let index=1;index<stops.length;index++){
+    const a=stops[index-1]==='home'?Game.home:Game.getNode(stops[index-1]),b=stops[index]==='home'?Game.home:Game.getNode(stops[index]);
+    if(!a||!b)continue;
+    roads.push(`<path d="M${(a.x+.5)*100} ${(a.y+.5)*100}L${(b.x+.5)*100} ${(b.y+.5)*100}" fill="none" stroke="#cab58a" stroke-width="6" opacity=".62"/><path d="M${(a.x+.5)*100} ${(a.y+.5)*100}L${(b.x+.5)*100} ${(b.y+.5)*100}" fill="none" stroke="#796e54" stroke-width="1.2" stroke-dasharray="5 7" opacity=".65"/>`);
+  }
+  return `<svg class="world-landscape" style="grid-column:2 / span ${span};grid-row:2 / span ${span}" viewBox="${originX} ${originY} ${size} ${size}" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="world-region-blend" x="${originX-100}" y="${originY-100}" width="${size+200}" height="${size+200}" filterUnits="userSpaceOnUse"><feGaussianBlur stdDeviation="6"/></filter></defs><rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="#7b8462"/>${Object.entries(regions).map(([type,paths])=>`<path d="${paths.join('')}" fill="${terrainColors[type]}" filter="url(#world-region-blend)"/>`).join('')}${contours.join('')}${details.join('')}${roads.join('')}${sites.join('')}</svg>`;
+}
 function worldMap(){
-  const start=worldBounds(),span=worldSpan();
-  return `<section class="world-grid-board"><div class="map-toolbar"><span class="outskirts-title">青溪天下 · 行军舆图</span><span class="label">${start.x}–${start.x+span-1} / ${start.y}–${start.y+span-1}</span></div><div class="world-grid" style="--map-span:${span}" aria-label="世界地图，拖动可移动视野"><span class="axis-corner">Y/X</span>${Array.from({length:span},(_,i)=>`<span class="map-axis">${start.x+i}</span>`).join('')}${Array.from({length:span},(_,dy)=>`<span class="map-axis">${start.y+dy}</span>${Array.from({length:span},(_,dx)=>{
-    const source=Game.getWorldTile(start.x+dx,start.y+dy),hidden=!source.wild&&source.id!=='home'&&!Game.landmarkVisible(source.id),t=hidden?{...source,name:'未发现据点',type:'plain',terrain:'plain',level:0,wild:true}:source,owned=S().conquered[t.id],job=Game.allExpeditions().some(e=>e.node===t.id);
-    return `<button class="world-cell ${t.type} ${t.openCity?'yellow-city-tile':''} ${t.id===selectedNode?'selected':''} ${owned?'owned':''} ${job?'march-target':''}" ${hidden?'disabled':''} data-action="worldTile" data-id="${t.id}" data-x="${t.x}" data-y="${t.y}" aria-label="${t.name} 坐标 ${t.x},${t.y} ${t.level}级${t.openCity?' 黄巾城市':''}${owned?' 已占领':''}">${terrainArt(t.type,t)}<span class="world-cell-level">${hidden?'未发现':t.id==='home'?'主城':t.level+'级'}</span>${!t.wild&&t.id!=='home'?'<span class="world-site-name">'+esc(t.name)+'</span>':''}${owned?'<span class="world-owned">✓</span>':t.openCity?'<span class="world-yellow-banner" aria-hidden="true">黄</span>':!t.wild&&t.id!=='home'?'<span class="world-landmark">◆</span>':''}${job?'<span class="world-march">⚑</span>':''}</button>`;
-  }).join('')}`).join('')}</div><div class="map-controls"><div class="map-pad">${btn('←','mapPan','-4:0','small secondary')}${btn('↑','mapPan','0:-4','small secondary')}${btn('↓','mapPan','0:4','small secondary')}${btn('→','mapPan','4:0','small secondary')}</div>${btn('回到主城','mapHome','','small secondary')}</div><p class="hint map-help">官道连接城池关隘 · 拖动移动视野，点选地块侦察与出征</p></section>`;
+  const start=worldBounds(),span=worldSpan(),tiles=new Map(),marches=new Set(Game.allExpeditions().map(e=>e.node));
+  const read=(x,y)=>{
+    if(x<0||y<0||x>=Game.WORLD_SIZE||y>=Game.WORLD_SIZE)return null;
+    const key=x+':'+y;if(tiles.has(key))return tiles.get(key);
+    const source=Game.getWorldTile(x,y),hidden=!source.wild&&source.id!=='home'&&!Game.landmarkVisible(source.id),tile=hidden?{...source,name:'未发现据点',type:'plain',terrain:'plain',level:0,wild:true,openCity:false,hidden:true}:source;
+    tiles.set(key,tile);return tile;
+  };
+  return `<section class="world-grid-board"><div class="map-toolbar"><span class="outskirts-title">青溪天下 · 行军舆图</span><span class="label">${start.x}–${start.x+span-1} / ${start.y}–${start.y+span-1}</span></div><div class="world-grid continuous-map" style="--map-span:${span}" aria-label="世界地图，拖动可移动视野">${worldLandscapeSVG(start,span,read)}<span class="axis-corner" style="grid-column:1;grid-row:1">Y/X</span>${Array.from({length:span},(_,i)=>`<span class="map-axis" style="grid-column:${i+2};grid-row:1">${start.x+i}</span>`).join('')}${Array.from({length:span},(_,dy)=>`<span class="map-axis" style="grid-column:1;grid-row:${dy+2}">${start.y+dy}</span>${Array.from({length:span},(_,dx)=>{
+    const t=read(start.x+dx,start.y+dy),hidden=!!t.hidden,owned=S().conquered[t.id],job=marches.has(t.id),city=t.id==='home'||(!t.wild&&t.terrain==='fort');
+    return `<button class="world-cell ${t.type} ${city?'world-city-cell':''} ${t.openCity?'yellow-city-tile':''} ${t.id===selectedNode?'selected':''} ${owned?'owned':''} ${job?'march-target':''}" style="grid-column:${dx+2};grid-row:${dy+2}" ${hidden?'disabled':''} data-action="worldTile" data-id="${t.id}" data-x="${t.x}" data-y="${t.y}" aria-label="${esc(t.name)} 坐标 ${t.x},${t.y} ${t.level}级${t.openCity?' 黄巾城市':''}${owned?' 已占领':''}"><span class="world-cell-level">${hidden?'未发现':t.id==='home'?'主城':t.level+'级'}</span>${!t.wild?'<span class="world-site-name">'+esc(t.id==='home'?(S().ruler||'主城'):t.name)+'</span>':''}${owned?'<span class="world-owned">✓</span>':!t.wild&&t.id!=='home'&&!city?'<span class="world-landmark">◆</span>':''}${job?'<span class="world-march">⚑</span>':''}</button>`;
+  }).join('')}`).join('')}</div><div class="map-controls"><div class="map-pad">${btn('←','mapPan','-4:0','small secondary')}${btn('↑','mapPan','0:-4','small secondary')}${btn('↓','mapPan','0:4','small secondary')}${btn('→','mapPan','4:0','small secondary')}</div>${btn('回到主城','mapHome','','small secondary')}</div><p class="hint map-help">官道连接已发现据点 · 青旗为我方，黄旗为黄巾城；拖动视野，点选地块出征。</p></section>`;
 }
 function yellowCityLinksHTML(){
   const cities=Game.nodes.filter(n=>n.openCity).map(n=>Game.getNode(n.id));if(!cities.length)return '';
@@ -53,13 +114,15 @@ function worldBattleReceiptHTML(){
 function worldPage(){
   if(S().battle&&!S().battle.finished)return battlePage();
   const n=Game.getNode(Game.landmarkVisible(selectedNode)?selectedNode:'field')||Game.getNode('field'),taskNodes=Game.nodes.filter(t=>!t.openCity),namedCount=taskNodes.filter(t=>S().conquered[t.id]).length,yellowCities=Game.nodes.filter(t=>t.openCity),cityCount=yellowCities.filter(t=>S().conquered[t.id]).length,wildCount=Object.keys(S().conquered).filter(id=>id.startsWith('wild_')).length;
-  return `<div class="page-head"><div><h2>青溪天下</h2><p class="sub">64×64 大地图 · 4,096 格山河，寻找下一块领地。</p></div><div class="world-territory-counts"><span class="badge">野地 ${wildCount} · 关隘 ${namedCount}/${taskNodes.length}</span>${yellowCities.length?`<span class="badge">黄巾城 ${cityCount}/${yellowCities.length}</span>`:''}</div></div>${expeditionStrip()}${worldBattleReceiptHTML()}<div class="layout world-layout"><div>${worldMap()}<details class="world-progress-details"><summary>章节与史诗进度 · 查看目标与奖励</summary><div>${chapterWorldBanner()}${epicWorldBanner()}</div></details><section class="world-navigation"><div><canvas id="world-minimap" width="192" height="192" aria-label="64乘64世界总览，点击定位"></canvas><p class="label" style="text-align:center;margin-top:6px">总览 · 点击定位</p></div><div class="world-jump"><label class="label">坐标跳转 · 0–63</label><div class="coordinate-row"><label>X <input id="map-x" type="number" min="0" max="63" value="${n.x}"></label><label>Y <input id="map-y" type="number" min="0" max="63" value="${n.y}"></label>${btn('前往','mapJump','','small')}</div><div class="map-legend">${Object.entries(Game.terrainTypes).map(([type,cfg])=>`<span><i style="background:${cfg.color}"></i>${cfg.name}</span>`).join('')}</div></div></section>${yellowCityLinksHTML()}<section class="landmark-links"><span class="label">任务据点 · 已探索及当前目标</span><div>${taskNodes.filter(t=>Game.landmarkVisible(t.id)).map(t=>btn(t.name,'mapLandmark',t.id,'small secondary')).join('')}</div></section></div><section class="panel node-panel"><div class="section-title"><h3>${n.name}</h3><span class="badge">${n.openCity?'黄巾城 · ':''}${n.level} 级</span></div><p class="coordinate-tag">坐标 (${n.x}, ${n.y}) · 距主城 ${Math.hypot(n.x-Game.home.x,n.y-Game.home.y).toFixed(1)} 格</p><p class="hint">${n.desc}</p><div class="divider"></div>${wildGeneralNodeHTML(n)}${classicTargetActions(n)}${S().conquered[n.id]&&Game.isCity(n)?'':`<div class="divider"></div>${enemyIntelHTML(n)}`}</section></div>`;
+  return `<div class="page-head"><div><h2>青溪天下</h2><p class="sub">64×64 大地图 · 4,096 格山河，寻找下一块领地。</p></div><div class="world-territory-counts"><span class="badge">野地 ${wildCount} · 关隘 ${namedCount}/${taskNodes.length}</span>${yellowCities.length?`<span class="badge">黄巾城 ${cityCount}/${yellowCities.length}</span>`:''}</div></div>${expeditionStrip()}
+    <div class="layout world-layout"><div class="world-map-main">${worldMap()}</div><aside class="panel node-panel"><div class="section-title"><h3>${esc(n.name)}</h3><span class="badge">${n.openCity?'黄巾城 · ':''}${n.level} 级</span></div><p class="coordinate-tag">坐标 (${n.x}, ${n.y}) · 距主城 ${Math.hypot(n.x-Game.home.x,n.y-Game.home.y).toFixed(1)} 格</p><p class="hint">${esc(n.desc)}</p><div class="divider"></div>${wildGeneralNodeHTML(n)}${classicTargetActions(n)}${S().conquered[n.id]&&Game.isCity(n)?'':`<div class="divider"></div>${enemyIntelHTML(n)}`}</aside></div>
+    <div class="world-map-support">${worldBattleReceiptHTML()}<section class="world-navigation"><div><canvas id="world-minimap" width="192" height="192" aria-label="64乘64世界总览，点击定位"></canvas><p class="label" style="text-align:center;margin-top:6px">总览 · 点击定位</p></div><div class="world-jump"><label class="label">坐标跳转 · 0–63</label><div class="coordinate-row"><label>X <input id="map-x" type="number" min="0" max="63" value="${n.x}"></label><label>Y <input id="map-y" type="number" min="0" max="63" value="${n.y}"></label>${btn('前往','mapJump','','small')}</div><div class="map-legend">${Object.entries(Game.terrainTypes).map(([type,cfg])=>`<span><i style="background:${cfg.color}"></i>${cfg.name}</span>`).join('')}</div></div></section>${yellowCityLinksHTML()}<section class="landmark-links"><span class="label">任务据点 · 已探索及当前目标</span><div>${taskNodes.filter(t=>Game.landmarkVisible(t.id)).map(t=>btn(t.name,'mapLandmark',t.id,'small secondary')).join('')}</div></section><details class="world-progress-details"><summary>章节与史诗进度 · 查看目标与奖励</summary><div>${chapterWorldBanner()}${epicWorldBanner()}</div></details></div>`;
 }
 function drawWorldMiniMap(){
   const canvas=document.getElementById('world-minimap');if(!canvas)return;const ctx=canvas.getContext('2d');if(!ctx)return;
   const cell=canvas.width/Game.WORLD_SIZE;
   for(let y=0;y<Game.WORLD_SIZE;y++)for(let x=0;x<Game.WORLD_SIZE;x++){
-    const t=Game.getWorldTile(x,y);ctx.fillStyle=t.id==='home'?'#e1c17b':S().conquered[t.id]?'#bddd98':t.openCity?'#d2ad4d':Game.terrainTypes[t.type]?.color||'#b09772';ctx.fillRect(x*cell,y*cell,cell,cell);
+    const t=Game.getWorldTile(x,y),hidden=!t.wild&&t.id!=='home'&&!Game.landmarkVisible(t.id);ctx.fillStyle=hidden?Game.terrainTypes.plain.color:t.id==='home'?'#e1c17b':S().conquered[t.id]?'#bddd98':t.openCity?'#d2ad4d':Game.terrainTypes[t.type]?.color||'#b09772';ctx.fillRect(x*cell,y*cell,cell,cell);
   }
   const start=worldBounds();ctx.strokeStyle='#f3e3b5';ctx.lineWidth=1.5;ctx.strokeRect(start.x*cell,start.y*cell,worldSpan()*cell,worldSpan()*cell);
   const n=Game.getNode(selectedNode);if(n){ctx.fillStyle='#f2d286';ctx.fillRect(n.x*cell-1,n.y*cell-1,cell+2,cell+2);}
@@ -68,7 +131,7 @@ function worldNodeModal(id){if(!Game.landmarkVisible(id)){toast('据点尚未发
 function centerWorld(x,y,select=true){
   worldView={x:Math.max(0,Math.min(63,x)),y:Math.max(0,Math.min(63,y))};
   const tile=Game.getWorldTile(worldView.x,worldView.y);if(select&&tile&&tile.id!=='home'){if(Game.landmarkVisible(tile.id))selectedNode=tile.id;else toast('这里的任务据点尚未发现，请先完成当前据点');}
-  render();
+  render();if(select)document.querySelector('.world-grid-board')?.scrollIntoView({block:'start',behavior:'smooth'});
 }
 document.addEventListener('click',event=>{
   if(event.target.closest('#world-minimap')){const rect=event.target.getBoundingClientRect();centerWorld(Math.min(63,Math.floor((event.clientX-rect.left)/rect.width*64)),Math.min(63,Math.floor((event.clientY-rect.top)/rect.height*64)));return;}
@@ -83,7 +146,8 @@ document.addEventListener('click',event=>{
 });
 document.addEventListener('pointerdown',event=>{
   const grid=event.target.closest('.world-grid');if(!grid||event.button>0)return;
-  mapDrag={grid,pointer:event.pointerId,x:event.clientX,y:event.clientY,start:{...worldView},moved:false,cell:grid.getBoundingClientRect().width/(worldSpan()+.4)};
+  const cell=grid.querySelector('.world-cell')?.getBoundingClientRect(),fallback=grid.getBoundingClientRect().width/(worldSpan()+.4);
+  mapDrag={grid,pointer:event.pointerId,x:event.clientX,y:event.clientY,start:{...worldView},moved:false,cellX:cell?.width||fallback,cellY:cell?.height||fallback};
 });
 document.addEventListener('pointermove',event=>{
   if(!mapDrag||event.pointerId!==mapDrag.pointer)return;
@@ -92,7 +156,7 @@ document.addEventListener('pointermove',event=>{
 document.addEventListener('pointerup',event=>{
   if(!mapDrag||event.pointerId!==mapDrag.pointer)return;
   const drag=mapDrag;mapDrag=null;drag.grid.classList.remove('dragging');
-  if(drag.moved){suppressMapClick=true;centerWorld(drag.start.x-Math.round((event.clientX-drag.x)/drag.cell),drag.start.y-Math.round((event.clientY-drag.y)/drag.cell),false);setTimeout(()=>suppressMapClick=false,300);}
+  if(drag.moved){suppressMapClick=true;centerWorld(drag.start.x-Math.round((event.clientX-drag.x)/drag.cellX),drag.start.y-Math.round((event.clientY-drag.y)/drag.cellY),false);setTimeout(()=>suppressMapClick=false,300);}
 });
 document.addEventListener('pointercancel',()=>{mapDrag?.grid.classList.remove('dragging');mapDrag=null;});
 document.addEventListener('click',event=>{if(suppressMapClick){event.preventDefault();event.stopImmediatePropagation();}},{capture:true});

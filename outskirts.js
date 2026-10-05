@@ -31,13 +31,40 @@ function plotArt(type,level=1,index=0,working=false){
   const construction=working?'<g class="plot-scaffold"><path d="M20 86V39m23 60V52m-27-10l31 15m-28 4l28 15m-24-31l17 41" fill="none" stroke="#d3b681" stroke-width="2.5"/><path d="M20 39l23 13" stroke="#6b5b3f" stroke-width="5"/><path d="M136 53V18l15 6-15 7" fill="#c39752" stroke="#e0c997" stroke-width="1.5"/></g>':'';
   return `<svg class="plot-scene" viewBox="0 0 160 124" aria-hidden="true">${ground}${detail}${construction}</svg>`;
 }
+function plotTemplateMeta(id){return Game.plotTemplates.find(t=>t.id===id);}
+function plotTemplateCountsHTML(counts){
+  return Object.keys(Game.plotTypes).map(type=>`${Game.buildings[type].name} ${counts[type]||0}`).join(' · ');
+}
+function plotTemplateFoodHTML(){
+  const net=Math.round(Game.rates().food*60);
+  return `<p class="plot-food-note">全军耗粮后，当前净粮产 <strong class="${net<0?'negative':''}" data-plot-food-net>${net>=0?'+':''}${net} /时</strong>。养兵仍需看田等级、劳动力和驻军耗粮。</p>`;
+}
+function plotTemplateCountTable(quote,preview=false){
+  const current=quote.actualCounts||Object.fromEntries(Object.keys(Game.plotTypes).map(type=>[type,S().plots.filter(p=>p.type===type).length]));
+  return `<div class="plot-template-table-wrap"><table class="plot-template-table"><thead><tr><th>产业</th><th>当前</th>${preview?'<th>施工后</th>':''}<th>样板目标</th>${preview?'<th>本次完成</th>':''}</tr></thead><tbody>${Object.keys(Game.plotTypes).map(type=>`<tr><th>${Game.buildings[type].name}</th><td>${current[type]||0}</td>${preview?`<td>${quote.effectiveCounts?.[type]??current[type]??0}</td>`:''}<td>${quote.counts[type]||0}</td>${preview?`<td>${quote.projectedCounts?.[type]??current[type]??0}</td>`:''}</tr>`).join('')}</tbody></table></div>`;
+}
+function plotTemplatePanelHTML(){
+  const selected=S().plotTemplate?.id,meta=plotTemplateMeta(selected),mode=S().plotTemplate?.mode||'fill',quote=meta?Game.plotTemplateQuote(selected,mode):null,pending=S().buildQueue.some(q=>q.plot!==undefined);
+  return `<section class="plot-template-panel"><div class="section-title"><h3>城外样板</h3><span class="label">按当前 ${Game.unlockedPlots()} 块开放土地安排</span></div><div class="plot-template-choices">${Game.plotTemplates.map(t=>{
+    const q=Game.plotTemplateQuote(t.id,'replace');
+    return `<button class="plot-template-choice ${selected===t.id?'is-selected':''}" data-action="plotTemplateSelect" data-id="${esc(t.id)}" aria-pressed="${selected===t.id}"><strong>${esc(t.name)}${t.id==='balanced'?'<span class="plot-template-tag">主城推荐</span>':''}</strong><span>${esc(t.desc)}</span><small>${esc(plotTemplateCountsHTML(q.counts))}</small></button>`;
+  }).join('')}</div>${meta?`<div class="plot-template-selection"><div class="plot-template-selection-head"><strong>已选：${esc(meta.name)}</strong>${btn('应用样板','plotTemplatePreview',`${selected}:fill`,'small')}</div>${plotTemplateCountTable(quote)}<div class="plot-template-execution"><p class="hint" data-plot-template-status>${esc(Game.plotTemplateStatus())}</p>${S().plotTemplate.active?btn('暂停','plotTemplatePause','','small secondary'):quote.tasks.length&&(pending||Object.values(quote.actualCounts||{}).some(value=>value>0))?btn('继续','plotTemplatePreview',`${selected}:${mode}`,'small secondary'):''}</div>${!quote.tasks.length?(pending?'<p class="hint">当前城外工程仍在建造队，等待完工。</p>':quote.conflicts.length?'<p class="hint">保留现有田后已无可安排项目；要达到目标，可预览「按样板改建」。</p>':'<p class="hint">布局已完成。官府新开放土地后，可再次应用样板。</p>'):''}${plotTemplateFoodHTML()}</div>`:'<p class="hint">先选样板，再预览施工。默认只补空地，保留现有资源田。</p>'}</section>`;
+}
+function plotTemplatePreview(id,mode='fill'){
+  const meta=plotTemplateMeta(id);if(!meta)return;
+  const quote=Game.plotTemplateQuote(id,mode),replace=mode==='replace',tasks=quote.tasks.length;
+  showModal(`城外样板 · ${esc(meta.name)}`,`<p class="sub">${Game.unlockedPlots()} 块开放土地 · ${esc(meta.desc)}</p><div class="plot-template-modes">${btn('只补空地','plotTemplatePreview',`${id}:fill`,!replace?'active-order':'secondary')}${btn('按样板改建','plotTemplatePreview',`${id}:replace`,replace?'active-order':'secondary')}</div><p class="hint">${replace?'按目标数量调整产业，可改建不匹配的资源田。':'仅在空地建设，保留已有资源田；原有布局可能无法完全达到样板配比。'}</p>${plotTemplateCountTable(quote,true)}<div class="plot-template-work-count"><span>新建 <strong>${quote.builds}</strong> 块</span><span>改建 <strong>${quote.replaces}</strong> 块</span><span>待安排 <strong>${tasks}</strong> 项</span></div>${replace&&quote.replaces?`<div class="notice storage-warning"><strong>确认后将改建 ${quote.replaces} 块已有资源田。</strong><br>这些田完工后改为新产业 1 级，原等级不保留。施工前与施工期间，旧田继续产出。</div>`:''}${quote.conflicts.length?'<p class="hint">本次完成数量与样板目标仍有差异，可能来自保留的资源田或正在施工的地块。已有施工照常完成，随后可再次预览。</p>':''}${tasks?`<p class="label">全部待安排施工的预计消耗 · 分项开工时扣除</p>${costs(quote.cost||{})}`:'<p class="notice">没有待安排施工。</p>'}<p class="hint">共用正常建造队，逐项检查资源与建筑前置。资源不足或队列已满时自动等待，不取消已有施工；启用后暂停自动升级，自动研究照常运行。</p>${quote.reason?`<p class="notice">当前状态：${esc(quote.reason)}</p>`:''}${plotTemplateFoodHTML()}`,btn('返回田庄','close','','secondary')+btn(replace?'确认按样板改建':'确认只补空地','plotTemplateApply',`${id}:${mode}`,'',!tasks));
+  manualModalContext=()=>plotTemplatePreview(id,mode);
+}
 function outsideCityPage(){
-  const s=S(),unlocked=Game.unlockedPlots(),used=s.plots.filter(p=>p.type).length;
+  const s=S(),unlocked=Game.unlockedPlots(),used=s.plots.filter(p=>p.type).length,template=s.plotTemplate?.id?Game.plotTemplateQuote(s.plotTemplate.id,s.plotTemplate.mode):null;
   return `<div class="page-head"><div><h2>青溪城 · 城外</h2><p class="sub">点击地块建设或升级，四种资源田自由搭配。</p></div><span class="badge">已用 ${used} / ${unlocked} 块</span></div>
   <div class="allocation">${Object.entries(Game.plotTypes).map(([type,cfg])=>{const plots=s.plots.filter(p=>p.type===type),gain=plots.reduce((sum,p)=>sum+Game.plotYield(p),0);return `<div class="allocation-item ${type}"><span class="allocation-glyph">${resourceIcon(cfg.resource,'')}</span><div><strong>${Game.resources[cfg.resource].name}</strong><p>${plots.length} 块 · <span data-plot-rate="${type}">+${Math.round(gain*60)}/时</span></p></div></div>`;}).join('')}</div>
+  ${plotTemplatePanelHTML()}
   <div class="layout outskirts-layout"><section class="outskirts-board"><div class="outskirts-banner"><span class="outskirts-title">青溪城外 · 田庄图</span><span class="label">官府 ${s.buildings.hall} 级 · 已开放 ${unlocked} / ${Game.PLOT_COUNT}</span></div><div class="plot-grid">${s.plots.map((p,index)=>{
     const locked=index>=unlocked,job=Game.plotJob(index),name=locked?'待开垦':p.type?Game.buildings[p.type].name:'空地';
-    return `<button class="plot-tile ${locked?'locked-land':p.type||'empty-land'} ${job?'working':''}" data-action="plot" data-id="${index}" aria-label="${index+1}号地块 ${name}${p.type?' '+p.level+'级':''}${job?' 施工中':''}"><span class="plot-index">${String(index+1).padStart(2,'0')}</span>${job?'<span class="plot-work">营造</span>':p.type&&!locked?'<span class="plot-level">'+p.level+'级</span>':''}${plotArt(locked?'locked':p.type,p.level,index,!!job)}<strong>${name}</strong><small>${locked?'官府 '+(Math.floor((index-12)/3)+2)+' 级开放':job?`${job.kind==='replace'?'改建':job.kind==='build'?'建造':'升级'}至 ${job.level} 级<br>${clock(job.end)}`:p.type?`+${Math.round(Game.plotYield(p)*60)}/时`:'点击建造'}</small></button>`;
+    const target=!locked?template?.targets[index]:null,hint=target?`样板：${Game.buildings[target].name}`:'';
+    return `<button class="plot-tile ${locked?'locked-land':p.type||'empty-land'} ${job?'working':''}" data-action="plot" data-id="${index}" aria-label="${index+1}号地块 ${name}${p.type?' '+p.level+'级':''}${job?' 施工中':''}${hint?' '+hint:''}"><span class="plot-index">${String(index+1).padStart(2,'0')}</span>${job?'<span class="plot-work">营造</span>':p.type&&!locked?'<span class="plot-level">'+p.level+'级</span>':''}${plotArt(locked?'locked':p.type,p.level,index,!!job)}<strong>${name}</strong><small>${locked?'官府 '+(Math.floor((index-12)/3)+2)+' 级开放':job?`${job.kind==='replace'?'改建':job.kind==='build'?'建造':'升级'}至 ${job.level} 级<br>${clock(job.end)}`:p.type?`+${Math.round(Game.plotYield(p)*60)}/时`:'点击建造'}</small>${hint?`<span class="plot-template-hint">${hint}</span>`:''}</button>`;
   }).join('')}</div><div class="outskirts-note">可重复建设同一种产业 · 同一块地独立升级 · 城内城外共用建造队</div></section>
   <aside class="city-side">${classicQueuePanel()}</aside></div>`;
 }
@@ -67,4 +94,8 @@ document.addEventListener('click',event=>{
   if(action==='plotPlan'){const [index,type]=id.split(':');plotPlan(Number(index),type);}
   if(action==='plotDevelop'){const [index,type]=id.split(':');if(actResult(Game.developPlot(Number(index),type),'建造队已前往城外'))modal.close();}
   if(action==='plotHall'){cityArea='inner';page='city';render();buildingModal('hall');}
+  if(action==='plotTemplateSelect')actResult(Game.setPlotTemplate(id),'已选择样板，可预览后应用');
+  if(action==='plotTemplatePreview'){const [template,mode]=id.split(':');plotTemplatePreview(template,mode);}
+  if(action==='plotTemplateApply'){const [template,mode]=id.split(':');if(actResult(Game.applyPlotTemplate(template,mode),'已启用样板，建造队会按条件逐项安排'))modal.close();}
+  if(action==='plotTemplatePause')actResult(Game.pausePlotTemplate(),'样板已暂停，已有施工照常完成');
 });

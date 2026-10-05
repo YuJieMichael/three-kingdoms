@@ -4,7 +4,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 function load(){
   const now=1791194400000,saved=new Map();
   const ctx=vm.createContext({console,Date:class extends Date{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}},localStorage:{getItem:k=>saved.get(k)||null,setItem:(k,v)=>saved.set(k,v)},document:{addEventListener(){}}});
-  for(const file of ['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','onboarding-data.js','onboarding-system.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','chapter-data.js','siege-data.js','war-orders.js','automation-system.js','yellow-city-data.js','engine.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'..',file),'utf8'),ctx,{filename:file});
+  for(const file of ['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','onboarding-data.js','onboarding-system.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','chapter-data.js','siege-data.js','war-orders.js','automation-system.js','yellow-city-data.js','plot-template-data.js','engine.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'..',file),'utf8'),ctx,{filename:file});
   const Game=vm.runInContext('Game',ctx),Heritage=vm.runInContext('HeritageSystem',ctx),data=vm.runInContext('HeritageData',ctx);Game.init();return {Game,Heritage,data};
 }
 test('prestige alone cannot promote: rejection leaves office, gold and jewels unchanged',()=>{
