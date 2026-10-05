@@ -38,16 +38,16 @@ npm start
 | 战斗画面、指令与倒计时 | `combat-ui.js` |
 | 掠夺／占领、出征预览与战利品展示 | `campaign-ui.js` |
 | 建造、科技、招贤、商城窗口 | `manual-ui.js` |
-| 主框架与左侧城池信息 | `classic-ui.js`、`classic.css` |
+| 主框架、资源横栏与写实战争主题 | `classic-ui.js`、`classic.css`、`war-theme.css` |
 | 其他界面、存档导入导出与页面刷新 | `app.js` |
-| 美术素材与图集位置 | `assets/realistic/`、`art-assets.js`、`art.css` |
+| 美术素材、城池环境、生成提示与图集位置 | `assets/realistic/`、`assets/warfare/`、`art-assets.js`、`art.css` |
 | 页面入口与加载顺序 | `index.html` |
 
 当前产出系数与掠夺系数集中在 `engine.js` 的 `ECONOMY_OUTPUT_FACTOR`、`RAID_LOOT_FACTOR`。资源收入按真实时间计算，试玩倍率用于人口、队列与行军。
 
 ## 验证
 
-运行 `npm test` 检查资源结算、来袭计时、守城损失、演练、官职珠宝校验与扣除及旧存档兼容。长局测试使用可控时钟模拟持续运行，不需要实际等待数天。浏览器中从「来袭与守城」开始演练，并完成一次出征查看新战报和仓储入口；按桌面和手机宽度检查页面。
+运行 `npm test` 检查自动研究的选择、暂停、接续、离线与存档兼容，以及资源结算、来袭计时、守城损失、演练、官职珠宝校验与扣除及旧存档兼容。长局测试使用可控时钟模拟持续运行，不需要实际等待数天。浏览器中从「来袭与守城」开始演练，并完成一次出征查看新战报和仓储入口；按桌面和手机宽度检查页面。
 
 ## 把修改保存到 GitHub
 

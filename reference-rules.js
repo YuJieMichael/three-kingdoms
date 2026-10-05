@@ -7760,7 +7760,7 @@ for(const [id,row] of Object.entries(ReferenceRules.units)){const unit=ManualDat
 ManualData.technology.supply.name='医疗技巧';
 for(const id of ['plant','logging','mining','smelting']){ManualData.technology[id].effect=.1;ManualData.technology[id].desc=({plant:'粮食',logging:'木材',mining:'石料',smelting:'铁锭'})[id]+'产量每级 +10%。';}
 ManualData.technology.researching={name:'研究技巧',desc:'每级缩短新研究的基础工期 3%。',effect:.03,max:10};
-ManualData.technology.repair.desc='每级增加一次基础修复率；城防迎击尚未开放。';
+ManualData.technology.repair.desc='正式守城结束后，每级恢复 5% 受损持久城防。';
 for(const [id,rows] of Object.entries(ReferenceRules.researchRows))Object.assign(ManualData.technology[id],{rows,trialCost:false,reference:true});
 const referenceBlueprint=ManualData.shop.find(i=>i.id==='blueprint');Object.assign(referenceBlueprint,{effect:'blueprint',desc:'建筑与资源田升至 10 级时消耗 1 张。开始建设时自动扣除，不能直接使用。'});
 
