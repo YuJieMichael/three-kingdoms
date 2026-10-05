@@ -68,6 +68,26 @@ test('raid bonus gold can exceed hall capacity while raid base loot still exclud
  assertBattleReceipt(e,before,r);assert.equal(g.state.res.gold,g.capacity('gold')+280);
 });
 
+for(const kind of ['full','over','partial'])for(const offline of [false,true])test(`raid ${offline?'offline':'online'} return preserves ${kind} warehouse loot without a second settlement`,()=>{
+ const e=setup(),g=e.Game;arrive(e);stock(g,kind);const before={...g.state.res},r=finish(e);
+ assert.equal(r.won,true);assertBattleReceipt(e,before,r);
+ const receivedWood=r.resourceReceipt.base.received.wood+(r.resourceReceipt.bonus.received.wood||0);
+ const wood=before.wood+receivedWood,receipt=clone(r.resourceReceipt),back=clone(r.back);
+ assert.ok(receivedWood>0);assert.ok(wood>g.capacity('wood'));
+ assert.equal(g.state.expedition.phase,'return');assert.equal(g.state.army.archer,0);
+ const wait=g.state.expedition.end-e.now()+1;
+ if(offline)e.offline(wait);else e.advance(wait);
+ assert.equal(g.state.expedition,null);assert.equal(g.state.army.archer,back.archer);
+ assert.equal(g.state.res.wood,wood,'return must neither clamp nor repeat settled loot');
+ assert.ok(g.state.res.food>g.capacity('food'),'normal marching upkeep must not remove all excess food');
+ assert.deepEqual(clone(g.state.reports[0].resourceReceipt),receipt);
+ g.save();e.offline(1);
+ assert.equal(g.state.res.wood,wood,'over-capacity stock survives reload after returning');
+ assert.equal(g.state.army.archer,back.archer,'reload cannot return the troops twice');
+ assert.deepEqual(clone(g.state.reports[0].resourceReceipt),receipt);
+ assert.equal(g.validSave(g.state),true);
+});
+
 test('base and bonus drops share surviving-army cargo space even when warehouses are full',()=>{
  const e=setup(25),g=e.Game;arrive(e,'field','occupy',25);stock(g,'full');const before={...g.state.res},r=finish(e);
  assert.equal(r.won,true);assert.ok(r.lost.archer>0);assert.equal(r.cargoCapacity,525);assert.equal(r.cargoLoaded,524);

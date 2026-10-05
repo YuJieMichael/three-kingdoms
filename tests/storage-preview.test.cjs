@@ -66,3 +66,14 @@ test('storage technology changes excess forecast without changing cargo received
   Game.state.tech.storage=1;
   row=Game.lootPreview('field','raid',army).storage.rows.find(r=>r.id==='wood');assert.equal(row.received,117);assert.equal(row.overCapacity,0);
 });
+
+test('raid receipt explains immediate over-capacity settlement without rewriting legacy reports',()=>{
+ const e=loadGame();city(e.Game,{drill:1});e.Game.state.army.archer=300;e.Game.state.res.food=40000;e.Game.state.res.wood=40000;
+ const quote=e.Game.lootPreview('field','raid',army);assertSettlement(e,quote);
+ const receipt=JSON.parse(JSON.stringify(e.Game.state.battle.result));
+ const html=r=>e.evaluate(`battleCargoHTML(${JSON.stringify(r)})`);
+ assert.match(html(receipt),/胜利结算时入库，满仓或超仓也能收取/);
+ assert.match(html(receipt),/返城不重复结算/);
+ delete receipt.overCapacity;assert.doesNotMatch(html(receipt),/胜利结算时入库/);
+ receipt.won=false;assert.equal(html(receipt),'');
+});

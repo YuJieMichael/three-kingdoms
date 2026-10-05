@@ -8,3 +8,35 @@
 @media(max-width:360px){.equipment-grid,.hero-slots{grid-template-columns:1fr}}
 .staff-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.staff-card{display:flex;flex-direction:column;gap:9px;padding:13px;background:#f4eee3;border:1px solid #cfbea0;border-radius:8px}.staff-card select{width:100%;min-width:0}.honor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.heritage-requirements{padding-left:22px;line-height:1.9}.gathering-summary{line-height:1.9}.lord-card .prestige-link{text-align:left;font-size:12px;margin-top:4px}
 @media(max-width:650px){.staff-grid,.honor-grid{grid-template-columns:1fr}}
+dialog:has(.inn-table-scroll){width:min(960px,calc(100% - 32px))}
+.inn-stat-legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin:15px 0 8px;font-size:12px;line-height:1.7;color:#d6dfca}
+.inn-stat-blue{color:#8ac5ff}.inn-stat-purple{color:#d5a2ff}.inn-stat-gold{color:#f6d176}.inn-stat-red{color:#ff9797}
+.inn-scroll-hint{margin:8px 0}.inn-table-scroll{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;border:1px solid #617151;border-radius:7px;scrollbar-width:thin}
+.inn-table-scroll:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.inn-recruitment-table{width:100%;min-width:740px;border-collapse:separate;border-spacing:0;font-size:12px;font-variant-numeric:tabular-nums;color:#e3e9d7}
+.inn-recruitment-table caption{text-align:left;padding:10px 12px;color:#c5d1b8;font-size:12px;background:#1c291e}
+.inn-recruitment-table tr{background:#253326}.inn-recruitment-table tbody tr:nth-child(even){background:#2b3a2b}.inn-recruitment-table thead tr{background:#35462f}
+.inn-recruitment-table th,.inn-recruitment-table td{padding:10px 8px;text-align:center;white-space:nowrap;border-bottom:1px solid #4b5d42;background:inherit}
+.inn-recruitment-table thead th{font-weight:500;color:#d6ddc6}.inn-recruitment-table tbody tr:last-child th,.inn-recruitment-table tbody tr:last-child td{border-bottom:0}
+.inn-recruitment-table .inn-name-cell{position:sticky;left:0;z-index:2;width:116px;min-width:116px;text-align:left;box-shadow:3px 0 5px #0b170d35}
+.inn-recruitment-table .inn-action-cell{position:sticky;right:0;z-index:2;width:96px;min-width:96px;box-shadow:-3px 0 5px #0b170d35}
+.inn-candidate-name{display:flex;align-items:center;gap:8px}.inn-candidate-name strong{max-width:72px;white-space:normal;overflow-wrap:anywhere;font-weight:500}
+.inn-candidate-portrait.asset-sprite{width:32px;height:36px;flex:none;border:1px solid #8b936c;border-radius:3px}
+.inn-stat{display:inline-flex;flex-direction:column;align-items:center;gap:2px;min-width:36px}.inn-stat strong{font-size:16px;font-weight:600;color:inherit}.inn-stat small{font-size:10px}.inn-stat-normal{color:#d1d9c4}
+.inn-action-cell .btn{min-height:44px;min-width:68px}.inn-recruit-reason{display:block;margin-top:5px;color:#d4c5a9;font-size:10px}
+.inn-empty{margin-top:14px}
+@media(max-width:650px){
+ dialog:has(.inn-table-scroll){width:calc(100% - 20px)}
+ .inn-recruitment-table{table-layout:fixed;width:610px;min-width:610px}
+ .inn-recruitment-table th,.inn-recruitment-table td{padding:9px 7px}
+ .inn-recruitment-table .inn-name-cell{width:90px;min-width:90px}
+ .inn-recruitment-table .inn-action-cell{width:74px;min-width:74px}
+ .inn-recruitment-table thead th:nth-child(2){width:50px}
+ .inn-recruitment-table thead th:nth-child(n+3):nth-child(-n+6){width:64px}
+ .inn-recruitment-table thead th:nth-child(7){width:54px}
+ .inn-recruitment-table thead th:nth-child(8){width:86px}
+ .inn-candidate-name{gap:5px}.inn-candidate-name strong{max-width:40px}
+ .inn-candidate-portrait.asset-sprite{width:24px;height:28px}
+ .inn-action-cell .btn{min-width:58px;padding-left:5px;padding-right:5px}
+ .inn-stat-legend{font-size:11px;gap:5px 10px}
+}
