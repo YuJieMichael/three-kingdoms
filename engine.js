@@ -67,7 +67,7 @@ const Game = (() => {
     const tile=getWorldTile(x,y);return tile?.wild?tile:null;
   }
   const defaultCityLayout=()=>Array.from({length:36},(_,i)=>i===14?'hall':[15,20,21].includes(i)?'reserved':null);
-  const starterGiftReward={food:40000,wood:40000,stone:40000,iron:40000,gold:60000};
+  const starterGiftReward={...OnboardingData.gifts[0].resources};
   const supplies=(amount,gold)=>({food:amount,wood:amount,stone:amount,iron:amount,gold});
   const plotReached=(s,type,level=1)=>s.plots.some(p=>p.type===type&&p.level>=level);
   const missions = [
@@ -645,7 +645,7 @@ const Game = (() => {
     state.inventory[id]--;Progression.record(state,'item');save();return null;
   }
   function starterGiftPending(){return OnboardingSystem.available(state).length>0;}
-  function starterGiftRemaining(){return Object.fromEntries(Object.entries(starterGiftReward).map(([id,n])=>[id,n-(state.starterGiftVersion===1?20000:state.starterGiftVersion>=2?n:0)]));}
+  function starterGiftRemaining(){return {...OnboardingSystem.quote(state,1).resources};}
   function addSupplies(reward){for(const [id,n] of Object.entries(reward))state.res[id]+=n;}
   function claimStarterGift(){
     return OnboardingSystem.claim(1);

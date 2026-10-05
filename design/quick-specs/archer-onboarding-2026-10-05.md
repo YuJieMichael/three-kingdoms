@@ -2,6 +2,8 @@
 
 类型：Addition；日期：2026-10-05。用户方案优先：官府等级对应十阶礼包，弓箭手是新手成长重点。
 
+v0.21.1 黄金及旧档补差以 starter-gold-tuning-2026-10-05.md 为准；下面黄金 60,000 为 v0.20.0 初始设计记录。
+
 没有现成 GDD、brief 或 systems-index；使用 README.md、RULES.md、既有 reward-data.js / reference-rules.js 和 game-evaluation-v0.19.0.md 为依据。之前关于首批义兵的调查仅作等待时间诊断，不实施义兵专属加速。
 
 规则：
