@@ -48,3 +48,5 @@ dialog,dialog.bag-dialog{max-width:calc(100% - 20px);box-sizing:border-box;overf
 .war-order-intel .enemy-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin:8px 0 12px}
 .war-order-intel .enemy-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(181,175,128,.14);padding:5px 0}
 .estimate{background:#283627;border-color:#657147;color:#dedec8}.storage-preview-table caption,.storage-preview-table small{color:#b4bea6}
+
+.dispatch-return-label{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer;font-weight:600}.dispatch-return-label input{width:20px;height:20px;flex:none;accent-color:#bfab6c}#dispatch-return-option[hidden]{display:none}
