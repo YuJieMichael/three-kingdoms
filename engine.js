@@ -21,10 +21,11 @@ const Game = (() => {
     {id:'pass',name:'白石隘口',terrain:'mountain',x:62,y:64,level:2,desc:'盾兵封锁隘口。集中兵力，避免分散攻击。',army:{shield:32,spear:20,archer:12},loot:{stone:410,iron:180,gold:170},bonus:{stone:.2},reward:'石料产量 +20%',time:18},
     {id:'camp',name:'黄巾营寨',terrain:'camp',x:66,y:27,level:2,desc:'弓兵依托营寨防守，轻骑兵能快速绕过前排。',army:{spear:30,archer:35,shield:12},loot:{food:380,wood:240,iron:160,gold:230},reward:'解救武将 · 严秋',time:22,capture:'yan'},
     {id:'mine',name:'赤铁山',terrain:'mountain',x:83,y:49,level:3,desc:'骑兵巡守矿脉，长枪兵是攻取这里的关键。',army:{cavalry:30,shield:25,archer:25},loot:{iron:580,stone:200,gold:280},bonus:{iron:.25},reward:'铁锭产量 +25%',time:24},
-    {id:'fort',name:'古渡县城',terrain:'fort',x:49,y:13,level:4,desc:'县城守军兵种齐全。扩充兵力与武将等级后，再发起总攻。',army:{shield:70,spear:55,archer:65,cavalry:18},loot:{food:1100,wood:750,stone:600,iron:480,gold:900},reward:'占领县城 · 达成首章',time:30}
+    {id:'fort',name:'古渡县城',terrain:'fort',x:49,y:13,level:4,desc:'县城守军兵种齐全。扩充兵力与武将等级后，再发起总攻。',army:{shield:70,spear:55,archer:65,cavalry:18},loot:{food:1100,wood:750,stone:600,iron:480,gold:900},reward:'占领县城 · 开启第二章',time:30},
+    ...ChapterData.nodes
   ];
   const WORLD_SIZE=64,home={x:32,y:32};
-  const landmarks={field:{x:29,y:35},wood:{x:29,y:29},pass:{x:36,y:34},camp:{x:37,y:28},mine:{x:40,y:32},fort:{x:34,y:23}};
+  const landmarks={field:{x:29,y:35},wood:{x:29,y:29},pass:{x:36,y:34},camp:{x:37,y:28},mine:{x:40,y:32},fort:{x:34,y:23},...Object.fromEntries(ChapterData.nodes.map(n=>[n.id,{x:n.x,y:n.y}]))};
   const terrainTypes={
     plain:{name:'平地',icon:'平',resource:'food',color:'#86976a'},
     grass:{name:'草原',icon:'草',resource:'food',color:'#83985e'},
@@ -92,6 +93,7 @@ const Game = (() => {
     {id:'fort',stage:'征战里程',title:'一县之主',desc:'占领古渡县城',route:'world',check:s=>!!s.conquered.fort,reward:{food:6000,wood:4000,stone:4000,iron:4000,gold:30000}}
   ];
   RewardData.extendMissions(missions);
+  ChapterData.extendMissions(missions);
   const missionClaimed=(id,s=state)=>s.missionClaims.includes(id);
   const missionReady=(m,s=state)=>!missionClaimed(m.id,s)&&m.check(s);
   const currentMission=()=>missions.find(m=>missionReady(m))||missions.find(m=>!missionClaimed(m.id));
@@ -358,6 +360,7 @@ const Game = (() => {
   const wildOwned=()=>Object.keys(state.conquered).filter(id=>getNode(id)?.wild).length;
   function attackBlocked(id,mode){
     const n=getNode(id);if(!n)return '目标不存在';if(!['raid','occupy'].includes(mode))return '请选择掠夺或占领';
+    const chapterBlocked=ChapterData.blocked(state,id);if(chapterBlocked)return chapterBlocked;
     if(isCity(n)&&!Progression.countyUnlocked(state))return '黄巾之乱四项史诗尚未全部完成，县城攻打未开放';
     if(state.conquered[id]&&(n.wild||isCity(n)))return '这块领地已归属你，可在领地管理中召回驻军或放弃野地';
     if(mode==='occupy'&&state.conquered[id])return '据点已占领';
@@ -536,12 +539,25 @@ const Game = (() => {
   const armyLimit=()=>Math.floor(state.buildings.drill*10000*(activeBuff('flag')?1.25:1));
   function research(id){tick();if(!ManualData.technology[id])return '科技不存在';if(state.buildings.academy<1)return '请先建造书院';if(state.researchQueue)return '书院正在研究另一项科技';if(state.tech[id]>=10)return '科技已满级';const level=state.tech[id]+1;const requirement=researchRequirements(id);if(requirement)return '需要 '+requirement;const cost=researchCost(id);if(!canPay(cost))return '研究资源不足';pay(cost);const start=Date.now();state.researchQueue={id,level,start,end:start+researchSeconds(id)*1000};save();return null;}
   function scout(id){tick();const n=getNode(id);if(!n)return '目标不存在';if(state.army.scout<1)return '城内至少需要 1 名斥候';if(state.res.food<10)return '侦察需要 10 粮食（试玩值）';state.res.food-=10;state.scouted[id]={at:Date.now(),level:state.tech.scouting};Progression.record(state,'scout');save();return null;}
-  function intel(id){const entry=state.scouted[id];return entry?{...entry,exact:entry.level>=5}:null;}
+  function intel(id){if(getNode(id)?.chapter===2)return {exact:true,public:true};const entry=state.scouted[id];return entry?{...entry,exact:entry.level>=5}:null;}
   function troopBand(n){if(n===0)return '无';const bands=[[10,'几个'],[25,'少数'],[50,'小队'],[100,'一些'],[250,'一群'],[500,'许多'],[1000,'大队'],[2500,'大群'],[5000,'大批'],[10000,'巨量'],[Infinity,'无数']];return bands.find(([max])=>n<max)[1];}
   function npcName(id,n){return n?.wild?ManualData.npcNames[id]||units[id].name:units[id].name;}
   function refreshInn(){tick();if(state.buildings.inn<1)return '请先建造客栈';const surnames=['魏','邵','程','陆','叶','夏','徐','陶'],given=['衡','舟','川','岚','松','宁','瑜','晏'];state.innCandidates=Array.from({length:state.buildings.inn},(_,i)=>{const number=Date.now()+i,seed=hash(number%10000,i),level=1+seed%Math.max(1,state.buildings.inn*2);return {id:'local_'+number,name:surnames[seed%8]+given[Math.floor(seed/8)%8],level,atk:35+seed%46,def:35+Math.floor(seed/5)%46,pol:35+Math.floor(seed/13)%46,wis:35+Math.floor(seed/17)%46,lead:level*10,price:level*1000,type:'将',title:'客栈游士',desc:'愿以一身所学，助城池安稳发展。',bonus:['spear','archer','shield'][seed%3]};});save();return null;}
   function recruit(id){tick();const hero=state.innCandidates.find(g=>g.id===id);if(!hero)return '候选已离开';if(state.generals.length>=state.buildings.tavern)return '招贤馆没有空闲房间';if(state.res.gold<hero.price)return '黄金不足';state.res.gold-=hero.price;state.customGenerals.push(hero);state.generals.push(hero.id);state.generalLevels[hero.id]=hero.level;state.generalXp[hero.id]=0;state.innCandidates=state.innCandidates.filter(g=>g.id!==id);HeroSystem.init(state);save();return null;}
-  function trade(resource,count,buy){tick();count=Math.floor(count);if(state.buildings.market<1)return '请先建造市场';if(resource==='gold'||!resources[resource]||count<1||count>state.buildings.market*100000)return '交易数量超出商队规模';if(buy){if(state.res.gold<count)return '黄金不足';if(state.res[resource]+count>capacity(resource))return '资源容量不足';state.res.gold-=count;state.res[resource]+=count;}else{if(state.res[resource]<count)return '资源不足';if(state.res.gold+count>capacity('gold'))return '黄金容量不足';state.res[resource]-=count;state.res.gold+=count;}Progression.record(state,'trade',count);Progression.record(state,buy?'trade_buy':'trade_sell',count);save();return null;}
+  function tradeQuote(resource,buy=true){
+    const scale=state.buildings.market*100000;
+    if(!Object.hasOwn(resources,resource)||resource==='gold')return {limit:0,reason:'请选择可交易资源'};
+    const room=Math.max(0,Math.floor(capacity(buy?resource:'gold')-state.res[buy?resource:'gold'])),stock=Math.max(0,Math.floor(state.res[buy?'gold':resource])),limit=Math.min(scale,stock,buy?Math.max(0,Math.floor(Number.MAX_SAFE_INTEGER-state.res[resource])):room);
+    const reason=scale<1?'请先建造市场':!buy&&room<1?'黄金已满仓，当前不能卖出':stock<1?(buy?'黄金不足':'资源不足'):'';
+    const warning=buy&&room<limit?(room===0?'该资源已满仓，仍可购买；成交后暂时超仓。':'购买超过仓储空位时可暂时超仓。'):'';
+    return {scale,room,stock,limit,reason,warning};
+  }
+  function trade(resource,count,buy){
+    tick();if(!Number.isFinite(Number(count)))return '请输入有效交易数量';count=Math.floor(Number(count));const q=tradeQuote(resource,buy);
+    if(q.reason)return q.reason;if(!Number.isSafeInteger(count)||count<1)return '请输入至少 1 的交易数量';if(count>q.limit)return '当前最多可'+(buy?'买入':'卖出')+' '+q.limit;
+    if(buy){state.res.gold-=count;state.res[resource]+=count;}else{state.res[resource]-=count;state.res.gold+=count;}
+    Progression.record(state,'trade',count);Progression.record(state,buy?'trade_buy':'trade_sell',count);save();return null;
+  }
   function brickPurchaseRemaining(id){return RewardData.goldBricks.some(b=>b.id===id)?Math.max(0,RewardData.dailyBrickLimit-(state.daily.brickPurchases[id]||0)):null;}
   function grantTestSupplies(){
     tick(Date.now(),false);const amount=RewardData.testSupplyAmount;
@@ -605,10 +621,10 @@ const Game = (() => {
   function setStorage(allocation){const keys=['food','wood','stone','iron'];if(!keys.every(k=>Number.isInteger(Number(allocation[k]))&&Number(allocation[k])>=0&&Number(allocation[k])<=100)||keys.reduce((v,k)=>v+Number(allocation[k]),0)!==100)return '四项比例之和必须是 100%';state.storageAllocation=Object.fromEntries(keys.map(k=>[k,Number(allocation[k])]));save();return null;}
   function buildDefense(id,count){tick();count=Math.floor(count);const d=ManualData.defenses[id];if(!d||count<1||count>10000)return '请输入城防数量';if(state.buildings.wall<d.wall)return '需要城墙 '+d.wall+' 级';for(const [key,level] of Object.entries(d.tech||{}))if(state.tech[key]<level)return '需要 '+ManualData.technology[key].name+' '+level+' 级';const requirement=defenseRequirements(id,count);if(requirement)return '需要 '+requirement;if(state.defenseQueue.length>=1)return '城防工队正在忙碌';const cost=Object.fromEntries(Object.entries(d.cost).map(([k,v])=>[k,v*count]));if(!canPay(cost))return '城防资源不足';pay(cost);const start=Date.now();state.defenseQueue.push({id,count,start,end:start+Math.max(1,count*d.time/(1+state.tech.construction*.1+general(state.governor).pol/100)/state.speed)*1000});save();return null;}
 
-  function awardMission(m){addSupplies(m.reward);state.prestige+=300;for(const [id,n] of Object.entries(m.items||{}))state.inventory[id]=(state.inventory[id]||0)+n;state.missionClaims.push(m.id);state.mission=state.missionClaims.length;}
+  function awardMission(m){addSupplies(m.reward);state.prestige+=300;for(const [id,n] of Object.entries(m.items||{}))state.inventory[id]=(state.inventory[id]||0)+n;for(const [id,n] of Object.entries(m.jewels||{}))state.jewels[id]+=n;state.missionClaims.push(m.id);state.mission=state.missionClaims.length;}
   function claimMission(id){
     tick(Date.now(),false);const m=id?missions.find(x=>x.id===id):currentMission();
-    if(!m)return '任务已全部完成';if(missionClaimed(m.id))return '该任务奖励已领取';if(!m.check(state))return '目标尚未达成';
+    if(!m)return '任务已全部完成';if(missionClaimed(m.id))return '该任务奖励已领取';if(!missionReady(m))return '目标尚未达成';
     awardMission(m);save();return null;
   }
   function claimReadyMissions(){
@@ -620,6 +636,6 @@ const Game = (() => {
   const claimDailyMilestone=count=>progressionAction('claimMilestone',Number(count));
   const claimReadyDaily=()=>progressionAction('claimReady');
   function reset(){state=newState();save();}
-  return {startCityDefense,cityDefenseRound,endDefenseDrill,brickPurchaseRemaining,grantTestSupplies,captiveCapacity,captiveChance,captiveRecruitQuote,recruitCaptives,releaseCaptives,claimDailyMilestone,claimReadyDaily,defenseCapacity,defenseUsed,defenseRequirements,armyPeople,buildingRuleText,researchRequirements,researchRuleText,buildingRequirements,speedupKey,speedupTargets,speedupQuote,useSpeedup,progression:Progression,acceptDaily,abandonDaily,claimDaily,donateEpic,exchangeCopper,countyUnlocked:()=>Progression.countyUnlocked(state),init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},allExpeditions,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,civicOrderPreview,executeCivicOrder,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setTactic,recall,dismissBattle,claimMission};
+  return {startCityDefense,cityDefenseRound,endDefenseDrill,brickPurchaseRemaining,grantTestSupplies,captiveCapacity,captiveChance,captiveRecruitQuote,recruitCaptives,releaseCaptives,claimDailyMilestone,claimReadyDaily,defenseCapacity,defenseUsed,defenseRequirements,armyPeople,buildingRuleText,researchRequirements,researchRuleText,buildingRequirements,speedupKey,speedupTargets,speedupQuote,useSpeedup,progression:Progression,acceptDaily,abandonDaily,claimDaily,donateEpic,exchangeCopper,countyUnlocked:()=>Progression.countyUnlocked(state),init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},allExpeditions,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,tradeQuote,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,civicOrderPreview,executeCivicOrder,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setTactic,recall,dismissBattle,claimMission};
 })();
 if(typeof module!=='undefined')module.exports=Game;

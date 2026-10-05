@@ -4,7 +4,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 function load(){
   let now=1791194400000;const saved=new Map();
   const ctx=vm.createContext({console,Date:class extends Date{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}},localStorage:{getItem:k=>saved.get(k)||null,setItem:(k,v)=>saved.set(k,v)},document:{addEventListener(){}}});
-  for(const file of ['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','engine.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'..',file),'utf8'),ctx,{filename:file});
+  for(const file of ['manual-data.js','speedup-data.js','reference-rules.js','reward-data.js','progression.js','hero-system.js','heritage-data.js','heritage-system.js','npc-data.js','npc-defense.js','chapter-data.js','engine.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'..',file),'utf8'),ctx,{filename:file});
   vm.runInContext('Math.random=()=>.999999',ctx);const Game=vm.runInContext('Game',ctx);Game.init();
   return {Game,advance:ms=>{now+=ms;Game.tick(now);},now:()=>now,eval:source=>vm.runInContext(source,ctx)};
 }
