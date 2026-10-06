@@ -2,7 +2,7 @@
 // The top-level save remains the active-city view for old UI and saves.
 // realm.cities stores city scopes; global heroes, quests and ownership stay shared.
 const CitySystem=(()=>{
-  const fields=['last','res','buildings','cityLayout','cityLevels','tactics','plots','plotTemplate','army','captives','buildQueue','trainQueue','researchQueue','tech','innCandidates','governor','population','morale','unrest','tax','storageAllocation','civicCooldowns','defenses','defenseQueue','garrisons','expedition','expeditions','battle','autoUpgrade','autoResearch','automation','cityRoles','gatherings','cityDefense','scoutQueue','scoutIntel','regionalFront','heroAdministration'];
+  const fields=['last','res','buildings','cityLayout','cityLevels','tactics','plots','plotTemplate','army','captives','buildQueue','trainQueue','researchQueue','tech','innCandidates','governor','population','morale','unrest','tax','storageAllocation','civicCooldowns','defenses','defenseQueue','garrisons','expedition','expeditions','battle','autoUpgrade','autoResearch','automation','cityRoles','gatherings','cityDefense','scoutQueue','scoutIntel','regionalFront','heroAdministration','warCare','governance'];
   const clone=value=>JSON.parse(JSON.stringify(value));
   const object=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
   const integer=n=>Number.isSafeInteger(n)&&n>=0;
@@ -17,7 +17,7 @@ const CitySystem=(()=>{
     for(const k of ['buildQueue','trainQueue','defenseQueue','innCandidates','expeditions','scoutQueue'])d[k]=[];
     for(const k of ['garrisons','gatherings','scoutIntel'])d[k]={};d.expedition=null;d.battle=null;d.researchQueue=null;d.autoUpgrade=false;d.autoResearch=false;
     d.automation={...clone(s.automation),notices:[],nextId:1};d.cityDefense={autoEnabled:false,nextAt:0,wave:0,wins:0,incoming:null,battle:null,reports:[]};
-    delete d.regionalFront;delete d.heroAdministration;RegionalFront.init(d);HeroAdministration.init(d);
+    delete d.regionalFront;delete d.heroAdministration;delete d.warCare;delete d.governance;RegionalFront.init(d);HeroAdministration.init(d);WarCare.init(d);GovernanceSystem.initCity(d,now);
     return {id:idFor(node.id),name:node.name,node:node.id,x:node.x,y:node.y,capital:false,createdAt:now,data:d};
   }
   function init(s,legacy=[]){

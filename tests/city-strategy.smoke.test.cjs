@@ -13,7 +13,7 @@ function prepared(){
 }
 function ui(e){
   e.evaluate(`function S(){return Game.state;}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}function num(n){return String(n);}function duration(n){return n+' 秒';}function btn(label,action,id='',cls='',disabled=false){return '<button data-action="'+action+'" data-id="'+id+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}globalThis.modalOutput={};function showModal(title,body,footer){modalOutput={title,body,footer};}`);
-  e.evaluate(read('city-ui.js'));return e;
+  e.evaluate(read('city-ui.js'));e.evaluate(read('named-city-ui.js'));return e;
 }
 test('fixed city roles survive renaming, hall upgrades and site migration; home and self-founded plains remain balanced',()=>{
   const e=env(),p=e.evaluate('CityStrategy');
@@ -21,16 +21,16 @@ test('fixed city roles survive renaming, hall upgrades and site migration; home 
     assert.equal(p.profile(e.Game.getNode(node)).id,role);assert.equal(p.profile({id:'city_'+node,node,name:'玩家改名',buildings:{hall:10},x:1,y:63}).id,role);assert.equal(p.profile('city_'+node).id,role);
   }
   for(const c of [null,{},'home','capital',{id:'capital',node:'fort'}, {capital:true,node:'yellow_chigang'},{node:'wild_12_34',name:'赤岗关隘',terrain:'fort'},{id:'unassigned_city',terrain:'fort',level:10}])assert.equal(p.profile(c).id,'balanced');
-  assert.deepEqual(copy(p.profile('yellow_qingshi').production),{food:1.2,wood:1,stone:1,iron:1,gold:1});assert.deepEqual(copy(p.profile('yellow_baisha').production),{food:1,wood:1.15,stone:1.15,iron:1.15,gold:1});assert.equal(p.profile('yellow_chigang').marchFactor,.8);
+  assert.deepEqual(copy(p.profile('yellow_qingshi').production),{food:1.2,wood:1,stone:1,iron:1,gold:1.1});assert.deepEqual(copy(p.profile('yellow_baisha').production),{food:1,wood:1.15,stone:1.15,iron:1.15,gold:1.1});assert.equal(p.profile('yellow_chigang').marchFactor,.8);
 });
 test('profiles are immutable and speculative map descriptions do not change ownership or resources',()=>{
   const e=ui(env()),before=JSON.stringify(e.Game.state);assert.throws(()=>e.evaluate(`'use strict';CityStrategy.profile('yellow_qingshi').production.food=99;`),/read only|readonly|Cannot assign/);
   const html=e.evaluate(`cityStrategyHTML(Game.getNode('yellow_chigang'))`);assert.match(html,/占领后 · 关隘/);assert.match(html,/新派隊伍|新派队伍/);assert.match(html,/行军时间 −20%/);assert.match(html,/<details[^>]*data-ui-disclosure=/);assert.doesNotMatch(html,/<details[^>]*\sopen(?:\s|>)/);assert.match(html,/掠夺不会获得/);assert.equal(JSON.stringify(e.Game.state),before);assert.equal(e.evaluate(`cityStrategyHTML(Game.getNode('north_pass'))`),'');
 });
-test('grain and mine multipliers apply to this city gross output and plot previews once, with upkeep and gold unchanged',()=>{
+test('grain and mine multipliers apply to local gross output and plot previews once, with unchanged upkeep and county tax paid once',()=>{
   const e=prepared(),g=e.Game,capital=copy(g.rates()),capitalPlots=g.state.plots.slice(0,4).map(p=>g.plotYield(p)),upkeep=g.upkeep(g.state.army)/60;
-  assert.equal(g.switchCity('city_yellow_qingshi'),null);const grain=g.rates();close(grain.food,(capital.food+upkeep)*1.2-upkeep);for(const k of ['wood','stone','iron','gold'])close(grain[k],capital[k]);close(g.plotYield(g.state.plots[0]),capitalPlots[0]*1.2);close(g.plotYield(g.state.plots[1]),capitalPlots[1]);
-  assert.equal(g.switchCity('city_yellow_baisha'),null);const mine=g.rates();close(mine.food,capital.food);close(mine.gold,capital.gold);for(const k of ['wood','stone','iron'])close(mine[k],capital[k]*1.15);for(let i=1;i<4;i++)close(g.plotYield(g.state.plots[i]),capitalPlots[i]*1.15);
+  assert.equal(g.switchCity('city_yellow_qingshi'),null);const grain=g.rates();close(grain.food,(capital.food+upkeep)*1.2-upkeep);for(const k of ['wood','stone','iron'])close(grain[k],capital[k]);close(grain.gold,capital.gold*1.1);close(g.plotYield(g.state.plots[0]),capitalPlots[0]*1.2);close(g.plotYield(g.state.plots[1]),capitalPlots[1]);
+  assert.equal(g.switchCity('city_yellow_baisha'),null);const mine=g.rates();close(mine.food,capital.food);close(mine.gold,capital.gold*1.1);for(const k of ['wood','stone','iron'])close(mine[k],capital[k]*1.15);for(let i=1;i<4;i++)close(g.plotYield(g.state.plots[i]),capitalPlots[i]*1.15);
   assert.equal(g.switchCity('capital'),null);for(const k in capital)close(g.rates()[k],capital[k]);assert.equal(g.citySummary('city_yellow_qingshi').strategy.id,'granary');assert.equal(g.citySummary('city_yellow_baisha').strategy.id,'mine');assert.equal(g.validSave(g.state),true);
 });
 test('pass-city expedition previews equal actual timestamps, and switching cities or reloading cannot retime a departed army',()=>{

@@ -7,9 +7,14 @@ const YellowCityData={
     {id:'yellow_baisha',name:'白沙黄巾城',terrain:'fort',openCity:true,faction:'yellow_turban',x:41,y:38,level:3,population:300,desc:'白沙城守军步弓混编，少量骑兵巡守外围。携带长枪兵保护弓阵，再配运输队带回战利品；占领战每胜降低 35 民心，降至零以下后易主。',army:{shield:25,spear:32,archer:28,cavalry:8},loot:{food:1500,wood:1500,stone:1500,iron:1500,gold:1200},reward:'占领缴获资源与黄金 · 民心低于 0 后归属',time:26},
     {id:'yellow_chigang',name:'赤岗黄巾城',terrain:'fort',openCity:true,faction:'yellow_turban',x:21,y:20,level:4,population:400,desc:'赤岗城的枪盾与弓兵阵列较厚，城防会消耗进攻兵力。整备混编部队与运输队后再攻城；占领战每胜降低 35 民心，降至零以下后易主。',army:{shield:42,spear:40,archer:42,cavalry:12},loot:{food:2500,wood:2500,stone:2500,iron:2500,gold:2500},reward:'占领缴获资源与黄金 · 民心低于 0 后归属',time:34}
   ],
-  createSites(legacy,namedSites=[]){
+  allNodes(){return [...this.nodes,...(typeof NamedCityData==='undefined'?[]:NamedCityData.nodes)];},
+  createSites(legacy,namedSites=[],existing={}){
     const occupied=new Set(['32,32']),inBounds=(x,y)=>Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&y>=0&&x<64&&y<64;
     for(const site of namedSites)if(inBounds(site?.x,site?.y))occupied.add(site.x+','+site.y);
+    // Preserve saved sites when appending cities to old worlds. New sites must
+    // also avoid player-built cities and any already reserved open-city cells.
+    for(const site of Object.values(existing||{}))if(inBounds(site?.x,site?.y))occupied.add(site.x+','+site.y);
+    for(const city of Object.values(legacy?.realm?.cities||{}))if(inBounds(city?.x,city?.y))occupied.add(city.x+','+city.y);
     // Read whole JSON string tokens, including object keys, so a report sentence
     // mentioning a coordinate cannot accidentally reserve unrelated map cells.
     const serialized=JSON.stringify(legacy||{})||'';
@@ -17,8 +22,9 @@ const YellowCityData={
       const match=/^wild_(\d{1,2})_(\d{1,2})$/.exec(JSON.parse(token[0]));
       if(match){const x=Number(match[1]),y=Number(match[2]);if(inBounds(x,y))occupied.add(x+','+y);}
     }
-    const sites={};
-    for(const node of this.nodes){
+    const sites={...existing};
+    for(const node of this.allNodes()){
+      if(Object.hasOwn(sites,node.id))continue;
       let nearest=null,distance=Infinity;
       // Iterating y then x gives deterministic tie breaking without sorting.
       for(let y=0;y<64;y++)for(let x=0;x<64;x++){

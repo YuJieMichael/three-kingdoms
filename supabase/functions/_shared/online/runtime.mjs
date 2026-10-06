@@ -3,7 +3,7 @@ import {createGameRuntime,runtimeHash} from '../game-runtime.mjs';
 export {createGameRuntime,runtimeHash};
 export const copy=value=>JSON.parse(JSON.stringify(value));
 export class GameError extends Error {constructor(code,message,status=400){super(message);this.code=code;this.status=status;}}
-export const gameActions=new Set(['queueBuilding','cancelBuild','demolish','developPlot','setPlotTemplate','applyPlotTemplate','pausePlotTemplate','setAutoUpgrade','setAutoResearch','setAutomationSettings','readAutomationNotices','relocateBuilding','upgrade','train','dismissTroops','research','scout','dispatchScout','refreshInn','recruit','trade','buyItem','useItem','useSpeedup','claimStarterGift','claimReadyMissions','claimTrialGems','setStorage','buildDefense','setGovernor','setTax','executeCivicOrder','dispatch','startBattle','battleRound','setBattleOrder','setBattleOrders','setTactic','recall','dismissBattle','claimMission','acceptDaily','abandonDaily','claimDaily','donateEpic','exchangeCopper','claimDailyMilestone','claimReadyDaily','selectExpedition','recallGarrison','abandonWild','requestCityDefense','setAutoCityDefense','startCityDefense','cityDefenseRound','endDefenseDrill','recruitAllCaptives','recruitCaptives','releaseCaptives','completeFirstBattleGuide','switchCity','enterOwnedCity','foundCity','sendTransport','redeployArmy','recallLogistics','trainGeneralSkill']);
+export const gameActions=new Set(['queueBuilding','cancelBuild','demolish','developPlot','setPlotTemplate','applyPlotTemplate','pausePlotTemplate','setAutoUpgrade','setAutoResearch','setAutomationSettings','readAutomationNotices','relocateBuilding','upgrade','train','dismissTroops','research','scout','dispatchScout','refreshInn','recruit','trade','buyItem','useItem','useSpeedup','claimStarterGift','claimReadyMissions','claimTrialGems','setStorage','buildDefense','setGovernor','setTax','executeCivicOrder','dispatch','startBattle','battleRound','setBattleOrder','setBattleOrders','setTactic','recall','dismissBattle','claimMission','acceptDaily','abandonDaily','claimDaily','donateEpic','exchangeCopper','claimDailyMilestone','claimReadyDaily','selectExpedition','recallGarrison','abandonWild','requestCityDefense','setAutoCityDefense','startCityDefense','cityDefenseRound','endDefenseDrill','recruitAllCaptives','recruitCaptives','releaseCaptives','completeFirstBattleGuide','switchCity','enterOwnedCity','foundCity','sendTransport','redeployArmy','recallLogistics','trainGeneralSkill','claimNamedCityDevelopment','healWounded','setAutoHeal','setDefenseDoctrine','resolveCityDefense','payHeroArrears','setGovernancePolicy','recruitDefeatedHero','submitBattleTactic','cancelBattleTactic','saveSupplyLine','setSupplyLineEnabled','removeSupplyLine','prepareHeroAdministration','startRegionalFront']);
 const namespaces={wild:{target:'HeroSystem',nested:'wild',actions:new Set(['discover','buyPortrait','recruit','reward','release'])},hero:{target:'HeroSystem',actions:new Set(['allocate','reset','drill','gift','equip','unequip','forge','enhance','salvage','expand'])},heritage:{target:'HeritageSystem',actions:new Set(['assign','promote','salary','startGather','collectGather','cancelGather'])},war:{target:'WarOrders',actions:new Set(['exchange'])},onboarding:{target:'OnboardingSystem',actions:new Set(['claim','claimAvailable','openItem','hide'])}};
 export function validateInput(input){
  if(!input||typeof input!=='object'||Array.isArray(input))throw new GameError('BAD_INPUT','请求格式无效');
@@ -13,17 +13,17 @@ export function validateInput(input){
  return input;
 }
 export function scopedRuntime(snapshot,now,marches=[],actor=null,sourceCity=null,random){
- const runtime=createGameRuntime({snapshot,now,random}),g=runtime.Game;
+ const runtime=createGameRuntime({snapshot,now,random,externalBusy:marches.filter(m=>m.source===actor&&m.status!=='done').map(m=>m.general).filter(Boolean)}),g=runtime.Game,activeCity=g.currentCityId();
  g.setExternalGeneralBusy(marches.filter(m=>m.source===actor&&m.status!=='done').map(m=>m.general));
  // Allied troops live in server escrow, outside the city's native army arrays.
  // Charge their stationary upkeep from the persisted city timestamp exactly once.
  for(const id of new Set(marches.filter(m=>m.source===actor&&m.kind==='aid'&&m.status==='stationed').map(m=>m.sourceCity||'capital'))){
   if(!g.state.realm.cities[id])continue;g.switchCity(id);
   const from=snapshot?.realm?.cities?.[id]?.data?.last??snapshot?.last??now;
-  const cost=marches.filter(m=>m.source===actor&&m.kind==='aid'&&m.status==='stationed'&&(m.sourceCity||'capital')===id).reduce((sum,m)=>sum+g.upkeep(m.army)*2*Math.max(0,now-Math.max(from,m.arrive))/60000,0);
+  const cost=marches.filter(m=>m.source===actor&&m.kind==='aid'&&m.status==='stationed'&&(m.sourceCity||'capital')===id).reduce((sum,m)=>sum+g.upkeep(m.army)*2*Math.max(0,now-Math.max(from,m.arrive))/3600000,0);
   g.state.res.food=Math.max(0,g.state.res.food-Math.ceil(cost));g.save();
  }
- if(sourceCity!==null){if(typeof sourceCity!=='string'||!g.state.realm.cities[sourceCity])throw new GameError('CITY_NOT_OWNED','出发城市不属于你');g.switchCity(sourceCity);}
+ if(sourceCity!==null){if(typeof sourceCity!=='string'||!Object.hasOwn(g.state.realm.cities,sourceCity))throw new GameError('CITY_NOT_OWNED','出发城市不属于你');g.switchCity(sourceCity);}else if(g.currentCityId()!==activeCity)g.switchCity(activeCity);
  return runtime;
 }
 export function executeGame(snapshot,input,now,random,runtime=null){

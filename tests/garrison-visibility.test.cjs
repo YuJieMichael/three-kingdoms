@@ -9,6 +9,7 @@ const {loadGame,city}=require('./helpers/game.cjs');
 function setup(seed=523){
  const e=loadGame(seed),g=e.Game,s=g.state;
  city(g,{hall:4,drill:4,tavern:6,inn:4,house:4});
+ s.warCare.defense.autoResolve=false; // This fixture inspects battle reserves before settlement.
  s.res.food=1000000;s.res.gold=1000000;s.army.archer=1500;
  assert.equal(g.refreshInn(),null);
  for(const candidate of [...s.innCandidates])assert.equal(g.recruit(candidate.id),null);

@@ -10,7 +10,7 @@ const forest='wild_31_32';
 // Every battle and garrison is produced by normal dispatch/march/combat APIs;
 // harvesting uses real elapsed hours and never edits enemies or quotes.
 function setup(archers=300){
- const e=loadGame(41),g=e.Game;city(g,{hall:4,drill:4});
+ const e=loadGame(41),g=e.Game;city(g,{hall:4,drill:4});g.state.warCare.defense.autoResolve=false;
  g.state.army.archer=archers;g.state.res.food=1000000;
  e.evaluate('Math.random=()=>0');
  assert.equal(g.validSave(g.state),true);return e;
@@ -167,10 +167,12 @@ test('legacy gather histories restore without inventing excess amounts and rejec
 });
 
 test('warehouse excess does not enable natural production beyond capacity or erase existing stocks',()=>{
- const e=setup(0),g=e.Game;city(g,{house:4});g.setTax(20);g.state.population=100;stock(g,'over');const before={...g.state.res};assert.ok(g.rates().wood>0);e.advance(3600000);
- assert.deepEqual(clone(g.state.res),before,'positive natural production stays stopped above capacity');
+ const e=setup(0),g=e.Game;city(g,{house:4});g.setTax(20);g.state.population=100;stock(g,'over');const before={...g.state.res},wages=g.governanceStatus().wages;assert.ok(g.rates().wood>0);e.advance(3600000);
+ for(const id of resources.filter(id=>id!=='gold'))assert.equal(g.state.res[id],before[id],'positive natural production stays stopped above capacity');
+ assert.equal(g.state.res.gold,before.gold-wages,'above-cap gold still pays the actual hourly hero wage');
  for(const id of resources)g.state.res[id]=g.capacity(id)-1;e.advance(3600000);
- for(const id of resources)assert.equal(g.state.res[id],g.capacity(id));
+ for(const id of resources.filter(id=>id!=='gold'))assert.equal(g.state.res[id],g.capacity(id));
+ assert.equal(g.state.res.gold,g.capacity('gold')-wages,'natural gold caps before the hourly payroll expense');
  assert.equal(g.validSave(g.state),true);
 });
 

@@ -12,11 +12,16 @@ function actualHeroes(){
 }
 function fixture(){
  if(!recruitedTemplate)recruitedTemplate=actualHeroes();
- const e=loadGame(943),g=e.Game;g.importSave(copy(recruitedTemplate));const a=e.evaluate('HeroAdministration'),xun=g.state.customGenerals.find(g=>g.wildLine==='xunyu'),pang=g.state.customGenerals.find(g=>g.wildLine==='pangtong');assert.ok(xun&&pang);
+ const e=loadGame(943),g=e.Game;g.importSave(copy(recruitedTemplate));g.state.warCare.defense.autoResolve=false;const a=e.evaluate('HeroAdministration'),xun=g.state.customGenerals.find(g=>g.wildLine==='xunyu'),pang=g.state.customGenerals.find(g=>g.wildLine==='pangtong');assert.ok(xun&&pang);
  return {e,g,a,xun:g.general(xun.id),pang:g.general(pang.id),s:g.state,api:{cityId:'capital'}};
 }
 function prepare(f){f.s.governor=f.pang.id;const q=f.a.prepareQuote(f.s,f.pang,'capital',f.e.now(),f.api);assert.equal(q.ok,true,q.reason);const r=f.a.prepare(f.s,f.pang,'capital',f.e.now(),q.key,f.api);assert.equal(r.ok,true,r.reason);return r.prepared;}
 function addCity(f){const {e}=f;e.evaluate(`Game.state.conquered.yellow_baisha=true;Game.state.towns.yellow_baisha.morale=-5;Game.state.realm.cities.city_yellow_baisha=CitySystem.empty(Game.state,Game.getNode('yellow_baisha'),Date.now());CitySystem.capture(Game.state);`);}
+
+test('departure cancels unused paid preparation but preserves an already consumed historical defense report',()=>{
+ const f=fixture();prepare(f);const id=f.pang.id;f.s.heroLoyalty[id]=0;f.e.evaluate(`GovernanceSystem.tickHeroes(Game.state,Date.now(),{busy:()=>false});`);assert.equal(f.s.generals.includes(id),false);assert.equal(f.s.heroAdministration.prepared,null);assert.equal(f.g.validSave(f.s),true);
+ const active=fixture();prepare(active);active.s.army.archer=1000;active.s.res.food=1000000;const doctrine=active.e.evaluate('WarCare.defenseSnapshot(Game.state)');doctrine.autoResolve=false;active.g.setDefenseDoctrine(doctrine);assert.equal(active.g.requestCityDefense('cavalry',1),null);active.e.advance(300000);assert.equal(active.g.startCityDefense(false,'lin',{archer:500}),null);active.g.resolveCityDefense();assert.ok(active.s.cityDefense.reports[0].administrationDefense);active.s.heroLoyalty[active.pang.id]=0;active.e.evaluate('GovernanceSystem.tickHeroes(Game.state,Date.now(),{busy:()=>false})');assert.equal(active.s.generals.includes(active.pang.id),false);assert.equal(active.g.validSave(active.s),true);active.g.save();active.g.init();assert.equal(active.g.validSave(active.g.state),true);assert.ok(active.g.state.cityDefense.reports[0].administrationDefense);
+});
 
 test('only genuinely portrait-captured and recruited identities receive the two city duties',()=>{
  const f=fixture();for(const hero of [f.xun,f.pang]){assert.equal(f.s.wildGenerals.recruited.includes(hero.id),true);assert.ok(f.s.wildGenerals.portraits.includes(hero.wildLine));assert.equal(f.a.identity(hero).id,hero.wildLine);}

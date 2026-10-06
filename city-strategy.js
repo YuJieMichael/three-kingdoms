@@ -12,14 +12,18 @@ const CityStrategy=(()=>{
   // Every ordinary capturable city in the current map has an explicit assignment.
   // New designed cities register here; an unassigned city keeps ordinary rules.
   const roles=Object.freeze({fort:'granary',yellow_qingshi:'granary',yellow_baisha:'mine',yellow_chigang:'pass'});
+  const namedProfiles=typeof NamedCityData==='undefined'?{}:Object.fromEntries(NamedCityData.definitions.map(d=>{
+    const p=profiles[d.strategy]||profiles.balanced;
+    return [d.id,make(p.id,p.name,p.description+' '+d.tierName+'本城黄金税收 +'+Math.round((d.goldFactor-1)*100)+'%，资源田最高 '+d.plotMax+' 级；仅本城生效。',{...p.production,gold:d.goldFactor},p.marchFactor)];
+  }));
   function profile(nodeOrCity){
     const c=typeof nodeOrCity==='string'?{id:nodeOrCity}:nodeOrCity;
     if(!c||typeof c!=='object'||c.capital===true||c.id==='capital'||c.id==='home')return profiles.balanced;
     const node=typeof c.node==='string'?c.node:typeof c.id==='string'?c.id.replace(/^city_/,''):'';
     if(node==='home'||node.startsWith('wild_'))return profiles.balanced;
-    return profiles[roles[node]]||profiles.balanced;
+    return namedProfiles[node]||profiles[roles[node]]||profiles.balanced;
   }
-  function summary(city){const p=profile(city);return p.name+' · '+({balanced:'普通资源与行军规则',granary:'本城粮食毛产量 +20%',mine:'本城木石铁毛产量 +15%',pass:'本城新派队伍行军时间 −20%'}[p.id]);}
+  function summary(city){const p=profile(city),d=typeof NamedCityData==='undefined'?null:NamedCityData.definition(city);return p.name+' · '+({balanced:'普通资源与行军规则',granary:'本城粮食毛产量 +20%',mine:'本城木石铁毛产量 +15%',pass:'本城新派队伍行军时间 −20%'}[p.id])+(d?' · 黄金税收 +'+Math.round((d.goldFactor-1)*100)+'%':'');}
   function marchSeconds(base,city){return Math.max(1,Math.ceil(Math.max(0,Number(base)||0)*profile(city).marchFactor));}
   return Object.freeze({profiles,roles,profile,summary,marchSeconds});
 })();

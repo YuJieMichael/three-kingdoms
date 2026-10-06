@@ -36,7 +36,7 @@ const HeroAdministration=(()=>{
     try{
       if(!exact(snapshot,['schema','id','hero','city','at','cost','gateFactor'])||snapshot.schema!==1||typeof snapshot.id!=='string'||!/^administration_defense_[1-9]\d*$/.test(snapshot.id)||typeof snapshot.hero!=='string'||typeof snapshot.city!=='string'||!snapshot.city.length||snapshot.city.length>100||!int(snapshot.at)||!sameCost(snapshot.cost)||snapshot.gateFactor!==1.2)return false;
       const seq=Number(snapshot.id.slice('administration_defense_'.length));if(!int(seq)||seq<1||seq>MAX_SEQ)return false;
-      if(s){const g=ownedHero(s,snapshot.hero);if(!g||g.wildLine!=='pangtong'||snapshot.city!==cityId(s,api)||!object(s.heroAdministration)||!int(s.heroAdministration.seq)||seq>s.heroAdministration.seq)return false;}
+      if(s){const g=api.historical?s.customGenerals?.find(g=>g.id===snapshot.hero&&g.origin==='wild'):ownedHero(s,snapshot.hero);if(!g||g.wildLine!=='pangtong'||snapshot.city!==cityId(s,api)||!object(s.heroAdministration)||!int(s.heroAdministration.seq)||seq>s.heroAdministration.seq)return false;}
       return true;
     }catch{return false;}
   }
@@ -45,7 +45,7 @@ const HeroAdministration=(()=>{
       const d=s.heroAdministration,records=[...(s.cityDefense?.battle&&!s.cityDefense.battle.drill?[s.cityDefense.battle]:[]),...(s.cityDefense?.reports||[]).filter(r=>!r.drill)].map(r=>r.administrationDefense).filter(x=>x!==undefined);
       if(d===undefined)return records.length===0;
       if(!exact(d,['schema','seq','prepared'])||d.schema!==1||!int(d.seq)||d.seq>MAX_SEQ||!(d.prepared===null||validDefenseSnapshot(d.prepared,s,api)&&d.prepared.id==='administration_defense_'+d.seq))return false;
-      const used=new Set();for(const snapshot of records){if(!validDefenseSnapshot(snapshot,s,api)||used.has(snapshot.id)||d.prepared?.id===snapshot.id)return false;used.add(snapshot.id);}
+      const used=new Set();for(const snapshot of records){if(!validDefenseSnapshot(snapshot,s,{...api,historical:true})||used.has(snapshot.id)||d.prepared?.id===snapshot.id)return false;used.add(snapshot.id);}
       return true;
     }catch{return false;}
   }

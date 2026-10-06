@@ -7,9 +7,9 @@ import {createHash} from 'node:crypto';
 import {PGlite} from '@electric-sql/pglite';
 
 const directory=new URL('../supabase/migrations/',import.meta.url);
-const migrationName=(await readdir(directory)).filter(name=>/^\d+_realm_online_.*\.sql$/.test(name)).sort().at(-1);
-assert.ok(migrationName,'A CLI-generated realm migration must exist');
-const migration=await readFile(new URL(migrationName,directory),'utf8');
+const migrationNames=(await readdir(directory)).filter(name=>/^\d+_.*\.sql$/.test(name)).sort();
+assert.ok(migrationNames.length,'CLI-generated realm migrations must exist');
+const migration=(await Promise.all(migrationNames.map(name=>readFile(new URL(name,directory),'utf8')))).join('\n');
 const schemaHash=createHash('sha256').update(migration).digest('hex');
 const db=await PGlite.create();
 const A='00000000-0000-4000-8000-000000000001',B='00000000-0000-4000-8000-000000000002',C='00000000-0000-4000-8000-000000000003',D='00000000-0000-4000-8000-000000000004',E='00000000-0000-4000-8000-000000000005';
@@ -159,5 +159,5 @@ try{
   const receipt=await service(tx=>rpc(tx,'receipt',[A,realm,'commit-one']));assert.equal(receipt.hash,'hash-commit-one');
   pass('every deployed RPC is service-only, and time/private-load/receipt functions execute with actual role privileges');
 
-  console.log(JSON.stringify({ok:true,checks,pglite:'0.5.8',migration:migrationName,schemaHash,postgres:(await db.query('SELECT version() version')).rows[0].version,scope:'local PostgreSQL WASM SQL/RLS/RPC; one connection; no hosted Supabase or multi-connection concurrency proof'},null,2));
+  console.log(JSON.stringify({ok:true,checks,pglite:'0.5.8',migration:migrationNames,schemaHash,postgres:(await db.query('SELECT version() version')).rows[0].version,scope:'local PostgreSQL WASM SQL/RLS/RPC; one connection; no hosted Supabase or multi-connection concurrency proof'},null,2));
 }finally{await db.close();}

@@ -259,6 +259,7 @@ test('world shortcuts reveal only explored and current stations while chapter un
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8').split('\n').find(line=>line.startsWith('const esc=')));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','art-assets.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','city-ui.js'),'utf8'));
+ e.evaluate(fs.readFileSync(path.join(__dirname,'..','named-city-ui.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','grid-world.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','manual-ui.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','wild-general-ui.js'),'utf8'));

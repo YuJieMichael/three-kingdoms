@@ -25,7 +25,7 @@ function ui(){
   function generalPortrait(){return '';}function troopPortrait(){return '';}
   function armyDeploymentHTML(){return '<section data-deployments></section>';}function cityLogisticsHTML(){return '';}function armyScoutHTML(){return '';}function captiveSummaryHTML(){return '';}
  `);
- for(const name of ['city-ui.js','mainline-ui.js','onboarding-ui.js','classic-ui.js'])e.evaluate(read(name));
+ for(const name of ['city-ui.js','named-city-ui.js','war-care-ui.js','governance-ui.js','mainline-ui.js','onboarding-ui.js','classic-ui.js'])e.evaluate(read(name));
  const troopStart=app.indexOf('function troopDetailModal('),troopEnd=app.indexOf('function trainModal(');
  e.evaluate(app.slice(troopStart,troopEnd));
  return {...e,g};
@@ -41,6 +41,7 @@ test('five primary destinations keep city areas local and reports/shop reachable
  for(const action of ['classicQueues','manualInventory','classicMission'])assert.match(html,new RegExp('data-action="'+action+'"'));
  e.evaluate('classicMoreModal()');const more=e.evaluate("document.getElementById('modal-body').innerHTML");
  for(const page of ['reports','shop'])assert.match(more,new RegExp('data-action="classicNav" data-id="'+page+'"'));
+ for(const action of ['namedCities','governance','warCare'])assert.match(more,new RegExp('data-action="'+action+'"'));
  assert.equal(JSON.stringify(e.g.state),before,'navigation views must not change game progress');
 });
 test('all ten real gift claims hide the persistent shortcut but remain inspectable from More',()=>{
@@ -68,9 +69,41 @@ test('objective resource gaps and queue countdowns follow actual current state w
 });
 test('readonly guard admits new inspection actions while reward, training and hero mutations stay blocked',()=>{
  const e=ui(),g=e.g;g.releaseSaveSession();assert.equal(g.saveSessionInfo().writable,false);const before=JSON.stringify(g.state);
- for(const action of ['classicMore','classicObjectives','troopDetail','heroTab','heroEquipment','heroPickEquipment','heroSkillAsk','heroSkillReview'])assert.deepEqual(pressGuard(e,action),{prevented:false,stopped:false},action);
- for(const action of ['mission','onboardingClaimAll','train','heroAllocate','heroEquip','heroDrill','heroSkillTrain'])assert.deepEqual(pressGuard(e,action),{prevented:true,stopped:true},action);
+ for(const action of ['namedCities','namedCityMap','governance','warCare','warCareDoctrine','warCareOrderAll','classicMore','classicObjectives','troopDetail','heroTab','heroEquipment','heroPickEquipment','heroSkillAsk','heroSkillReview'])assert.deepEqual(pressGuard(e,action),{prevented:false,stopped:false},action);
+ for(const action of ['namedCityDevelopment','governancePolicy','salaryPay','defeatedRecruit','warCareHeal','warCareHealAll','warCareAuto','warCareDoctrineSave','mission','onboardingClaimAll','train','heroAllocate','heroEquip','heroDrill','heroSkillTrain'])assert.deepEqual(pressGuard(e,action),{prevented:true,stopped:true},action);
  assert.equal(JSON.stringify(g.state),before);
+});
+test('readonly named-city, governance and hospital panels show real state while every new payment or policy action stays blocked',()=>{
+ const e=ui(),g=e.g;
+ assert.equal(e.evaluate("WarCare.admit(S(),'field:capital:'+Date.now()+':field',{archer:3},Date.now(),Game.units)"),null);
+ const care=g.warCareQuote('archer',3),salary=g.salaryQuote();assert.equal(care.selected.archer,3);assert.ok(care.gold>0);g.releaseSaveSession();const before=JSON.stringify(g.state);
+ e.evaluate('namedCityOverviewModal()');let html=e.evaluate("document.getElementById('modal-body').innerHTML");assert.ok(html.includes(g.getNode('yellow_qingshi').name));assert.match(html,/资源田最高 12 级/);assert.doesNotMatch(html,/洛阳都城|中原州城|北原郡城/);
+ e.evaluate('governanceModal()');html=e.evaluate("document.getElementById('modal-body').innerHTML");assert.match(html,/将领薪俸/);assert.match(html,/data-action="governancePolicy"/);assert.match(html,/民心目标/);
+ e.evaluate('warCareModal()');html=e.evaluate("document.getElementById('modal-body').innerHTML");assert.match(html,/待治 3 人/);assert.ok(html.includes('全部治疗需要 '+care.gold+' 黄金'));assert.match(html,/data-action="warCareHealAll"/);
+ e.evaluate('defenseDoctrineModal()');html=e.evaluate("document.getElementById('modal-body').innerHTML");assert.match(html,/data-action="warCareDoctrineSave"/);assert.match(html,/本城守城战术/);
+ const defense=JSON.parse(JSON.stringify(g.state.warCare.defense));defense.mode='inside';
+ for(const result of [g.healWounded('archer',3,care.key),g.setAutoHeal(true),g.setDefenseDoctrine(defense),g.setGovernancePolicy('autoRelief',true),g.payHeroArrears('all',salary.key),g.claimNamedCityDevelopment('yellow_qingshi','stale')])assert.equal(result,g.saveSessionInfo().reason);
+ assert.equal(JSON.stringify(g.state),before);assert.equal(g.validSave(g.state),true);
+});
+test('sidebar and home objectives preserve a stable key until visible task, resource-gap or queue information changes',()=>{
+ const e=ui(),g=e.g;
+ e.evaluate(`
+  globalThis.objectiveNodes=new Map();
+  const decodeObjectiveKey=html=>html.match(/data-objective-key="([^"]*)"/)[1].replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+  for(const [selector,html] of [['[data-sidebar-objective]',sidebarObjectiveHTML()],['[data-live-objective]',currentObjectiveHTML()]]){
+   const node={dataset:{objectiveKey:decodeObjectiveKey(html)},html,replacements:0};
+   Object.defineProperty(node,'outerHTML',{set(value){this.html=value;this.dataset.objectiveKey=decodeObjectiveKey(value);this.replacements++;}});objectiveNodes.set(selector,node);
+  }
+  document.querySelectorAll=selector=>objectiveNodes.has(selector)?[objectiveNodes.get(selector)]:[];
+ `);
+ const counts=()=>JSON.parse(e.evaluate('JSON.stringify([...objectiveNodes.values()].map(n=>n.replacements))'));
+ let before=JSON.stringify(g.state);e.evaluate('refreshObjectiveUI();refreshObjectiveUI()');assert.deepEqual(counts(),[0,0]);assert.equal(JSON.stringify(g.state),before);
+ g.state.res.wood++;before=JSON.stringify(g.state);e.evaluate('refreshObjectiveUI()');assert.deepEqual(counts(),[0,0],'irrelevant stock must not replace an unchanged objective');assert.equal(JSON.stringify(g.state),before);
+ assert.equal(g.onboarding.claim(1),null);assert.equal(g.claimReadyMissions(),null);g.state.res.food=0;
+ let m=e.evaluate('currentObjectiveModel()');assert.equal(m.growth.kind,'building');before=JSON.stringify(g.state);e.evaluate('refreshObjectiveUI();refreshObjectiveUI()');assert.deepEqual(counts(),[1,1]);assert.equal(JSON.stringify(g.state),before);assert.ok(e.evaluate("objectiveNodes.get('[data-sidebar-objective]').html").includes(m.status));
+ g.state.res.food=m.growth.cost.food;before=JSON.stringify(g.state);e.evaluate('refreshObjectiveUI();refreshObjectiveUI()');assert.deepEqual(counts(),[2,2],'a resolved shortage updates both objectives even without a new task');assert.equal(JSON.stringify(g.state),before);
+ m=e.evaluate('currentObjectiveModel()');assert.equal(g.queueBuilding(m.growth.site,m.growth.id),null);e.evaluate('refreshObjectiveUI()');assert.deepEqual(counts(),[3,3]);const initial=e.evaluate("objectiveNodes.get('[data-sidebar-objective]').html");
+ e.advance(1000);before=JSON.stringify(g.state);e.evaluate('refreshObjectiveUI();refreshObjectiveUI()');assert.deepEqual(counts(),[4,4]);assert.notEqual(e.evaluate("objectiveNodes.get('[data-sidebar-objective]').html"),initial);assert.equal(e.evaluate("objectiveNodes.get('[data-sidebar-objective]').dataset.objectiveKey"),e.evaluate("objectiveNodes.get('[data-live-objective]').dataset.objectiveKey"));assert.equal(JSON.stringify(g.state),before);
 });
 test('readonly hero skill inspection shows real quotes and keeps money, merit and skills unchanged',()=>{
  const e=ui(),g=e.g;e.evaluate(read('hero-ui.js'));g.releaseSaveSession();const before=JSON.stringify(g.state);

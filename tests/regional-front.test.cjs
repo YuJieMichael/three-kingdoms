@@ -4,7 +4,7 @@ const copy=x=>JSON.parse(JSON.stringify(x)),read=name=>fs.readFileSync(path.join
 // Prepared owned cities and overwhelming archers verify settlement, not natural balance.
 function prepared(node='yellow_qingshi',hall=6){
   const e=loadGame(932),g=e.Game,s=g.state;s.honors.noble=3;s.stats.victories=1;
-  e.evaluate(`for(const id of ['yellow_qingshi','yellow_baisha','yellow_chigang']){Game.state.conquered[id]=true;Game.state.towns[id].morale=-5;const c=CitySystem.empty(Game.state,Game.getNode(id),Date.now());Game.state.realm.cities[c.id]=c;}`);
+  e.evaluate(`for(const id of ['yellow_qingshi','yellow_baisha','yellow_chigang']){Game.state.conquered[id]=true;Game.state.towns[id].morale=-5;const c=CitySystem.empty(Game.state,Game.getNode(id),Date.now());c.data.warCare.defense.autoResolve=false;Game.state.realm.cities[c.id]=c;}`);
   assert.equal(g.switchCity('city_'+node),null);city(g,{hall,wall:0,drill:3,house:5});s.population=10000;for(const id in g.resources)s.res[id]=1000000;s.army.archer=15000;s.realm.heroLocations.lin=g.currentCityId();g.save();assert.equal(g.validSave(s),true);return e;
 }
 function start(e,level=1){const q=e.Game.regionFrontQuote(level);assert.equal(q.reason,'');assert.equal(e.Game.startRegionalFront(level,q.key),null);return q;}

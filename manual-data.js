@@ -9,7 +9,7 @@ const ManualData = {
       "relief": {"name":"赈灾","resource":"food","costMultiplier":1,"morale":5,"unrest":-15},
       "blessing": {"name":"祈福","resource":"gold","costMultiplier":1,"morale":25,"unrest":-5},
       "immigration": {"name":"增丁","resource":"food","costMultiplier":2,"populationFraction":0.1,"minimumIncrease":20},
-      "sacrifice": {"name":"祭天","unavailable":"天灾与天赐系统尚未开放"}
+      "sacrifice": {"name":"祭天"}
     },
     "levyMultipliers": {"food":5,"wood":3,"stone":3,"iron":2,"gold":2},
     "trialCost": true,

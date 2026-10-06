@@ -33,7 +33,7 @@ const HeroSystem=(()=>{
       if(s.heroLoyalty===undefined)s.heroLoyalty={};
       if(object(s.heroLoyalty))for(const id of s.generals)if(s.heroLoyalty[id]===undefined)s.heroLoyalty[id]=80;
     }
-    const heldCaptives=s=>s.wildGenerals?.captives?.length||0;
+    const heldCaptives=s=>(s.wildGenerals?.captives?.length||0)+(s.heroService?.captives?.length||0);
     const roomUsed=s=>s.generals.length+heldCaptives(s);
     const roomCapacity=s=>Game.heroCapacity?.(s)??s.buildings.tavern;
     function unlockReason(s,d){return !d.minInn?'':s.buildings.inn<d.minInn?'需要 '+d.minInn+' 级客栈':s.honors.noble<d.noble?'需要爵位 '+HeritageData.nobles[d.noble].name:'';}

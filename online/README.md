@@ -17,9 +17,17 @@ npm run online:serve
 
 游戏账号配置可填项目地址 `http://127.0.0.1:8140`，publishable key 填 `sb_publishable_local_development`，世界 `china-1`。本地密码至少 10 个字符。该开发 key 不用于生产认证，实际访问必须通过注册获得的会话。CORS 默认仅允许本机游戏页面端口 8137。本地服务每 15 秒检查已抵达的共享行军；没有到期行军时不写存档。
 
+## v0.33.0 战争、外交与玩家市场
+
+新增 `shared.declareWar/endProtection/peace`、`shared.setDiplomacy/markOperation/removeOperation` 与 `shared.marketCreate/marketBuy/marketCancel` 命令。玩家攻击参数增加 `purpose: raid|occupy` 与 `returnAfterOccupy`。新玩家保护72小时；个人宣战准备8小时、有效48小时；免战花5000黄金，持续12小时、冷却48小时。保护、同盟和友好关系在派遣及结算时重新检查。只有分城可以易主，主城作为保底；城破将领、援军、在外部队、库存与未履约挂单按原归属处理，不复制资产。
+
+玩家挂单冻结真实卖方库存，部分成交扣买方黄金，服务端生成有距离和抵达时间的商队；抵达才交货并支付卖方。订单版本、玩家修订、商队状态及城市归属使用同一事务与幂等回执，取消仅退未售余量；交货和退款允许超仓。确认响应携带本事务的公开世界投影，及时显示余量、商队和外交变化。联盟名城摘要聚合成员领土，进攻名城的下级辖区条件仍按玩家个人拥有判断。
+
+新伤兵进入所属城医院并通过黄金治疗回驻军；守城使用冻结战术。薪俸、民心/断粮及主动城务事件按真实小时结算，共享迁移从当前时间开始，不追缴旧档。完整试玩参数见 [当前规则](../RULES.md)，必要验收见 [v0.33.0记录](../production/qa/original-systems-v0.33.0.md)。本地验证不代表正式云服已经开放。
+
 ## 独立 Supabase 项目
 
-CLI 固定使用 2.119.0。本次迁移已由真实 `supabase migration new realm_online_v028` 创建，不再复制另一份 SQL 源。
+CLI 固定使用 2.119.0。两份迁移分别由 `supabase migration new realm_online_v028` 与 `supabase migration new realm_war_market_v033` 创建；部署需按时间顺序应用全部迁移，SQL验收脚本同样执行全部文件。
 
 ```sh
 node scripts/build-online-runtime.cjs
