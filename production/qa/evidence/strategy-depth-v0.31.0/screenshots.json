@@ -1,0 +1,104 @@
+{
+  "version": "0.31.0",
+  "source": "actual localhost browser screenshots; viewed before retention",
+  "screenshots": [
+    {
+      "file": "desktop-city-roles.jpg",
+      "width": 1280,
+      "height": 900,
+      "sha256": "8d7305140c3e3ef45ca82c78a2926bd4f11776ff61b3b365285eeae755b275df",
+      "observed": true
+    },
+    {
+      "file": "desktop-formal-counter.jpg",
+      "width": 1280,
+      "height": 900,
+      "sha256": "c607c6420083721361a972c5d33c85c9bcaf40ffa9a0b831febd4a5b8a25f69e",
+      "observed": true
+    },
+    {
+      "file": "desktop-formal-watch.jpg",
+      "width": 1280,
+      "height": 900,
+      "sha256": "2b43b547812d64832843b135ed4434ae2d67e0245892f64359a96c7b41f67184",
+      "observed": true
+    },
+    {
+      "file": "desktop-orders.jpg",
+      "width": 1280,
+      "height": 900,
+      "sha256": "709d34ad9bf4a36bbcdde76c7444e6eda1da1d6e286fee97e319ac4765f8f116",
+      "observed": true
+    },
+    {
+      "file": "mobile-charge-quote.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "69082c0e15df1ac097b1116fb491ab9ba7cee9c5c93461e7f90eab6dbc27d950",
+      "observed": true
+    },
+    {
+      "file": "mobile-charge-result.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "3ba5c223935d7233ad3cde95582014b9a398771a33e24f1e21fd1cf8e3dac254",
+      "observed": true
+    },
+    {
+      "file": "mobile-city-role.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "4cba7a7db459058f6f1b78fafdf9b1484e5e5686de2413385c23f1eb370205cc",
+      "observed": true
+    },
+    {
+      "file": "mobile-encounter-target.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "681b7abe86965bae333bbe42af47093ca9daa62ec7e6e38e8eed322224aa4fe5",
+      "observed": true
+    },
+    {
+      "file": "mobile-formal-response.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "45c7f76e65fa8a149f4df7a862a8940771acedffb1f13a4b2c989303130cb1a8",
+      "observed": true
+    },
+    {
+      "file": "mobile-pass-march.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "a162989ce0e5490d539422f964db40ef886ecf3f76a7cc577a8e0ce9a1b480b8",
+      "observed": true
+    },
+    {
+      "file": "mobile-pass-transport.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "6e716bbd2919250918f37f2cb5de4597b1dfbcd4b5d8064ce01504e71568bf2d",
+      "observed": true
+    },
+    {
+      "file": "mobile-rescue-quote.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "e43a0ba9c51e1e575a02098ee433023bb85f1de5b24e11bc95a856205aef50b2",
+      "observed": true
+    },
+    {
+      "file": "mobile-rescue-result.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "a2946391096ff8f36c6e054e9a02e94cae55bcf9e48be5a5df0c291eb652cbe0",
+      "observed": true
+    },
+    {
+      "file": "mobile-teaching-catalog.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "3423a36594c3b0adbe3b58f09fe449c34a33dab72ab878fd1e8012e4516287d8",
+      "observed": true
+    }
+  ]
+}

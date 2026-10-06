@@ -176,6 +176,19 @@ test('rendered army states distinguish travel, arrival, combat, station and gath
  assert.equal(g.validSave(g.state),true);
 });
 
+test('deployment cards label coordinate-free military orders while real wild coordinates and saved travel times remain intact',()=>{
+ const ids=['order_encounter_field_5_screen','order_encounter_elite_7_lure','order_encounter_siege_10_fire','order_field_1','order_challenge_field_5_preserve','wild_31_32'];
+ for(const id of ids){
+  const e=setup(),g=e.Game,n=g.getNode(id);g.state.conquered.north_keep=true;
+  if(n.orderRoute){g.state.warOrders.cleared[n.orderRoute]=n.orderTier;g.state.warOrders.wins[n.orderRoute]=n.orderTier;}
+  e.evaluate(`globalThis.S=()=>Game.state;globalThis.esc=value=>String(value);globalThis.num=value=>String(value);globalThis.btn=(label,action)=>'<button data-action="'+action+'">'+label+'</button>';`);
+  assert.equal(g.dispatch(id,'lin',{archer:100},'occupy'),null);const travel=clone(g.state.expedition),before=JSON.stringify(g.state),output=e.evaluate('armyDeploymentHTML()');
+  assert.doesNotMatch(output,/undefined|NaN|Infinity/);assert.match(output,/抵达剩余/);assert.match(output,/预计抵达/);
+  if(n.orderRoute)assert.match(output,/<small>军令战场<\/small>/);else assert.ok(output.includes(`<small>(${n.x}, ${n.y})</small>`));
+  assert.equal(JSON.stringify(g.state),before);assert.deepEqual(clone(g.state.expedition),travel);assert.equal(timing(e,overview(e).rows[0]).totalMs,travel.end-travel.start);
+ }
+});
+
 test('live army refresh advances separate route fields and accessible bars while preserving the card subtree',()=>{
  const e=setup(),g=e.Game;assert.equal(g.refreshInn(),null);assert.equal(g.recruit(g.state.innCandidates[0].id),null);
  const hero=g.state.customGenerals[0].id;

@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-const {loadGame,city}=require('./helpers/game.cjs');
+const {loadGame,city,battle}=require('./helpers/game.cjs');
 const root=path.join(__dirname,'..'),read=name=>fs.readFileSync(path.join(root,name),'utf8');
 // UI fixtures retain the real game models and action guard without booting a browser.
 function ui(){
@@ -25,7 +25,7 @@ function ui(){
   function generalPortrait(){return '';}function troopPortrait(){return '';}
   function armyDeploymentHTML(){return '<section data-deployments></section>';}function cityLogisticsHTML(){return '';}function armyScoutHTML(){return '';}function captiveSummaryHTML(){return '';}
  `);
- for(const name of ['mainline-ui.js','onboarding-ui.js','classic-ui.js'])e.evaluate(read(name));
+ for(const name of ['city-ui.js','mainline-ui.js','onboarding-ui.js','classic-ui.js'])e.evaluate(read(name));
  const troopStart=app.indexOf('function troopDetailModal('),troopEnd=app.indexOf('function trainModal(');
  e.evaluate(app.slice(troopStart,troopEnd));
  return {...e,g};
@@ -94,6 +94,22 @@ test('map disclosures retain target access while excluding future task landmarks
  g.state.raided.field=true;html=e.evaluate('worldPage()');assert.match(html,/data-action="mapLandmark" data-id="wood"/);assert.doesNotMatch(html,/data-action="mapLandmark" data-id="fort"/);
  e.evaluate('render=()=>{}');e.evaluate(`centerWorld(${g.home.x},${g.home.y})`);html=e.evaluate('worldPage()');
  assert.match(html,new RegExp('id="map-x"[^>]*value="'+g.home.x+'"'));assert.match(html,new RegExp('id="map-y"[^>]*value="'+g.home.y+'"'));
+});
+function orderMapUI(){const e=ui();e.evaluate(read('campaign-ui.js'));e.evaluate(read('war-orders-ui.js'));e.evaluate(`function expeditionStrip(){return '';}function wildGeneralNodeHTML(){return '';}function enemyIntelHTML(){return '';}function chapterWorldBanner(){return '';}function epicWorldBanner(){return '';}function combatRoundSummaryHTML(){return '';}render=()=>{};toast=()=>{};`);e.evaluate(read('grid-world.js'));return e;}
+test('a finished military-order encounter remains a coordinate-free campaign target with real guard, rewards and recovery actions',()=>{
+ const e=orderMapUI(),g=e.g,id='order_encounter_field_5_screen',army={archer:2000,shield:600,spear:800,cavalry:300};city(g,{hall:8,drill:10,house:10,barracks:10,academy:8,smith:8});g.state.conquered.north_keep=true;g.state.warOrders.cleared.field=g.state.warOrders.wins.field=5;Object.assign(g.state.army,army);g.state.res.food=1000000;
+ const result=battle(e,id,'occupy',army);assert.equal(result.won,true);assert.equal(g.state.battle.finished,true);e.evaluate(`selectedNode=${JSON.stringify(id)};`);const before=JSON.stringify(g.state),center=e.evaluate('JSON.stringify(worldView)');let html=e.evaluate('worldPage()');
+ assert.match(html,/军令战场 · 野战破阵 · 第 5 阶战术遭遇/);assert.match(html,/普通胜利：军功/);assert.match(html,/军令战术遭遇预览/);assert.match(html,/整军剩余/);assert.match(html,new RegExp('data-action="campaignDispatch" data-id="'+id+':occupy"[^>]*disabled'));
+ for(const unit of Object.keys(g.getNode(id).army))assert.ok(html.includes(g.units[unit].name));assert.doesNotMatch(html,/undefined|NaN|配兵掠夺|配兵占领|占领、掠夺与掉落规则|:raid"/);assert.equal(e.evaluate('JSON.stringify(worldView)'),center);assert.equal(JSON.stringify(g.state),before);
+ e.evaluate(`worldNodeModal(${JSON.stringify(id)})`);html=e.evaluate("document.getElementById('modal-body').innerHTML");assert.match(html,/军令战场/);assert.match(html,/守军阵容/);assert.match(html,/整军/);assert.doesNotMatch(html,/undefined|NaN|坐标|:raid"|配兵占领/);assert.equal(JSON.stringify(g.state),before);
+ e.advance(g.warOrders.RECOVERY+1);html=e.evaluate(`classicTargetActions(Game.getNode(${JSON.stringify(id)}))`);assert.match(html,new RegExp('data-action="campaignDispatch" data-id="'+id+':occupy"[^>]*>配兵讨伐'));assert.doesNotMatch(html,/配兵掠夺|配兵占领|:raid"/);
+});
+test('military-order landmark and minimap paths preserve real map bounds while ordinary and hidden landmarks retain their guards',()=>{
+ const e=orderMapUI(),g=e.g,id='order_siege_5',center=e.evaluate('JSON.stringify(worldView)');e.evaluate(`globalThis.mapClick={target:{closest:selector=>selector==='[data-action]'?{disabled:false,dataset:{action:'mapLandmark',id:${JSON.stringify(id)}}}:null},preventDefault(){},stopImmediatePropagation(){}};uiListeners.filter(x=>x.type==='click').forEach(x=>x.callback(mapClick));`);assert.equal(e.evaluate('selectedNode'),id);assert.equal(e.evaluate('JSON.stringify(worldView)'),center);
+ e.evaluate('centerWorld(undefined,undefined);centerWorld(NaN,12)');assert.equal(e.evaluate('JSON.stringify(worldView)'),center);e.evaluate(`globalThis.canvasCoordinates=[];document.getElementById('world-minimap').width=192;document.getElementById('world-minimap').getContext=()=>({fillRect(...args){canvasCoordinates.push(args)},strokeRect(...args){canvasCoordinates.push(args)}});drawWorldMiniMap();`);assert.equal(e.evaluate('canvasCoordinates.every(args=>args.every(Number.isFinite))'),true);
+ e.evaluate(`worldNodeModal(${JSON.stringify(id)})`);let html=e.evaluate("document.getElementById('modal-body').innerHTML");assert.match(html,/军令战场 · 攻坚拔寨 · 第 5 阶/);assert.match(html,/营寨门墙|重垒门墙/);assert.match(html,/北境大营/);assert.doesNotMatch(html,/undefined|NaN|:raid"|坐标/);
+ e.evaluate(`mapClick.target.closest=selector=>selector==='[data-action]'?{disabled:false,dataset:{action:'mapLandmark',id:'fort'}}:null;uiListeners.filter(x=>x.type==='click').forEach(x=>x.callback(mapClick));`);assert.equal(e.evaluate('selectedNode'),id);assert.equal(e.evaluate('JSON.stringify(worldView)'),center);
+ e.evaluate(`mapClick.target.closest=selector=>selector==='[data-action]'?{disabled:false,dataset:{action:'mapLandmark',id:'field'}}:null;uiListeners.filter(x=>x.type==='click').forEach(x=>x.callback(mapClick));`);assert.equal(e.evaluate('selectedNode'),'field');assert.deepEqual(JSON.parse(e.evaluate('JSON.stringify(worldView)')),{x:g.getNode('field').x,y:g.getNode('field').y});
 });
 test('target folds keep valid nested details while actions and real marching references stay outside',()=>{
  const e=ui(),g=e.g;e.evaluate(read('campaign-ui.js'));const before=JSON.stringify(g.state),html=e.evaluate("classicTargetActions(Game.getNode('field'))");

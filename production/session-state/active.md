@@ -1,16 +1,16 @@
 # 当前开发状态
 
 <!-- STATUS -->
-代码版本v0.30.0：用户选择的五项指挥界面精简已实现，导航／当前目标／地图／兵将名册／战斗布局均有实际验收；战斗与资源规则不变。独立Supabase项目未选择，远程后台未启用。发布证据以工作区outputs/update-v0.30.0/publish-receipt.json为准；本文件不替代回执。
+代码版本v0.31.0：用户选择的三场军令遭遇、粮城／矿城／关隘、赵云／马超身份战法已实现并完成必要验收。保留五入口布局、画像抓将、实际行军／返回、首奖去重与战利品爆仓。发布证据以工作区outputs/update-v0.31.0/publish-receipt.json为准；本文件不替代回执。
 <!-- /STATUS -->
 
 <!-- CHECKPOINT -->
 **Updated:** 2026-10-05
 **Branch:** main
-**Current task:** production/epics/command-ui/01-interface-simplification.md实现验收完成，按既有授权提交／发布，精确提交与CI／Pages状态见外部回执
-**Next step:** 用户试玩五入口及战斗布局，后续集中做大型回归／自然长局与名将打法比较
-**Blocked on:** 玩法开发无阻塞；正式云后台仍待独立组织／项目及费用选择
-**Files in progress:** 当前发布证据；界面代码与有界验收已完成
-**Run result:** OBSERVED — 106项唯一必要检查通过；390×844、1280×900隔离存档浏览器完成五主入口、目标前往、礼包全领、兵将详情、地图跳转、正式战斗／演练、真实资源入库／行军时间、只读训练拦截与黄巾预警。已观察截图在production/qa/evidence/command-ui-v0.30.0。修复等待文案刷新和手机列裁切。Graphify本地仅代码刷新1388节点3092边80社区，未上传。无本地全量回归、自然长局、真人可用性、实体手机或线上百人容量结论。
-**Open questions:** 真人易读性与战术机会频率待试玩；云项目选择和联网计谋仍待确定
+**Current task:** /story-done — production/epics/strategy-depth/story-001-three-updates.md已闭环，COMPLETE WITH NOTES；按既有授权提交／发布，精确提交与CI／Pages状态见外部回执
+**Next step:** 本轮三个更新的故事已完成，试玩正式遭遇及五场演练；按用户安排集中做大型本地回归、自然长局与名将机会频率比较
+**Blocked on:** 本轮功能无阻塞；正式云后台仍待独立项目及费用选择
+**Files in progress:** 当前发布回执；功能代码与必要验收完成
+**Run result:** OBSERVED — 去重195项必要用例通过，26源模块权威副本已构建；1280×900、390×844独立存档浏览器实际完成正式遭遇、普通察伏取消预备、未察伏触发射击、自动结算／返城、赵云375撤军与马超150推退，关隘运输普通68→实际55秒且重载保持原抵达时间。14张已打开观察的截图在production/qa/evidence/strategy-depth-v0.31.0。修复共享模式遭遇静默降级、存档降级以及军令虚假坐标／领地语义。默认Node文件进程隔离存在未定位的偶发退出，151项不隔离批次及相关独立诊断全部通过，原日志保留。Graphify代码刷新1436节点3203边86社区，无watcher／hooks／上传。无本地全量回归、自然长局、真人平衡、实体手机或线上负载结论。
+**Open questions:** 默认Node文件进程偶发退出原因、真实战术机会频率和经济平衡待后续集中验证
 <!-- /CHECKPOINT -->

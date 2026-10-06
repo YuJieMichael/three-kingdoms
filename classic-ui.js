@@ -96,7 +96,12 @@ function growthMissionModal(){
   manualModalContext=growthMissionModal;
 }
 
+function classicWarOrderTargetHTML(n){
+  const s=S(),reason=Game.attackBlocked(n.id,'occupy')||(!s.buildings.drill?'需要校场':Game.allExpeditions().length>=s.buildings.drill?'校场派遣名额已满':s.cooldowns[n.id]>Date.now()?'守军正在恢复':'');
+  return `${warOrderIntelHTML(n)}<p class="hint" data-order-clock="${n.orderRoute}">${esc(warOrderClockText(n.orderRoute))}</p><div class="target-actions">${btn(reason||'配兵讨伐','campaignDispatch',n.id+':occupy','block',!!reason)}${btn('返回战役军令','taskTab','orders','secondary')}</div><p class="hint target-time">${esc(campaignMarchReferenceHTML(n))}</p>`;
+}
 function classicTargetActions(n){
+  if(n.orderRoute)return classicWarOrderTargetHTML(n);
   if(Game.cityMeta?.(n.id))return campaignOwnedCityHTML(n);
   if(!Game.landmarkVisible(n.id))return '<p class="notice">这个任务据点尚未发现，请先完成当前据点。</p>';
   const s=S(),owned=!!s.conquered[n.id],chapterBlocked=ChapterData.blocked(s,n.id);if(chapterBlocked)return `<p class="notice">${esc(chapterBlocked)}</p>${btn('查看章节路线','taskTab','chapter','block')}<p class="hint">${n.reward}</p>`;if(Game.isCity(n)&&!n.openCity&&!Game.countyUnlocked())return `<div class="notice">县城攻打未开放：完成黄巾之乱四项史诗后，可选择掠夺或占领。</div>${btn('查看解锁进度','taskTab','epic','block')}<div class="target-actions">${btn('掠夺 · 史诗未完成','campaignDispatch',n.id+':raid','secondary',true)}${btn('占领 · 史诗未完成','campaignDispatch',n.id+':occupy','',true)}</div>`;if(owned&&(n.wild||Game.isCity(n)))return campaignNodeDetails(n);
@@ -121,7 +126,7 @@ document.addEventListener('click',event=>{
   if(action==='missionClaimAll'){if(actResult(Game.claimReadyMissions(),'已完成任务的补给与黄金已全部到账'))classicMissionModal();}
   if(action==='missionGo'){
     const m=Game.missions.find(x=>x.id===id);if(!m)return;
-    if(m.node){if(!Game.landmarkVisible(m.node)){toast('请先完成当前任务据点');return;}modal.close();page='world';selectedNode=m.node;worldView={...Game.landmarks[m.node]};render();return;}
+    if(m.node){if(!Game.landmarkVisible(m.node)){toast('请先完成当前任务据点');return;}modal.close();page='world';selectedNode=m.node;const n=Game.getNode(m.node);if(Number.isFinite(n?.x)&&Number.isFinite(n?.y))worldView={x:n.x,y:n.y};render();return;}
     if(m.route==='wildGenerals'){wildGeneralsModal();return;}
     if(m.route==='gift'){onboardingGiftsModal();return;}
     modal.close();

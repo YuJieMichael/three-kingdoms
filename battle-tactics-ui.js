@@ -1,19 +1,19 @@
 'use strict';
-const battleTacticLabels={watch:'察伏',fire:'火攻封路',huangzhong:'蓄弦先射',weiyan:'佯退诱追',xushu:'料敌先机'};
-const tacticalLessonTitles={ready_shot:'预备射击与探阵',bait_chase:'诱追与保持阵线',fire_reveal:'火区与提前揭露'};
+const battleTacticLabels={watch:'察伏',fire:'火攻封路',huangzhong:'蓄弦先射',weiyan:'佯退诱追',zhaoyun:'接应撤军',machao:'冲阵退敌',xushu:'料敌先机'};
+const tacticalLessonTitles={ready_shot:'预备射击与探阵',bait_chase:'诱追与保持阵线',fire_reveal:'火区与提前揭露',rescue_retreat:'接应撤军与保持距离',charge_hold:'冲阵与固守反制'};
 let battleTacticDraft=null;
 function battleTacticsSafeView(b){return typeof Game.battleTacticsView==='function'?Game.battleTacticsView(b):null;}
 function battleIdentityOf(id){return typeof Game.heroIdentity==='function'?Game.heroIdentity(id):null;}
 function battleIdentityHTML(id,compact=false){
   const identity=battleIdentityOf(id);if(!identity?.id)return '';
   if(compact)return `<p class="hero-battle-identity-tag"><strong>${esc(identity.name)}</strong> · ${esc(identity.description)}</p>`;
-  return `<section class="hero-battle-identity"><div class="section-title"><h3>${esc(identity.name)} · ${esc(battleTacticLabels[identity.action]||'名将战法')}</h3><span class="badge">每战一次</span></div><p>${esc(identity.description)}</p><dl><div><dt>发动条件</dt><dd>${esc(identity.condition)}</dd></div><div><dt>可被破解</dt><dd>${esc(identity.counter)}</dd></div></dl><p class="hint">仅普通单机逐回合战斗与战术演练启用；守城、共享自动战斗暂不支持。</p>${btn('查看三场演练','tacticalLessonCatalog','','small secondary')}</section>`;
+  return `<section class="hero-battle-identity"><div class="section-title"><h3>${esc(identity.name)} · ${esc(battleTacticLabels[identity.action]||'名将战法')}</h3><span class="badge">每战一次</span></div><p>${esc(identity.description)}</p><dl><div><dt>发动条件</dt><dd>${esc(identity.condition)}</dd></div><div><dt>可被破解</dt><dd>${esc(identity.counter)}</dd></div></dl><p class="hint">仅普通单机逐回合战斗与战术演练启用；守城、共享自动战斗暂不支持。</p>${btn('查看战术演练','tacticalLessonCatalog','','small secondary')}</section>`;
 }
 function battlePlanLabel(plan){return `${plan.side==='enemy'?'敌军':'我军'}${Game.units[plan.unit]?.name||plan.unit||''} · ${plan.name||battleTacticLabels[plan.type]||plan.type}`;}
 function battlePlanDetail(plan){
   if(plan.hidden)return '对象尚未揭露';
   if(Number.isFinite(plan.left)&&Number.isFinite(plan.right))return `火区 ${plan.left}–${plan.right}`;
-  if(plan.target)return `目标：${Game.units[plan.target]?.name||plan.target}`;
+  if(plan.target)return `${plan.type==='zhaoyun'?'己方被保护队':plan.type==='machao'?'冲阵敌队':'目标'}：${Game.units[plan.target]?.name||plan.target}`;
   return typeof plan.details==='string'?plan.details:'已公开发动条件';
 }
 function battleTacticsPanelHTML(b,context={}){
@@ -22,7 +22,7 @@ function battleTacticsPanelHTML(b,context={}){
   if(shared)return '<p class="hint battle-tactics-unavailable">共享自动战斗暂未启用名将战法与计谋。</p>';
   if(!v.enabled)return `<p class="hint battle-tactics-unavailable">${b.rules===2?'旧版战斗继续按原规则结算；计谋在新出征中启用。':'此战斗模式暂未启用名将战法与计谋。'}</p>`;
   const actions=['watch','fire',...(v.identity?.action?[v.identity.action]:[])],plans=v.preparations||[];
-  return `<section class="battle-tactics-panel" aria-label="战术筹策"><div class="battle-tactics-heading"><strong>筹策 ${num(v.cp??v.points?.player??0)} / 3</strong><span>${v.submittedThisRound?'本轮已提交':'本轮可提交 1 次'}${v.identityUsed?' · 名将战法已用':''}</span></div>${!b.finished?`<div class="battle-tactics-actions">${actions.map(type=>btn(esc(battleTacticLabels[type]||type),'battleTacticOpen',type,'small secondary',!!v.submittedThisRound||(type===v.identity?.action&&v.identityUsed))).join('')}</div>`:''}${plans.length?`<ul class="battle-preparations">${plans.map(p=>`<li><div><strong>${esc(battlePlanLabel(p))}</strong><span>${p.status==='active'?'本轮生效':`第 ${p.readyRound} 回合响应`} · ${esc(battlePlanDetail(p))}</span></div>${p.side==='player'&&p.cancelable&&!b.finished?btn('取消准备','battleTacticCancelAsk',esc(p.id),'small secondary'):''}</li>`).join('')}</ul>`:''}<details class="battle-tactics-rules"><summary>费用与攻击机会</summary><p class="hint">每战 3 点，不恢复；每回合最多提交 1 次。火攻耗 2 点，其他战法耗 1 点。黄忠、魏延与火攻先准备一回合；察伏与徐庶揭露立即响应。合法宣布后取消、没触发或被识破均不退款；预留主攻击仍会失去，正常反击保留。</p></details></section>`;
+  return `<section class="battle-tactics-panel" aria-label="战术筹策"><div class="battle-tactics-heading"><strong>筹策 ${num(v.cp??v.points?.player??0)} / 3</strong><span>${v.submittedThisRound?'本轮已提交':'本轮可提交 1 次'}${v.identityUsed?' · 名将战法已用':''}</span></div>${!b.finished?`<div class="battle-tactics-actions">${actions.map(type=>btn(esc(battleTacticLabels[type]||type),'battleTacticOpen',type,'small secondary',!!v.submittedThisRound||(type===v.identity?.action&&v.identityUsed))).join('')}</div>`:''}${plans.length?`<ul class="battle-preparations">${plans.map(p=>`<li><div><strong>${esc(battlePlanLabel(p))}</strong><span>${p.status==='active'?'本轮生效':`第 ${p.readyRound} 回合响应`} · ${esc(battlePlanDetail(p))}</span></div>${p.side==='player'&&p.cancelable&&!b.finished?btn('取消准备','battleTacticCancelAsk',esc(p.id),'small secondary'):''}</li>`).join('')}</ul>`:''}<details class="battle-tactics-rules"><summary>费用与攻击机会</summary><p class="hint">每战 3 点，不恢复；每回合最多提交 1 次。火攻耗 2 点，其他战法耗 1 点。黄忠、魏延、赵云、马超与火攻先准备一回合；察伏与徐庶揭露立即响应。合法宣布后取消、没触发或被识破均不退款；预留主攻击仍会失去，正常反击保留。赵云接应队需要继续坚守且距离不超过300，被保护队最多1.5倍后退并放弃主攻击；马超实际冲阵耗本轮主攻击，最多推退200，目标固守完全反制。</p></details></section>`;
 }
 function battleFireZoneHTML(b){
   const v=battleTacticsSafeView(b);if(!v?.enabled)return '';
@@ -31,8 +31,8 @@ function battleFireZoneHTML(b){
 }
 function battleUnitBudgetHTML(b,id){
   const v=battleTacticsSafeView(b);if(!v?.enabled)return '';
-  const plans=Array.isArray(v.reservedMainAttacks)?v.reservedMainAttacks.filter(r=>r.unit===id).map(r=>(v.plans||[]).find(p=>p.id===r.planId)||r):(v.plans||[]).filter(p=>p.side==='player'&&p.unit===id&&['fire','huangzhong','weiyan'].includes(p.type)&&(p.round===v.round||p.type==='huangzhong'&&p.readyRound===v.round));
-  return plans.length?`<p class="battle-unit-budget">${plans.map(p=>`${esc(p.name||battleTacticLabels[p.type])}：本轮主攻击已锁定${p.status==='cancelled'||p.status==='invalid'?'，取消后也不会恢复':p.type==='huangzhong'?'，继续坚守才可触发':''}`).join(' · ')}</p>`:'';
+  const plans=Array.isArray(v.reservedMainAttacks)?v.reservedMainAttacks.filter(r=>r.unit===id).map(r=>({...((v.plans||[]).find(p=>p.id===r.planId)||r),budgetKind:r.kind})):(v.plans||[]).filter(p=>p.side==='player'&&p.unit===id&&['fire','huangzhong','weiyan','zhaoyun','machao'].includes(p.type)&&(p.round===v.round||p.type==='huangzhong'&&p.readyRound===v.round));
+  return plans.length?`<p class="battle-unit-budget">${plans.map(p=>`${esc(p.name||battleTacticLabels[p.type])}${p.budgetKind==='rescue'?'被保护队接应后退':p.budgetKind==='charge'?'骑兵冲阵':''}：本轮主攻击已锁定${p.status==='cancelled'||p.status==='invalid'?'，取消后也不会恢复':p.type==='huangzhong'?'，继续坚守才可触发':''}`).join(' · ')}</p>`:'';
 }
 function battleTacticEventsHTML(b){
   const v=battleTacticsSafeView(b),events=(v?.events||[]).filter(e=>e.round===b.round);
@@ -46,11 +46,11 @@ function battleTacticModal(type){
   const v=battleTacticsSafeView(c.battle);if(!v?.enabled||(!c.practice&&typeof OnlineClient!=='undefined'&&OnlineClient.shared())){toast('此模式暂不支持计谋');return;}
   pauseBattleForTactics(c);
   const q=Game.battleTacticQuote(type,{},c.battle),o=q?.options||{},actors=o.actors||[],targets=o.targets||[],plans=o.preparations||[],bounds=o.fireBounds||{min:1,max:Math.max(1,c.battle.length-101),length:100};
-  const args={};if(['fire','huangzhong','weiyan'].includes(type)&&actors.length)args.unit=actors[0].id;if(type==='weiyan'&&targets.length)args.target=targets[0].id;if(['watch','xushu'].includes(type)&&plans.length)args.planId=plans[0].id;if(type==='fire')args.left=Math.max(bounds.min,Math.min(bounds.max,Math.floor((c.battle.length-100)/2)));
+  const args={};if(['fire','huangzhong','weiyan','zhaoyun','machao'].includes(type)&&actors.length)args.unit=actors[0].id;if(['weiyan','machao','zhaoyun'].includes(type)&&targets.length)args.target=(type==='zhaoyun'?targets.find(t=>t.id!==args.unit):targets[0])?.id||'';if(['watch','xushu'].includes(type)&&plans.length)args.planId=plans[0].id;if(type==='fire')args.left=Math.max(bounds.min,Math.min(bounds.max,Math.floor((c.battle.length-100)/2)));
   battleTacticDraft={...c,type,args,key:null};
   const options=(rows,value)=>rows.map(r=>`<option value="${esc(r.id)}" ${r.id===value?'selected':''}>${esc(r.name||r.id)}</option>`).join('');
   const title=battleTacticLabels[type]||type;
-  showModal('筹策 · '+esc(title),`<p class="sub">第 ${v.round} 回合 · 剩余 ${num(v.cp??v.points?.player??0)} 筹策</p><div class="battle-tactic-form">${['fire','huangzhong','weiyan'].includes(type)?`<label>施计兵队<select id="battle-tactic-unit" ${actors.length?'':'disabled'}>${actors.length?options(actors,args.unit):'<option value="">暂无可用兵队</option>'}</select></label>`:''}${type==='weiyan'?`<label>诱追对象<select id="battle-tactic-target" ${targets.length?'':'disabled'}>${targets.length?options(targets,args.target):'<option value="">暂无近战目标</option>'}</select></label>`:''}${['watch','xushu'].includes(type)?`<label>${type==='watch'?'要识破的射击准备':'要揭露的已提交计谋'}<select id="battle-tactic-plan" ${plans.length?'':'disabled'}>${plans.length?plans.map(p=>`<option value="${esc(p.id)}">${esc(battlePlanLabel(p))}</option>`).join(''):'<option value="">暂无适用的敌方准备</option>'}</select></label>`:''}${type==='fire'?`<label for="battle-tactic-left">火区左端 · 长度 ${bounds.length}<span class="battle-fire-input"><input id="battle-tactic-range" type="range" min="${bounds.min}" max="${bounds.max}" step="1" value="${args.left}" aria-label="火区左端"><input id="battle-tactic-left" type="number" inputmode="numeric" min="${bounds.min}" max="${bounds.max}" step="1" value="${args.left}" aria-label="火区左端坐标"></span></label><p class="hint">区间包含两端，影响双方；生效时已有部队在区内，整段火攻失效。</p>`:''}</div><div id="battle-tactic-preview" aria-live="polite"></div>`,btn(c.practice?'返回演练':'返回指挥',c.practice?'tacticalLessonResume':'close','','secondary')+btn('确认提交','battleTacticSubmit'));
+  showModal('筹策 · '+esc(title),`<p class="sub">第 ${v.round} 回合 · 剩余 ${num(v.cp??v.points?.player??0)} 筹策</p><div class="battle-tactic-form">${['fire','huangzhong','weiyan','zhaoyun','machao'].includes(type)?`<label>施计兵队<select id="battle-tactic-unit" ${actors.length?'':'disabled'}>${actors.length?options(actors,args.unit):'<option value="">暂无可用兵队</option>'}</select></label>`:''}${['weiyan','machao','zhaoyun'].includes(type)?`<label>${type==='zhaoyun'?'己方被保护队':type==='machao'?'冲阵敌近战队':'诱追对象'}<select id="battle-tactic-target" ${targets.length?'':'disabled'}>${targets.length?options(targets.filter(t=>type!=='zhaoyun'||t.id!==args.unit),args.target):'<option value="">暂无适用目标</option>'}</select></label>`:''}${['watch','xushu'].includes(type)?`<label>${type==='watch'?'要识破的射击准备':'要揭露的已提交计谋'}<select id="battle-tactic-plan" ${plans.length?'':'disabled'}>${plans.length?plans.map(p=>`<option value="${esc(p.id)}">${esc(battlePlanLabel(p))}</option>`).join(''):'<option value="">暂无适用的敌方准备</option>'}</select></label>`:''}${type==='fire'?`<label for="battle-tactic-left">火区左端 · 长度 ${bounds.length}<span class="battle-fire-input"><input id="battle-tactic-range" type="range" min="${bounds.min}" max="${bounds.max}" step="1" value="${args.left}" aria-label="火区左端"><input id="battle-tactic-left" type="number" inputmode="numeric" min="${bounds.min}" max="${bounds.max}" step="1" value="${args.left}" aria-label="火区左端坐标"></span></label><p class="hint">区间包含两端，影响双方；生效时已有部队在区内，整段火攻失效。</p>`:''}</div><div id="battle-tactic-preview" aria-live="polite"></div>`,btn(c.practice?'返回演练':'返回指挥',c.practice?'tacticalLessonResume':'close','','secondary')+btn('确认提交','battleTacticSubmit'));
   manualModalContext=updateBattleTacticPreview;updateBattleTacticPreview();
   if(!c.practice&&!c.battle.auto){const hint=document.createElement('p');hint.className='hint';hint.textContent='战斗倒计时已暂停。提交后可回到指挥页自行开启。';document.getElementById('battle-tactic-preview').after(hint);}
 }
@@ -74,7 +74,7 @@ function battleTacticCancelModal(id){
 }
 function battleTacticIsPracticeAction(action){return ['battleTacticSubmit','battleTacticCancel'].includes(action)&&!!battleTacticDraft?.practice&&Game.lessonInfo?.()?.battle===battleTacticDraft.battle;}
 function tacticalLessonCatalog(){
-  showModal('战术演练',`<p class="sub">固定兵将阵容，不消耗城池部队、主将或资源，也不赠送正式名将。与普通单机战斗共用逐队结算。</p><div class="tactical-lesson-list">${Object.entries(tacticalLessonTitles).map(([id,title],index)=>`<article><div><strong>${index+1}. ${esc(title)}</strong><p class="hint">${{ready_shot:'看预兆，比较进入射程与停在射程外。',bait_chase:'比较追击诱兵与保持阵线。',fire_reveal:'先揭露火区，再调整移动时机。'}[id]}</p></div>${btn('开始演练','tacticalLessonStart',id,'small')}</article>`).join('')}</div>`,btn('关闭','close','','secondary'));
+  showModal('战术演练',`<p class="sub">固定兵将阵容，不消耗城池部队、主将或资源，也不赠送正式名将。与普通单机战斗共用逐队结算。</p><div class="tactical-lesson-list">${Object.entries(tacticalLessonTitles).map(([id,title],index)=>`<article><div><strong>${index+1}. ${esc(title)}</strong><p class="hint">${{ready_shot:'看预兆，比较进入射程与停在射程外。',bait_chase:'比较追击诱兵与保持阵线。',fire_reveal:'先揭露火区，再调整移动时机。',rescue_retreat:'轻骑坚守接应，比较正常后退与有限加速。',charge_hold:'实际推进冲阵，比较敌军前进与固守反制。'}[id]}</p></div>${btn('开始演练','tacticalLessonStart',id,'small')}</article>`).join('')}</div>`,btn('关闭','close','','secondary'));
 }
 function tacticalLessonModal(){
   const info=Game.lessonInfo();if(!info?.battle){tacticalLessonCatalog();return;}
