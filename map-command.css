@@ -1,0 +1,67 @@
+/* Map controls stay close to the field; reference material opens on demand. */
+.world-command-page{min-width:0}
+.world-command-heading{align-items:center;margin:0 0 10px}
+.world-command-heading h2{font-size:19px;letter-spacing:1px}
+.world-command-heading>.label{font-size:11px;white-space:nowrap}
+.screen-world .world-command-page .world-layout{grid-template-columns:minmax(0,1fr) 270px;gap:12px}
+.screen-world .world-command-page .world-grid-board{padding:9px}
+.world-command-page .map-toolbar{margin-bottom:7px;padding-bottom:7px}
+.world-command-page .map-controls{margin-top:7px}
+.world-command-page .map-controls .btn{min-height:36px;min-width:36px}
+.screen-world .world-command-page .world-target-panel{display:block;padding:12px}
+.world-target-panel>.section-title{gap:7px;margin-bottom:5px;align-items:start}
+.world-target-panel>.section-title h3{line-height:1.5;overflow-wrap:anywhere}
+.world-target-panel>.coordinate-tag{font-size:11px;margin:0 0 8px;line-height:1.6}
+.world-target-intel{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:36px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.world-intel-status{font-size:11px;color:#c3cdb8;line-height:1.5}
+.world-target-intel>.btn{flex:none}
+.world-wild-summary{margin:8px 0;padding:8px;font-size:12px}
+.world-wild-summary .hint{margin:3px 0 5px;line-height:1.55}
+.world-target-details{margin-top:9px;border-top:1px solid var(--line);font-size:11px}
+.world-target-details>summary{min-height:40px;padding:10px 0;cursor:pointer;color:#d8c491;line-height:1.6}
+.world-target-details>div{padding:0 0 5px}
+.world-target-details .section-title{margin-top:12px;margin-bottom:5px}
+.world-target-details .wild-node-lead{margin:8px 0}
+.world-target-details .wild-node-lead h3{font-size:14px!important}
+.screen-world .world-command-support{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.world-command-support>.world-battle-receipt{grid-column:1 / -1;margin:0}
+.world-command-support>.world-tool-details{min-width:0;margin:0;border:1px solid #4d5b46;border-radius:4px;background:#263024}
+.world-tool-details>summary{min-height:44px;padding:11px 12px;font-size:12px;line-height:1.7;color:#d5c28f;cursor:pointer}
+.world-tool-details>section,.world-tool-details>div{margin:0;border:0;border-top:1px solid #4d5b46;border-radius:0;background:transparent;padding:10px 12px;min-width:0}
+.world-command-support .world-navigation{display:grid;grid-template-columns:112px minmax(0,1fr);gap:12px}
+.world-command-support #world-minimap{display:block;width:112px;height:112px;max-width:100%;border:1px solid #7c8258;cursor:crosshair}
+.world-tool-details>.map-help{margin:0;padding:0 12px 10px;font-size:11px;line-height:1.7}
+.world-command-support .coordinate-row{flex-wrap:wrap;margin:8px 0;gap:7px}
+.world-command-support .coordinate-row label{display:flex;align-items:center;gap:4px;font-size:11px}
+.world-command-support .coordinate-row input{width:55px;min-height:36px}
+.world-command-support .coordinate-row>.btn{min-height:36px}
+.world-command-support .map-legend{font-size:11px;line-height:1.6;gap:6px 9px}
+.world-command-support .landmark-links>div{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.world-command-support .landmark-links .btn{min-height:40px;font-size:11px;line-height:1.5;padding:7px 5px;overflow-wrap:anywhere}
+.world-command-support .yellow-city-links .hint{font-size:11px}
+.world-command-support .world-territory-counts{max-width:none;justify-content:flex-start;margin:0 0 8px}
+@media(max-width:1100px) and (min-width:761px){
+  .screen-world .world-command-page .world-layout{grid-template-columns:minmax(0,1fr) 240px}
+  .screen-world .world-command-support{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  .world-command-heading{margin-bottom:7px}
+  .world-command-heading h2{font-size:17px}
+  .world-command-heading>.label{font-size:10px}
+  .screen-world .world-command-page .world-layout{grid-template-columns:1fr;gap:8px}
+  .screen-world .world-command-page .world-grid-board{padding:7px 5px}
+  .screen-world .world-command-page .world-target-panel{position:static;padding:10px}
+  .world-command-page .map-controls .btn{min-height:44px;min-width:44px;padding:6px 8px}
+  .world-target-intel{min-height:44px;padding-bottom:5px}
+  .world-target-intel>.btn,.world-wild-summary>.btn,.world-target-details .btn{min-height:44px}
+  .world-target-panel .target-actions .btn{min-height:44px;font-size:12px}
+  .world-target-details>summary{min-height:44px;padding:11px 0;font-size:12px}
+  .screen-world .world-command-support{grid-template-columns:1fr}
+  .world-command-support .world-navigation{grid-template-columns:100px minmax(0,1fr);gap:10px;padding:10px}
+  .world-command-support #world-minimap{width:100px;height:100px}
+  .world-command-support .coordinate-row{gap:7px}
+  .world-command-support .coordinate-row input{width:54px;min-height:44px;font-size:16px;padding:6px 4px}
+  .world-command-support .coordinate-row>.btn{min-height:44px;font-size:11px}
+  .world-command-support .landmark-links>div{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .world-command-support .landmark-links .btn{min-height:44px;font-size:12px}
+}

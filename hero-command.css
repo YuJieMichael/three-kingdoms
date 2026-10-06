@@ -1,0 +1,40 @@
+/* The roster keeps comparison values visible; cultivation stays in hero details. */
+.hero-command-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px;margin-bottom:12px}
+.hero-command-head h2{font-size:23px}.hero-command-head .sub{margin:4px 0 0}
+.hero-command-tabs,.hero-command-tools{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.hero-command-tabs{margin-left:auto}.hero-command-tools{flex-basis:100%}
+.hero-command-tabs .btn,.hero-command-tools .btn{min-height:44px}
+.hero-command-more{position:relative}.hero-command-more summary{cursor:pointer;border:1px solid #50604f;border-radius:6px;font-size:11px;min-height:44px;padding:0 12px;display:flex;align-items:center;box-sizing:border-box}
+.hero-command-more summary::after{content:' ▾';margin-left:6px}.hero-command-more[open] summary::after{content:' ▴'}
+.hero-command-more>div{position:absolute;top:calc(100% + 5px);right:0;z-index:5;padding:8px;min-width:132px;display:grid;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:7px;box-shadow:0 6px 15px #0005}
+.hero-roster-hint{margin:0 0 10px;line-height:1.6}
+.hero-roster{border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.hero-roster-table{width:100%;border-spacing:0;border-collapse:collapse;table-layout:fixed;font-size:12px;font-variant-numeric:tabular-nums}
+.hero-roster-table th,.hero-roster-table td{border-bottom:1px solid var(--line);padding:10px 8px;vertical-align:middle;text-align:left;overflow-wrap:anywhere}
+.hero-roster-table thead th{background:#30402c;color:var(--muted);font-weight:500;font-size:11px}
+.hero-roster-table thead th:nth-child(1){width:22%}.hero-roster-table thead th:nth-child(2){width:26%}.hero-roster-table thead th:nth-child(3){width:20%}.hero-roster-table thead th:nth-child(4){width:19%}.hero-roster-table thead th:nth-child(5){width:13%}
+.hero-roster-table tbody tr{background:var(--panel)}.hero-roster-table tbody tr:nth-child(even){background:#2c3c2b}.hero-roster-table tbody tr:last-child>*{border-bottom:0}
+.hero-roster-name{font-weight:400}.hero-roster-name .hero-roster-portrait.asset-sprite{float:left;width:34px;height:42px;margin-right:8px;border:1px solid #917c50;border-radius:3px}
+.hero-roster-name>span{display:block;min-width:0}.hero-roster-name strong{font-size:14px;font-weight:600}.hero-roster-name small,.hero-roster-status small,.hero-roster-tactic small{display:block;font-size:10px;line-height:1.5;color:var(--muted);margin-top:3px}
+.hero-roster-name small.hero-roster-points{color:var(--gold)}
+.hero-roster-core{line-height:1.6}.hero-core-attribute{display:inline-flex;flex-direction:column;min-width:64px;margin-right:8px;vertical-align:top}
+.hero-core-attribute>span{white-space:nowrap;color:var(--muted);font-size:11px}.hero-core-attribute>span>strong{color:var(--ink);font-size:15px;font-weight:500}
+.hero-core-attribute>small{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
+.hero-core-attribute .inn-stat{display:inline;min-width:0}.hero-core-attribute .inn-stat strong{font-size:11px}.hero-core-attribute .inn-stat small{display:none}
+.hero-roster-status strong,.hero-roster-tactic strong{font-size:12px;font-weight:500}.hero-roster-action{text-align:right!important}.hero-roster-action .btn{min-height:44px;min-width:58px;white-space:nowrap}
+.hero-unrecruited-list,.hero-growth-rules,.hero-initial-details{margin:12px 0;border:1px solid var(--line);border-radius:6px;background:#253425}
+.hero-unrecruited-list>summary,.hero-growth-rules>summary,.hero-initial-details>summary{cursor:pointer;padding:11px 12px;min-height:44px;box-sizing:border-box;font-size:12px;color:var(--muted)}
+.hero-growth-rules>p{padding:0 12px 12px;margin:0}.hero-initial-details>.wild-initial-stats{margin:0 10px 10px}
+.hero-unrecruited-list .hero-roster-table{border-top:1px solid var(--line)}.hero-unrecruited-list .hero-roster-portrait{opacity:.7}
+@media(max-width:760px){
+ .hero-command-head{gap:8px}.hero-command-head h2{font-size:21px}.hero-command-tabs{margin-left:0}.hero-command-tools{gap:5px}.hero-command-tools .btn{padding-left:9px;padding-right:9px}
+ .hero-roster-table,.hero-roster-table tbody{display:block}.hero-roster-table thead{display:none}
+ .hero-roster-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 60px;gap:7px 8px;padding:11px 10px;border-bottom:1px solid var(--line)}.hero-roster-table tbody tr:last-child{border-bottom:0}
+ .hero-roster-table tbody th,.hero-roster-table tbody td{display:block;border:0;padding:0;min-width:0}
+ .hero-roster-name{grid-column:1/3;grid-row:1}.hero-roster-name .hero-roster-portrait.asset-sprite{width:30px;height:36px;margin-right:8px}.hero-roster-name>span{display:flex;flex-wrap:wrap;align-items:center;gap:3px 7px}.hero-roster-name small{margin-top:0}.hero-roster-name small.hero-roster-points{flex-basis:100%;padding-left:38px}
+ .hero-roster-core{grid-column:1/4;grid-row:2;display:flex!important;gap:12px}.hero-core-attribute{margin-right:0;min-width:0;flex-direction:row;align-items:center;gap:6px}
+ .hero-roster-status{grid-column:1;grid-row:3}.hero-roster-tactic{grid-column:2/4;grid-row:3}.hero-roster-status::before,.hero-roster-tactic::before{content:attr(data-label)' · ';font-size:10px;color:var(--muted)}
+ .hero-roster-status strong,.hero-roster-tactic strong{font-size:11px}.hero-roster-status small,.hero-roster-tactic small{font-size:10px;margin-top:2px}
+ .hero-roster-action{grid-column:3;grid-row:1;align-self:center}.hero-roster-action .btn{padding-left:6px;padding-right:6px;min-width:58px}
+}
+@media(max-width:370px){.hero-roster-core{gap:8px}.hero-core-attribute{gap:4px}.hero-command-tools{width:100%}.hero-core-attribute>span{font-size:10px}}

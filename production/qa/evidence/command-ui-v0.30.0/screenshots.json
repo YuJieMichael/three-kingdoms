@@ -1,0 +1,158 @@
+[
+  {
+    "file": "desktop-more.jpg",
+    "width": 1280,
+    "height": 900,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-troop-detail.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "desktop-battle.jpg",
+    "width": 1280,
+    "height": 900,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-battle.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-troop-roster.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-heroes.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "desktop-heroes.jpg",
+    "width": 1280,
+    "height": 900,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-gifts-complete.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "desktop-map.jpg",
+    "width": 1280,
+    "height": 900,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-battle-events.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-map-target.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-outskirts.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-warning.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-objectives.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "desktop-lesson.jpg",
+    "width": 1280,
+    "height": 900,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-lesson.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "desktop-city.jpg",
+    "width": 1280,
+    "height": 900,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-march.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-map.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-hero-detail.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "desktop-army.jpg",
+    "width": 1280,
+    "height": 900,
+    "format": "JPEG"
+  },
+  {
+    "file": "desktop-readonly.jpg",
+    "width": 1280,
+    "height": 720,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-army.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-city.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "mobile-map-tools.jpg",
+    "width": 390,
+    "height": 844,
+    "format": "JPEG"
+  },
+  {
+    "file": "desktop-selected-unit.jpg",
+    "width": 1280,
+    "height": 720,
+    "format": "JPEG"
+  }
+]

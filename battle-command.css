@@ -1,0 +1,88 @@
+/* Formal battles and teaching sessions share the same command hierarchy. */
+.battle-command-page{min-width:0}
+.battle-command-page .page-head{margin-bottom:8px}
+.battle-command-page .page-head .sub{max-width:65ch}
+.battle-command-page .combat-panel{padding:12px}
+.battle-command-page .battle-header{margin-bottom:8px}
+.battle-command-page .battle-header h3{font-size:16px}
+.battle-command-bar{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,.65fr);gap:12px;margin-bottom:12px;padding:9px;background:#202c25;border:1px solid #627052;border-radius:5px;min-width:0}
+.battle-command-bar .battle-global-orders{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 10px;padding:0;background:transparent;border:0;border-radius:0;align-items:center}
+.battle-command-bar .battle-global-orders>strong{font-size:12px;color:#dfd0a1}
+.battle-command-bar .battle-global-orders .unit-order-buttons{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.battle-command-bar .battle-global-orders>.hint{margin:0;font-size:11px;text-align:right;line-height:1.5}
+.battle-command-bar .btn{min-height:44px;box-sizing:border-box;line-height:1.4}
+.battle-round-controls{display:flex;flex-direction:column;justify-content:center;gap:5px;min-width:0}
+.battle-round-controls>strong{font-size:12px;color:#e4d099;font-variant-numeric:tabular-nums;line-height:1.5}
+.battle-round-controls .combat-controls{margin:0;gap:5px;flex-wrap:nowrap}
+.battle-round-controls .combat-controls .btn{font-size:12px;padding:8px 7px;white-space:normal}
+.battle-command-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.7fr);gap:12px;align-items:start}
+.battle-front,.battle-command-side{min-width:0}
+.battle-front .combat-round-summary{padding:8px;margin:0 0 8px;background:#293728;border-color:#526244;color:#ccd5b8}
+.battle-front .combat-round-heading{display:block}
+.battle-front .combat-round-heading h4{font-size:12px;margin:0 0 3px;color:#dfd0a1}
+.battle-front .combat-round-heading p{margin:0;font-size:12px;line-height:1.5}
+.battle-front .combat-round-heading strong{color:#edc899}
+.battle-front .combat-event-list,.battle-front .combat-event-list li{border-color:#526244}
+.battle-front .combat-event-result{color:#dbc59a}
+.battle-front .combat-round-waiting{margin:0 0 8px}
+.battle-front .combat-no-strike{font-size:11px;margin:5px 0 0;padding:0;line-height:1.5}
+.battle-command-page details>summary{cursor:pointer;color:#d8d7b5;line-height:1.5}
+.battle-command-page .combat-round-detail>summary{min-height:44px;box-sizing:border-box;display:flex;align-items:center;font-size:11px;padding:7px 0}
+.battle-command-page .combat-round-detail>summary::before,.battle-command-page .battle-log-detail>summary::before,.battle-command-page .battle-command-help>summary::before{content:'▸';margin-right:7px;color:#d7c288}
+.battle-command-page .combat-round-detail[open]>summary::before,.battle-command-page .battle-log-detail[open]>summary::before,.battle-command-page .battle-command-help[open]>summary::before{content:'▾'}
+.battle-command-page .combat-round-detail>summary::-webkit-details-marker,.battle-command-page .battle-log-detail>summary::-webkit-details-marker,.battle-command-page .battle-command-help>summary::-webkit-details-marker{display:none}
+.battle-command-page .combat-move-list{margin:8px 0;padding-left:20px;font-size:11px;line-height:1.7;color:#c3cdb4}
+.battle-command-page .distance-field{padding:10px 25px}
+.battle-command-page .battle-labels{margin-bottom:6px;letter-spacing:1px}
+.battle-command-page .distance-axis{margin:5px 0 7px}
+.battle-command-page .range-caption{line-height:1.5;margin-top:8px;font-size:11px}
+.battle-command-side .battle-tactics-panel{margin:0 0 10px}
+.battle-command-side .battle-tactics-actions .btn{min-width:70px;padding:8px 5px}
+.battle-command-side .battle-tactics-rules summary{min-height:44px;padding:9px 0}
+.battle-unit-heading{display:flex;justify-content:space-between;gap:8px;margin:10px 0 7px;font-size:12px;color:#dfd0a1}
+.battle-unit-heading span{font-size:11px;font-weight:400;color:#b6c1a7}
+.battle-command-side .unit-orders{grid-template-columns:1fr;gap:6px}
+.battle-command-side .unit-orders>.unit-order{padding:0;border-radius:5px}
+.battle-command-side .unit-orders>.unit-order>summary{display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 10px;box-sizing:border-box;font-size:12px;list-style:none}
+.battle-command-side .unit-orders>.unit-order>summary::-webkit-details-marker{display:none}
+.battle-command-side .unit-orders>.unit-order>summary::after{content:'▸';color:#cfbe8d;margin-left:3px}
+.battle-command-side .unit-orders>.unit-order[open]>summary::after{content:'▾'}
+.battle-command-side .unit-orders>.unit-order>summary>span:first-of-type{font-size:11px;color:#c2ccb0}
+.battle-command-side .unit-orders>.unit-order>summary>.label{margin-left:auto;white-space:normal;text-align:right}
+.battle-command-side .unit-order-expanded{padding:0 10px 10px}
+.battle-command-side .unit-order-head .unit-order-name{font-family:var(--sans);font-size:11px;min-height:44px;color:#d8d5ac;text-decoration:underline;text-underline-offset:3px}
+.battle-command-side .unit-data{margin:0 0 7px;font-size:11px}
+.battle-command-side .unit-order-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.battle-command-side .unit-order-buttons .btn{min-height:44px;font-size:12px;box-sizing:border-box}
+.battle-command-side .unit-target-label{display:grid;gap:5px;margin-top:9px;font-size:11px}
+.battle-command-side .unit-target-label select{width:100%;min-width:0;min-height:44px;box-sizing:border-box;font-size:12px}
+.battle-log-detail,.battle-command-help{margin-top:10px;border-top:1px solid #526244}
+.battle-log-detail>summary,.battle-command-help>summary{display:flex;align-items:center;min-height:44px;box-sizing:border-box;padding:8px 0;font-size:12px}
+.battle-command-page .battle-log{margin-bottom:8px}
+.battle-command-help>.hint{margin:0 0 8px}
+.battle-command-page.is-finished .battle-command-layout{grid-template-columns:1fr}
+.battle-command-page.is-practice .tactical-lesson-objective{padding:8px 10px;margin-bottom:8px}
+.battle-command-page summary:focus-visible{outline:2px solid #d1b76b;outline-offset:2px}
+@media(max-width:980px){
+  .battle-command-layout{grid-template-columns:1fr}
+  .battle-command-side .battle-tactics-panel{margin-top:0}
+}
+@media(max-width:760px){
+  .battle-command-page .page-head h2{font-size:18px}
+  .battle-command-page .page-head .sub{font-size:11px;line-height:1.5}
+  .battle-command-page .combat-panel{padding:8px}
+  .battle-command-bar{grid-template-columns:1fr;gap:7px;padding:7px;margin-bottom:9px}
+  .battle-command-bar .battle-global-orders{gap:4px 5px}
+  .battle-command-bar .battle-global-orders>.hint{font-size:10px}
+  .battle-command-bar .battle-global-orders .unit-order-buttons .btn{font-size:12px;padding:7px 3px}
+  .battle-round-controls{flex-direction:column;align-items:stretch;gap:4px}
+  .battle-round-controls>strong{flex:none;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+  .battle-round-controls .combat-controls{flex:none;width:100%;min-width:0}
+  .battle-command-layout{gap:9px}
+  .battle-command-page .distance-field{padding:9px 21px}
+  .battle-command-page .range-caption{font-size:11px}
+  .battle-command-page .distance-lane{height:76px;min-height:76px}
+  .battle-command-page .battle-portrait.asset-sprite{width:30px;height:30px}
+  .battle-command-page .distance-formation{min-width:42px;min-height:44px}
+  .battle-command-side .unit-target-label select{font-size:16px}
+}
