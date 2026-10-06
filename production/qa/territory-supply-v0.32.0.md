@@ -9,7 +9,7 @@ CCGS minimal dev-story → story-done。按用户“三项一起做”实施区�
 
 ## 定向检查
 
-131项首轮整合检查全部通过；倒计时及共享状态提示修复后重跑相关30项全部通过，其中2项为新增唯一用例。本版共 **133项唯一必要检查通过**，不把重复运行叠加计数。
+131项首轮整合检查全部通过；倒计时及共享状态提示修复后重跑相关30项全部通过，其中2项为新增唯一用例。首个GitHub提交的自动回归发现普通守城奖励被误设为爆仓；限定为区域战线后，相关73项定向检查全部通过，其中旧爆仓文件25项为本轮新增覆盖。本版共 **158项唯一必要检查通过**，不把重复运行叠加计数。
 
 | 范围 | 用例与结果 |
 | --- | --- |
@@ -17,9 +17,10 @@ CCGS minimal dev-story → story-done。按用户“三项一起做”实施区�
 | 自动补给 | `tests/supply-lines.test.cjs`，17/17；真实扣兵／扣粮／装货、负重与来源保留、目标在途去重、来源特性、续运、召回暂停、只读／共享、旧档与非法物流容器拒绝 |
 | 内政名将 | `tests/hero-administration.test.cjs`，13/13；实际画像购买→歼灭→俘获→招降身份、荀彧新运输折扣、旧队伍冻结、庞统支付／普通守将消费、演练、切城、重复消费与共享提示 |
 | 既有系统兼容 | 城池特性、占城、守城、高级守城、城守经验、存档保护、官职晋升，合计68项；含更新后的旧VM模块加载顺序 |
+| 爆仓规则兼容 | `tests/loot-overcapacity.test.cjs`，25/25；掠夺／占领／采集爆仓、普通正式守城仓储限制及历史收据兼容 |
 | 权威运行时兼容 | `tests/online-runtime.test.cjs`，18/18；29源模块权威副本已重新生成，仅构建文件，没有远程部署 |
 
-上述前三组47项、兼容68项、运行时18项合计133。实际兼容计数以TAP为准；下方命令与日志可重放，不从源码阅读宣称行为通过。
+上述前三组47项、既有系统兼容68项、爆仓规则25项、运行时18项合计158。实际兼容计数以TAP为准；下方命令与日志可重放，不从源码阅读宣称行为通过。
 
 ```sh
 node --test --test-concurrency=1 --test-isolation=none \
@@ -27,10 +28,11 @@ node --test --test-concurrency=1 --test-isolation=none \
  tests/regional-front.test.cjs tests/city-strategy.smoke.test.cjs \
  tests/city-capture.smoke.test.cjs tests/city-defense.test.cjs \
  tests/advanced-defense.smoke.test.cjs tests/governor-construction-xp.test.cjs \
- tests/save-session.test.cjs tests/office-promotion.test.cjs tests/online-runtime.test.cjs
+ tests/save-session.test.cjs tests/office-promotion.test.cjs \
+ tests/loot-overcapacity.test.cjs tests/online-runtime.test.cjs
 ```
 
-工作区 `outputs/update-v0.32.0/scoped-final.tap` 保留131项原始整合日志，`ui-fixes.tap`保留修复后30项日志。使用Node24顺序且不隔离的定向执行，沿用上一轮已记录的默认文件进程偶发退出限制；本轮没有重现或解决该运行器问题。既有GitHub push回归独立使用Node20，精确提交结果只以发布回执为准。
+工作区 `outputs/update-v0.32.0/scoped-final.tap` 保留131项原始整合日志，`ui-fixes.tap`保留修复后30项日志，`warehouse-scope-repair.tap`保留区域／内政／旧爆仓／权威运行时73项通过日志。使用Node24顺序且不隔离的定向执行，沿用上一轮已记录的默认文件进程偶发退出限制；本轮没有重现或解决该运行器问题。既有GitHub push回归独立使用Node20，精确提交结果只以发布回执为准。
 
 ## 实际浏览器操作
 
@@ -64,7 +66,7 @@ node --test --test-concurrency=1 --test-isolation=none \
 
 三个代理分别复核补给接线、区域NPC结算与内政边界。补给代理额外最小复现确认旧多城缺字段迁移保留库存、全程资源／兵力守恒、只读派遣阻止和非当前城食粮估算无副作用；内政代理确认共享已付准备保留、消费战斗冻结、只读与旧档迁移；区域代理确认其他城市通知仅针对真实来袭、不改当前城市。
 
-修复发现的非法物流校验异常、补给／区域静态倒计时、共享模式虚假“职责生效”徽标及任命后详情不即时更新。NPC公开战线情报和守城奖励文案与实际规则同步。源码语法23文件、版本化77静态引用及差异格式检查通过。
+修复发现的非法物流校验异常、补给／区域静态倒计时、共享模式虚假“职责生效”徽标及任命后详情不即时更新。NPC公开战线情报和守城奖励文案与实际规则同步。首次GitHub回归（提交`1c1ce29`）433项中有1项失败：普通正式守城应按仓储限制结算。修复`defenseApi`仅在实际`battle.front`存在时允许爆仓，并让准备页与战报按实际收据说明规则；保留已保存的可选`overCapacity`字段兼容。修复后相关73项通过，未改旧测试预期。最终提交CI与Pages状态以发布回执为准。源码语法23文件、版本化77静态引用及差异格式检查通过。
 
 Graphify按原code-only／exclude标志本地刷新1546节点、3486边、89社区，0缺失端点；1份SQL因解析依赖缺失未入图，27自关联及闭包／文档／媒体／CSS覆盖限制保留。没有后台监听、hooks、外部语义调用或上传。未凭图谱缺边认定机制不存在。
 
