@@ -1,0 +1,7 @@
+.hero-administration{margin-top:12px;padding:12px;border:1px solid var(--border,#59654d);border-radius:8px;background:rgba(100,115,69,.07)}
+.hero-administration .section-title{margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.hero-administration h3{font-size:15px;margin:0}
+.hero-administration p{margin:7px 0;line-height:1.55}
+.administration-cost strong{white-space:nowrap;color:var(--text,#e6dfc8)}
+.administration-prepared{padding:8px 10px;border-left:3px solid var(--gold,#b59a60);background:rgba(181,154,96,.1)}
+@media(max-width:600px){.hero-administration{padding:10px}.hero-administration .badge{font-size:11px}.administration-cost{font-size:13px}}
