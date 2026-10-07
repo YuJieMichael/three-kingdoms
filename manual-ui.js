@@ -96,7 +96,40 @@ function originalManualShopPage(){
 function manualShopInfoModal(id){webShopInfoModal(id);}
 function originalManualShopInfoModal(id){const item=Game.manual.shop.find(x=>x.id===id);if(!item)return;showModal('宝物 · '+esc(item.name),`<div class="shop-item-description">${itemIcon(item)}<p class="sub">${esc(item.category)} · 持有 ${num(S().inventory[id]||0)} 件</p><p class="hint">${esc(item.desc)}</p><p class="hint">${num(item.price)} 元宝 / 件 · 试玩价</p>${!item.effect?'<p class="notice">关联系统尚未接入，暂不能使用或购买。</p>':''}</div>`,btn('返回商城','close','','secondary')+(item.effect?btn('购买一件','manualBuy',id,'',S().gems<item.price):'')+((S().inventory[id]||0)>0&&item.effect?btn('使用道具','manualUsePlan',id,'secondary'):''));}
 function manualInventoryModal(){inventoryGridModal();}
-function manualUsePlan(id){const item=Game.manual.shop.find(x=>x.id===id);if(['jewelBox','equipmentBox'].includes(item?.effect)){onboardingBoxModal(id);return;}if(item?.effect==='equipmentMaterial'){heroEquipmentPageOpen();return;}if(item?.effect==='speedup'){speedupPlanModal(id);return;}if(item?.effect==='blueprint'){toast('建筑图纸在升至 10 级时自动扣除，请前往城内或城外选择建筑');return;}if(!item?.effect){toast('该宝物关联系统尚未接入');return;}if(!(S().inventory[id]>0)){toast('尚未持有该宝物，可通过商城购买或战斗掉落获取');return;}const needsHero=['politics','valor','wisdom','tiger','heroReset'].includes(item.effect);showModal('使用 · '+item.name,`${itemIcon(item)}<p class="sub">${item.desc}</p>${needsHero?`<label class="label">选择将领</label><select id="item-hero">${S().generals.map(id=>`<option value="${id}">${esc(Game.general(id).name)}</option>`).join('')}</select>`:''}${['rename','banner'].includes(item.effect)?`<label class="label">${item.effect==='rename'?'新君主名称（最多 12 字）':'新旗号（最多 2 字）'}</label><input id="item-text" maxlength="${item.effect==='rename'?12:2}" aria-label="新名称">`:''}${item.effect==='heroReset'?'<p class="notice">每 10 级需要 1 枚洗髓丹（向上取整）；只重置分配点数，保留等级和装备。</p>':''}${item.effect==='flag'?'<p class="notice">军旗用于下一次出征，成功派兵后消耗效果；未出征时保留 24 小时（试玩保留时限）。</p>':''}`,btn('返回背包','manualInventory','','secondary')+btn('确认使用','manualUse',id));}
+function manualUsePlan(id,selection={}){
+ const focusedId=document.activeElement?.id,item=Game.manual.shop.find(x=>x.id===id);
+ if(['jewelBox','equipmentBox'].includes(item?.effect)){onboardingBoxModal(id);return;}
+ if(item?.effect==='equipmentMaterial'){heroEquipmentPageOpen();return;}
+ if(item?.effect==='speedup'){speedupPlanModal(id);return;}
+ if(item?.effect==='blueprint'){toast('建筑图纸在升至 10 级时自动扣除，请前往城内或城外选择建筑');return;}
+ if(!item?.effect){toast('该宝物关联系统尚未接入');return;}
+ if(!(S().inventory[id]>0)){toast('尚未持有该宝物，可通过商城购买或战斗掉落获取');manualInventoryModal();return;}
+ const needsHero=['politics','valor','wisdom','tiger','heroReset'].includes(item.effect),hero=selection.hero??S().generals[0],quote=Game.itemUseQuote(id,1,hero),count=selection.count??1;
+ const quantity=quote.batch?`<section class="item-use-quantity"><label class="label" for="item-use-count">使用数量</label><div class="item-quantity-controls">${btn('−','itemQuantity','minus','secondary')}<input id="item-use-count" data-item="${esc(id)}" type="number" min="1" max="${quote.max}" step="1" value="${esc(String(count))}" inputmode="numeric" aria-describedby="item-use-stock item-use-preview">${btn('＋','itemQuantity','plus','secondary')}${btn('全部','itemQuantity','all','secondary')}</div><p class="hint" id="item-use-stock">持有 ${num(quote.owned)} 个 · 本次最多 ${num(quote.max)} 个</p><p class="notice" id="item-use-preview" role="status" aria-live="polite"></p></section>`:'';
+ showModal('使用 · '+esc(item.name),`${itemIcon(item)}<p class="sub">${esc(item.desc)}</p>${needsHero?`<label class="label" for="item-hero">选择将领</label><select id="item-hero">${S().generals.map(id=>`<option value="${id}" ${id===hero?'selected':''}>${esc(Game.general(id).name)}</option>`).join('')}</select>`:''}${quantity}${!quote.batch?'<p class="hint">持有 '+num(quote.owned)+' 个</p>':''}${['rename','banner'].includes(item.effect)?`<label class="label" for="item-text">${item.effect==='rename'?'新君主名称（最多 12 字）':'新旗号（最多 2 字）'}</label><input id="item-text" maxlength="${item.effect==='rename'?12:2}" value="${esc(selection.text||'')}" aria-label="新名称">`:''}${item.effect==='heroReset'?'<p class="notice">每 10 级需要 1 枚洗髓丹（向上取整）；只重置分配点数，保留等级和装备。</p>':''}${item.effect==='flag'?'<p class="notice">军旗用于下一次出征，成功派兵后消耗效果；未出征时保留 24 小时（试玩保留时限）。</p>':''}`,btn('返回背包','manualInventory','','secondary')+btn('确认使用','manualUse',id));
+ updateItemUsePreview();
+ manualModalContext=()=>{if(!(S().inventory[id]>0)){manualInventoryModal();return;}manualUsePlan(id,{count:document.getElementById('item-use-count')?.value??1,hero:document.getElementById('item-hero')?.value,text:document.getElementById('item-text')?.value});};
+ if(['item-use-count','item-hero','item-text'].includes(focusedId))document.getElementById(focusedId)?.focus({preventScroll:true});
+}
+function updateItemUsePreview(){
+ const input=document.getElementById('item-use-count');if(!input)return;
+ const quote=Game.itemUseQuote(input.dataset.item,Number(input.value),document.getElementById('item-hero')?.value),preview=document.getElementById('item-use-preview'),confirm=modalBody.querySelector('[data-action="manualUse"]');
+ input.max=String(quote.max);input.setAttribute('aria-invalid',String(!!quote.error));
+ const stock=document.getElementById('item-use-stock');if(stock)stock.textContent='持有 '+num(quote.owned)+' 个 · 本次最多 '+num(quote.max)+' 个';
+ const pending=typeof OnlineClient!=='undefined'&&OnlineClient.pending();
+ if(confirm){confirm.disabled=!!quote.error||pending;confirm.textContent=pending?'正在使用…':quote.error?'确认使用':'确认使用 ×'+num(quote.count);}
+ if(preview)preview.textContent=quote.error||('消耗 '+num(quote.count)+' 个 · '+(quote.gold?'获得 '+num(quote.gold)+' 黄金（可暂时超仓）':quote.seconds?'增加持续时间 '+duration(quote.seconds):'补充人口 '+num(quote.population)));
+ for(const control of modalBody.querySelectorAll('[data-action="itemQuantity"]'))control.disabled=pending||quote.max<1||(control.dataset.id==='minus'&&Number(input.value)<=1)||(control.dataset.id==='plus'&&Number(input.value)>=quote.max);
+}
+document.addEventListener('input',event=>{if(event.target.id==='item-use-count')updateItemUsePreview();});
+document.addEventListener('change',event=>{if(event.target.id==='item-hero')updateItemUsePreview();});
+document.addEventListener('click',event=>{
+ const control=event.target.closest('[data-action="itemQuantity"]');if(!control||control.disabled)return;
+ const input=document.getElementById('item-use-count');if(!input)return;
+ const quote=Game.itemUseQuote(input.dataset.item,1,document.getElementById('item-hero')?.value),current=Number(input.value),base=Number.isSafeInteger(current)?current:1;
+ input.value=String(Math.max(1,Math.min(quote.max,control.dataset.id==='all'?quote.max:base+(control.dataset.id==='plus'?1:-1))));updateItemUsePreview();
+});
+
 document.addEventListener('click',event=>{
   const el=event.target.closest('[data-action]');if(!el||el.disabled)return;const a=el.dataset.action,id=el.dataset.id;
   if(a==='governmentTab')manualGovernmentModal(id);
@@ -138,7 +171,15 @@ const [site,b]=id.split(':');manualBuildPlan(Number(site),b);}
   if(a==='manualInventory')manualInventoryModal();
   if(a==='inventoryShop'){shopCategory='全部';page='shop';modal.close();render();}
   if(a==='manualUsePlan')manualUsePlan(id);
-  if(a==='manualUse'&&actResult(Game.useItem(id,document.getElementById('item-hero')?.value,document.getElementById('item-text')?.value),'道具已使用'))manualInventoryModal();
+  if(a==='manualUse'){
+    const countInput=document.getElementById('item-use-count'),count=countInput?Number(countInput.value):1,hero=document.getElementById('item-hero')?.value,text=document.getElementById('item-text')?.value;
+    const quote=Game.itemUseQuote(id,count,hero);if(quote.error){toast(quote.error);updateItemUsePreview();return;}
+    el.disabled=true;
+    const error=Game.useItem(id,hero,text,count);
+    if(actResult(error,quote.batch?'已使用 '+num(count)+' 个道具'+(quote.gold?'，获得 '+num(quote.gold)+' 黄金':''):'道具已使用'))manualInventoryModal();
+    else if(!OnlineClient.pending()){el.disabled=false;updateItemUsePreview();}
+    else updateItemUsePreview();
+  }
   if(a==='manualSpeed')showModal('试玩时间倍率',`<p class="sub">倍率加快人口增长与新建队列。资源生产、税收和军队耗粮按真实时间计算；基础产出已下调 30%。已经开始的工程保留预计完成时间。</p><p class="hint">道具持续时间、野地每日降级、离线累计上限按真实时间计算。</p>${[1,10,60].map(v=>btn('×'+v+(v===S().speed?' · 当前':''),'manualSetSpeed',String(v),'secondary block')).join('')}`,btn('关闭','close','','secondary'));
   if(a==='manualSetSpeed'&&actResult(Game.setSpeed(Number(id)),'试玩倍率已调整'))modal.close();
 });
