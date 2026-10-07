@@ -1,0 +1,50 @@
+/* Godot art and readability improvements, fitted to the original browser layout. */
+.web-edition-tools{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;padding:8px 10px;background:#e3dac1;border:1px solid #baaa87;border-radius:5px}
+.classic-item-image{object-fit:contain;width:64px;height:64px;image-rendering:auto;vertical-align:middle;flex-shrink:0}
+.classic-item-image.bag-icon{width:48px;height:48px}.classic-item-image.bag-detail-icon{width:76px;height:76px}
+.web-atlas-art{width:100%;height:100%;overflow:hidden!important;pointer-events:none;filter:drop-shadow(0 3px 2px #2225)}
+.illustrated-map{position:relative;isolation:isolate}.illustrated-map .map-landscape{display:none}.map-meadow{position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 20% 25%,#c3c68c80,transparent 40%),radial-gradient(ellipse at 70% 65%,#69825360,transparent 38%),#a4af77;pointer-events:none}
+.illustrated-map .world-cell{background:transparent!important;border-color:transparent!important;box-shadow:none!important;overflow:visible}
+.illustrated-map .world-cell:before,.illustrated-map .world-cell:after{display:none!important}
+.illustrated-map .web-terrain-art{position:absolute;inset:2% 2% 10%;width:96%;height:88%;z-index:1}
+.illustrated-map .terrain-image{position:absolute;inset:4% 7% 10%;width:86%;height:86%;z-index:1;background-color:transparent}
+.illustrated-map .world-cell-level,.illustrated-map .world-site-name,.illustrated-map .world-owned,.illustrated-map .world-march{z-index:2;background:#ece3cddd;color:#3d3b2d;border-radius:3px}
+.illustrated-map .world-site-name:not([data-online-pin]){background:#ece3cddd!important;color:#3d3b2d!important;opacity:1!important}.illustrated-map .map-axis,.illustrated-map .axis-corner{color:#3c4e31!important}
+.illustrated-map .world-cell-level{display:none}.illustrated-map .world-site-name{max-width:95%;font-size:11px}
+.illustrated-map .world-cell.selected{outline:2px solid #ebcd63!important;outline-offset:-3px;border-radius:50%;background:#eee09b30!important}
+.illustrated-map .world-cell.selected .world-cell-level,.illustrated-map.tactical-map .world-cell-level{display:block}
+.illustrated-map.tactical-map .world-cell{border:1px solid #56614755!important;border-radius:0}
+.illustrated-map .world-cell:hover{outline:1px solid #f0e7ad;outline-offset:-4px;background:#ece5c333!important}
+.manual-city .city-grid-tile,.plot-tile{background:transparent!important;border:1px solid transparent!important;box-shadow:none!important}
+.manual-city .city-grid-tile:hover,.plot-tile:hover{background:#dddc9e33!important;outline:1px solid #bba86c}
+.manual-city .city-grid-tile>strong,.plot-tile>strong{background:#e7dfc2dd;border-radius:3px;padding:2px 5px;width:fit-content;margin:auto}
+.manual-city .empty-city .city-glyph{color:#536b4377}.manual-city .empty-city>strong,.manual-city .empty-city>small{opacity:.7}
+.city-building-art{width:100%!important;height:90px!important}.city-building-art>.web-atlas-art{width:100%;height:100%}
+.web-empty-land,.web-resource-art{position:relative;display:block;width:100%;height:90px;margin:auto}.web-empty-land .web-atlas-art{width:100%;height:100%;opacity:.75}
+.web-build-sign{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);padding:2px 5px;color:#eee0b9;background:#76613d;border:1px solid #b29965;box-shadow:0 3px 0 #3f422b;font-size:10px;white-space:nowrap}
+.web-resource-art .web-resource-sprite{width:110px;height:90px;max-width:100%;filter:drop-shadow(0 3px 3px #1118)}
+.manual-city .plot-index,.plot-tile .plot-index{opacity:0}.manual-city .city-grid-tile:hover .plot-index,.manual-city .city-grid-tile:focus-visible .plot-index,.plot-tile:hover .plot-index,.plot-tile:focus-visible .plot-index{opacity:1}
+.web-shop-shelves{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.web-shop-item{display:flex;flex-direction:column;align-items:center;gap:7px;min-height:158px;background:linear-gradient(#eee7d5,#ded1b4);border:1px solid #bca67d;border-bottom:5px solid #927648;border-radius:4px;color:#3b3326;padding:12px;cursor:pointer}
+.web-shop-item:hover{background:#f4eddc;outline:2px solid #b28e44}.web-shop-item strong{font-size:16px}.web-shop-item small{font-size:11px;color:#726044}.web-shop-item.unavailable{opacity:.65}
+.web-item-detail{display:flex;align-items:flex-start;gap:20px}.web-item-detail .classic-item-image,.web-item-detail .item-art{width:96px;height:96px}
+#web-shop-quantity{width:120px}.web-supply-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}.web-supply-cards .panel{margin:0}
+.web-supply-cards p{line-height:1.65}.web-drop-pool{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin-top:10px;font-size:12px}
+.web-plot-preview{padding:14px;background:#e3e4c7;border:1px solid #abae7d;border-radius:4px;margin:14px 0}.web-plot-preview table{width:100%;border-collapse:collapse}.web-plot-preview th,.web-plot-preview td{padding:8px;border-bottom:1px solid #b9bd95;text-align:right}.web-plot-preview th:first-child{text-align:left}
+.web-army-rosters{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}.web-army-roster>div{display:flex;gap:8px;flex-wrap:wrap}.web-army-roster h4{margin:0 0 8px;color:#395342}.web-army-roster.enemy h4{color:#813e2f}
+.web-army-card{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:92px;flex:1;max-width:160px;background:#e4eadc;border:1px solid #839477;border-radius:5px;padding:8px;color:#33432a;cursor:pointer}
+.web-army-card .asset-sprite{width:66px;height:66px}.enemy .web-army-card{background:#ecddd5;border-color:#b69684;color:#6c382b;cursor:default}.web-army-card span{font-size:13px}.web-army-card small{font-size:11px}.web-army-card progress{width:100%;height:7px;accent-color:#5a7847}.enemy progress{accent-color:#a0523e}.web-army-card.is-defeated{opacity:.4}
+.distance-field{padding:14px 42px!important;overflow:hidden}.distance-lane{min-height:106px!important}.distance-formation .battle-portrait{width:62px!important;height:62px!important}.distance-formation{min-width:72px}.formation-name{display:block;white-space:nowrap;font-size:11px;color:#2f3b25;background:#e4eadcdd;border-radius:3px;padding:2px}.enemy .formation-name{background:#ecdaceee;color:#703b2c}.combat-unit-body>small{font-size:12px!important;font-weight:bold;background:#eee9d5;color:#342f22;border-radius:3px;padding:1px 4px}
+.battle-command-bar{position:sticky;top:0;z-index:8;box-shadow:0 3px 8px #2223;background:#ded4b8!important}
+.battle-command-bar,.battle-command-bar strong,.battle-command-bar .hint{color:#443822!important}.web-army-roster h4{color:#c6d4b3}.web-army-roster.enemy h4{color:#dfad96}
+.city-grid-tile>strong,.plot-tile>strong{color:#413b2a!important}.web-plot-preview{color:#3c4328}.web-edition-tools{color:#403725}
+.web-battle-dialog .modal-top,.web-battle-dialog .modal-top h2,.web-battle-dialog .close,.web-battle-dialog .modal-actions{color:#403725!important}
+.web-supply-cards .web-terrain-art{width:100%;height:110px}.web-building-comparison article{padding:10px;border-bottom:1px solid #bba77d55}
+.web-county-flag{float:left;margin-right:18px;background:#8a3325;border:2px solid #caaa61;min-width:68px;padding:14px;text-align:center;color:#eedda2;font-size:27px}.web-county-flag span{display:block;font-size:12px;margin-top:7px}
+.city-grid-tile:focus-visible,.plot-tile:focus-visible{outline:3px solid #efd27b!important;outline-offset:-3px}
+.combat-shot{animation-duration:950ms;animation-delay:calc(650ms + var(--combat-delay,0ms))}.combat-slash{animation-duration:650ms;animation-delay:calc(650ms + var(--combat-delay,0ms))}
+.distance-formation.combat-moving{animation-duration:650ms}.combat-fired .battle-portrait{animation-duration:550ms;animation-delay:650ms}.combat-impact{animation-duration:650ms;animation-delay:950ms}.distance-formation.combat-fallen{animation-duration:450ms;animation-delay:1350ms}.distance-formation.combat-moving.combat-fallen{animation:combat-step 650ms ease-out both,combat-fall 450ms ease-out 1350ms both}.combat-gate-impact{animation-duration:650ms;animation-delay:950ms}
+@media(prefers-reduced-motion:reduce){.combat-shot,.combat-slash,.distance-formation.combat-moving,.combat-fired .battle-portrait,.combat-impact,.distance-formation.combat-fallen,.distance-formation.combat-moving.combat-fallen,.combat-gate-impact{animation:none!important}}
+@media(max-width:760px){.web-empty-land,.web-resource-art{height:52px}.web-resource-art .web-resource-sprite{width:64px;height:52px}.web-build-sign{font-size:8px}}
+dialog.web-battle-dialog{width:min(1450px,97vw);max-width:97vw;height:95dvh;max-height:95dvh}.web-battle-dialog .modal-top{position:sticky;top:0;background:#e9e1cd;z-index:9}.web-battle-dialog .battle-command-layout{grid-template-columns:minmax(0,1fr) 310px}.web-battle-dialog .modal-actions{position:sticky;bottom:0;background:#e9e1cd;z-index:9}
+@media(max-width:760px){.city-building-art{height:52px!important}.web-edition-tools{gap:4px;padding:6px}.web-edition-tools .btn{font-size:11px;padding:6px}.web-shop-shelves{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.web-shop-item{padding:8px 3px;min-height:145px}.web-shop-item strong{font-size:13px}.web-shop-item small{font-size:10px}.web-shop-item .classic-item-image{width:50px;height:50px}.web-army-rosters{gap:7px}.web-army-card{min-width:68px;padding:5px}.web-army-card .asset-sprite{width:46px;height:46px}.web-battle-dialog .battle-command-layout{display:block}.distance-field{padding:10px 28px!important}.distance-formation .battle-portrait{width:44px!important;height:44px!important}.distance-lane{min-height:95px!important}.web-item-detail{gap:10px}.web-item-detail .classic-item-image{width:64px;height:64px}}

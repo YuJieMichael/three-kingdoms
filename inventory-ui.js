@@ -7,7 +7,7 @@ function bagEntries(){
  const items=Game.manual.shop.map(item=>({key:'item:'+item.id,kind:'item',id:item.id,name:item.name,count:S().inventory[item.id]||0,category:item.effect==='jewelBox'?'珍宝':item.effect==='gold'?'资源补给':item.effect==='speedup'?'加速':['内政','军事','将领','装备'].includes(item.category)?item.category:'其他',item}));
  const jewels=Object.entries(Game.progression.jewels).map(([id,jewel])=>({key:'jewel:'+id,kind:'jewel',id,name:jewel.name,count:S().jewels[id]||0,category:'珍宝',jewel}));
  const equipment=S().equipment.map(e=>({key:'equipment:'+e.id,kind:'equipment',id:e.id,name:HeroSystem.itemName(e),count:1,category:'装备',equipment:e}));
- return [...items,...jewels,...equipment].filter(entry=>entry.count>0);
+ return [...items,...jewels,...equipment,...webBundleEntries()].filter(entry=>entry.count>0);
 }
 function bagIcon(entry,classes='bag-icon'){
  if(entry.kind==='equipment')return heroEquipmentIcon(entry.equipment).replace('item-art','item-art '+classes);
@@ -22,6 +22,7 @@ function bagTile(entry){
  return `<button class="bag-slot bag-owned bag-quality-${rare} ${bagSelected===entry.key?'bag-selected':''}" data-action="bagSelect" data-id="${esc(entry.key)}" aria-pressed="${bagSelected===entry.key}" aria-label="${esc(entry.name)}，数量 ${num(entry.count)}${status?'，'+status:''}" title="${esc(entry.name)} · ${num(entry.count)} 件"><span class="bag-count">×${bagQuantity(entry.count)}</span>${bagIcon(entry)}<span class="bag-name">${esc(entry.name)}</span><span class="bag-purpose">${entry.kind==='equipment'?HeroSystem.slots[entry.equipment.slot]:entry.kind==='jewel'?'晋爵 / 招降':entry.item.effect==='speedup'?'缩短队列时间':entry.item.effect==='gold'?'兑换黄金':entry.category}</span>${status?`<span class="bag-status">${status}</span>`:''}</button>`;
 }
 function bagDetailHTML(entry){
+ if(entry?.kind==='bundle')return webBundleDetailHTML(entry);
  if(!entry)return '<section class="bag-detail bag-detail-empty"><p class="hint">此分类暂无物品，获得后会显示在格子里。</p></section>';
  const head=`<div class="bag-detail-head">${bagIcon(entry,'bag-detail-icon')}<span class="label">${entry.category}</span><h3>${esc(entry.name)}${entry.kind==='equipment'&&entry.equipment.enhance?' +'+entry.equipment.enhance:''}</h3><p class="bag-detail-count">持有 <strong>${num(entry.count)}</strong> ${entry.kind==='equipment'?'件':'个'}</p></div>`;
  let body='';
