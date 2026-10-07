@@ -182,8 +182,6 @@ render=function(){
   const battle=S().battle;
   if(battle&&!battle.finished&&battle!==webClosedBattle&&!modal.open)webBattleWindowOpen=true;
   webOriginalRender();
-  const main=document.getElementById('main');
-  if(main&&!document.getElementById('web-edition-tools'))main.insertAdjacentHTML('afterbegin',`<nav id="web-edition-tools" class="web-edition-tools" aria-label="征战辅助">${btn('征战与成长','webEditionHub','','small secondary')}${page==='world'?btn('掠夺找资源','webRaids','','small secondary',WebEdition.shared()):''}${btn('消息记录','webMessages','','small secondary')}${btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','small secondary')}</nav>`);
   webUpdateMusic();
   if(webBattleWindowOpen)webPresentBattle();
 };
