@@ -1,6 +1,6 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="432f9fea6359c18a8d1e2655b09f97770718c3e676501c602c7897afd906a8b4";
-export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","engine.js"];
+export const runtimeHash="04099388538869c52dd787c60c48fddd6c9ef21c4d9ff4027a5755be25376f25";
+export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
  const navigator=undefined,module=undefined,document={addEventListener(){}};
@@ -14335,6 +14335,9 @@ const BattleStratagems=(()=>{
 // Nothing in this module grants heroes, items, rewards or permanent progress.
 const TacticalLessons=(()=>{
   const definitions=[
+    {id:'spear_cavalry',basic:true,title:'长枪抗骑 · 保护弓阵',generalName:'先锋将',wildLine:'',description:'固定借调30长枪、18弓箭手，对阵18轻骑、8弓箭手。让枪阵接触轻骑，观察枪骑交锋与弓阵受击。',objective:'打败练习守军，观察队形与克制。',length:1800,player:[['spear',30,0,'advance'],['archer',18,0,'hold']],enemy:[['cavalry',18,1800,'advance'],['archer',8,1800,'hold']]},
+    {id:'siege_guard',basic:true,siegeNode:'luo_gate',title:'护卫器械 · 河洛东门',generalName:'先锋将',wildLine:'',description:'借调450刀盾、240长枪、420弓箭手、12冲车、2投石车。使用原第三章河洛东门、实际守军和18000耐久城门；演练不开放正式章节或占领城池。',objective:'推进护卫和器械，先破城门，再清守军。观察破門回合、箭楼和器械存活。',length:1800,player:[['shield',450,0,'advance'],['spear',240,0,'advance'],['archer',420,0,'advance'],['ram',12,0,'advance'],['catapult',2,0,'advance']],enemy:[]},
+    {id:'opening_battle',basic:true,title:'开场 · 黄巾遭遇战',generalName:'先锋将',wildLine:'',description:'盾兵前进吸收箭矢，弓兵先坚守射击；如果够不到敌人，再推进弓队。逐队选择向前、坚守、后退，点击下一回合观察变化。',objective:'打败黄巾部队，认识射程、速度和逐队指令。也可以随时跳过，回城按指引发展。',length:1600,player:[['shield',24,0,'advance'],['archer',30,0,'hold']],enemy:[['militia',18,1600,'advance'],['spear',8,1600,'advance'],['archer',12,1600,'hold']]},
     {id:'ready_shot',title:'一 · 蓄弦与探阵',generalName:'黄忠',wildLine:'huangzhong',description:'黄忠的弓队先准备一轮。第二轮，盾兵从射程外进入时先射；盾兵仍抵御箭矢。比较准备射击与普通连续射击的代价。',objective:'用弓箭兵提交蓄弦先射，再推进两轮，观察盾兵进入射程时的先手与克制。',length:2600,player:[['archer',50,1000,'hold'],['shield',15,900,'hold']],enemy:[['shield',35,2600,'advance'],['archer',10,2600,'hold']]},
     {id:'bait_chase',title:'二 · 诱追与守势',generalName:'魏延',wildLine:'warrior',description:'长枪阵先退到弓队后方。仍前进的轻骑被诱去追枪阵；不追的盾阵保留原令。诱追只改变目标，不加移动、不送第二次攻击。',objective:'以长枪兵诱退敌方轻骑，再推进两轮；比较轻骑追枪与弓队遭骑兵克制的区别。',length:3000,player:[['spear',30,1200,'hold'],['archer',35,1100,'hold']],enemy:[['cavalry',20,2600,'advance'],['shield',25,3000,'hold']]},
     {id:'fire_reveal',title:'三 · 料敌与封路',generalName:'徐庶',wildLine:'strategist',description:'开局时敌弓队已准备火攻，具体区间尚未公开。徐庶能提前揭露，让你调整本轮位置；火区下一轮才截停双方，且不额外扣血。',objective:'揭露敌方火攻，再调整前进或坚守，推进两轮观察火区。',length:3000,player:[['spear',25,900,'hold'],['archer',40,600,'hold']],enemy:[['cavalry',15,2600,'advance'],['archer',20,2800,'hold']],enemyPlan:{type:'fire',unit:'archer',left:1400}},
@@ -14345,17 +14348,20 @@ const TacticalLessons=(()=>{
     const d=definitions.find(x=>x.id===id);if(!d)return null;
     const rows=entries=>entries.map(([unit,count,pos])=>{const u=units[unit],stats=Object.fromEntries(['hp','atk','def','range','speed'].map(k=>[k,u[k]]));return {id:unit,initial:count,stats,hp:count*stats.hp,maxHp:count*stats.hp,pos,defending:false};});
     const generalSnapshot={id:'practice_'+id,name:d.generalName,wildLine:d.wildLine,atk:80,def:70,wis:85,pol:60,lead:50,bonus:d.wildLine==='huangzhong'?'archer':d.wildLine==='warrior'?'spear':['zhaoyun','machao'].includes(d.wildLine)?'cavalry':'shield'};
-    const node={id:'practice_'+id,name:d.title,level:1,terrain:'plain',army:{},loot:{},time:0};
-    const battle={rules:3,lesson:id,node:node.id,general:generalSnapshot.id,generalSnapshot,enemyGeneralSnapshot:{id:'practice_enemy_'+id,name:'演练守军',wildLine:''},mode:'raid',length:d.length,siege:false,gate:null,militia:0,round:0,machineGateAttacks:0,currentRoundSummary:{round:0,events:[]},player:rows(d.player),enemy:rows(d.enemy),orders:Object.fromEntries(d.player.map(([unit,,,_order])=>[unit,{command:_order,target:''}])),enemyOrders:Object.fromEntries(d.enemy.map(([unit,,,_order])=>[unit,{command:_order,target:''}])),log:['独立演练：使用固定阵容，不消耗正式资源、军队或奖励。'],auto:false,finished:false,result:null};
+    const target=d.siegeNode?Game.getNode(d.siegeNode):null;
+    const enemyEntries=target?Object.entries(target.army).map(([unit,count])=>[unit,count,d.length,'hold']):d.enemy;
+    const node=target?{...target,name:d.title}:{id:'practice_'+id,name:d.title,level:1,terrain:'plain',army:{},loot:{},time:0};
+    const battle={rules:3,lesson:id,node:node.id,general:generalSnapshot.id,generalSnapshot,enemyGeneralSnapshot:{id:'practice_enemy_'+id,name:'演练守军',wildLine:''},mode:target?'occupy':'raid',length:d.length,siege:!!target,gate:target?SiegeSystem.gate(target,'occupy'):null,militia:0,round:0,machineGateAttacks:0,currentRoundSummary:{round:0,events:[]},player:rows(d.player),enemy:rows(enemyEntries),orders:Object.fromEntries(d.player.map(([unit,,,_order])=>[unit,{command:_order,target:''}])),enemyOrders:Object.fromEntries(enemyEntries.map(([unit,,,_order])=>[unit,{command:_order,target:''}])),log:['独立演练：使用固定阵容，不消耗正式资源、军队或奖励。'],auto:false,finished:false,result:null};
     return {id,title:d.title,generalName:d.generalName,description:d.description,objective:d.objective,node,battle,enemyPlan:d.enemyPlan?{...d.enemyPlan}:null,result:null};
   }
   function objectiveMet(session){
+    if(session.id==='opening_battle'||definitions.find(d=>d.id===session.id)?.basic)return false;
     const b=session.battle,types={ready_shot:'huangzhong',bait_chase:'weiyan',fire_reveal:'xushu',rescue_retreat:'zhaoyun',charge_hold:'machao'},plans=b.stratagem?.plans||[];
     return b.round>=2&&plans.some(p=>p.side==='player'&&p.type===types[session.id]&&(session.id==='bait_chase'?p.chased===true:['rescue_retreat','charge_hold'].includes(session.id)?p.effectApplied===true:['triggered','resolved'].includes(p.status)));
   }
   function finish(session,won){
-    const b=session.battle,met=objectiveMet(session);
-    const result={won,round:b.round,objectiveMet:met,summary:met?'已观察到本课战法的作用。教学观察结束，可重开比较另一套指令；这不代表正式战斗已经歼灭全部敌军。':'演练结束。可重开按目标试一次，观察日志中的准备、反制和失效原因。'};
+    const b=session.battle,met=session.id==='opening_battle'||definitions.find(d=>d.id===session.id)?.basic?won:objectiveMet(session);
+    const result={won,round:b.round,objectiveMet:met,summary:(session.id==='opening_battle'||definitions.find(d=>d.id===session.id)?.basic)?(won?'遭遇战获胜！回城领取工程补给，跟随引导建设、募兵，再发起真正的出征。':'先锋演练结束，可重试改变指令，或直接回城跟随成长路线。'):met?'已观察到本课战法的作用。教学观察结束，可重开比较另一套指令；这不代表正式战斗已经歼灭全部敌军。':'演练结束。可重开按目标试一次，观察日志中的准备、反制和失效原因。'};
     session.result=result;b.result=result;b.finished=true;b.auto=false;return result;
   }
   return {definitions,create,objectiveMet,finish};
@@ -14627,6 +14633,806 @@ const HeroAdministration=(()=>{
 })();
 
 
+// SOURCE: battle-review.js
+'use strict';
+const BattleReview=(()=>{
+// Read-only explanations of canonical receipts and recorded round events.
+// This module does not resolve combat, grant rewards, or change a save.
+const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
+const count = value => Number.isSafeInteger(value) && value >= 0;
+const damage = value => Number.isFinite(value) && value >= 0 && value <= Number.MAX_SAFE_INTEGER;
+const METRICS = ['shieldArrowDamage', 'shieldArrowHits', 'shieldOtherRangedDamage', 'shieldOtherRangedHits',
+  'spearCavalryDamage', 'spearCavalryHits', 'cavalrySpearDamage', 'cavalrySpearHits',
+  'cavalryArcherDamage', 'cavalryArcherHits', 'archerDamage', 'archerHits',
+  'gateDamage', 'gateHits', 'machineGateDamage', 'machineGateHits', 'towerDamage', 'towerHits'];
+const number = value => new Intl.NumberFormat('zh-CN', {maximumFractionDigits: 2}).format(value);
+
+/** Plain JSON data owned by a practice session, never by canonical game state. */
+function createRoundEvidence() {
+  return {version: 1, rounds: [], incompleteRounds: [],
+    totals: Object.fromEntries(METRICS.map(key => [key, 0])),
+    gate: {maxHp: null, lastHp: null, brokenRound: null}};
+}
+
+/** Accumulate a real resolved round once. Recoil duplicates its strike and is excluded.
+ * Pass {battle} after the round to record an observed gate transition. */
+function collectRoundEvidence(summary, accumulator, {battle = null} = {}) {
+  if (!object(accumulator) || accumulator.version !== 1 || !Array.isArray(accumulator.rounds) ||
+      !Array.isArray(accumulator.incompleteRounds) || !object(accumulator.totals) || !object(accumulator.gate))
+    throw new TypeError('Use createRoundEvidence() for the evidence accumulator');
+  if (!object(summary) || !count(summary.round) || summary.round < 1 || summary.round > 30 || !Array.isArray(summary.events))
+    return accumulator;
+  if (accumulator.rounds.includes(summary.round)) return accumulator;
+  const totals = accumulator.totals;
+  let incomplete = false;
+  const add = (metric, amount) => {
+    const next = totals[metric] + amount;
+    if (damage(totals[metric]) && damage(next)) totals[metric] = next;
+    else incomplete = true;
+  };
+  for (const event of summary.events) {
+    if (!object(event)) { incomplete = true; continue; }
+    if (event.type === 'move' || event.type === 'recoil') continue;
+    if (!['strike', 'tower', 'gate'].includes(event.type) || !['player', 'enemy'].includes(event.side) ||
+        typeof event.unit !== 'string' || typeof event.target !== 'string' || !damage(event.damage) ||
+        !count(event.killed) || typeof event.ranged !== 'boolean' || typeof event.counter !== 'boolean') {
+      incomplete = true; continue;
+    }
+    if (event.type === 'gate') {
+      if (event.side !== 'player' || event.target !== 'gate') { incomplete = true; continue; }
+      add('gateDamage', event.damage); add('gateHits', 1);
+      if (['ram', 'catapult'].includes(event.unit)) {
+        add('machineGateDamage', event.damage); add('machineGateHits', 1);
+      }
+      continue;
+    }
+    if (event.type === 'tower') {
+      if (event.side === 'enemy' && event.unit === 'tower') {
+        add('towerDamage', event.damage); add('towerHits', 1);
+      } else incomplete = true;
+      continue;
+    }
+    if (event.side === 'enemy' && event.target === 'shield' && event.unit === 'archer') {
+      add('shieldArrowDamage', event.damage); add('shieldArrowHits', 1);
+    } else if (event.side === 'enemy' && event.target === 'shield' && event.ranged) {
+      add('shieldOtherRangedDamage', event.damage); add('shieldOtherRangedHits', 1);
+    }
+    if (event.side === 'player' && event.unit === 'spear' && event.target === 'cavalry') {
+      add('spearCavalryDamage', event.damage); add('spearCavalryHits', 1);
+    }
+    if (event.side === 'enemy' && event.unit === 'cavalry' && event.target === 'spear') {
+      add('cavalrySpearDamage', event.damage); add('cavalrySpearHits', 1);
+    }
+    if (event.side === 'enemy' && event.unit === 'cavalry' && event.target === 'archer') {
+      add('cavalryArcherDamage', event.damage); add('cavalryArcherHits', 1);
+    }
+    if (event.side === 'player' && event.unit === 'archer') {
+      add('archerDamage', event.damage); add('archerHits', 1);
+    }
+  }
+  accumulator.rounds.push(summary.round);
+  accumulator.rounds.sort((a, b) => a - b);
+  if (incomplete) accumulator.incompleteRounds.push(summary.round);
+  const gate = object(battle?.gate) ? battle.gate : null;
+  if (battle?.round === summary.round && gate && damage(gate.hp) && damage(gate.maxHp) && gate.maxHp > 0) {
+    accumulator.gate.maxHp = gate.maxHp;
+    accumulator.gate.lastHp = gate.hp;
+    // Only a complete prefix of actual rounds can identify the break round.
+    // An already-broken gate first seen after a gap is not a measured duration.
+    if (gate.hp === 0 && accumulator.gate.brokenRound === null && !incomplete &&
+        accumulator.incompleteRounds.length === 0 && accumulator.rounds.length === summary.round &&
+        accumulator.rounds.every((round, index) => round === index + 1) && totals.gateDamage >= gate.maxHp)
+      accumulator.gate.brokenRound = summary.round;
+  }
+  return accumulator;
+}
+
+const armyCount = (army, id) => object(army) && (!Object.hasOwn(army, id) || count(army[id])) ? army[id] || 0 : null;
+function machineReceipt(report, battle, practice) {
+  if (['lost', 'wounded', 'back'].every(key => object(report[key]))) {
+    const values = ['ram', 'catapult'].map(id => ({id, lost: armyCount(report.lost, id),
+      wounded: armyCount(report.wounded, id), alive: armyCount(report.back, id)}));
+    if (values.some(row => Object.values(row).some(value => value === null))) return null;
+    return {deployed: values.reduce((sum, row) => sum + row.lost + row.wounded + row.alive, 0),
+      lost: values.reduce((sum, row) => sum + row.lost, 0), wounded: values.reduce((sum, row) => sum + row.wounded, 0),
+      alive: values.reduce((sum, row) => sum + row.alive, 0), practice: !!practice};
+  }
+  if (!practice || !Array.isArray(battle?.player)) return null;
+  const rows = battle.player.filter(row => object(row) && ['ram', 'catapult'].includes(row.id));
+  if (!rows.length || rows.some(row => !count(row.initial) || !damage(row.hp) || !damage(row.stats?.hp) || row.stats.hp <= 0)) return null;
+  const deployed = rows.reduce((sum, row) => sum + row.initial, 0);
+  const alive = rows.reduce((sum, row) => sum + Math.ceil(row.hp / row.stats.hp), 0);
+  return alive <= deployed ? {deployed, alive, practice: true} : null;
+}
+
+/** The report is a receipt, not a reconstructed simulation. Evidence is optional.
+ * Formal DTOs omit evidence. Only a practice service supplies an accumulator. */
+function battleReview(report = {}, {battle = null, evidence = null, practice = false} = {}) {
+  report = object(report) ? report : {};
+  battle = object(battle) ? battle : null;
+  const result = {title: '本战关键原因', scope: '战报结算凭据；整场交锋数据未记录', findings: [], actions: []};
+  const finding = (label, text, kind = 'evidence') => result.findings.push({label, text, kind});
+  const rounds = count(report.round) ? report.round : count(battle?.round) ? battle.round : null;
+  const failure = object(report.failure) ? report.failure : null;
+  const failureNames = {retreat: '主动撤军后结束', army: '我军已无可战部队', gate: '城防仍未攻破',
+    enemy: '尚有守军存活', gate_and_enemy: '城防未破且仍有守军存活'};
+  if (failure) {
+    finding('结算原因', failureNames[failure.reason] || '战报没有可识别的失败原因', 'result');
+    if (count(failure.gateHp) && failure.gateHp > 0)
+      finding('未破城防', `结束时城防耐久剩余 ${number(failure.gateHp)}。`);
+    if (count(failure.enemyRemaining) && failure.enemyRemaining > 0)
+      finding('守军仍在', `结束时剩余守军 ${number(failure.enemyRemaining)} 人。`);
+    if (failure.outOfRange === true)
+      finding('射程空等', '结束时仍有我军坚守队伍，其射程内没有存活敌军。', 'warning');
+  } else if (typeof report.won === 'boolean') {
+    finding('结算结果', (report.won ? '本战获胜' : '本战未获胜') + (rounds === null ? '。' : `，共 ${rounds} 回合。`), 'result');
+  }
+  const machines = machineReceipt(report, battle, practice);
+  if (machines?.deployed > 0) {
+    const text = `冲车与投石车出征 ${number(machines.deployed)} 架，战场幸存 ${number(machines.alive)} 架`;
+    const simulated = count(machines.lost) && count(machines.wounded) ?
+      `演练模拟损失 ${number(machines.lost)} 架、模拟伤兵 ${number(machines.wounded)} 架` :
+      `演练中离场 ${number(machines.deployed - machines.alive)} 架，尚无正式伤兵判定`;
+    finding('器械存活', machines.practice ? text + `；${simulated}。不改变正式军队或伤兵。` :
+      text + `；永久损失 ${number(machines.lost)} 架，伤兵 ${number(machines.wounded)} 架。`);
+  }
+  const challenge = object(report.warOrder?.challenge) ? report.warOrder.challenge : null;
+  if (challenge && count(challenge.machineGateAttacks) &&
+      (challenge.machineGateAttacks > 0 || count(challenge.machines) && challenge.machines > 0)) {
+    finding('挑战凭据', `器械实际攻击门墙 ${number(challenge.machineGateAttacks)} 次；战术条件` +
+      (challenge.met === true ? '已达成。' : '未达成。') + '这是战报中的挑战判定，不能归因于单一指令。');
+  } else if (count(battle?.machineGateAttacks) && battle.machineGateAttacks > 0) {
+    finding('破门参与', `本场器械实际攻击门墙 ${number(battle.machineGateAttacks)} 次。`);
+  }
+
+  let measured = null;
+  let full = false;
+  let prefix = false;
+  if (practice && object(evidence) && evidence.version === 1 && Array.isArray(evidence.rounds) &&
+      Array.isArray(evidence.incompleteRounds) && object(evidence.totals) &&
+      METRICS.every(key => damage(evidence.totals[key]))) {
+    measured = evidence;
+    prefix = rounds !== null && rounds > 0 && evidence.incompleteRounds.length === 0 &&
+      evidence.rounds.length === rounds && evidence.rounds.every((round, index) => round === index + 1);
+    full = prefix && (battle?.finished === true || !battle && typeof report.won === 'boolean');
+    result.scope = full ? `演练第 1–${rounds} 回合的完整实际事件；不含反事实估算` :
+      prefix ? `演练第 1–${rounds} 回合的实际事件（战斗仍在进行）；不含反事实估算` :
+      `演练已记录 ${evidence.rounds.length} 轮${evidence.incompleteRounds.length ? '（部分事件不完整）' : ''}；不能当作整场总计`;
+  } else if (!report.shared && battle && object(battle.currentRoundSummary) &&
+      battle.currentRoundSummary.round === battle.round && battle.round > 0) {
+    measured = collectRoundEvidence(battle.currentRoundSummary, createRoundEvidence(), {battle});
+    result.scope = `战报结算凭据＋第 ${battle.round} 回合实际记录（仅末轮）；整场交锋数据未记录`;
+  }
+  if (measured && measured.rounds.length) {
+    const t = measured.totals;
+    const scope = full ? '整场' : prefix ? '截至本回合' : practice ? '已记录范围' : '末回合';
+    finding('盾阵承箭', t.shieldArrowHits ? `${scope}敌弓命中我军刀盾 ${number(t.shieldArrowHits)} 次，实际伤害 ${number(t.shieldArrowDamage)}。这是承受的伤害，不是免去的伤害。` :
+      `${scope}没有记录到敌弓命中我军刀盾，不能据此声称盾阵承担了箭矢。`);
+    if (t.shieldOtherRangedHits)
+      finding('其他远程', `${scope}刀盾承受其他远程实际伤害 ${number(t.shieldOtherRangedDamage)}，${number(t.shieldOtherRangedHits)} 次命中。`);
+    finding('枪骑交锋', `${scope}我军长枪命中敌轻骑 ${number(t.spearCavalryHits)} 次、伤害 ${number(t.spearCavalryDamage)}；敌轻骑命中我军枪阵 ${number(t.cavalrySpearHits)} 次、伤害 ${number(t.cavalrySpearDamage)}（均含反击）。这不是自动拦截次数。`);
+    if (t.cavalryArcherHits)
+      finding('弓阵遇骑', `${scope}敌轻骑命中我军弓队 ${number(t.cavalryArcherHits)} 次，实际伤害 ${number(t.cavalryArcherDamage)}。`, 'warning');
+    if (t.archerHits)
+      finding('弓队输出', `${scope}我军弓队命中 ${number(t.archerHits)} 次，实际输出 ${number(t.archerDamage)}。`);
+    if (t.gateHits)
+      finding('门墙受击', `${scope}门墙实际承受伤害 ${number(t.gateDamage)}；其中器械攻击 ${number(t.machineGateHits)} 次、伤害 ${number(t.machineGateDamage)}。`);
+    if (t.towerHits)
+      finding('箭楼威胁', `${scope}箭楼命中我军 ${number(t.towerHits)} 次，实际伤害 ${number(t.towerDamage)}。`);
+    if (prefix && count(measured.gate?.brokenRound) && measured.gate.brokenRound > 0)
+      finding('破门耗时', `完整记录确认城防耐久在第 ${measured.gate.brokenRound} 回合归零。`);
+    else if (battle?.gate && battle.gate.hp === 0)
+      finding('破门范围', '已观察到城防耐久归零；现有证据不足以确认精确破门回合。', 'gap');
+  } else {
+    finding('记录边界', practice && battle?.round === 0 ?
+      '尚未结算演练回合；行动后显示实际交锋证据。' :
+      '未保存整场逐回合攻击事件：盾阵受箭伤害、枪骑交锋次数与精确破门回合均不能补算。', 'gap');
+  }
+  finding('盾与箭 · 规则', '弓箭兵攻击刀盾兵时伤害系数为 0.5；床弩与投石不享受这一专属减伤。坚守本身没有额外减伤。', 'rule');
+  finding('枪与骑 · 规则', '长枪兵攻击轻骑兵时伤害系数为 1.6；不包含重骑。枪兵是否先接敌，要看实际站位和攻击目标。', 'rule');
+  finding('门墙 · 规则', '器械进入射程并实际攻击才参与破门；破门后城防掩护解除、箭楼停止射击。', 'rule');
+  result.actions = [
+    {label: '盾护推进：刀盾向前，弓队保持后排；观察敌弓实际命中谁。'},
+    {label: '枪护弓：枪兵推进、弓兵坚守，形成前后位置；重骑需单独评估。'},
+    {label: '护械破门：让冲车或投石进入射程，关注门墙耐久、箭楼与器械存活。'},
+  ];
+  return result;
+}
+
+return {createRoundEvidence,collectRoundEvidence,battleReview};})();
+
+
+// SOURCE: wild-fields.js
+'use strict';
+const WildFields=(()=>{
+
+const WILD_INTERVAL_MS = 30 * 60 * 1000;
+const TYPES = ['plain', 'grass', 'forest', 'hill', 'mountain', 'lake', 'swamp'];
+const wildId = /^wild_(\d{1,2})_(\d{1,2})$/;
+const integer = n => Number.isSafeInteger(n) && n >= 0;
+const object = n => !!n && typeof n === 'object' && !Array.isArray(n);
+const uint = n => integer(n) && n <= 0xffffffff;
+const validId = id => {
+  const m = wildId.exec(id);
+  return !!m && Number(m[1]) < 64 && Number(m[2]) < 64 && id === `wild_${Number(m[1])}_${Number(m[2])}`;
+};
+const mix = (...values) => {
+  let n = 2166136261;
+  for (const value of values) {
+    n = Math.imul(n ^ (value >>> 0), 16777619);
+    n = Math.imul(n ^ (n >>> 16), 2246822507);
+  }
+  return (n ^ (n >>> 13)) >>> 0;
+};
+const cache = new Map();
+function shuffle(values, seed) {
+  const result = [...values];
+  let n = seed;
+  for (let i = result.length - 1; i > 0; i--) {
+    n = mix(n, i);
+    const j = n % (i + 1);
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+function block(meta, x, y) {
+  const bx = Math.floor(x / 8), by = Math.floor(y / 8);
+  const key = `${meta.seed}:${meta.generation}:${bx}:${by}`;
+  if (!cache.has(key)) {
+    if (cache.size >= 128) cache.clear();
+    const seed = mix(meta.seed, meta.generation, bx, by);
+    cache.set(key, {
+      types: shuffle(Array.from({length: 64}, (_, i) => TYPES[(i + seed % 7) % 7]), mix(seed, 1)),
+      levels: shuffle(Array.from({length: 64}, (_, i) => 1 + (i + seed % 10) % 10), mix(seed, 2)),
+    });
+  }
+  return cache.get(key);
+}
+
+function validWildFields(state) {
+  if (!object(state) || state.wildRefresh === undefined) return object(state);
+  const m = state.wildRefresh;
+  return object(m) && Object.keys(m).length === 5 && m.version === 1 && uint(m.seed) &&
+    integer(m.generation) && integer(m.at) && m.at === m.generation * WILD_INTERVAL_MS &&
+    object(m.pins) && Object.keys(m.pins).length <= 4096 && Object.entries(m.pins).every(([id, p]) =>
+      validId(id) && object(p) && Object.keys(p).length === 4 && TYPES.includes(p.type) &&
+      integer(p.level) && p.level <= 10 && uint(p.seed) && typeof p.legacy === 'boolean');
+}
+
+/** A balanced 8×8 neighbourhood; shuffle changes placements, not quotas. */
+function resolveWild(state, x, y, now) {
+  const m = state?.wildRefresh;
+  if (!m || state.onlineRealm) return null;
+  const id = `wild_${x}_${y}`, p = m.pins[id];
+  const row = p || (() => {
+    const b = block(m, x, y), index = y % 8 * 8 + x % 8;
+    return {type: b.types[index], level: b.levels[index], seed: mix(m.seed, m.generation, x, y), legacy: false};
+  })();
+  const claim = state.landClaims?.[id];
+  const level = claim && state.conquered?.[id] ? Math.max(0, claim.level - Math.floor((now - claim.at) / 86400000)) : row.level;
+  return {...row, level};
+}
+
+const wildWeight = (seed, index) => mix(seed, index + 17);
+function wildKey(state, x, y, now) {
+  const r = resolveWild(state, x, y, now);
+  return r ? `${r.type}:${r.level}:${r.seed}:${r.legacy ? 1 : 0}` : '';
+}
+
+function scopes(state) {
+  return [state, ...Object.entries(state.realm?.cities || {}).filter(([id]) => id !== state.realm.activeCity).map(([, city]) => city.data)];
+}
+function heldTargets(state) {
+  const held = new Set();
+  const add = id => { if (typeof id === 'string' && validId(id)) held.add(id); };
+  for (const [id, owned] of Object.entries(state.conquered || {})) if (owned) add(id);
+  for (const id of Object.keys(state.realm?.wildOwners || {})) add(id);
+  for (const city of Object.values(state.realm?.cities || {})) add(city.node);
+  for (const s of scopes(state)) {
+    for (const id of Object.keys(s.garrisons || {})) add(id);
+    for (const id of Object.keys(s.gatherings || {})) add(id);
+    add(s.expedition?.node);
+    for (const e of s.expeditions || []) add(e.node);
+    for (const e of s.scoutQueue || []) add(e.node);
+    if (s.battle && !s.battle.finished) add(s.battle.node);
+  }
+  return held;
+}
+function clearIntel(state, held, released = null) {
+  const shouldClear = id => validId(id) && !held.has(id) && (!released || released.has(id));
+  for (const s of scopes(state)) {
+    for (const id of Object.keys(s.scoutIntel || {})) if (shouldClear(id)) delete s.scoutIntel[id];
+  }
+  for (const id of Object.keys(state.scouted || {})) if (shouldClear(id)) delete state.scouted[id];
+}
+
+/** Freeze active targets before changing epoch; canonical claims keep their daily decay. */
+function syncWildFields(game, now) {
+  const s = game.state; if (!s || s.onlineRealm || game.authorityActive() || (typeof GAME_SERVER_RUNTIME!=='undefined' && GAME_SERVER_RUNTIME && !s.wildRefresh)) return;
+  const held = heldTargets(s), first = !s.wildRefresh;
+  if (!validWildFields(s)) throw new Error('Invalid wild-refresh state');
+  if (first) s.wildRefresh = {version: 1, seed: Math.floor(Math.random()*0x100000000),
+    generation: Math.floor(now / WILD_INTERVAL_MS), at: Math.floor(now / WILD_INTERVAL_MS) * WILD_INTERVAL_MS, pins: {}};
+  const m = s.wildRefresh;
+  for (const id of held) if (!m.pins[id]) {
+    const [, xs, ys] = wildId.exec(id), x = Number(xs), y = Number(ys);
+    if (first) {
+      const n = game.legacyWildTile(x, y);
+      m.pins[id] = {type: n.type, level: n.level, seed: 0, legacy: true};
+    } else m.pins[id] = resolveWild(s, x, y, now);
+  }
+  const released = new Set();
+  for (const id of Object.keys(m.pins)) if (!held.has(id)) {
+    const old = m.pins[id], [, xs, ys] = wildId.exec(id);
+    delete m.pins[id];
+    const fresh = resolveWild(s, Number(xs), Number(ys), now);
+    if (['type', 'level', 'seed', 'legacy'].some(key => old[key] !== fresh[key])) released.add(id);
+  }
+  const next = Math.max(m.generation, Math.floor(now / WILD_INTERVAL_MS));
+  if (first || next !== m.generation) clearIntel(s, held);
+  else if (released.size) clearIntel(s, held, released);
+  m.generation = next;
+  m.at = next * WILD_INTERVAL_MS;
+  if (!validWildFields(s)) throw new Error('Invalid wild-refresh result');
+}
+
+function wildRefreshView(state) {
+  const m = state.wildRefresh;
+  return m ? {enabled: true, generation: m.generation, intervalSeconds: WILD_INTERVAL_MS / 1000,
+    refreshedAt: m.at, nextAt: m.at + WILD_INTERVAL_MS, protected: Object.keys(m.pins).length,
+    description: '每30分钟随机刷新空闲野地的类型、等级和守军；每个8×8区域均衡分布。城池、已占领、采集及行军目标保留。'} : {enabled: false};
+}
+
+return {resolve:resolveWild,weight:wildWeight,key:wildKey,sync:syncWildFields,valid:validWildFields,view:wildRefreshView};
+})();
+
+
+// SOURCE: web-edition.js
+'use strict';
+// Faithful browser adaptation of Godot's private progression modules.
+// Shared-world rewards and map state continue to belong to online/.
+const WebEdition=(()=>{
+  const copy=value=>JSON.parse(JSON.stringify(value));
+  class GameError extends Error{constructor(code,message){super(message);this.code=code;}}
+  const validateInput=input=>{if(!input||typeof input.type!=='string'||!Array.isArray(input.args)||input.args.length>8)throw new GameError('BAD_INPUT','操作参数无效');};
+const CONQUEST_BUNDLES = Object.freeze({supply_choice: '百工调拨令', supply_rations: '行军粮秣包',
+  supply_recovery: '返城整备包', supply_siege: '攻城筹备包'});
+const conquestGems = (kind, level) => kind === 'city' ? 20 + level * 5 : 3 + level * 2;
+
+/** Provenance for earned bundles lives in the independently validated conquest ledger. */
+function earnedConquestBundles(state, id) {
+  return Object.values(state.conquestSupply?.records || {}).filter(row => row?.status === 'rewarded' &&
+    row.drop?.kind === 'bundle' && row.drop.id === id).length;
+}
+
+const GrowthSupport=(()=>{
+
+const OFFER_ID = 'growth_coral';
+const COST = 80;
+const LIMIT = 5;
+const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
+// Optional prototype supply prices. Promotion requirements remain canonical;
+// these fixed copper prices are clearly marked as this game's trial design.
+const PREPARATION_PRICES = Object.freeze({pearl: 40, coral: 80, glass: 120, amber: 160,
+  agate: 200, crystal: 240, jadeite: 280, jade: 320, nightPearl: 400});
+let catalogue = null;
+
+function preparationCatalogue() {
+  if (catalogue) return catalogue;
+  const rows = new Map();
+  for(const kind of ['office','noble']) for(const row of kind==='office'?HeritageData.offices:HeritageData.nobles){
+    const rank=row.id;
+    for(const [jewel,limit] of Object.entries(row.promotion?.jewels||{})){
+      if(!Object.hasOwn(PREPARATION_PRICES,jewel)||kind==='noble'&&rank===1&&jewel==='coral')continue;
+      const id=`growth_prepare_${kind}_${rank}_${jewel}`;
+      rows.set(id,{id,kind,rank,jewel,limit,stage:row.name,cost:PREPARATION_PRICES[jewel]});
+    }
+  }
+  catalogue = rows;
+  return catalogue;
+}
+
+const isGrowthSupportOffer = id => typeof id === 'string' && (id === OFFER_ID || id.startsWith('growth_prepare_'));
+
+/** Optional save-wide extension; old canonical saves do not need migration. */
+function validGrowthSupport(snapshot) {
+  if (!object(snapshot)) return false;
+  if (!Object.hasOwn(snapshot, 'growthSupport')) return true;
+  const record = snapshot.growthSupport;
+  if (!object(record) || !Number.isSafeInteger(record.coralExchanged) || record.coralExchanged < 0 || record.coralExchanged > LIMIT) return false;
+  if (record.version === 1) return Object.keys(record).length === 2 && Object.hasOwn(record, 'version') && Object.hasOwn(record, 'coralExchanged');
+  if (record.version !== 2 || Object.keys(record).length !== 3 || !Object.hasOwn(record, 'version') ||
+    !Object.hasOwn(record, 'coralExchanged') || !Object.hasOwn(record, 'preparation') || !object(record.preparation)) return false;
+  const entries = Object.entries(record.preparation), rules = preparationCatalogue();
+  return entries.length <= rules.size && entries.every(([id, count]) => rules.has(id) &&
+    Number.isSafeInteger(count) && count >= 0 && count <= rules.get(id).limit &&
+    rules.get(id).rank <= (snapshot.honors?.[rules.get(id).kind] ?? -2) + 1);
+}
+
+/** Only the two current next-promotion stages are quoted. Future offers are
+ * never purchasable just by inventing their IDs. A rank's quota never resets. */
+function growthPreparationQuotes(runtime, {shared = false} = {}) {
+  if (shared) return [];
+  const {Game: game, HeritageSystem: heritage, Progression: progression} = runtime, state = game.state;
+  if (!validGrowthSupport(state)) return [];
+  const rows = [];
+  for (const kind of ['office', 'noble']) {
+    const promotion = heritage.promotionQuote(state, kind);
+    if (!promotion?.next) continue;
+    for (const [jewel, required] of Object.entries(promotion.rule.jewels)) {
+      const id = `growth_prepare_${kind}_${promotion.next.id}_${jewel}`, rule = preparationCatalogue().get(id);
+      if (!rule) continue;
+      const claimed = state.growthSupport?.preparation?.[id] || 0, owned = state.jewels[jewel], remaining = rule.limit - claimed;
+      let reason = state.conquered?.camp !== true ? '先占领黄巾营寨，开放晋升筹备' :
+        !Number.isSafeInteger(state.copper) || state.copper < 0 || !Number.isSafeInteger(owned) || owned < 0 ? '铜钱或珍宝记录无效' :
+        owned >= required ? '本次晋升所需珍宝已备齐' : remaining <= 0 ? '本次晋升的固定筹备份额已用完' :
+        state.copper < rule.cost ? `铜钱不足：需要 ${rule.cost}` : '';
+      if (owned >= Number.MAX_SAFE_INTEGER) reason = '珍宝数量达到上限';
+      rows.push({...rule, name: `${rule.stage}筹备 · ${progression.jewels[jewel].name} ×1`,
+        claimed, remaining, period: 'rank', owned, required, missing: Math.max(0, required - owned), reason,
+        trial: true, command: {type: 'exchangeCopper', args: [id]}});
+    }
+  }
+  return rows;
+}
+
+/** Deterministic, read-only offer. Never initializes a counter or resets daily. */
+function growthSupportQuote(runtime, {shared = false} = {}) {
+  const state = runtime.Game.state;
+  const valid = validGrowthSupport(state);
+  const claimed = valid ? state.growthSupport?.coralExchanged ?? 0 : null;
+  let reason = '';
+  if (shared) reason = '共享模式不开放县城筹备兑换，请切换本机进度';
+  else if (!valid) reason = '县城筹备兑换记录无效';
+  else if (state.conquered?.camp !== true) reason = '先占领黄巾营寨，开放县城筹备兑换';
+  else if (claimed >= LIMIT) reason = '本存档珊瑚筹备兑换限额已用完（5 枚）';
+  else if (!Number.isSafeInteger(state.copper) || state.copper < 0 ||
+    !Number.isSafeInteger(state.jewels?.coral) || state.jewels.coral < 0) reason = '铜钱或珊瑚记录无效';
+  else if (state.jewels.coral >= Number.MAX_SAFE_INTEGER) reason = '珊瑚数量达到数值上限';
+  else if (state.copper < COST) reason = '铜钱不足：需要 80';
+  return {id: OFFER_ID, name: '县城筹备 · 珊瑚 ×1', cost: COST, claimed,
+    remaining: valid ? LIMIT - claimed : 0, limit: LIMIT, period: 'save', reason,
+    command: {type: 'exchangeCopper', args: [OFFER_ID]}};
+}
+
+/** Executes only on the private bridge's disposable canonical runtime/CAS candidate. */
+function executeGrowthSupport(runtime, input, now, {shared = false} = {}) {
+  validateInput(input);
+  if (input.type !== 'exchangeCopper' || input.args.length !== 1 || !isGrowthSupportOffer(input.args[0])) {
+    throw new GameError('COMMAND_NOT_ALLOWED', '晋升筹备操作参数无效');
+  }
+  if (shared) throw new GameError('COMMAND_NOT_ALLOWED', '共享模式不开放阶段筹备兑换');
+  if (!Number.isSafeInteger(now) || now < 0) throw new GameError('BAD_TIME', '结算时间无效');
+  const game = runtime.Game;
+  if (!validGrowthSupport(game.state) || !game.validSave(copy(game.state))) {
+    throw new GameError('BAD_SAVE', '晋升筹备兑换无法通过存档校验');
+  }
+  game.tick(now, true);
+  const offer = input.args[0] === OFFER_ID ? growthSupportQuote(runtime) :
+    growthPreparationQuotes(runtime).find(row => row.id === input.args[0]);
+  if (!offer) throw new GameError('GAME_RULE', '这项筹备不属于当前晋升阶段，请刷新后选择');
+  if (offer.reason) throw new GameError('GAME_RULE', offer.reason);
+  game.state.copper -= offer.cost;
+  const jewel = offer.jewel || 'coral';
+  game.state.jewels[jewel] += 1;
+  const claimed = offer.claimed + 1;
+  // CitySystem's field list excludes this extension, so the single top-level
+  // record remains shared by every owned city and survives canonical migration.
+  const old = game.state.growthSupport;
+  if (offer.id === OFFER_ID) game.state.growthSupport = old?.version === 2 ?
+    {...old, coralExchanged: claimed} : {version: 1, coralExchanged: claimed};
+  else game.state.growthSupport = {version: 2, coralExchanged: old?.coralExchanged || 0,
+    preparation: {...(old?.preparation || {}), [offer.id]: claimed}};
+  if (game.save() === false) throw new GameError('SAVE_FAILED', '晋升筹备兑换保存失败', 500);
+  if (!validGrowthSupport(game.state) || !game.validSave(game.state)) {
+    throw new GameError('INVALID_RESULT', '晋升筹备兑换产生无效状态', 500);
+  }
+  return {state: copy(game.state), result: {id: offer.id, jewel, count: 1,
+    copperSpent: offer.cost, claimed, remaining: offer.limit - claimed}, runtime};
+}
+
+return {validGrowthSupport,growthPreparationQuotes,growthSupportQuote,executeGrowthSupport};})();
+const SupplyWorkshop=(()=>{
+
+// Optional prototype items. Native item IDs, resource caps and queues stay in Game.
+const offers = [
+  {id: 'supply_choice', name: '百工调拨令', price: 22, limit: 10,
+    description: '开包时选择建设、研究或练兵，固定获得对应15分钟加速 ×4。按当前需要调拨，合计1小时；不直接完成队列。',
+    choices: ['build', 'research', 'train'].map(kind => ({id: kind,
+      name: {build: '建设加速', research: '研究加速', train: '练兵加速'}[kind], items: {[`speed_${kind}_15m`]: 4}}))},
+  {id: 'supply_rations', name: '行军粮秣包', price: 12, limit: 10,
+    description: '固定粮食 +10000。用于行军、募兵或伤兵治疗；资源装不下时保留包裹。', resources: {food: 10000}},
+  {id: 'supply_recovery', name: '返城整备包', price: 55, limit: 5,
+    description: '固定获得练兵1小时加速 ×2、典民令 ×1，粮食 +5000、黄金 +2000。人口与练兵道具需另行使用，不直接补满部队。',
+    items: {speed_train_1h: 2, population: 1}, resources: {food: 5000, gold: 2000}},
+  {id: 'supply_siege', name: '攻城筹备包', price: 90, limit: 5,
+    description: '固定获得建设1小时加速 ×2、练兵1小时加速 ×2，石料 +10000、铁锭 +5000。帮助准备器械，仍需满足原募兵条件。',
+    items: {speed_build_1h: 2, speed_train_1h: 2}, resources: {stone: 10000, iron: 5000}},
+];
+const ids = new Map(offers.map(row => [row.id, row]));
+const commands = new Set(['supplies.buy', 'supplies.open', 'supplies.claimStarter']);
+const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
+const int = value => Number.isSafeInteger(value) && value >= 0;
+const empty = () => ({version: 1, stock: {}, purchases: {}, starterClaimed: false});
+const starterItems = {speed_build_1h: 4, speed_research_1h: 2, speed_train_1h: 1};
+const isSupplyCommand = type => commands.has(type);
+
+function validSupplyWorkshop(state) {
+  if (!object(state)) return false;
+  if (!Object.hasOwn(state, 'supplyWorkshop')) return true;
+  const r = state.supplyWorkshop;
+  return object(r) && Object.keys(r).length === 4 && r.version === 1 && typeof r.starterClaimed === 'boolean' &&
+    object(r.stock) && object(r.purchases) && Object.entries(r.purchases).every(([id, n]) => ids.has(id) && int(n) && n <= ids.get(id).limit) &&
+    Object.entries(r.stock).every(([id, n]) => ids.has(id) && int(n) &&
+      n <= (r.purchases[id] || 0) + (r.starterClaimed && id === 'supply_choice' ? 1 : 0) + earnedConquestBundles(state, id));
+}
+
+function grantEarnedSupplyBundle(game, id) {
+  if (!ids.has(id)) throw new GameError('BAD_SUPPLIES', '未知军需包');
+  const r = copy(game.state.supplyWorkshop || empty());
+  r.stock[id] = (r.stock[id] || 0) + 1;
+  game.state.supplyWorkshop = r;
+  if (!validSupplyWorkshop(game.state)) throw new GameError('BAD_SUPPLIES', '所得军需包无法通过来源校验');
+}
+
+function contentsReason(game, contents) {
+  for (const [id, n] of Object.entries(contents.items || {})) {
+    if (!game.manual.shop.some(row => row.id === id && row.effect) || !int(n) ||
+      !int(game.state.inventory[id] || 0) || !int((game.state.inventory[id] || 0) + n)) return '道具内容或库存无效';
+  }
+  for (const [id, n] of Object.entries(contents.resources || {})) {
+    if (!Object.hasOwn(game.resources, id) || !int(n) || !Number.isFinite(game.state.res[id]) ||
+      game.state.res[id] + n > game.capacity(id)) return `${game.resources[id]?.name || id}容量不足；包裹保留，请腾出空间或提升仓储`;
+  }
+  return '';
+}
+
+function starterView(game, shared) {
+  const reason = shared ? '首战工程补给用于本机进度' : game.state.supplyWorkshop?.starterClaimed ? '本存档已领取' :
+    game.state.onboarding.firstBattle === 'complete' ? '首战引导已完成，本补给仅用于首战准备' :
+    game.state.buildings.hall < 1 ? '官府达到1级后领取' : contentsReason(game, {items: starterItems});
+  return {name: '首战工程补给', description: '一次性免费领取：建设1小时加速 ×4、研究1小时加速 ×2、练兵1小时加速 ×1、百工调拨令 ×1。先安排当前工程，再按成长路线预览使用。',
+    claimed: !!game.state.supplyWorkshop?.starterClaimed, reason,
+    command: {type: 'supplies.claimStarter', args: []}};
+}
+
+const starterSupplyQuote = (runtime, {shared = false} = {}) => starterView(runtime.Game, shared);
+
+function supplyWorkshopView(runtime, {shared = false} = {}) {
+  const game = runtime.Game, state = game.state, r = state.supplyWorkshop || empty();
+  const items = shared ? [] : offers.map(offer => {
+    const count = r.stock[offer.id] || 0, remaining = offer.limit - (r.purchases[offer.id] || 0);
+    const reason = !remaining ? '本存档限购份额已用完' : state.gems < offer.price ? '试玩元宝不足' : '';
+    const choices = (offer.choices || []).map(row => ({id: row.id, name: row.name, reason: contentsReason(game, row)}));
+    return {id: offer.id, name: offer.name, category: '创新军需', effect: 'supplyBundle', count,
+      description: offer.description + `\n试玩设计 · 本存档限购 ${offer.limit} 包，跨城共用。`, trial: true,
+      supported: true, rewardOnly: false, price: offer.price, buyType: 'supplies.buy', openType: 'supplies.open',
+      purchase: {reason, limit: reason ? 0 : Math.min(99, remaining, Math.floor(state.gems / offer.price)),
+        remaining, dailyLimit: offer.limit, period: 'save', costs: Array.from({length: 99}, (_, i) => offer.price * (i + 1))},
+      use: {targetKind: choices.length ? 'choice' : 'none', targets: choices,
+        reason: count < 1 ? '没有这件包裹' : choices.length ? '' : contentsReason(game, offer), route: null}};
+  });
+  return {items, starter: starterView(game, shared)};
+}
+
+function grant(game, contents) {
+  for (const [id, n] of Object.entries(contents.items || {})) game.state.inventory[id] = (game.state.inventory[id] || 0) + n;
+  for (const [id, n] of Object.entries(contents.resources || {})) game.state.res[id] += n;
+}
+
+/** Private CAS candidate only. All failures discard the candidate and keep receipts unchanged. */
+function executeSupplyCommand(runtime, input, now) {
+  validateInput(input);
+  if (!commands.has(input.type) || !validSupplyWorkshop(runtime.Game.state)) throw new GameError('BAD_SUPPLIES', '军需记录或操作无效');
+  const game = runtime.Game;
+  game.tick(now, true);
+  const r = copy(game.state.supplyWorkshop || empty());
+  let result;
+  if (input.type === 'supplies.claimStarter') {
+    if (input.args.length) throw new GameError('BAD_SUPPLIES', '首战补给参数无效');
+    const quote = starterView(game, false);
+    if (quote.reason) throw new GameError('GAME_RULE', quote.reason);
+    grant(game, {items: starterItems});
+    r.starterClaimed = true; r.stock.supply_choice = (r.stock.supply_choice || 0) + 1;
+    result = {items: copy(starterItems), bundles: {supply_choice: 1}, free: true};
+  } else {
+    const offer = ids.get(input.args[0]);
+    if (!offer) throw new GameError('BAD_SUPPLIES', '军需包不存在');
+    if (input.type === 'supplies.buy') {
+      const count = input.args[1], purchased = r.purchases[offer.id] || 0, cost = count * offer.price;
+      if (input.args.length !== 2 || !int(count) || count < 1 || count > 99 || purchased + count > offer.limit)
+        throw new GameError('GAME_RULE', '购买数量超过本存档限购份额');
+      if (!int(game.state.gems) || game.state.gems < cost) throw new GameError('GAME_RULE', '试玩元宝不足');
+      game.state.gems -= cost; r.purchases[offer.id] = purchased + count;
+      r.stock[offer.id] = (r.stock[offer.id] || 0) + count;
+      result = {bundle: offer.id, count, gemsSpent: cost};
+    } else {
+      if (!(r.stock[offer.id] > 0)) throw new GameError('GAME_RULE', '没有这件包裹');
+      const choice = offer.choices?.find(row => row.id === input.args[1]);
+      if (offer.choices ? input.args.length !== 2 || !choice : input.args.length !== 1)
+        throw new GameError('BAD_SUPPLIES', '请明确选择合法的调拨方向');
+      const contents = choice || offer, reason = contentsReason(game, contents);
+      if (reason) throw new GameError('GAME_RULE', reason);
+      grant(game, contents); r.stock[offer.id] -= 1;
+      result = {bundle: offer.id, choice: choice?.id || null, items: copy(contents.items || {}), resources: copy(contents.resources || {})};
+    }
+  }
+  game.state.supplyWorkshop = r;
+  if (!validSupplyWorkshop(game.state) || !game.validSave(game.state) || game.save() === false)
+    throw new GameError('INVALID_RESULT', '军需操作无法通过存档校验');
+  return {state: copy(game.state), result, runtime};
+}
+
+return {validSupplyWorkshop,grantEarnedSupplyBundle,starterSupplyQuote,supplyWorkshopView,executeSupplyCommand};})();
+const ConquestSupply=(()=>{
+
+const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
+const int = value => Number.isSafeInteger(value) && value >= 0;
+let metadata;
+function catalogue() {
+  if (metadata) return metadata;
+  const {Game: game} = {Game};
+  const nodes = new Map(game.nodes.map(node => [node.id, game.isCity(node) ? 'city' : 'wild']));
+  const pool = game.manual.shop.filter(item => item.effect && !item.rewardOnly).map(item => ({
+    kind: 'item', id: item.id, name: item.name, weight: item.price >= 100 ? 1 : 8}));
+  pool.push(...Object.entries(CONQUEST_BUNDLES).map(([id, name]) => ({kind: 'bundle', id, name, weight: id === 'supply_siege' ? 3 : 8})));
+  metadata = {nodes, pool};
+  return metadata;
+}
+
+function nodeKind(id) {
+  const wild = /^wild_(\d+)_(\d+)$/.exec(id);
+  if (wild) return Number(wild[1]) < 64 && Number(wild[2]) < 64 && `wild_${Number(wild[1])}_${Number(wild[2])}` === id ? 'wild' : null;
+  return catalogue().nodes.get(id) || null;
+}
+function empty() { return {version: 1, enabled: false, records: {}}; }
+function availablePool(game) {
+  return catalogue().pool.filter(drop => drop.kind === 'bundle' || (game.state.inventory[drop.id] || 0) < Number.MAX_SAFE_INTEGER);
+}
+function validConquestSupply(state) {
+  if (!object(state)) return false;
+  if (!Object.hasOwn(state, 'conquestSupply')) return true;
+  const r = state.conquestSupply;
+  if (!object(r) || Object.keys(r).length !== 3 || r.version !== 1 || typeof r.enabled !== 'boolean' || !object(r.records)) return false;
+  const rows = Object.entries(r.records), {nodes, pool} = catalogue();
+  if (rows.length > 4096 + nodes.size) return false;
+  return rows.every(([id, row]) => object(row) && Object.keys(row).length === 7 && ['wild', 'city'].includes(row.kind) && nodeKind(id) === row.kind &&
+    ['baseline', 'disabled', 'rewarded'].includes(row.status) && int(row.level) && row.level >= 1 && row.level <= 10 && int(row.at) &&
+    typeof row.sourceCity === 'string' && row.sourceCity.length <= 100 && int(row.gems) &&
+    (row.status === 'rewarded' ? row.gems <= conquestGems(row.kind, row.level) && !!row.sourceCity &&
+      object(row.drop) && Object.keys(row.drop).length === 2 && pool.some(drop => drop.kind === row.drop.kind && drop.id === row.drop.id) : row.gems === 0 && row.drop === null));
+}
+
+function conquestNodeQuote(game, node, mode = 'occupy') {
+  const kind = nodeKind(node.id), enabled = game.state.conquestSupply?.enabled === true;
+  const first = !!kind && !game.state.conquestSupply?.records[node.id] && !game.state.conquered[node.id];
+  return {enabled, eligible: !!kind && mode === 'occupy', first,
+    gems: kind ? conquestGems(kind, Math.max(1, Math.min(10, node.level || 1))) : 0,
+    reason: !enabled ? '征战补给模式尚未开启' : !kind || mode !== 'occupy' ? '额外补给用于野地／据点与城池占领' :
+      !first ? '此地点的首次占领份额已处理，重占不再发放' : '真正占领后自动获得元宝与随机商城道具 ×1'};
+}
+
+function conquestSupplyView(runtime, {shared = false} = {}) {
+  const game = runtime.Game, r = game.state.conquestSupply || empty(), pool = availablePool(game);
+  const totalWeight = pool.reduce((n, row) => n + row.weight, 0);
+  const rewarded = Object.entries(r.records).filter(([, row]) => row.status === 'rewarded');
+  return {shared, enabled: !shared && r.enabled, reason: shared ? '征战补给模式用于本机PVE进度' : '',
+    earnedGems: rewarded.reduce((n, [, row]) => n + row.gems, 0), rewarded: rewarded.length,
+    history: shared ? [] : rewarded.sort((a, b) => b[1].at - a[1].at).slice(0, 8).map(([id, row]) => ({
+      node: id, name: game.getNode(id)?.name || id, kind: row.kind, gems: row.gems, at: row.at,
+      itemName: catalogue().pool.find(drop => drop.kind === row.drop.kind && drop.id === row.drop.id).name})),
+    pool: shared ? [] : pool.map(row => ({id: row.id, kind: row.kind, name: row.name, percent: 100 * row.weight / totalWeight})),
+    command: {type: 'conquest.setEnabled', args: [!r.enabled]}};
+}
+
+function executeConquestSetting(runtime, input, now) {
+  validateInput(input);
+  if (input.type !== 'conquest.setEnabled' || input.args.length !== 1 || typeof input.args[0] !== 'boolean')
+    throw new GameError('BAD_CONQUEST_MODE', '请选择开启或暂停征战补给模式');
+  const game = runtime.Game;
+  game.tick(now, true);
+  const r = copy(game.state.conquestSupply || empty());
+  // Initial opt-in never pays retroactive prizes for already-owned/imported land.
+  for (const id of Object.keys(game.state.conquered)) {
+    if (!game.state.conquered[id] || r.records[id] || !nodeKind(id)) continue;
+    const node = game.getNode(id);
+    if (node) r.records[id] = {status: 'baseline', kind: nodeKind(id), level: Math.max(1, Math.min(10, node.level || 1)),
+      at: now, sourceCity: '', gems: 0, drop: null};
+  }
+  r.enabled = input.args[0]; game.state.conquestSupply = r;
+  if (!validConquestSupply(game.state) || !game.validSave(game.state) || game.save() === false)
+    throw new GameError('INVALID_RESULT', '征战补给设置无法通过存档校验');
+  return {runtime, state: copy(game.state), result: {enabled: r.enabled}};
+}
+
+/** Capture only a real player-issued occupancy round, before native settlement. */
+function captureConquestContext(game, input) {
+  const b = game.state.battle;
+  if (input.type !== 'battleRound' || !game.state.conquestSupply || !b || b.finished || b.mode !== 'occupy' ||
+      game.state.expedition?.node !== b.node || game.state.expedition?.general !== b.general || !nodeKind(b.node)) return null;
+  if (game.state.expedition.sourceCity && game.state.expedition.sourceCity !== game.currentCityId()) return null;
+  return {battle: b, node: b.node, general: b.general, sourceCity: game.currentCityId(), already: !!game.state.conquered[b.node]};
+}
+
+/** Supplemental reward only after actual ownership changes. Same CAS/receipt as the battle. */
+function settleConquestSupply(runtime, context, now) {
+  if (!context) return null;
+  const game = runtime.Game, b = game.state.battle, result = b?.result, node = game.getNode(context.node);
+  if (b !== context.battle || !b.finished || b.node !== context.node || b.general !== context.general || context.already ||
+      !result?.won || result.mode !== 'occupy' || result.claimed !== true || !game.state.conquered[context.node] ||
+      game.currentCityId() !== context.sourceCity || game.state.conquestSupply.records[context.node]) return null;
+  if (node.wild && game.state.realm.wildOwners[context.node] !== context.sourceCity ||
+      game.isCity(node) && !game.cityList().some(city => city.node === context.node)) return null;
+  const report = game.state.reports[0];
+  if (!report || report.node !== context.node || report.general !== context.general || report.sourceCity !== context.sourceCity ||
+      !int(report.id) || report.won !== true || report.claimed !== true || report.mode !== 'occupy') return null;
+  const r = game.state.conquestSupply, kind = nodeKind(context.node), level = Math.max(1, Math.min(10, node.level || 1));
+  const row = {status: r.enabled ? 'rewarded' : 'disabled', kind, level, at: report.id, sourceCity: context.sourceCity, gems: 0, drop: null};
+  r.records[context.node] = row;
+  if (r.enabled) {
+    const pool = availablePool(game);
+    let pick = Math.floor(Math.random()*pool.reduce((n, drop) => n + drop.weight, 0));
+    const chosen = pool.find(drop => (pick -= drop.weight) < 0);
+    row.drop = {kind: chosen.kind, id: chosen.id};
+    row.gems = Math.min(conquestGems(kind, level), Number.MAX_SAFE_INTEGER - game.state.gems);
+    game.state.gems += row.gems;
+    if (chosen.kind === 'bundle') SupplyWorkshop.grantEarnedSupplyBundle(game, chosen.id);
+    else game.state.inventory[chosen.id] = (game.state.inventory[chosen.id] || 0) + 1;
+  }
+  if (!validConquestSupply(game.state) || !game.validSave(game.state) || game.save() === false)
+    throw new GameError('INVALID_RESULT', '占领补给无法通过存档校验');
+  return row.status === 'rewarded' ? conquestReportReceipt(runtime, report) : null;
+}
+
+function conquestReportReceipt(runtime, report) {
+  const row = runtime.Game.state.conquestSupply?.records[report.node];
+  if (!row || row.status !== 'rewarded' || row.at !== report.id || row.sourceCity !== report.sourceCity ||
+      report.won !== true || report.claimed !== true || report.mode !== 'occupy') return null;
+  const drop = catalogue().pool.find(value => value.kind === row.drop.kind && value.id === row.drop.id);
+  return {node: report.node, gems: row.gems, item: {...copy(row.drop), name: drop.name, count: 1}};
+}
+
+return {validConquestSupply,conquestNodeQuote,conquestSupplyView,executeConquestSetting,captureConquestContext,settleConquestSupply,conquestReportReceipt};})();
+
+  const runtime=()=>({Game,HeritageSystem,Progression});
+  const shared=()=>Game.authorityActive()||!!Game.state?.onlineRealm||typeof GAME_SERVER_RUNTIME!=='undefined'&&GAME_SERVER_RUNTIME;
+  function execute(type,args){
+    if(shared())return '此扩展用于本机进度，共享世界继续使用原结算规则';
+    const reason=Game.saveBlockReason();if(reason)return reason;
+    try{
+      if(type.startsWith('supplies.'))SupplyWorkshop.executeSupplyCommand(runtime(),{type,args},Date.now());
+      else if(type==='conquest.setEnabled')ConquestSupply.executeConquestSetting(runtime(),{type,args},Date.now());
+      else GrowthSupport.executeGrowthSupport(runtime(),{type,args},Date.now());
+      return null;
+    }catch(error){return error.message;}
+  }
+  function capture(){return shared()?null:ConquestSupply.captureConquestContext(Game,{type:'battleRound'});}
+  function settle(context){
+    if(!context)return null;
+    // finishBattle persists the native report and supplemental receipt together.
+    const game=Object.create(Game);game.save=()=>true;
+    return ConquestSupply.settleConquestSupply({...runtime(),Game:game},context,Date.now());
+  }
+  function sync(){
+    if(shared()||Game.state.conquestSupply)return;
+    // Preserve old ownership as a baseline before any new battle or toggle.
+    const records={};
+    for(const [id,held] of Object.entries(Game.state.conquered)){
+      const node=held?Game.getNode(id):null;if(!node)continue;
+      records[id]={kind:Game.isCity(node)?'city':'wild',status:'baseline',level:Math.max(1,Math.min(10,node.level||1)),at:Date.now(),sourceCity:'',gems:0,drop:null};
+    }
+    Game.state.conquestSupply={version:1,enabled:false,records};
+  }
+  return {execute,capture,settle,sync,shared,
+    valid:s=>WildFields.valid(s)&&GrowthSupport.validGrowthSupport(s)&&SupplyWorkshop.validSupplyWorkshop(s)&&ConquestSupply.validConquestSupply(s),
+    supplies:()=>SupplyWorkshop.supplyWorkshopView(runtime(),{shared:shared()}),
+    growth:()=>[GrowthSupport.growthSupportQuote(runtime(),{shared:shared()}),...GrowthSupport.growthPreparationQuotes(runtime(),{shared:shared()})],
+    conquest:()=>ConquestSupply.conquestSupplyView(runtime(),{shared:shared()}),
+    conquestQuote:(node,mode)=>ConquestSupply.conquestNodeQuote(Game,node,mode),
+    receipt:report=>ConquestSupply.conquestReportReceipt(runtime(),report)};
+})();
+
+
 // SOURCE: engine.js
 'use strict';
 // Handbook tables are in manual-data.js. Trial economy formulas and combat coefficients are documented in RULES.md.
@@ -14671,21 +15477,22 @@ const Game = (() => {
     swamp:{name:'沼泽',icon:'泽',resource:'food',color:'#617b67'}
   };
   const hash=(x,y)=>{let n=Math.imul(x+419,374761393)^Math.imul(y+733,668265263);n=Math.imul(n^(n>>>13),1274126177);return (n^(n>>>16))>>>0;};
-  function wildTile(x,y,context=state){
-    const seed=hash(x,y),district=hash(Math.floor(x/4),Math.floor(y/4))%100,river=Math.abs(x-(15+Math.round(4*Math.sin(y/7))));
-    const type=river<1?'lake':district<19?'forest':district<35?'mountain':district<48?'hill':district<61?'swamp':district<80?'grass':'plain';
+  function legacyWildTile(x,y,context=state,override=null){
+    const seed=override?.seed??hash(x,y),district=hash(Math.floor(x/4),Math.floor(y/4))%100,river=Math.abs(x-(15+Math.round(4*Math.sin(y/7))));
+    const type=override?.type||(river<1?'lake':district<19?'forest':district<35?'mountain':district<48?'hill':district<61?'swamp':district<80?'grass':'plain');
     const cfg=terrainTypes[type],distance=Math.hypot(x-home.x,y-home.y),base=Math.min(10,1+Math.floor(distance/5)+(seed%11===0?1:0));
     const id='wild_'+x+'_'+y,claim=context?.landClaims?.[id];
-    const level=claim?Math.max(0,claim.level-Math.floor((Date.now()-claim.at)/86400000)):base;
+    const level=override?.level??(claim?Math.max(0,claim.level-Math.floor((Date.now()-claim.at)/86400000)):base);
     // Use the package's NPC value budget and conversion factor; stable seeded weights
     // adapt its random composition to a persistent browser map.
     const army={},budget=(ReferenceRules.fieldBudget[level]||0)*1.1,ids=Object.keys(ReferenceRules.npcValues);let allocated=0;
-    ids.forEach((id,i)=>{const weight=hash(x+i*7,y+i*13)%(100-allocated||1);allocated+=weight;const count=Math.floor(budget*weight*.0078/ReferenceRules.npcValues[id]);if(count>0)army[id]=count;});
+    ids.forEach((id,i)=>{const weight=(override&&!override.legacy?WildFields.weight(seed,i):hash(x+i*7,y+i*13))%(100-allocated||1);allocated+=weight;const count=Math.floor(budget*weight*.0078/ReferenceRules.npcValues[id]);if(count>0)army[id]=count;});
     if(level&&!Object.keys(army).length)army.militia=1;
     let bonus=0;if(level&&type!=='plain')bonus=(type==='lake'?5+level*3:type==='grass'?11+level:3+level*2)/100;
     const value=Object.entries(army).reduce((v,[id,n])=>v+Math.floor(n*ReferenceRules.npcValues[id]/.784),0),amount=Math.floor(value*(cfg.resource==='stone'?.5:cfg.resource==='iron'?.4:1)),bonusMap=bonus?{[cfg.resource]:bonus}:{},reward=type==='plain'?'平地 · 占领后可筑城':level?'占领后 '+resources[cfg.resource].name+'产量 +'+Math.round(bonus*100)+'%':'0 级野地 · 无产量加成';
     return {id,name:cfg.name+'野地 ('+x+','+y+')',type,terrain:type,x,y,level,wild:true,referenceArmy:true,desc:'野地守军按等级战力预算生成，各地配兵不同。先侦察，再选择掠夺或占领；运输兵决定能带回多少资源。',army,loot:{[cfg.resource]:amount},reward,bonus:bonusMap,time:Math.min(90,Math.max(8,Math.round(6+distance*2)))};
   }
+  function wildTile(x,y,context=state){const override=WildFields.resolve(context,x,y,Date.now());return {...legacyWildTile(x,y,context,override),wildKey:WildFields.key(context,x,y,Date.now())};}
   function getWorldTile(x,y,context=state){
     if(!Number.isInteger(x)||!Number.isInteger(y)||x<0||y<0||x>=WORLD_SIZE||y>=WORLD_SIZE)return null;
     if(x===home.x&&y===home.y)return {id:'home',name:'青溪城',type:'home',x,y,level:context?.realm?.cities?.capital?.data.buildings.hall||context?.buildings.hall||1};
@@ -14750,6 +15557,7 @@ const Game = (() => {
   const missionClaimed=(id,s=state)=>s.missionClaims.includes(id);
   const missionReady=(m,s=state)=>!missionClaimed(m.id,s)&&m.check(s);
   const currentMission=()=>missions.find(m=>missionReady(m))||missions.find(m=>!missionClaimed(m.id));
+  const lessonEvidence=new WeakMap();
   let state,economyClock=null,realmSettling=false,onlineAuthority=false,offlineSnapshot=null,externalGeneralBusy=new Set(),lessonSession=null;
   const tacticsAvailable=()=>typeof BattleStratagems!=='undefined'&&!onlineAuthority&&typeof GAME_SERVER_RUNTIME==='undefined';
   const blankArmy = () => Object.fromEntries(Object.keys(units).map(k=>[k,0]));
@@ -14902,6 +15710,7 @@ const Game = (() => {
   }
   function validSave(d,cityScopeOnly=false){
     if(d===state&&!cityScopeOnly)CitySystem.capture(state);
+    if(!cityScopeOnly&&!WebEdition.valid(d))return false;
     const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
     const finite=n=>Number.isFinite(n)&&n>=0&&n<=Number.MAX_SAFE_INTEGER;
     const integer=n=>finite(n)&&Number.isInteger(n);
@@ -15074,7 +15883,7 @@ const Game = (() => {
     }state.realm.logistics=state.realm.logistics.filter(j=>!remove.has(j.id));state.realm.logisticsReports=state.realm.logisticsReports.slice(0,30);
   }
   function tick(now=Date.now(),allowAutomation=true,settleAtSameTime=false){
-    if(onlineAuthority||realmSettling||saveBlockReason())return;CitySystem.capture(state);const selected=currentCityId();
+    if(onlineAuthority||realmSettling||saveBlockReason())return;WildFields.sync(api,now);WebEdition.sync();CitySystem.capture(state);const selected=currentCityId();
     const scouts=CitySystem.list(state).flatMap(c=>CitySystem.scope(state,c).scoutQueue.flatMap(j=>[j.end,...(j.phase==='out'?[j.end+j.returnSeconds*1000]:[])]));
     const capStart=now-28800000,salaryFrom=Math.max(state.heroService.lastPay,capStart),salaryBounds=Array.from({length:Math.max(0,Math.floor((now-salaryFrom)/GovernanceSystem.HOUR))},(_,i)=>salaryFrom+(i+1)*GovernanceSystem.HOUR);
     const bounds=[...new Set([...salaryBounds,...scouts.filter(end=>end<=now),...state.realm.logistics.flatMap(j=>[j.end,...(j.kind==='transport'&&j.phase==='outbound'?[j.end+j.seconds*1000]:[])]).filter(end=>end<=now),now])].sort((a,b)=>a-b);realmSettling=true;
@@ -15381,13 +16190,13 @@ const Game = (() => {
     if(!tacticsAvailable()||typeof TacticalLessons==='undefined')return '教学演练仅在单机模式可用';
     if(state.battle&&!state.battle.finished||state.cityDefense.battle)return '请先结束当前正式战斗或守城演练';
     const next=TacticalLessons.create(id,units);if(!next)return '演练不存在';
-    next.battle.stratagem=BattleStratagems.create(next.battle,{player:next.battle.generalSnapshot,enemy:next.battle.enemyGeneralSnapshot});lessonSession=next;
+    lessonEvidence.set(next.battle,BattleReview.createRoundEvidence());next.battle.stratagem=BattleStratagems.create(next.battle,{player:next.battle.generalSnapshot,enemy:next.battle.enemyGeneralSnapshot});lessonSession=next;
     if(next.enemyPlan)tacticSubmit(next.battle,'enemy',next.enemyPlan.type,next.enemyPlan);
     return null;
   }
-  const lessonInfo=()=>lessonSession?{id:lessonSession.id,title:lessonSession.title,generalName:lessonSession.generalName,description:lessonSession.description,objective:lessonSession.objective,node:lessonSession.node,battle:lessonSession.battle,result:lessonSession.result}:null;
+  const lessonInfo=()=>lessonSession?{id:lessonSession.id,title:lessonSession.title,basic:!!TacticalLessons.definitions.find(d=>d.id===lessonSession.id)?.basic,generalName:lessonSession.generalName,description:lessonSession.description,objective:lessonSession.objective,node:lessonSession.node,battle:lessonSession.battle,result:lessonSession.result,evidence:lessonEvidence.get(lessonSession.battle)}:null;
   function lessonOrder(index,command){const b=lessonSession?.battle,r=Number.isInteger(index)?b?.player[index]:null;if(!r||r.hp<=0||b.finished||!['advance','hold','fallback'].includes(command))return '演练指令无效';b.orders[r.id].command=command;return null;}
-  function lessonTarget(index,target){const b=lessonSession?.battle,r=Number.isInteger(index)?b?.player[index]:null;if(!r||r.hp<=0||b.finished||target!==''&&!b.enemy.some(t=>t.id===target))return '演练目标无效';b.orders[r.id].target=target;return null;}
+  function lessonTarget(index,target){const b=lessonSession?.battle,r=Number.isInteger(index)?b?.player[index]:null;if(!r||r.hp<=0||b.finished||target!==''&&!(target==='gate'&&b.gate?.hp>0)&&!b.enemy.some(t=>t.id===target))return '演练目标无效';b.orders[r.id].target=target;return null;}
   function lessonAllOrders(command){if(!lessonSession||!['advance','hold','fallback'].includes(command)||lessonSession.battle.finished)return '演练指令无效';for(let i=0;i<lessonSession.battle.player.length;i++)if(lessonSession.battle.player[i].hp>0)lessonOrder(i,command);return null;}
   const lessonTactic=(type,args={},key)=>tacticSubmit(lessonSession?.battle,'player',type,args,key);
   const lessonCancelTactic=id=>lessonSession?BattleStratagems.cancel(lessonSession.battle,'player',id,stratagemApi):{ok:false,reason:'尚未开始演练'};
@@ -15495,6 +16304,7 @@ const Game = (() => {
       if(target){const beforeHp=target.hp,before=Math.ceil(target.hp/target.stats.hp),damage=Math.round((node.fortification?.tower||180+nLevel(b.node)*70)/(1+target.stats.def/200)/(1+g.def/300));target.hp=Math.max(0,target.hp-damage);const killed=before-Math.ceil(target.hp/target.stats.hp);event('tower','enemy','tower',target.id,b.length,target.pos,Math.min(beforeHp,damage),killed,false,true);event('recoil','player',target.id,'tower',target.pos,target.pos,Math.min(beforeHp,damage),killed,false,true);pushLog(b,'城防箭楼射击我军'+units[target.id].name+'，伤害 '+Math.min(beforeHp,damage)+'。');}
     }
     if(tactics)BattleStratagems.endRound(b,stratagemApi);
+    if(lesson)BattleReview.collectRoundEvidence(b.currentRoundSummary,lessonEvidence.get(b),{battle:b});
     const finish=won=>lesson?TacticalLessons.finish(lesson,won):finishBattle(won);
     if(!living(b.enemy).length&&(!b.gate||!b.gate.hp))finish(true);
     else if(!living(b.player).length||b.round>=30){if(b.round>=30)pushLog(b,lesson?'演练达到回合上限，可重开比较指令。':'达到回合上限，'+(b.gate?.hp>0?'城防仍未攻破'+(living(b.enemy).length?'且守军尚未清空':''):'守军尚未清空')+'，本次攻打失败。');finish(false);}
@@ -15503,6 +16313,7 @@ const Game = (() => {
   }
   function finishBattle(won,retreated=false){
     const b=state.battle,e=state.expedition;if(!b||b.finished)return;
+    const conquestContext=WebEdition.capture();
     const n=getNode(b.node),mode=b.mode,originalArmy={...e.army},alive=survivors(b.player),back=blankArmy(),lost=blankArmy(),wounded=blankArmy();
     const enemyRemaining=totalArmy(survivors(b.enemy)),gateHp=b.gate?.hp||0,outOfRange=b.player.some(r=>r.hp>0&&b.orders[r.id].command==='hold'&&b.enemy.some(t=>t.hp>0)&&!b.enemy.some(t=>t.hp>0&&Math.abs(t.pos-r.pos)<=r.stats.range));
     const failure=won?null:{reason:retreated?'retreat':!totalArmy(alive)?'army':gateHp>0?(enemyRemaining?'gate_and_enemy':'gate'):'enemy',round:b.round,enemyRemaining,gateHp,outOfRange};
@@ -15531,6 +16342,7 @@ const Game = (() => {
     const tacticReceipt=b.stratagem?{tacticEvents:[...BattleStratagems.view(b,'player').events.map(e=>'第 '+e.round+' 回合 · '+e.text),...b.log.filter(line=>line.includes('被火区截停'))].slice(-60),tacticPoints:{...b.stratagem.points}}:{};
     b.finished=true;b.auto=false;b.result={...tacticReceipt,wildGeneral,warOrder,failure,...progressionResult,...equipmentResult,won,mode,returnAfterOccupy:!!e.returnAfterOccupy,claimed,stationed,moraleBefore,moraleAfter,retreated,woundedInHospital:true,loot,resourceReceipt,captures,captureDiscarded,itemDrops:drops.items,bonusLoot,bonusDiscarded,cargoCapacity,cargoLoaded:Object.values(loot).reduce((v,n)=>v+n,0)+Object.values(bonusLoot).reduce((v,n)=>v+n,0),lootDiscarded,lost,wounded,back,xp,first:claimed,recruit,overflow,overCapacity};
     state.reports.unshift({id:Date.now(),node:n.id,general:e.general,sourceCity:currentCityId(),round:b.round,...b.result});state.reports=state.reports.slice(0,20);
+    WebEdition.settle(conquestContext);
     pushLog(b,n.orderRoute&&won?'军令讨伐成功，军功 +'+warOrder.points+'，已保存；部队返城。':!won?'战斗失利，幸存部队返城整顿。':mode==='raid'?'掠夺成功，战利品已入库（允许爆仓），部队返城；领地归属不变。':stationed?(isCity(n)?'占领成功，部队驻扎新城，可切换城市查看。':'占领成功，部队留守野地，耗粮翻倍。'):claimed?(n.wild&&e.returnAfterOccupy?'占领成功，部队按出征选择返城；野地归属与产量加成保留。':'占领成功，领地归属变更。'):moraleAfter!==null?'攻城获胜，民心 '+moraleBefore+' → '+moraleAfter+'，尚未易主。':'本次战斗结束。');
     if(wildGeneral)pushLog(b,wildGeneral.status==='captured'?'俘获将领 '+wildGeneral.name+'，忠诚 40；请在俘将管理中手动招降。':wildGeneral.status==='portrait_required'?'未能俘获将领 '+wildGeneral.name+'：'+wildGeneral.reason+'。线索仍然有效。':'释放将领 '+wildGeneral.name+'：'+wildGeneral.reason+'。扩建招贤馆后可重新打听。');
     if(totalArmy(captures))pushLog(b,'收容俘虏：'+Object.entries(captures).filter(([,n])=>n>0).map(([id,n])=>units[id].name+' ×'+n).join('、')+'；可在军队的俘虏营招降。');
@@ -15753,8 +16565,8 @@ const Game = (() => {
   function setGovernancePolicy(kind,enabled){tick(Date.now(),false);const error=GovernanceSystem.setPolicy(state,kind,enabled,Date.now());if(!error)save();return error;}
   const defeatedHeroQuote=(id,method='gold')=>GovernanceSystem.captiveQuote(state,id,method);
   function recruitDefeatedHero(id,method,key){tick(Date.now(),false);const error=GovernanceSystem.recruitCaptive(state,id,method,key,Date.now());if(!error)save();return error;}
-  const api={namedCityProgress,namedCities,namedCityDevelopmentQuote,claimNamedCityDevelopment,plotMaxLevel,warCareQuote,healWounded,setAutoHeal,setDefenseDoctrine,resolveCityDefense,governanceStatus,salaryQuote,payHeroArrears,setGovernancePolicy,defeatedHeroQuote,recruitDefeatedHero,cityStrategy,battleTacticsView,battleTacticQuote,submitBattleTactic,cancelBattleTactic,heroIdentity,startTacticalLesson,lessonInfo,currentBattle:()=>lessonSession?.battle||state.battle,lessonRound,lessonOrder,lessonAllOrders,lessonTarget,lessonTactic,lessonCancelTactic,endTacticalLesson,setExternalGeneralBusy,domesticStrategyAvailable,supplyLines,supplyLineQuote,saveSupplyLine,setSupplyLineEnabled,removeSupplyLine,heroAdministrationQuote,prepareHeroAdministration,regionFrontQuote,regionalFrontStatus,startRegionalFront,cityMeta,citySummary,cityList,currentCityId,currentHome,heroCity,heroCapacity,cityLimit,getCityState,switchCity,enterOwnedCity,foundCityQuote,foundCity,transportQuote,sendTransport,redeployQuote,redeployArmy,logisticsList,recallLogistics,scoutQuote,dispatchScout,trainGeneralSkill,generalGrowth:GeneralGrowth,enterOnlineSession,leaveOnlineSession,applyOnlineSnapshot,authorityActive:()=>onlineAuthority,saveOfflineInfo:()=>lastOffline,openSaveSession,respondSaveTakeover,saveBlockReason,saveSessionInfo,exportStoredRaw,restoreSaveBackup,takeOverSaveSession,releaseSaveSession,completeFirstBattleGuide,warOrders:WarOrders,onboarding:OnboardingSystem,buildingConditions,requirementLevel,requestCityDefense,setAutoCityDefense,startCityDefense,cityDefenseRound,endDefenseDrill,brickPurchaseRemaining,grantTestSupplies,captiveCapacity,captiveChance,captiveRecruitQuote,captiveRecruitAllQuote,recruitAllCaptives,recruitCaptives,releaseCaptives,claimDailyMilestone,claimReadyDaily,defenseCapacity,defenseUsed,defenseRequirements,armyPeople,buildingRuleText,researchRequirements,researchRuleText,buildingRequirements,speedupKey,speedupTargets,speedupQuote,useSpeedup,progression:Progression,acceptDaily,abandonDaily,claimDaily,donateEpic,exchangeCopper,countyUnlocked:()=>Progression.countyUnlocked(state),init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},get uiState(){return state;},allExpeditions:everyExpedition,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,plotTemplates:PlotTemplateData.templates,plotTemplateQuote,setPlotTemplate,applyPlotTemplate,pausePlotTemplate,plotTemplateStatus,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,setAutoResearch,autoResearchStatus,setAutomationSettings,readAutomationNotices,automation:AutomationSystem,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,marchQuote,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,tradeQuote,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,landmarkVisible,landmarkReached,nextLandmark,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,civicOrderPreview,executeCivicOrder,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setBattleOrders,setTactic,recall,dismissBattle,claimMission};
-  const actions=['claimNamedCityDevelopment','healWounded','setAutoHeal','setDefenseDoctrine','resolveCityDefense','payHeroArrears','setGovernancePolicy','recruitDefeatedHero','submitBattleTactic','cancelBattleTactic','saveSupplyLine','setSupplyLineEnabled','removeSupplyLine','prepareHeroAdministration','startRegionalFront','switchCity','enterOwnedCity','foundCity','sendTransport','redeployArmy','recallLogistics','dispatchScout','trainGeneralSkill','completeFirstBattleGuide','requestCityDefense','setAutoCityDefense','startCityDefense','cityDefenseRound','endDefenseDrill','grantTestSupplies','recruitAllCaptives','recruitCaptives','releaseCaptives','claimDailyMilestone','claimReadyDaily','acceptDaily','abandonDaily','claimDaily','donateEpic','exchangeCopper','selectExpedition','developPlot','setPlotTemplate','applyPlotTemplate','pausePlotTemplate','recallGarrison','abandonWild','queueBuilding','cancelBuild','demolish','setAutoUpgrade','setAutoResearch','setAutomationSettings','readAutomationNotices','dismissTroops','research','scout','refreshInn','recruit','trade','buyItem','useItem','claimStarterGift','claimReadyMissions','claimTrialGems','setSpeed','setStorage','buildDefense','relocateBuilding','upgrade','train','setGovernor','setTax','executeCivicOrder','dispatch','startBattle','battleRound','setBattleOrder','setBattleOrders','setTactic','recall','dismissBattle','claimMission'];
+  const api={legacyWildTile,webEditionAction:(type,...args)=>WebEdition.execute(type,args),namedCityProgress,namedCities,namedCityDevelopmentQuote,claimNamedCityDevelopment,plotMaxLevel,warCareQuote,healWounded,setAutoHeal,setDefenseDoctrine,resolveCityDefense,governanceStatus,salaryQuote,payHeroArrears,setGovernancePolicy,defeatedHeroQuote,recruitDefeatedHero,cityStrategy,battleTacticsView,battleTacticQuote,submitBattleTactic,cancelBattleTactic,heroIdentity,startTacticalLesson,lessonInfo,currentBattle:()=>lessonSession?.battle||state.battle,lessonRound,lessonOrder,lessonAllOrders,lessonTarget,lessonTactic,lessonCancelTactic,endTacticalLesson,setExternalGeneralBusy,domesticStrategyAvailable,supplyLines,supplyLineQuote,saveSupplyLine,setSupplyLineEnabled,removeSupplyLine,heroAdministrationQuote,prepareHeroAdministration,regionFrontQuote,regionalFrontStatus,startRegionalFront,cityMeta,citySummary,cityList,currentCityId,currentHome,heroCity,heroCapacity,cityLimit,getCityState,switchCity,enterOwnedCity,foundCityQuote,foundCity,transportQuote,sendTransport,redeployQuote,redeployArmy,logisticsList,recallLogistics,scoutQuote,dispatchScout,trainGeneralSkill,generalGrowth:GeneralGrowth,enterOnlineSession,leaveOnlineSession,applyOnlineSnapshot,authorityActive:()=>onlineAuthority,saveOfflineInfo:()=>lastOffline,openSaveSession,respondSaveTakeover,saveBlockReason,saveSessionInfo,exportStoredRaw,restoreSaveBackup,takeOverSaveSession,releaseSaveSession,completeFirstBattleGuide,warOrders:WarOrders,onboarding:OnboardingSystem,buildingConditions,requirementLevel,requestCityDefense,setAutoCityDefense,startCityDefense,cityDefenseRound,endDefenseDrill,brickPurchaseRemaining,grantTestSupplies,captiveCapacity,captiveChance,captiveRecruitQuote,captiveRecruitAllQuote,recruitAllCaptives,recruitCaptives,releaseCaptives,claimDailyMilestone,claimReadyDaily,defenseCapacity,defenseUsed,defenseRequirements,armyPeople,buildingRuleText,researchRequirements,researchRuleText,buildingRequirements,speedupKey,speedupTargets,speedupQuote,useSpeedup,progression:Progression,acceptDaily,abandonDaily,claimDaily,donateEpic,exchangeCopper,countyUnlocked:()=>Progression.countyUnlocked(state),init,tick,save,reset,validSave,migrateSave,importSave,get state(){return state;},get uiState(){return state;},allExpeditions:everyExpedition,selectExpedition,resources,buildings,cityIds,plotTypes,PLOT_COUNT,unlockedPlots,plotJob,plotCost,plotTime,plotYield,developPlot,plotTemplates:PlotTemplateData.templates,plotTemplateQuote,setPlotTemplate,applyPlotTemplate,pausePlotTemplate,plotTemplateStatus,economyOutputFactor:ECONOMY_OUTPUT_FACTOR,lootPreview,isCity,generalBusy,wildOwned,attackBlocked,attackInfo,battleDropInfo,recallGarrison,abandonWild,buildRecord,buildSeconds,researchSeconds,armyLimit,primarySite,queueBuilding,cancelBuild,demolish,buildLimit,setAutoUpgrade,autoUpgradeStatus,setAutoResearch,autoResearchStatus,setAutomationSettings,readAutomationNotices,automation:AutomationSystem,freePopulation,workers,unitRequirements,trainSeconds,trainingLimit,dismissTroops,unitStats,marchQuote,carry,upkeep,researchCost,research,scout,intel,troopBand,npcName,refreshInn,recruit,tradeQuote,trade,buyItem,useItem,claimStarterGift,starterGiftPending,starterGiftRemaining,starterGiftReward,claimReadyMissions,missionClaimed,missionReady,currentMission,claimTrialGems,setSpeed,setStorage,buildDefense,manual:ManualData,units,get generals(){return [...generals,...(state?.customGenerals||[])];},nodes,WORLD_SIZE,home,landmarks,landmarkVisible,landmarkReached,nextLandmark,terrainTypes,getWorldTile,getNode,relocateBuilding,missions,rates,maxPop,committed,capacity,canPay,upgradeCost,upgrade,unitUnlocked,trainCost,train,general,setGovernor,setTax,civicOrderPreview,executeCivicOrder,power,totalArmy,dispatch,startBattle,battleRound,setBattleOrder,setBattleOrders,setTactic,recall,dismissBattle,claimMission};
+  const actions=['webEditionAction','claimNamedCityDevelopment','healWounded','setAutoHeal','setDefenseDoctrine','resolveCityDefense','payHeroArrears','setGovernancePolicy','recruitDefeatedHero','submitBattleTactic','cancelBattleTactic','saveSupplyLine','setSupplyLineEnabled','removeSupplyLine','prepareHeroAdministration','startRegionalFront','switchCity','enterOwnedCity','foundCity','sendTransport','redeployArmy','recallLogistics','dispatchScout','trainGeneralSkill','completeFirstBattleGuide','requestCityDefense','setAutoCityDefense','startCityDefense','cityDefenseRound','endDefenseDrill','grantTestSupplies','recruitAllCaptives','recruitCaptives','releaseCaptives','claimDailyMilestone','claimReadyDaily','acceptDaily','abandonDaily','claimDaily','donateEpic','exchangeCopper','selectExpedition','developPlot','setPlotTemplate','applyPlotTemplate','pausePlotTemplate','recallGarrison','abandonWild','queueBuilding','cancelBuild','demolish','setAutoUpgrade','setAutoResearch','setAutomationSettings','readAutomationNotices','dismissTroops','research','scout','refreshInn','recruit','trade','buyItem','useItem','claimStarterGift','claimReadyMissions','claimTrialGems','setSpeed','setStorage','buildDefense','relocateBuilding','upgrade','train','setGovernor','setTax','executeCivicOrder','dispatch','startBattle','battleRound','setBattleOrder','setBattleOrders','setTactic','recall','dismissBattle','claimMission'];
   for(const name of actions){const action=api[name];api[name]=(...args)=>{const error=saveBlockReason();if(error)return error;const result=action(...args);return ['write-error','read-error','readonly','conflict'].includes(saveMode)?saveReason:result;};}
   api.useSpeedup=(...args)=>{const error=saveBlockReason();if(error)return {error};const result=useSpeedup(...args);return saveMode==='active'?result:{error:saveReason};};
   return api;

@@ -1,6 +1,6 @@
 'use strict';
 const battleTacticLabels={watch:'察伏',fire:'火攻封路',huangzhong:'蓄弦先射',weiyan:'佯退诱追',zhaoyun:'接应撤军',machao:'冲阵退敌',xushu:'料敌先机'};
-const tacticalLessonTitles={ready_shot:'预备射击与探阵',bait_chase:'诱追与保持阵线',fire_reveal:'火区与提前揭露',rescue_retreat:'接应撤军与保持距离',charge_hold:'冲阵与固守反制'};
+const tacticalLessonTitles={spear_cavalry:'长枪抗骑 · 保护弓阵',siege_guard:'护卫器械 · 河洛东门',opening_battle:'黄巾遭遇战 · 开场示范',ready_shot:'预备射击与探阵',bait_chase:'诱追与保持阵线',fire_reveal:'火区与提前揭露',rescue_retreat:'接应撤军与保持距离',charge_hold:'冲阵与固守反制'};
 let battleTacticDraft=null;
 function battleTacticsSafeView(b){return typeof Game.battleTacticsView==='function'?Game.battleTacticsView(b):null;}
 function battleIdentityOf(id){return typeof Game.heroIdentity==='function'?Game.heroIdentity(id):null;}
@@ -74,7 +74,7 @@ function battleTacticCancelModal(id){
 }
 function battleTacticIsPracticeAction(action){return ['battleTacticSubmit','battleTacticCancel'].includes(action)&&!!battleTacticDraft?.practice&&Game.lessonInfo?.()?.battle===battleTacticDraft.battle;}
 function tacticalLessonCatalog(){
-  showModal('战术演练',`<p class="sub">固定兵将阵容，不消耗城池部队、主将或资源，也不赠送正式名将。与普通单机战斗共用逐队结算。</p><div class="tactical-lesson-list">${Object.entries(tacticalLessonTitles).map(([id,title],index)=>`<article><div><strong>${index+1}. ${esc(title)}</strong><p class="hint">${{ready_shot:'看预兆，比较进入射程与停在射程外。',bait_chase:'比较追击诱兵与保持阵线。',fire_reveal:'先揭露火区，再调整移动时机。',rescue_retreat:'轻骑坚守接应，比较正常后退与有限加速。',charge_hold:'实际推进冲阵，比较敌军前进与固守反制。'}[id]}</p></div>${btn('开始演练','tacticalLessonStart',id,'small')}</article>`).join('')}</div>`,btn('关闭','close','','secondary'));
+  showModal('战术演练',`<p class="sub">固定兵将阵容，不消耗城池部队、主将或资源，也不赠送正式名将。与普通单机战斗共用逐队结算。</p><div class="tactical-lesson-list">${Object.entries(tacticalLessonTitles).map(([id,title],index)=>`<article><div><strong>${index+1}. ${esc(title)}</strong><p class="hint">${{spear_cavalry:'长枪接骑，弓队守后排；观察实际克制。',siege_guard:'护卫器械推进，用真实河洛城门练习破门。',opening_battle:'盾兵掩护，弓队射击；先认识逐回合指令。',ready_shot:'看预兆，比较进入射程与停在射程外。',bait_chase:'比较追击诱兵与保持阵线。',fire_reveal:'先揭露火区，再调整移动时机。',rescue_retreat:'轻骑坚守接应，比较正常后退与有限加速。',charge_hold:'实际推进冲阵，比较敌军前进与固守反制。'}[id]}</p></div>${btn('开始演练','tacticalLessonStart',id,'small')}</article>`).join('')}</div>`,btn('关闭','close','','secondary'));
 }
 function tacticalLessonModal(){
   const info=Game.lessonInfo();if(!info?.battle){tacticalLessonCatalog();return;}

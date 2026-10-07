@@ -1,7 +1,7 @@
 'use strict';
 let cityArea='inner';
 function cityPage(){return cityArea==='inner'?innerCityPage():outsideCityPage();}
-function plotArt(type,level=1,index=0,working=false){
+function legacyPlotArt(type,level=1,index=0,working=false){
   const tier=Math.max(1,Math.min(3,Math.ceil(level/3))),seed=landscapeSeed(index,level);
   const ground='<path d="M3 72L72 31 157 72 87 114Z" fill="#5c6b43"/><path d="M3 72v6l84 42 70-42v-6l-70 42Z" fill="#354931"/><path d="M7 72l65-37 80 37-65 37Z" fill="#90906a"/>';
   let detail='';
@@ -83,7 +83,7 @@ function plotModal(index){
 }
 function plotPlan(index,type){
   const p=S().plots[index],same=p.type===type,replace=!!p.type&&!same,level=same?p.level+1:1,b=Game.buildings[type],cost=Game.plotCost(index,type),required=Game.buildingRequirements(type,level);
-  showModal(`${same?'升级':replace?'改建':'建设'} · ${b.name}`,`<p class="sub">${index+1} 号地块${p.type?' · 当前为 '+Game.buildings[p.type].name+' '+p.level+' 级':''}</p><div class="modal-info"><span>完工产量 · ${level} 级</span><strong>+${Math.round(Game.plotYield({type,level})*60)}<span class="label"> /时</span></strong></div><p class="hint">${b.desc}</p><div class="enemy-list">${recordDetails(Game.buildRecord(type,level))}</div>${costs(cost)}${resourceWaitHTML(cost)}${Game.buildingRuleText(type,level)?`<p class="hint">前置：${esc(Game.buildingRuleText(type,level))}</p>`:''}${required?`<p class="notice">需要 ${esc(required)}</p>`:''}${constructionExperienceHTML(level)}<p class="hint">施工时间 ${duration(Game.plotTime(index,type))}</p>${replace?'<div class="notice">新产业从 1 级开始，施工完成前原产业继续生产。</div>':''}`,btn('重新选择','plot',String(index),'secondary')+btn(same?'确认升级':replace?'确认改建':'开始建设','plotDevelop',`${index}:${type}`,'',!!required||!Game.canPay(cost)||S().buildQueue.length>=Game.buildLimit()));
+  showModal(`${same?'升级':replace?'改建':'建设'} · ${b.name}`,`<p class="sub">${index+1} 号地块${p.type?' · 当前为 '+Game.buildings[p.type].name+' '+p.level+' 级':''}</p><div class="modal-info"><span>完工产量 · ${level} 级</span><strong>+${Math.round(Game.plotYield({type,level})*60)}<span class="label"> /时</span></strong></div><p class="hint">${b.desc}</p><div class="enemy-list">${recordDetails(Game.buildRecord(type,level))}</div>${webPlotBenefitsHTML(index,type,level)}${costs(cost)}${resourceWaitHTML(cost)}${Game.buildingRuleText(type,level)?`<p class="hint">前置：${esc(Game.buildingRuleText(type,level))}</p>`:''}${required?`<p class="notice">需要 ${esc(required)}</p>`:''}${constructionExperienceHTML(level)}<p class="hint">施工时间 ${duration(Game.plotTime(index,type))}</p>${replace?'<div class="notice">新产业从 1 级开始，施工完成前原产业继续生产。</div>':''}`,btn('重新选择','plot',String(index),'secondary')+btn(same?'确认升级':replace?'确认改建':'开始建设','plotDevelop',`${index}:${type}`,'',!!required||!Game.canPay(cost)||S().buildQueue.length>=Game.buildLimit()));
 }
 
 document.addEventListener('click',event=>{
