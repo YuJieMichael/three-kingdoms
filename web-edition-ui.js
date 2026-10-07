@@ -10,7 +10,8 @@ function webTerrainArt(tile){
   if(tile.id==='home'||tile.type==='fort'||Game.isCity(tile))return webCityBuildingArt(tile.id==='home'||Game.isCity(tile)?'hall':'wall',3).replace('web-atlas-art','web-atlas-art web-terrain-art');
   const atlas=WebArt.terrain,key=(tile.type==='fort'?'camp':tile.type)+'_'+((landscapeSeed(tile.x,tile.y)%2)?'a':'b');
   const rect=atlas.regions[key]||atlas.regions.plain_a;
-  return webAtlasSprite(atlas.texture,rect,atlas.size,tile.hidden?'未发现区域':tile.name,'web-terrain-art');
+  const seed=landscapeSeed(tile.x,tile.y),style=`--terrain-offset:${(seed>>>4)%13-6}%;--terrain-scale:${(.87+(seed%24)/100).toFixed(2)}`;
+  return webAtlasSprite(atlas.texture,rect,atlas.size,tile.name,'web-terrain-art').replace('viewBox=',`style="${style}" viewBox=`);
 }
 function webEmptyLandArt(index,locked=false){
   const atlas=WebArt.terrain,region=atlas.regions[index%2?'grass_a':'grass_b'];
@@ -177,6 +178,7 @@ updateDispatch=function(...args){
 };
 const webOriginalRender=render;
 render=function(){
+  if(page!=='city'&&page!=='world')document.body.classList.remove('scene-focus');
   const battle=S().battle;
   if(battle&&!battle.finished&&battle!==webClosedBattle&&!modal.open)webBattleWindowOpen=true;
   webOriginalRender();
@@ -247,8 +249,16 @@ document.addEventListener('online-snapshot',()=>{const next=String(OnlineClient.
 document.addEventListener('keydown',event=>{
   if(event.altKey||event.ctrlKey||event.metaKey||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key))return;
   const active=document.activeElement,board=active?.closest('.city-grid,.plot-grid');if(!board||active.tagName!=='BUTTON')return;
-  const cells=[...board.querySelectorAll('button')],index=cells.indexOf(active),grid=getComputedStyle(board).gridTemplateColumns.split(' ').length;
-  const target=cells[index+({ArrowLeft:-1,ArrowRight:1,ArrowUp:-grid,ArrowDown:grid}[event.key])];
+  const cells=[...board.querySelectorAll('button')],index=cells.indexOf(active),grid=board.classList.contains('scene-stage')?6:getComputedStyle(board).gridTemplateColumns.split(' ').length,step=({ArrowLeft:-1,ArrowRight:1,ArrowUp:-grid,ArrowDown:grid}[event.key]);
+  let target=cells[index+step];
+  if(board.classList.contains('scene-stage')){
+    const logical=Number(active.dataset.id.replace('site:','')),bySite=new Map(cells.map(c=>[Number(c.dataset.id.replace('site:','')),c]));
+    target=null;
+    for(let site=logical+step;site>=0&&site<(board.classList.contains('city-grid')?36:Game.unlockedPlots());site+=step){
+      if(Math.abs(step)===1&&Math.floor(site/6)!==Math.floor(logical/6))break;
+      if(bySite.has(site)){target=bySite.get(site);break;}
+    }
+  }
   if(target){event.preventDefault();target.focus();target.scrollIntoView({block:'nearest',inline:'nearest'});}
 });
 modal.addEventListener('close',()=>{

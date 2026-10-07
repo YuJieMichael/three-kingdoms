@@ -57,16 +57,11 @@ function plotTemplatePreview(id,mode='fill'){
   manualModalContext=()=>plotTemplatePreview(id,mode);
 }
 function outsideCityPage(){
-  const s=S(),unlocked=Game.unlockedPlots(),used=s.plots.filter(p=>p.type).length,template=s.plotTemplate?.id?Game.plotTemplateQuote(s.plotTemplate.id,s.plotTemplate.mode):null;
+  const s=S(),unlocked=Game.unlockedPlots(),used=s.plots.filter(p=>p.type).length;
   return `<div class="page-head"><div><h2>${esc(activeCityMeta().name)} · 城外</h2><p class="sub">点击地块建设或升级，四种资源田自由搭配。</p></div><span class="badge">已用 ${used} / ${unlocked} 块</span></div>
   <div class="allocation">${Object.entries(Game.plotTypes).map(([type,cfg])=>{const plots=s.plots.filter(p=>p.type===type),gain=plots.reduce((sum,p)=>sum+Game.plotYield(p),0);return `<div class="allocation-item ${type}"><span class="allocation-glyph">${resourceIcon(cfg.resource,'')}</span><div><strong>${Game.resources[cfg.resource].name}</strong><p>${plots.length} 块 · <span data-plot-rate="${type}">+${Math.round(gain*60)}/时</span></p></div></div>`;}).join('')}</div>
-  ${plotTemplatePanelHTML()}
-  <div class="layout outskirts-layout"><section class="outskirts-board"><div class="outskirts-banner"><span class="outskirts-title">${esc(activeCityMeta().name)} · 田庄图</span><span class="label">官府 ${s.buildings.hall} 级 · 已开放 ${unlocked} / ${Game.PLOT_COUNT}</span></div><div class="plot-grid">${s.plots.map((p,index)=>{
-    const locked=index>=unlocked,job=Game.plotJob(index),name=locked?'待开垦':p.type?Game.buildings[p.type].name:'空地';
-    const target=!locked?template?.targets[index]:null,hint=target?`样板：${Game.buildings[target].name}`:'';
-    return `<button class="plot-tile ${locked?'locked-land':p.type||'empty-land'} ${job?'working':''}" data-action="plot" data-id="${index}" aria-label="${index+1}号地块 ${name}${p.type?' '+p.level+'级':''}${job?' 施工中':''}${hint?' '+hint:''}"><span class="plot-index">${String(index+1).padStart(2,'0')}</span>${job?'<span class="plot-work">营造</span>':p.type&&!locked?'<span class="plot-level">'+p.level+'级</span>':''}${plotArt(locked?'locked':p.type,p.level,index,!!job)}<strong>${name}</strong><small>${locked?'官府 '+(Math.floor((index-12)/3)+2)+' 级开放':job?`${job.kind==='replace'?'改建':job.kind==='build'?'建造':'升级'}至 ${job.level} 级<br>${clock(job.end)}`:p.type?`+${Math.round(Game.plotYield(p)*60)}/时`:'点击建造'}</small>${hint?`<span class="plot-template-hint">${hint}</span>`:''}</button>`;
-  }).join('')}</div><div class="outskirts-note">可重复建设同一种产业 · 同一块地独立升级 · 城内城外共用建造队</div></section>
-  <aside class="city-side">${classicQueuePanel()}</aside></div>`;
+  <div class="layout outskirts-layout">${webOutskirtsScene()}
+  <aside class="city-side">${classicQueuePanel()}</aside></div><details class="scene-template-options"><summary>田庄布局样板 · 兵城／资源城／投石城</summary>${plotTemplatePanelHTML()}</details>`;
 }
 function plotModal(index){
   Game.tick();

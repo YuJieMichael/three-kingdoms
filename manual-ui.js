@@ -3,13 +3,7 @@ let shopCategory='全部',manualModalContext=null,governmentTab='comfort';
 const constructionExperienceHTML=level=>`<p class="hint">完工奖励：城守经验 +${HeroSystem.constructionXp(level)} · 归完工时任职的城守。</p>`;
 const manualLink=(key,label='查看手册')=>`<a href="${Game.manual.source[key]}" target="_blank" rel="noopener">${label}</a>`;
 const recordDetails=row=>row?Object.entries({output:'调整后基础产量 /小时',capacity:'容量',workers:'所需劳动人口',population:'人口上限',limit:'规模'}).filter(([k])=>row[k]!==undefined).map(([k,label])=>`<div class="enemy-row"><span>${label}</span><strong>${num(k==='output'?row[k]*Game.economyOutputFactor:row[k])}</strong></div>`).join(''):'';
-function manualCityScene(){
-  return `<section class="city-grid-board manual-city"><div class="outskirts-banner"><span class="outskirts-title">${esc(activeCityMeta().name)} · 城坊图</span><span class="label">6×6 · 官府占 4 格</span></div><div class="city-grid">${S().cityLayout.map((id,i)=>{
-    if(id==='reserved')return `<div class="city-reserved"><span>官府院落</span></div>`;
-    const b=id?Game.buildings[id]:null,q=S().buildQueue.find(q=>q.site===i),lv=S().cityLevels[i];
-    return `<button class="city-grid-tile ${id?'built-city':'empty-city'} ${q?'working':''}" data-action="${id?'building':'citySlot'}" data-id="${id?'site:'+i:i}" aria-label="城内 ${Math.floor(i/6)+1}行${i%6+1}列 ${b?b.name+' '+lv+'级':'空地'}"><span class="plot-index">${String(i+1).padStart(2,'0')}</span>${q?'<span class="plot-work">工</span>':''}${b?`<span class="city-building-art">${webCityBuildingArt(id,lv)}</span>`:webEmptyLandArt(i)}<strong>${b?b.name:'空地'}</strong><small>${q?clock(q.end):b?'Lv.'+lv:'建造'}</small></button>`;
-  }).join('')}</div><p class="outskirts-note">32 格自由建设 · 民房、军营、仓库可以重复建造</p></section>`;
-}
+function manualCityScene(){return webCityScene();}
 function autoUpgradeControls(){return `<div class="auto-upgrade-controls ${S().autoUpgrade?'is-running':''}"><button class="btn block ${S().autoUpgrade?'secondary':''}" data-action="manualAutoUpgrade" aria-pressed="${S().autoUpgrade}">${S().autoUpgrade?'停止自动升级':'开启自动升级'}</button><p class="auto-upgrade-status" data-auto-upgrade-status role="status">${Game.autoUpgradeStatus()}</p><div class="automation-shortcut">${btn('挂机设置与完成记录','automationOpen','','small secondary block')}</div><details><summary>自动升级规则</summary><p class="hint">城内建筑与资源田一起升级，优先低等级。材料和前置满足时自动排入建造队。消耗图纸的 10 级升级需手动确认；页面运行时生效。</p></details></div>`;}
 function manualInnerCityPage(){const s=S();return `<div class="page-head"><div><h2>${esc(activeCityMeta().name)} · 城内</h2><p class="sub">点击空地建造，点击建筑升级或办理城务。</p></div><span class="badge">官府 ${s.buildings.hall} 级 · 6×6 城坊</span></div><div class="layout city-command-layout"><div>${manualCityScene()}</div><aside class="city-side">${classicQueuePanel()}</aside></div>`;}
 function manualCitySlotModal(site){
