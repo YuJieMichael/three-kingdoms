@@ -43,7 +43,8 @@ function tacticsModal(){
 }
 function battleCommandBarHTML(b,context={}){
   if(b.finished)return '';
-  return `<div class="battle-command-bar" aria-label="全军与回合指令">${battleAllOrdersHTML(b,context)}<div class="battle-round-controls">${context.practice?'<strong class="battle-practice-timer">演练 · 手动结算</strong>':`<strong data-battle-timer>${battleTimerText()}</strong>`}<div class="combat-controls">${context.practice?'':btn(battleAutoEnabled()?'暂停倒计时':'开启倒计时','battleAuto','','secondary')}${btn('下一回合',context.practice?'tacticalLessonRound':'battleRound')}</div></div></div>`;
+  const error=!context.practice&&typeof battleAdvanceErrorFor!=='undefined'&&battleAdvanceErrorFor===b?battleAdvanceError:'';
+  return `${error?'<p class="notice battle-advance-error" role="alert">回合未推进：'+esc(error)+'</p>':''}<div class="battle-command-bar" aria-label="全军与回合指令">${battleAllOrdersHTML(b,context)}<div class="battle-round-controls">${context.practice?'<strong class="battle-practice-timer">演练 · 手动结算</strong>':`<strong data-battle-timer>${battleTimerText()}</strong>`}<div class="combat-controls">${context.practice?'':btn(battleAutoEnabled()?'暂停倒计时':'开启倒计时','battleAuto','','secondary')}${btn('下一回合',context.practice?'tacticalLessonRound':'battleRound')}</div></div></div>`;
 }
 function battleUnitOrdersHTML(b,n,context={}){
   return `<div class="unit-orders">${b.player.map(r=>{
@@ -80,8 +81,8 @@ function battlePage(b=S().battle,context={}){
 document.addEventListener('click',event=>{
   const el=event.target.closest('[data-action]');if(!el||el.disabled)return;
   if(el.dataset.action==='formationSelect'){selectedFormation=el.dataset.id;render();}
-  if(el.dataset.action==='unitOrder'){const [id,command]=el.dataset.id.split(':');selectedFormation=id;actResult(Game.setBattleOrder(id,command));}
-  if(el.dataset.action==='battleAllOrders')actResult(Game.setBattleOrders(el.dataset.id),'全军指令已更新，可继续逐队调整');
+  if(el.dataset.action==='unitOrder'){const [id,command]=el.dataset.id.split(':');selectedFormation=id;actResult(Game.setBattleOrder(id,command),Game.units[id].name+'已改为'+orderNames[command]+'，下一回合生效');}
+  if(el.dataset.action==='battleAllOrders')actResult(Game.setBattleOrders(el.dataset.id),'全军已改为'+orderNames[el.dataset.id]+'，下一回合生效，可继续逐队调整');
   if(el.dataset.action==='tacticsModal')tacticsModal();
   if(el.dataset.action==='tacticOrder'){const [id,command]=el.dataset.id.split(':');const scroll=modal.scrollTop,error=Game.setTactic(id,command);if(error)toast(error);else{tacticsModal();modal.scrollTop=scroll;}}
 });
