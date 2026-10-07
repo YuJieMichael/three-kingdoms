@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="75014215b1380bf8b25a14e925df1ab83338ca30f63af312b679b9fca4f5c21b";
+export const runtimeHash="f11ef667358ef699ff0c9e4bc93f4f706ae346847529510ab37a13818a54404e";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -16206,9 +16206,20 @@ const Game = (() => {
     const n=getNode(e.node);if(n.encounter&&!tacticsAvailable())return '战术遭遇目前支持单机逐回合战斗，请切回单机模式';
     const encounter=WarOrders.encounterConfig?.(n.id),info=attackInfo(n.id,e.mode),player=formation(e.army),enemy=formation(e.enemySnapshot||info.army,true),length=encounter?.length||battleLength([...player,...enemy]);for(const r of enemy)r.pos=encounter?.enemyPositions[r.id]??length;
     state.battle={rules:2,length,node:n.id,general:e.general,sourceCity:e.sourceCity||currentCityId(),generalSnapshot:e.generalSnapshot||{...general(e.general)},skillProfile:e.skillProfile||GeneralGrowth.profile(state,e.general),mode:e.mode,siege:info.siege,gate:SiegeSystem.gate(n,e.mode),militia:info.militia,round:0,machineGateAttacks:0,currentRoundSummary:{round:0,events:[]},player,enemy,orders:Object.fromEntries(player.map(r=>[r.id,{...e.orders[r.id]}])),log:['两军相距 '+length+'。按兵种速度依次行动，同速守方优先。'],auto:true,finished:false,result:null};
+    normalizeBattleTargets(state.battle);
     if(tacticsAvailable()){const b=state.battle;b.rules=3;if(b.generalSnapshot.wildLine===undefined&&general(e.general)?.wildLine){b.generalSnapshot.wildLine=general(e.general).wildLine;if(e.generalSnapshot)e.generalSnapshot.wildLine=b.generalSnapshot.wildLine;}b.enemyGeneralSnapshot=enemyGeneralSnapshot(n);b.enemyOrders=Object.fromEntries(enemy.map(r=>[r.id,{command:b.gate?.hp>0&&n.commander?.order?n.commander.order:defaultOrder(r.id),target:''}]));b.stratagem=BattleStratagems.create(b,{player:b.generalSnapshot,enemy:b.enemyGeneralSnapshot});planEnemyTactic(b,n);}
     if(n.commander)pushLog(state.battle,'敌将 '+n.commander.name+' · '+n.commander.title+'：攻击 ×'+n.commander.attack+'，防御 ×'+n.commander.defense+'。');if(state.battle.gate)pushLog(state.battle,n.fortification.name+'：耐久 '+state.battle.gate.hp+'；冲车、投石车优先破城，破城后箭楼失效。');
     if(info.siege)pushLog(state.battle,'占领攻城：城防启用，义兵 '+info.militia+' 人加入义兵阵。');e.phase='battle';save();return null;
+  }
+  function normalizeBattleTargets(b){
+    // Default expedition tactics may name a valid troop type absent from this encounter.
+    // Clear only those stale targets; keep commands and malformed input validation intact.
+    for(const [orders,foes,canTargetGate] of [[b.orders,b.enemy,true],[b.enemyOrders,b.player,false]]){
+      for(const order of Object.values(orders||{})){
+        const target=order.target;
+        if(Object.hasOwn(units,target)&&!foes.some(row=>row.id===target)||target==='gate'&&(!canTargetGate||!b.gate?.hp))order.target='';
+      }
+    }
   }
   function setTactic(id,command,target){
     if(!Object.hasOwn(units,id))return '兵种不存在';
@@ -16239,6 +16250,7 @@ const Game = (() => {
     if(!lesson&&(b.round>=30||!b.player.some(r=>r.hp>0)||!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp)){const error=finishBattle(b.player.some(r=>r.hp>0)&&!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp);save();return error||b;}
     if(!b.generalSnapshot)for(const row of b.player){const stats=unitStats(row.id);row.hp=Math.min(row.initial*stats.hp,row.hp/row.stats.hp*stats.hp);row.maxHp=row.initial*stats.hp;row.stats=stats;}b.round++;
     const tactics=b.rules===3&&!!b.stratagem;
+    normalizeBattleTargets(b);
     if(tactics){const begun=BattleStratagems.beginRound(b,{player:b.orders,enemy:b.enemyOrders},stratagemApi);if(!begun.ok){b.round--;return begun.reason;}}
     const currentRoundSummary={round:b.round,events:[]};b.currentRoundSummary=currentRoundSummary;
     const event=(type,side,unit,target,from,to,damage=0,killed=0,counter=false,ranged=false)=>currentRoundSummary.events.push({type,side,unit,target,from,to,damage,killed,counter,ranged});

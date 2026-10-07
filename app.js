@@ -3,10 +3,31 @@ const app=document.getElementById('app'),modal=document.getElementById('modal'),
 let offline=Game.init();
 let page='city',selectedNode='field',trainId='',toastTimer,autoLast=0;
 const BATTLE_ROUND_MS=30000;
+let battleAdvanceError='',battleAdvanceErrorFor=null;
 let automationLastNotice=Game.state.automation.nextId-1;
 function battleAutoEnabled(){return OnlineClient.shared()?OnlineClient.battleAuto():!!S().battle?.auto;}
-function battleTimerText(){const b=Game.state.battle;return battleAutoEnabled()&&b&&!b.finished?`下一回合倒计时：${Math.max(0,Math.ceil((BATTLE_ROUND_MS-(Date.now()-autoLast))/1000))} 秒`:'已暂停计时，可手动进入下一回合。';}
-function advanceBattleRound(){if(!Game.state.battle||Game.state.battle.finished)return;autoLast=Date.now();if(OnlineClient.shared()){if(!OnlineClient.pending())actResult(Game.battleRound());return;}Game.battleRound();if(S().battle?.finished){page='world';selectedNode=S().battle.node;const n=Game.getNode(selectedNode);if(n?.x!==undefined)worldView={x:n.x,y:n.y};toast(S().battle.result.won?'战斗胜利，已自动结算；详情保留在战报。':'战斗结束，已自动结算伤亡与返城；详情保留在战报。');}previous=signature();render();}
+function battleTimerText(){
+ const b=Game.state.battle,blocked=Game.saveBlockReason();
+ if(b&&!b.finished&&blocked)return '战斗已暂停：'+blocked;
+ return battleAutoEnabled()&&b&&!b.finished?`下一回合倒计时：${Math.max(0,Math.ceil((BATTLE_ROUND_MS-(Date.now()-autoLast))/1000))} 秒`:'已暂停计时，可手动进入下一回合。';
+}
+function battleAdvanceFailed(b,reason){
+ battleAdvanceError=String(reason);battleAdvanceErrorFor=b;autoLast=Date.now();
+ if(!OnlineClient.shared()&&!Game.saveBlockReason()){b.auto=false;Game.save();}
+ render();toast('回合未推进：'+battleAdvanceError);return false;
+}
+function advanceBattleRound(){
+ const b=Game.state.battle;if(!b||b.finished)return false;
+ if(OnlineClient.shared()&&OnlineClient.pending())return false;
+ const before=b.round;
+ let result;try{result=Game.battleRound();}catch(error){return battleAdvanceFailed(b,error.message||'战斗结算发生错误');}
+ if(typeof result==='string'&&result)return battleAdvanceFailed(b,result);
+ battleAdvanceError='';battleAdvanceErrorFor=null;autoLast=Date.now();
+ if(OnlineClient.shared()){actResult(result);return true;}
+ if(S().battle===b&&!b.finished&&b.round===before)return battleAdvanceFailed(b,'本回合没有完成结算，请查看战场指令或导出存档排查');
+ if(S().battle?.finished){page='world';selectedNode=S().battle.node;const n=Game.getNode(selectedNode);if(n?.x!==undefined)worldView={x:n.x,y:n.y};toast(S().battle.result.won?'战斗胜利，已自动结算；详情保留在战报。':'战斗结束，已自动结算伤亡与返城；详情保留在战报。');}
+ previous=signature();render();return true;
+}
 const S=()=>Game.state;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=n=>Math.floor(n).toLocaleString('zh-CN');
@@ -24,6 +45,7 @@ function saveManagementModal(){
 let shownSaveStatus='';
 function refreshSaveStatusUI(){
   const info=Game.saveSessionInfo(),key=info.mode+info.reason;
+  document.querySelectorAll('[data-battle-timer]').forEach(el=>{el.textContent=battleTimerText();});
   if(shownSaveStatus===key&&document.getElementById('save-session-warning'))return;
   shownSaveStatus=key;document.getElementById('save-session-warning')?.remove();
   if(!info.writable)document.getElementById('main')?.insertAdjacentHTML('afterbegin',`<section id="save-session-warning" class="notice" role="alert"><strong>城池已暂停</strong><p>${esc(info.reason)}</p>${btn('存档保护与恢复','saveManagement','','small')}</section>`);
