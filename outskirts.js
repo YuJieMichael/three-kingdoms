@@ -59,9 +59,8 @@ function plotTemplatePreview(id,mode='fill'){
 function outsideCityPage(){
   const s=S(),unlocked=Game.unlockedPlots(),used=s.plots.filter(p=>p.type).length;
   return `<div class="page-head"><div><h2>${esc(activeCityMeta().name)} · 城外</h2><p class="sub">点击地块建设或升级，四种资源田自由搭配。</p></div><span class="badge">已用 ${used} / ${unlocked} 块</span></div>
-  <div class="allocation">${Object.entries(Game.plotTypes).map(([type,cfg])=>{const plots=s.plots.filter(p=>p.type===type),gain=plots.reduce((sum,p)=>sum+Game.plotYield(p),0);return `<div class="allocation-item ${type}"><span class="allocation-glyph">${resourceIcon(cfg.resource,'')}</span><div><strong>${Game.resources[cfg.resource].name}</strong><p>${plots.length} 块 · <span data-plot-rate="${type}">+${Math.round(gain*60)}/时</span></p></div></div>`;}).join('')}</div>
   <div class="layout outskirts-layout">${webOutskirtsScene()}
-  <aside class="city-side">${classicQueuePanel()}</aside></div><details class="scene-template-options"><summary>田庄布局样板 · 兵城／资源城／投石城</summary>${plotTemplatePanelHTML()}</details>`;
+  ${layoutCityToolsHTML()}</div><details class="layout-production-details" data-ui-disclosure="layout-production"><summary>田庄产量明细</summary><div class="allocation">${Object.entries(Game.plotTypes).map(([type,cfg])=>{const plots=s.plots.filter(p=>p.type===type),gain=plots.reduce((sum,p)=>sum+Game.plotYield(p),0);return `<div class="allocation-item ${type}"><span class="allocation-glyph">${resourceIcon(cfg.resource,'')}</span><div><strong>${Game.resources[cfg.resource].name}</strong><p>${plots.length} 块 · <span data-plot-rate="${type}">+${Math.round(gain*60)}/时</span></p></div></div>`;}).join('')}</div></details><details class="scene-template-options"><summary>田庄布局样板 · 兵城／资源城／投石城</summary>${plotTemplatePanelHTML()}</details>`;
 }
 function plotModal(index){
   Game.tick();
