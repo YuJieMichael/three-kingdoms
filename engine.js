@@ -395,7 +395,7 @@ const Game = (() => {
   const enterOwnedCity=nodeId=>switchCity(CitySystem.idFor(nodeId));
   function foundCityQuote(nodeId,name='新城'){
     const n=getNode(nodeId),cost={food:10000,wood:10000,stone:10000,iron:10000,gold:5000};name=typeof name==='string'?name.trim():'';
-    const reason=!n?.wild||n.type!=='plain'?'只能在平地上筑城':!state.conquered[nodeId]?'请先占领这块平地':state.realm.wildOwners[nodeId]!==currentCityId()?'请切换至这块野地的所属城市':state.realm.cities[CitySystem.idFor(nodeId)]?'这里已经建城':cityList().length>=cityLimit()?'爵位允许的城池数量已满，请先晋升爵位':state.garrisons[nodeId]||state.gatherings[nodeId]?'请先收回驻军并结束采集':!name||name.length>12?'城市名称需要 1–12 个字':!canPay(cost)?'本城建城资源不足':'';
+    const reason=!n?.wild||n.type!=='plain'?'只能在平地上筑城':!state.conquered[nodeId]?'请先占领这块平地':state.realm.wildOwners[nodeId]!==currentCityId()?'请切换至这块野地的所属城市':state.realm.cities[CitySystem.idFor(nodeId)]?'这里已经建城':cityList().length>=cityLimit()?'城池名额已满':state.garrisons[nodeId]||state.gatherings[nodeId]?'请先收回驻军并结束采集':!name||name.length>12?'城市名称需要 1–12 个字':!canPay(cost)?'本城建城资源不足':'';
     return {node:nodeId,name,cost,reason,sourceCity:currentCityId(),key:JSON.stringify([currentCityId(),nodeId,name,cityLimit(),cityList().length,state.realm.wildOwners[nodeId],!!state.garrisons[nodeId]])};
   }
   function foundCity(nodeId,name,key){tick(Date.now(),false);const q=foundCityQuote(nodeId,name);if(key!==q.key)return '建城条件已变化，请重新预览';if(q.reason)return q.reason;pay(q.cost);const n={...getNode(nodeId),name:q.name};state.realm.cities[CitySystem.idFor(nodeId)]=CitySystem.empty(state,n,Date.now());delete state.realm.wildOwners[nodeId];save();return null;}
@@ -683,7 +683,7 @@ const Game = (() => {
     const chapterBlocked=ChapterData.blocked(state,id);if(chapterBlocked)return chapterBlocked;
     if(isCity(n)&&!n.openCity&&!Progression.countyUnlocked(state))return '黄巾之乱四项史诗尚未全部完成，县城攻打未开放';
     if(state.conquered[id]&&(n.wild||isCity(n)))return '这块领地已归属你，可在领地管理中召回驻军或放弃野地';
-    if(mode==='occupy'&&isCity(n)&&cityList().length>=cityLimit())return '爵位允许的城池数量已满，请先晋升爵位';
+    if(mode==='occupy'&&isCity(n)&&cityList().length>=cityLimit())return '城池名额已满';
     if(mode==='occupy'&&state.conquered[id])return '据点已占领';
     if(mode==='occupy'&&n.wild&&wildOwned()>=state.buildings.hall)return '附属野地已满，升级官府或放弃一块野地';
     return null;

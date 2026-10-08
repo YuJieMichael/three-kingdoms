@@ -88,7 +88,7 @@ export function territoryView(cities,alliances,memberships,map){return alliances
 export function transferCity({actor,target,cityId,now,runtime,marches,marchChanged,cities,cityChanged,orders,orderChanged,persist}){
  const defender=runtime(target,cityId).Game,attacker=runtime(actor).Game,ds=defender.state,as=attacker.state,city=ds.realm.cities[cityId];
  if(!city||city.capital)fail('主城是保底城市，不能被占领','CAPITAL_PROTECTED');
- if(attacker.cityList().length>=attacker.cityLimit())fail('爵位允许的城池数量已满');
+ if(attacker.cityList().length>=attacker.cityLimit())fail('城池名额已满');
  const claim=cities.find(c=>c.id===city.node&&c.owner===target);if(!claim)fail('城市归属已改变','CITY_TAKEN');
  const capital=ds.realm.cities.capital.data,refuge=[],residentHeroes=Object.entries(ds.realm.heroLocations).filter(([,location])=>location===cityId).map(([id])=>id),busyIds=[...new Set([...marches.filter(m=>m.source===target&&m.status!=='done').map(m=>m.general),...(ds.expedition?[ds.expedition.general]:[]),...ds.expeditions.map(e=>e.general),...Object.values(ds.garrisons).map(e=>e.general),...ds.realm.logistics.map(e=>e.general)].filter(Boolean))];
  // Native expeditions, scouting and wild garrisons remain with the old owner.
