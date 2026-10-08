@@ -41,5 +41,14 @@ test('closing the battle window keeps it closed while the battle continues on th
   const e=setup(),g=e.Game;assert.equal(g.startBattle(),null);e.evaluate('render();flush()');assert.equal(e.evaluate('modal.open'),true);
   e.evaluate('click("webBattleClose");flush();render();flush()');assert.equal(e.evaluate('modal.open'),false,'a closed battle window must not reopen on the next render');
   g.battleRound();e.evaluate('render();flush()');assert.equal(e.evaluate('modal.open'),false);
+  assert.match(e.evaluate('battlePage()'),/data-action="webBattleWindow"[^>]*>打开战场窗口/,'the page battle view must offer a way back to the window');
   e.evaluate('click("webBattleWindow");flush()');assert.equal(e.evaluate('modal.open'),true);assert.equal(shownRound(e),g.state.battle.round);
+  assert.doesNotMatch(e.evaluate('modalBody.innerHTML'),/打开战场窗口/,'the window itself has no reopen bar');
+});
+test('the reopen bar is only offered for an unfinished formal battle whose window is closed',()=>{
+  const e=setup(),g=e.Game;assert.equal(g.startBattle(),null);e.evaluate('render();flush()');
+  assert.doesNotMatch(e.evaluate('battlePage()'),/打开战场窗口/,'while the window is open the page shows the placeholder');
+  e.evaluate('click("webBattleClose");flush()');assert.match(e.evaluate('battlePage()'),/打开战场窗口/);
+  assert.doesNotMatch(e.evaluate('battlePage(S().battle,{practice:true})'),/打开战场窗口/);
+  for(let i=0;i<30&&!g.state.battle.finished;i++)g.battleRound();assert.equal(g.state.battle.finished,true);assert.doesNotMatch(e.evaluate('battlePage()'),/打开战场窗口/);
 });
