@@ -59,12 +59,33 @@ function layoutShell(){
   </div>`;
 }
 function layoutCityToolsHTML(){return '';}
+let layoutMoreCategory='war';
+const LAYOUT_MORE_TABS=[['war','征战'],['city','城务'],['tools','辅助']];
 function layoutMoreModal(){
-  const section=(name,buttons)=>`<section class="layout-menu-group"><h3>${name}</h3><div class="more-command-grid">${buttons}</div></section>`;
-  const groups=[
-    section('征战与补给',btn('征战与成长','webEditionHub','','secondary')+btn('掠夺找资源','webRaids','','secondary',WebEdition.shared())+btn('十阶礼包 · '+S().onboarding.claims.length+'/10','onboardingGifts','','secondary')),
-    section('领地与城务',btn('领地与驻军','classicTerritory','','secondary')+btn('来袭与守城','npcDefense','','secondary')+btn('名城版图','namedCities','','secondary')+btn('城务与薪俸','governance','','secondary')+btn('伤兵营','warCare','','secondary')+btn('城池详情','classicInfo','','secondary')+btn('自动助手 · '+Game.automation.unread(S())+' 未读','automationOpen','','secondary')),
-    section('记录与设置',btn('消息记录','webMessages','','secondary')+btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','secondary')+btn('设置与存档','settings','','secondary'))
-  ];
-  showModal('更多事务',groups.join(''),btn('关闭','close','','secondary'));
+  const unread=Game.automation.unread(S());
+  const groups={
+    war:btn('征战与成长','webEditionHub','','secondary')+btn('掠夺找资源','webRaids','','secondary',WebEdition.shared())+btn('名城版图','namedCities','','secondary')+btn('新手补给 · '+S().onboarding.claims.length+'/10','onboardingGifts','','secondary'),
+    city:btn('领地与驻军','classicTerritory','','secondary')+btn('来袭与守城','npcDefense','','secondary')+btn('城务与薪俸','governance','','secondary')+btn('伤兵营','warCare','','secondary')+btn('城池详情','classicInfo','','secondary'),
+    tools:btn('自动助手'+(unread?' · '+unread+' 未读':''),'automationOpen','','secondary')+btn('消息记录','webMessages','','secondary')+btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','secondary')
+  };
+  const tabs=LAYOUT_MORE_TABS.map(([id,label])=>`<button role="tab" id="more-tab-${id}" aria-controls="more-category-panel" aria-selected="${layoutMoreCategory===id}" tabindex="${layoutMoreCategory===id?0:-1}" data-action="layoutMoreTab" data-id="${id}">${label}${id==='tools'&&unread?'<i aria-label="有未读记录"></i>':''}</button>`).join('');
+  showModal('更多',`<section class="layout-more-menu"><nav class="layout-more-tabs" role="tablist" aria-label="更多功能分类">${tabs}</nav><div id="more-category-panel" class="layout-more-panel" role="tabpanel" aria-labelledby="more-tab-${layoutMoreCategory}">${groups[layoutMoreCategory]}</div></section>`,btn('关闭','close','','secondary'));
+  manualModalContext=layoutMoreModal;
 }
+function layoutSelectMoreCategory(id){
+  if(!LAYOUT_MORE_TABS.some(([key])=>key===id))return;
+  layoutMoreCategory=id;layoutMoreModal();
+  document.getElementById('more-tab-'+id)?.focus();
+}
+document.addEventListener('click',event=>{
+  const tab=event.target.closest('[data-action="layoutMoreTab"]');
+  if(tab)layoutSelectMoreCategory(tab.dataset.id);
+});
+document.addEventListener('keydown',event=>{
+  const tab=event.target.closest('[data-action="layoutMoreTab"]');
+  if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+  event.preventDefault();
+  const index=LAYOUT_MORE_TABS.findIndex(([id])=>id===tab.dataset.id);
+  const next=event.key==='Home'?0:event.key==='End'?LAYOUT_MORE_TABS.length-1:(index+(event.key==='ArrowRight'?1:-1)+LAYOUT_MORE_TABS.length)%LAYOUT_MORE_TABS.length;
+  layoutSelectMoreCategory(LAYOUT_MORE_TABS[next][0]);
+});
