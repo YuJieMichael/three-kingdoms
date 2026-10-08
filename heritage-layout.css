@@ -61,3 +61,5 @@
 .layout-more-panel .btn{margin:0;min-height:44px;padding:9px 12px;font-size:13px;white-space:normal}
 @media(max-width:480px){.layout-more-menu{width:100%}.layout-more-panel{grid-template-columns:minmax(0,1fr);min-height:0}.layout-more-tabs{margin-bottom:12px}.layout-more-panel .btn{min-height:44px}}
 #modal:has(.layout-more-menu){width:min(560px,calc(100vw - 24px));max-width:calc(100vw - 24px)}
+
+.heritage-requirements .requirement-met{color:#a4bf8c}.heritage-requirements .requirement-missing{color:#e2b989}.heritage-requirements li{line-height:1.8}.heritage-requirements li>span{display:inline-block;width:14px;font-weight:bold}

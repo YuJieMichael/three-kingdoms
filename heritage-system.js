@@ -11,13 +11,16 @@ const HeritageSystem=(()=>{
  const live=()=>{Game.tick();init(Game.state);return Game.state;};
  const save=()=>{Game.save();return null;};
  function assign(governor,commander,counsellor){const s=live(),all=[governor,commander,counsellor],chosen=all.filter(Boolean);if(!governor)return '请选择一位城守';if(chosen.some(id=>!s.generals.includes(id)||Game.generalBusy(id)))return '任职将领必须已经招募且留在城内';if(new Set(chosen).size!==chosen.length)return '一位将领只能担任一个职位';s.governor=governor;s.cityRoles={commander,counsellor};return save();}
+ // Only current owned county cities count. Raid wins and former ownership do not.
+ function ownedCounties(s){return Object.values(s?.realm?.cities||{}).filter(c=>NamedCityData.definition(c)?.tier==='county'&&NamedCitySystem.owned(s,c.node));}
  function promotionQuote(s,kind){const list=kind==='office'?HeritageData.offices:kind==='noble'?HeritageData.nobles:null;if(!list)return null;const current=s.honors[kind],next=list[current+1];if(!next)return {next:null,reason:'已达最高级别'};const r=next.promotion,missing=[];
   if(s.prestige<r.prestige)missing.push('声望 '+r.prestige);
   if(s.honors.office<r.office)missing.push('官职 '+HeritageData.offices[r.office].name);
+  if(r.noble&&s.honors.noble<r.noble)missing.push('爵位 '+HeritageData.nobles[r.noble].name);
   if(s.buildings.hall<r.hall)missing.push('官府 '+r.hall+' 级');
   if(s.res.gold<r.gold)missing.push('黄金 '+r.gold);
   for(const [id,n] of Object.entries(r.jewels))if(s.jewels[id]<n)missing.push(Progression.jewels[id].name+' ×'+n);
-  if(r.county&&!s.conquered.fort)missing.push('占领古渡县城');
+  if(r.county&&!ownedCounties(s).length)missing.push('持有至少一座县城（须占领，掠夺不算）');
   return {next,rule:r,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
  }
  function promote(kind){const s=live(),q=promotionQuote(s,kind);if(!q?.next)return q?.reason||'请选择晋升类型';if(q.reason)return q.reason;s.res.gold-=q.rule.gold;for(const [id,n] of Object.entries(q.rule.jewels))s.jewels[id]-=n;s.honors[kind]=q.next.id;return save();}
@@ -42,5 +45,5 @@ const HeritageSystem=(()=>{
   if(!Array.isArray(s.heritageHistory)||s.heritageHistory.length>10)return false;
   return s.heritageHistory.every(r=>obj(r)&&int(r.at)&&['salary','gather'].includes(r.kind)&&typeof r.name==='string'&&r.name.length<=100&&obj(r.loot)&&Object.entries(r.loot).every(([k,n])=>['food','wood','stone','iron','gold'].includes(k)&&int(n))&&obj(r.jewels)&&Object.entries(r.jewels).every(([k,n])=>Object.hasOwn(Progression.jewels,k)&&int(n)&&n<=24)&&int(r.xp)&&(r.kind==='salary'||Game.getNode(r.node,s)?.wild&&int(r.discarded)&&(r.overCapacity===undefined||int(r.overCapacity)&&r.overCapacity<=Object.values(r.loot).reduce((sum,n)=>sum+n,0))));
  }
- return {roles,HOUR,init,office,noble,roleHero,roleOf,effectiveHero,assign,promotionQuote,promote,salaryQuote,salary,gatherReason,startGather,gatherQuote,collectGather,cancelGather,valid};
+ return {roles,HOUR,init,office,noble,roleHero,roleOf,effectiveHero,assign,ownedCounties,promotionQuote,promote,salaryQuote,salary,gatherReason,startGather,gatherQuote,collectGather,cancelGather,valid};
 })();

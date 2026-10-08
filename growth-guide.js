@@ -60,7 +60,7 @@ const GrowthGuide=(()=>{
       const away=Object.entries(s.garrisons).find(([,g])=>g.army.archer>0);
       if(s.army.archer<OnboardingData.archerTarget&&away)return {kind:'garrison',id:away[0],title:'召回弓兵，整备首战部队',reason:'弓兵正在驻守或返城，不必重复征兵。召回保留领地归属，待返城后再出征。'};
       const restore=train('archer',OnboardingData.archerTarget,s.stats.victories?'补回永久损失，恢复 30 名弓兵。幸存部队返城，伤兵需在伤兵营付金治疗，不需要重复训练。':'弓兵已解锁，补齐 30 人再战。先用「向前」进入射程，再按距离选择「坚守」。');if(restore)return restore;
-      if(s.stats.victories>0){const promotion=HeritageSystem.promotionQuote(s,'office');return {kind:'firstBattleComplete',id:target,title:'首战闭环完成，查看收获与官职晋升',reason:'首胜会获得珍珠，晋升伍长需声望 1000 与珍珠 1 枚，确认后消耗珍珠。可先领取首胜任务、查看官爵；条件不足时继续官府成长。',promotionReady:!!promotion?.next&&!promotion.reason};}
+      if(s.stats.victories>0){const promotion=HeritageSystem.promotionQuote(s,'office');return {kind:'firstBattleComplete',id:target,title:'首战闭环完成，查看收获与官职晋升',reason:'首胜会获得珍珠，晋升伍长需先达到公士，另需声望 1000 与珍珠 1 枚；公士的黄金与珠宝条件可在官爵页查看。可先领取首胜任务、查看官爵；条件不足时继续官府成长。',promotionReady:!!promotion?.next&&!promotion.reason};}
       const drill=resolve('building','drill',1);if(drill)return drill;
       const scouting=resolve('tech','scouting',1);if(scouting)return {...scouting,reason:'出征前先探明敌情。研究侦察 1 级后，训练一名斥候；'+scouting.reason};
       if(!game.intel(target)){
