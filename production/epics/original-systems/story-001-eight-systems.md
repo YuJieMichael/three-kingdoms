@@ -7,7 +7,7 @@
 **GDD:** design/quick-specs/original-systems-v0.33.0.md
 **ADR Governing Implementation:** N/A — 延续现有浏览器引擎与共享世界事务模型
 
-## 验收
+## Acceptance Criteria
 
 - [x] 名城阶梯、城市收益和资源田上限真实可用。
 - [x] 权威宣战/保护/玩家分城易主及归属处理。

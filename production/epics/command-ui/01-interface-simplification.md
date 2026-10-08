@@ -6,6 +6,7 @@ Layer: Feature
 Status: Complete
 Last Updated: 2026-10-05
 GDD: design/quick-specs/command-ui-v0.30.0.md
+ADR Governing Implementation: N/A — 沿用现有浏览器前端与界面框架
 Workflow: minimal
 Dependencies: existing v0.29.0 public game
 

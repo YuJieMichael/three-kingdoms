@@ -4,7 +4,10 @@ const {loadGame,city,cloneActiveSave}=require('./helpers/game.cjs');
 const sum=map=>Object.values(map).reduce((a,b)=>a+b,0);
 const clone=cloneActiveSave;
 const resources=['food','wood','stone','iron','gold'];
-const forest='wild_31_32';
+// Wild-field types/levels now come from the saved 30-minute balanced refresh (wild-fields.js,
+// 80efded, GODOT-TO-WEB.md), so wild_31_32 is no longer a forest on a fresh map. Use the
+// nearest level-1 forest of the same seeded fresh map, matching the old legacy fixture.
+const forest=(()=>{const g=loadGame(41).Game;let best=null;for(let x=0;x<g.WORLD_SIZE;x++)for(let y=0;y<g.WORLD_SIZE;y++){const n=g.getNode(`wild_${x}_${y}`);if(n?.wild&&n.type==='forest'&&n.level===1&&(!best||n.time<best.time))best=n;}assert.ok(best,'seeded fresh map must contain a level-1 forest');return best.id;})();
 
 // City levels, troop reserves and resource stocks are prepared fixtures.
 // Every battle and garrison is produced by normal dispatch/march/combat APIs;
@@ -134,7 +137,7 @@ test('save validation rejects malformed over-capacity receipt maps',()=>{
  for(const mutate of [r=>r.overCapacity=-1,r=>r.overCapacity+=1,r=>delete r.resourceReceipt.base.overCapacity,r=>delete r.resourceReceipt]){const bad=clone(current);mutate(bad.reports[0]);assert.equal(g.validSave(bad),false);}
 });
 
-function occupyForest(e,node=forest,archers=300){arrive(e,node,'occupy',archers);const r=finish(e);assert.equal(r.won,true);assert.equal(r.stationed,true);assert.equal(e.Game.state.garrisons[node].phase,'stationed');assert.equal(e.Game.validSave(e.Game.state),true);return r;}
+function occupyForest(e,node=forest,archers=300){assert.equal(e.Game.getNode(node).type,'forest','gathering fixtures harvest wood');arrive(e,node,'occupy',archers);const r=finish(e);assert.equal(r.won,true);assert.equal(r.stationed,true);assert.equal(e.Game.state.garrisons[node].phase,'stationed');assert.equal(e.Game.validSave(e.Game.state),true);return r;}
 function startGather(e,node=forest){assert.equal(e.evaluate(`HeritageSystem.startGather('${node}')`),null);}
 function quoteGather(e,node=forest){const before=JSON.stringify(e.Game.state),q=e.evaluate(`HeritageSystem.gatherQuote(Game.state,'${node}')`);assert.equal(JSON.stringify(e.Game.state),before);return q;}
 function collect(e,node=forest){return e.evaluate(`HeritageSystem.collectGather('${node}')`);}

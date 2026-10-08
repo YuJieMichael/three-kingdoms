@@ -33,9 +33,11 @@ test('wild occupation return choice changes troop destination without changing t
 });
 
 test('a vacated occupation retains the land slot and production bonus but cannot gather without a garrison',()=>{
- const e=setup(),g=e.Game;city(g,{hall:1});g.state.plots[0]={type:'lumber',level:1};g.state.population=g.workers();const plot=g.state.plots[0],before=g.plotYield(plot);assert.ok(before>0);
+ // v0.34.0 wild refresh can change the target's terrain, so use the resource field matching its actual bonus.
+ const e=setup(),g=e.Game,[res]=Object.keys(g.getNode(forest).bonus),field=Object.keys(g.plotTypes).find(k=>g.plotTypes[k].resource===res);assert.ok(field);
+ city(g,{hall:1});g.state.plots[0]={type:field,level:1};g.state.population=g.workers();const plot=g.state.plots[0],before=g.plotYield(plot);assert.ok(before>0);
  arrive(e,forest,'lin',true);const r=finish(e);assert.equal(r.won,true);assert.equal(g.wildOwned(),1);assert.ok(g.state.landClaims[forest]);
- assert.ok(Math.abs(g.plotYield(plot)-before*(1+g.getNode(forest).bonus.wood))<1e-9);
+ assert.ok(g.getNode(forest).bonus[res]>0);assert.ok(Math.abs(g.plotYield(plot)-before*(1+g.getNode(forest).bonus[res]))<1e-9);
  assert.match(g.attackBlocked('wild_33_32','occupy'),/附属野地已满/);
  assert.match(e.evaluate(`HeritageSystem.startGather('${forest}')`),/驻守部队/);assert.equal(Object.keys(g.state.gatherings).length,0);
  e.advance(g.state.expedition.end-e.now()+1);assert.equal(g.state.conquered[forest],true);assert.equal(g.wildOwned(),1);assert.ok(g.plotYield(plot)>before);

@@ -254,6 +254,7 @@ test('world shortcuts reveal only explored and current stations while chapter un
   globalThis.terrainIcon=()=>'';
   globalThis.epicWorldBanner=()=>'';globalThis.chapterWorldBanner=()=>'';
   globalThis.expeditionStrip=()=>'';globalThis.classicTargetActions=()=>'';
+  globalThis.Audio=class{};document.body={classList:{contains:()=>false}};
  `);
  // Use the real helpers and UI dependencies loaded before app.js first renders index.html.
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8').split('\n').find(line=>line.startsWith('const esc=')));
@@ -263,6 +264,7 @@ test('world shortcuts reveal only explored and current stations while chapter un
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','grid-world.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','manual-ui.js'),'utf8'));
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','wild-general-ui.js'),'utf8'));
+ for(const file of ['web-edition-ui.js','scene-ui.js','ink-map.js','layout-ui.js'])e.evaluate(fs.readFileSync(path.join(__dirname,'..',file),'utf8'));
  let html=e.evaluate('worldPage()');
  for(const node of e.Chapter.chapterThreeNodes){
   assert.ok(!html.includes('data-action="mapLandmark" data-id="'+node.id+'"'));

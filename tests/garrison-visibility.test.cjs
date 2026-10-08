@@ -25,6 +25,9 @@ function overview(e){
  return model;
 }
 const sum=army=>Object.values(army).reduce((n,count)=>n+count,0);
+// Unheld wild fields refresh randomly (wild-fields.js), so a target's garrison and the
+// occupation's casualties come from the actual battle instead of a fixed map tile.
+const casualties=result=>sum(result.lost)+sum(result.wounded);
 function assertTotals(e){
  const g=e.Game,s=g.state,m=overview(e),held=e.evaluate('NPCDefense.heldArmy(Game.state)');
  assert.equal(m.city,sum(s.army));
@@ -39,7 +42,7 @@ function assertTotals(e){
  return m;
 }
 function winOccupation(e,node,general,archers=300){
- const g=e.Game;
+ const g=e.Game,hospital=sum(g.state.warCare.wounded);
  assert.equal(g.dispatch(node,general,{archer:archers},'occupy'),null);
  e.advance(g.state.expedition.end-e.now()+1);
  assert.equal(g.startBattle(),null);
@@ -47,6 +50,10 @@ function winOccupation(e,node,general,archers=300){
  const result=g.state.battle.result;
  assert.equal(result.won,true);
  assert.equal(result.stationed,true);
+ assert.ok(sum(result.back)>0);
+ assert.equal(sum(result.back)+casualties(result),archers);
+ // Casualties leave the army overview: the dead are gone and the wounded wait in the hospital.
+ assert.equal(sum(g.state.warCare.wounded),hospital+sum(result.wounded));
  assert.equal(g.state.expedition,null);
  assert.equal(g.validSave(g.state),true);
  return result;
@@ -92,23 +99,23 @@ test('an actual wild occupation moves surviving troops into one visible garrison
 
 test('multiple wild garrisons and both primary and additional expeditions remain visible after selecting another army',()=>{
  const e=setup(),g=e.Game,heroes=[...g.state.customGenerals].map(hero=>hero.id);
- winOccupation(e,'wild_31_32','lin');
- winOccupation(e,'wild_33_32',heroes[0]);
+ const first=winOccupation(e,'wild_31_32','lin'),second=winOccupation(e,'wild_33_32',heroes[0]);
+ const stationed=sum(first.back)+sum(second.back),total=1500-casualties(first)-casualties(second);
  assert.equal(g.dispatch('field',heroes[1],{archer:100},'raid'),null);
  assert.equal(g.dispatch('wood',heroes[2],{archer:80},'raid'),null);
  let m=assertTotals(e);
- assert.equal(m.city,720);assert.equal(m.field,180);assert.equal(m.stationed,600);assert.equal(m.total,1500);
+ assert.equal(m.city,720);assert.equal(m.field,180);assert.equal(m.stationed,stationed);assert.equal(m.total,total);
  assert.deepEqual(m.rows.map(row=>row.node).sort(),['field','wild_31_32','wild_33_32','wood'].sort());
  assert.equal(g.selectExpedition('wood'),null);assert.equal(g.recall(),null);
  m=assertTotals(e);assert.equal(m.field,180);assert.equal(m.rows.find(row=>row.node==='wood').phase,'return');
  assert.equal(m.rows.find(row=>row.node==='field').phase,'march');
  const saved=JSON.parse(JSON.stringify(g.state));
  g.importSave(saved);
- m=assertTotals(e);assert.equal(m.rows.length,4);assert.equal(m.total,1500);
+ m=assertTotals(e);assert.equal(m.rows.length,4);assert.equal(m.total,total);
  e.advance(g.state.expedition.end-e.now()+1);
- m=assertTotals(e);assert.equal(m.city,800);assert.equal(m.field,100);assert.equal(m.stationed,600);assert.equal(m.total,1500);
+ m=assertTotals(e);assert.equal(m.city,800);assert.equal(m.field,100);assert.equal(m.stationed,stationed);assert.equal(m.total,total);
  assert.deepEqual(m.rows.map(row=>row.node).sort(),['field','wild_31_32','wild_33_32'].sort());
- e.advance(1000);assert.equal(assertTotals(e).total,1500);assert.equal(g.state.army.archer,800);
+ e.advance(1000);assert.equal(assertTotals(e).total,total);assert.equal(g.state.army.archer,800);
  assert.equal(g.validSave(g.state),true);
 });
 
@@ -125,13 +132,13 @@ test('recalled garrisons stay visible during return and settle into the city exa
  e.offline(returnEnd-e.now()+1);
  m=assertTotals(e);assert.equal(m.stationed,0);assert.equal(m.rows.length,0);assert.equal(g.state.army.archer,before+count);
  e.advance(1000);g.save();e.offline(1000);
- assert.equal(assertTotals(e).total,1500);assert.equal(g.state.army.archer,before+count);
+ assert.equal(assertTotals(e).total,1500-casualties(result));assert.equal(g.state.army.archer,before+count);
  assert.equal(g.generalBusy('lin'),false);
  assert.equal(g.validSave(g.state),true);
 });
 
 test('older sparse garrison army saves migrate without hiding or duplicating their soldiers',()=>{
- const e=setup(),g=e.Game,node='wild_31_32';winOccupation(e,node,'lin');
+ const e=setup(),g=e.Game,node='wild_31_32',result=winOccupation(e,node,'lin');
  const older=JSON.parse(JSON.stringify(g.state));
  for(const [unit,count]of Object.entries(older.garrisons[node].army))if(count===0)delete older.garrisons[node].army[unit];
  // Sparse garrisons were written before the multi-city realm was introduced.
@@ -142,20 +149,20 @@ test('older sparse garrison army saves migrate without hiding or duplicating the
  assert.equal(JSON.stringify(older),original);assert.equal(g.validSave(migrated),true);
  g.importSave(older);
  const m=assertTotals(e);
- assert.equal(m.total,1500);assert.equal(m.stationed,300);assert.equal(m.rows.length,1);
+ assert.equal(m.total,1500-casualties(result));assert.equal(m.stationed,sum(result.back));assert.equal(m.rows.length,1);
  assert.deepEqual(Object.keys(g.state.garrisons[node].army).sort(),Object.keys(g.units).sort());
  assert.equal(g.validSave(g.state),true);
 });
 
 test('gathering garrisons remain visible and cannot be recalled until gathering is cancelled',()=>{
- const e=setup(),g=e.Game,node='wild_31_32';winOccupation(e,node,'lin');
+ const e=setup(),g=e.Game,node='wild_31_32',result=winOccupation(e,node,'lin'),count=sum(result.back);
  assert.equal(e.evaluate(`HeritageSystem.startGather('${node}')`),null);
- let m=assertTotals(e);assert.equal(m.stationed,300);assert.equal(m.rows[0].phase,'stationed');
+ let m=assertTotals(e);assert.equal(m.stationed,count);assert.equal(m.rows[0].phase,'stationed');
  assert.equal(g.recallGarrison(node),'请先收获或取消采集，再召回驻军');
- assert.equal(g.state.garrisons[node].phase,'stationed');assert.equal(assertTotals(e).total,1500);
+ assert.equal(g.state.garrisons[node].phase,'stationed');assert.equal(assertTotals(e).total,1500-casualties(result));
  assert.equal(e.evaluate(`HeritageSystem.cancelGather('${node}')`),null);
  assert.equal(g.recallGarrison(node),null);
- m=assertTotals(e);assert.equal(m.rows[0].phase,'return');assert.equal(m.stationed,300);
+ m=assertTotals(e);assert.equal(m.rows[0].phase,'return');assert.equal(m.stationed,count);
  assert.equal(g.validSave(g.state),true);
 });
 
