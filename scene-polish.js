@@ -8,8 +8,30 @@ const SceneStyles={
 };
 // The selected art direction is the default for everyone. Old drafts remain in the preview archive.
 const sceneFieldStyle='heritage';
+let sceneEmptyPlotsVisible=false;
+const sceneObservedPlots=new Map(),sceneFreshPlots=new Map();
+function sceneObservePlotCapacity(cityId,unlocked){
+  const previous=sceneObservedPlots.get(cityId);sceneObservedPlots.set(cityId,unlocked);
+  if(previous!==undefined&&unlocked>previous){
+    sceneFreshPlots.set(cityId,{start:previous,end:unlocked});sceneEmptyPlotsVisible=true;
+    if(!document.querySelector('dialog[open]'))requestAnimationFrame(()=>document.querySelector('.scene-fields .scene-new-plot')?.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'}));
+  }
+  return sceneFreshPlots.get(cityId);
+}
+function sceneEmptyPlotMarker(index,fresh=false){
+  return `<span class="scene-empty-marker ${fresh?'scene-new-marker':''}" aria-hidden="true"><svg class="scene-empty-outline" viewBox="0 0 120 60"><path d="M44 12L60 4 76 12M99 22L115 30 99 38M76 48L60 56 44 48M21 38L5 30 21 22"/></svg><span class="scene-empty-name">${fresh?'新 · ':''}${index+1}号空地</span></span>`;
+}
+function sceneEmptyPlotControls(count){
+  return `<div class="scene-empty-controls"><button type="button" data-scene-empty-toggle aria-pressed="${sceneEmptyPlotsVisible}" ${!count&&!sceneEmptyPlotsVisible?'disabled':''}>${sceneEmptyPlotsVisible?'收起空地':'查看空地'}${count?' · '+count+' 块':''}</button><span>${count?(sceneEmptyPlotsVisible?'标亮位置可建设 · 下滑查看全部':'开启后标出可建设位置'):'已无空闲地块'}</span></div>`;
+}
+document.addEventListener('click',event=>{
+  if(!event.target.closest('[data-scene-empty-toggle]'))return;
+  sceneEmptyPlotsVisible=!sceneEmptyPlotsVisible;
+  if(!sceneEmptyPlotsVisible)sceneFreshPlots.delete(Game.currentCityId());
+  render();document.querySelector('[data-scene-empty-toggle]')?.focus({preventScroll:true});
+});
 function sceneStyleChooser(){
-  return '<span class="scene-art-selection">复古建筑 · 明亮田庄 <a href="scene-style-preview.html?v=0.34.14" target="_blank" rel="noopener">查看美术效果 ↗</a></span>';
+  return '<span class="scene-art-selection">复古建筑 · 明亮田庄 <a href="scene-style-preview.html?v=0.34.15" target="_blank" rel="noopener">查看美术效果 ↗</a></span>';
 }
 function scenePaintedResourceArt(type){
   const atlas=ScenePaintedArt.resources,region=atlas.regions[type];if(!region)return '';
