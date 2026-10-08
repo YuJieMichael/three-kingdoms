@@ -81,11 +81,23 @@ function missionHTML(){const m=Game.currentMission();return m?`<div class="missi
 const interfaceDisclosures=new Map();
 function rememberInterfaceDisclosures(container){container?.querySelectorAll('details[data-ui-disclosure]').forEach(el=>interfaceDisclosures.set(el.dataset.uiDisclosure,el.open));}
 function restoreInterfaceDisclosures(container){container?.querySelectorAll('details[data-ui-disclosure]').forEach(el=>{if(interfaceDisclosures.has(el.dataset.uiDisclosure))el.open=interfaceDisclosures.get(el.dataset.uiDisclosure);});}
+let sceneScrollMemory=null;
+function sceneScrollKey(el){return `${page}:${el.querySelector('.scene-fields')?'fields':'city'}`;}
+function rememberSceneScroll(){const el=app.querySelector('.scene-scroll');sceneScrollMemory=el?{key:sceneScrollKey(el),left:el.scrollLeft}:null;}
+function placeSceneScroll(){
+  const el=app.querySelector('.scene-scroll');if(!el||el.scrollWidth<=el.clientWidth)return;
+  if(sceneScrollMemory?.key===sceneScrollKey(el)){el.scrollLeft=sceneScrollMemory.left;return;}
+  const hall=el.querySelector('.scene-hall'),box=el.getBoundingClientRect(),hallBox=hall?.getBoundingClientRect();
+  const center=hallBox?hallBox.left-box.left+el.scrollLeft+hallBox.width/2:el.scrollWidth/2;
+  el.scrollLeft=Math.max(0,center-el.clientWidth/2);
+}
 function render(){
   const previousMain=document.getElementById('main'),scrollTop=previousMain?.dataset.page===page?previousMain.scrollTop:0;
   rememberInterfaceDisclosures(app);
+  rememberSceneScroll();
   app.innerHTML=classicShell();
   restoreInterfaceDisclosures(app);
+  placeSceneScroll();
   startCombatFeedback();const main=document.getElementById('main');main.dataset.page=page;main.scrollTop=scrollTop;
   if(page==='world'&&S().battle)document.getElementById('battle-log')?.scrollTo(0,99999);
   if(page==='world'&&(!S().battle||S().battle.finished))drawWorldMiniMap();refreshSaveStatusUI();
