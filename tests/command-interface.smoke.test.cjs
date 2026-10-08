@@ -61,6 +61,15 @@ test('all ten real gift claims hide the persistent shortcut but remain inspectab
  const before=JSON.stringify(g.state);assert.equal(e.evaluate('classicGiftComplete()'),true);assert.doesNotMatch(e.evaluate('classicShell()'),/class="layout-gift-button"|data-action="onboardingGifts"/);
  e.evaluate('classicMoreModal()');assert.match(e.evaluate("document.getElementById('modal-body').innerHTML"),/data-action="onboardingGifts"[^>]*>新手补给 · 10\/10</);assert.equal(JSON.stringify(g.state),before);
 });
+test('tier-five pearls and coral show in the gift preview, the tier card and the objective; pre-v0.34.19 claims say they were not paid',()=>{
+ const e=ui(),g=e.g,body=()=>e.evaluate("document.getElementById('modal-body').innerHTML"),card=(html,n)=>html.slice(html.indexOf('第 '+n+' 阶 · '),html.indexOf('第 '+(n+1)+' 阶 · '));city(g,{hall:6});
+ e.evaluate('onboardingGiftsModal()');let html=body();const preview=html.slice(html.indexOf('一键领取预览'),html.indexOf('gift-stages'));
+ for(const part of [preview,card(html,5)]){assert.match(part,/珍珠 ×10/);assert.match(part,/珊瑚 ×5/);}for(const n of [4,6])assert.doesNotMatch(card(html,n),/珍珠|珊瑚/);
+ for(let n=1;n<=4;n++)assert.equal(g.onboarding.claim(n),null);for(const x of g.missions)if(g.missionReady(x))assert.equal(g.claimMission(x.id),null);
+ const m=e.evaluate('currentObjectiveModel()');assert.equal(m.growth.kind,'gift');assert.equal(Number(m.growth.id),5);assert.match(m.reward,/珍珠 ×10 · 珊瑚 ×5/);
+ assert.equal(g.onboarding.claim(5),null);e.evaluate('onboardingGiftsModal()');html=card(body(),5);assert.match(html,/已领取/);assert.match(html,/珍珠 ×10/);assert.doesNotMatch(html,/不补发/);
+ g.state.onboarding.jewelClaims=[];e.evaluate('onboardingGiftsModal()');html=card(body(),5);assert.match(html,/v0\.34\.19 前领取.*不补发/);assert.doesNotMatch(html,/珍珠 ×10/);
+});
 test('objective previews use current gift quotes and prioritize a genuinely claimable mission',()=>{
  const e=ui(),g=e.g,before=JSON.stringify(g.state),quote=g.onboarding.quote(g.state,1);let m=e.evaluate('currentObjectiveModel()');
  assert.equal(m.growth.kind,'gift');for(const [id,n] of Object.entries(quote.resources))assert.ok(m.reward.includes(g.resources[id].name+' '+n.toLocaleString('zh-CN')));
