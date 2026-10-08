@@ -160,7 +160,14 @@ function webObserveCombat(b){
   const old=webRenderedRounds.get(b);webRenderedRounds.set(b,b.round);
   if(old!==undefined&&b.round>old&&b.currentRoundSummary?.events.length&&!window.matchMedia('(prefers-reduced-motion:reduce)').matches)webCombatUntil=performance.now()+1800;
   webLockCombatControls();
+  // Keep the command bar under the dialog title; on phones show the new round's result after a tapped 下一回合, since it sits below the fold.
+  const top=modal.querySelector('.modal-top'),bar=modalBody.querySelector('.battle-command-bar');
+  modal.style.setProperty('--web-battle-top',(top?.offsetHeight||0)+'px');modal.style.setProperty('--web-battle-bar',(bar?.offsetHeight||0)+'px');
+  if(old!==undefined&&b.round>old&&webScrollToRound&&window.matchMedia('(max-width:760px)').matches)modalBody.querySelector('.combat-round-summary')?.scrollIntoView({block:'start'});
+  if(old!==undefined&&b.round>old)webScrollToRound=false;
 }
+let webScrollToRound=false;
+document.addEventListener('click',event=>{if(event.target.closest('[data-action="battleRound"],[data-action="tacticalLessonRound"]'))webScrollToRound=true;},true);
 function webPresentBattle(){
   const battle=S().battle;if(!battle){webBattleWindowOpen=false;if(modalBody.querySelector('[data-web-battle]'))modal.close();return;}
   showModal('战场指挥',`<div data-web-battle>${webFullBattlePage(battle)}</div>`,btn('关闭战场 · 继续城务','webBattleClose','','secondary'));
@@ -200,7 +207,7 @@ document.addEventListener('click',event=>{
   const el=event.target.closest('[data-action]');if(!el||el.disabled)return;
   const action=el.dataset.action,id=el.dataset.id;
   if(action==='webBattleWindow'){webClosedBattle=null;webBattleWindowOpen=true;render();}
-  if(action==='webBattleClose')modal.close();
+  if(action==='webBattleClose'){webBattleWindowOpen=false;webClosedBattle=S().battle;modal.close();render();}
   if(action==='webEditionHub')showModal('征战与成长',`<div class="settings-row">${btn('开场战斗 / 教学','webOpening','','block',WebEdition.shared())}${btn('工程与军需','webSupplies','','block',WebEdition.shared())}${btn('晋升材料筹备','webGrowth','','block',WebEdition.shared())}${btn('征战补给模式','webConquest','','block',WebEdition.shared())}${btn('战后整备','webReplenish','','secondary block')}</div><p class="hint">本机扩展用于自己的征战进度。共享世界的资源与行动由原在线服务处理。</p>`,btn('关闭','close','','secondary'));
   if(action==='webMessages')showModal('消息记录',webMessages.length?webMessages.map(m=>`<article><small>${new Date(m.at).toLocaleTimeString('zh-CN')}</small><p>${esc(m.text)}</p></article>`).join(''):'<p>暂无消息。</p>',btn('关闭','close','','secondary'));
   if(['importConfirm','resetFinal','onlineResume','onlineCreateShared','onlinePrivateImport','onlineLogout'].includes(action))webMessages.length=0;
@@ -260,6 +267,8 @@ document.addEventListener('keydown',event=>{
   if(target){event.preventDefault();target.focus();target.scrollIntoView({block:'nearest',inline:'nearest'});}
 });
 modal.addEventListener('close',()=>{
+  // Browsers queue the close event; if the dialog was reopened meanwhile (battle start closes and reopens it), this close is stale.
+  if(modal.open)return;
   if(webBattleWindowOpen){webBattleWindowOpen=false;webClosedBattle=S().battle;render();}
   if(Game.lessonInfo()?.id==='opening_battle')Game.endTacticalLesson();
   webUpdateMusic();
