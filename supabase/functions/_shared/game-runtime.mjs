@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="e463a3fe9daa9433f27636906909d2d2e0feaa463a2cdd0aae01e453a27b78c2";
+export const runtimeHash="52ccd89e16492909a58f334dfa2c0e42f45f3e1de1a0493b1a810395dc8012b7";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -12145,6 +12145,8 @@ const GovernanceSystem=(()=>{
 // General cultivation and equipment numbers are prototype rules, not historical tables.
 const HeroSystem=(()=>{
   const attrs={atk:'勇武',def:'统御',pol:'内政',wis:'智谋',lead:'统率'};
+  // Free points only raise these three; 统御 and 统率 grow from level and equipment.
+  const allocatable=['atk','pol','wis'];
   const slots={weapon:'兵器',armor:'铠甲',helmet:'头盔',accessory:'佩饰'};
   const qualities=['','普通','精良','珍稀'];
   const names={weapon:['','精铁长枪','百炼战刃','龙纹战戟'],armor:['','皮甲','锁子甲','玄铁战甲'],helmet:['','铁盔','明光盔','狮纹金盔'],accessory:['','竹简','青玉佩','龙凤玉印']};
@@ -12296,7 +12298,7 @@ const HeroSystem=(()=>{
   const live=()=>{Game.tick();init(Game.state);return Game.state;};
   const busy=id=>!Game.state.generals.includes(id)?'请选择已招募将领':Game.generalBusy(id)?'将领出征或驻守中，请返城后调整':null;
   const save=()=>{Game.save();return null;};
-  function allocate(id,points){const s=live(),error=busy(id);if(error)return error;if(!points||Object.keys(points).length!==5||!Object.keys(attrs).every(k=>Number.isSafeInteger(points[k])&&points[k]>=0))return '加点格式不正确';const sum=Object.values(points).reduce((a,b)=>a+b,0);if(sum<1||sum>remaining(s,id))return '可分配属性点不足';for(const k of Object.keys(attrs))s.heroPoints[id][k]+=points[k];return save();}
+  function allocate(id,points){const s=live(),error=busy(id);if(error)return error;if(!points||Object.keys(points).length!==5||!Object.keys(attrs).every(k=>Number.isSafeInteger(points[k])&&points[k]>=0))return '加点格式不正确';if(Object.keys(attrs).some(k=>!allocatable.includes(k)&&points[k]>0))return '统御与统率不能加点';const sum=Object.values(points).reduce((a,b)=>a+b,0);if(sum<1||sum>remaining(s,id))return '可分配属性点不足';for(const k of Object.keys(attrs))s.heroPoints[id][k]+=points[k];return save();}
   function reset(id){const s=live(),error=busy(id);if(error)return error;const used=totalPoints(s,id)-remaining(s,id),count=Math.ceil(s.generalLevels[id]/10);if(!used)return '这位将领没有已分配属性点';if((s.inventory.resetHero||0)<count)return '需要洗髓丹 ×'+count;s.inventory.resetHero-=count;s.heroPoints[id]=zero();Progression.record(s,'item',count);return save();}
   function drillQuote(s,id){const day=Progression.period(Date.now()),d=s.heroDrills[id],used=d?.day===day?d.count:0;return {used,cost:1000*(s.generalLevels[id]||1),xp:80};}
   function drill(id){const s=live(),error=busy(id);if(error)return error;if(s.buildings.drill<1)return '请先建造校场';if(s.generalLevels[id]>=10000)return '将领已达最高等级';const q=drillQuote(s,id);if(q.used>=3)return '今日已操练 3 次，北京时间 05:00 重置';if(s.res.gold<q.cost)return '黄金不足';s.res.gold-=q.cost;s.heroDrills[id]={day:Progression.period(Date.now()),count:q.used+1};addXp(s,id,q.xp);return save();}
@@ -12310,7 +12312,7 @@ const HeroSystem=(()=>{
   function salvage(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero)return '请先卸下装备';s.equipment=s.equipment.filter(x=>x.id!==eid);s.inventory.pearl=(s.inventory.pearl||0)+e.tier+Math.floor(e.enhance/3);return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {attrs,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand};
+  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand};
 })();
 
 
