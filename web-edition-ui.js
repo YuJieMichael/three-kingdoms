@@ -146,9 +146,11 @@ function installWebEditionUI(){
 const webMessages=[];
 let webBattleWindowOpen=false,webClosedBattle=null,webCombatUntil=0,webCombatUnlock;
 const webRenderedRounds=new WeakMap(),webFullBattlePage=battlePage;
-battlePage=function(b,context={}){
+battlePage=function(b=S().battle,context={}){
   if(!context.practice&&webBattleWindowOpen)return `<section class="panel"><h3>战场指挥窗口</h3><p>关闭窗口可以办理城务，部队不会因此撤退。</p>${btn('打开战场','webBattleWindow')}</section>`;
-  return webFullBattlePage(b,context);
+  const page=webFullBattlePage(b,context);
+  // After 关闭战场 the battle continues here; offer the way back to the command window.
+  return !context.practice&&b&&!b.finished?`<div class="notice web-battle-reopen">${btn('打开战场窗口','webBattleWindow','','small')}<span>战场窗口已关闭，部队仍在交战；也可以在这里继续指挥。</span></div>`+page:page;
 };
 function webLockCombatControls(){
   clearTimeout(webCombatUnlock);
@@ -206,7 +208,7 @@ showModal=function(...args){if(webBattleWindowOpen&&!String(args[1]).includes('d
 document.addEventListener('click',event=>{
   const el=event.target.closest('[data-action]');if(!el||el.disabled)return;
   const action=el.dataset.action,id=el.dataset.id;
-  if(action==='webBattleWindow'){webClosedBattle=null;webBattleWindowOpen=true;render();}
+  if(action==='webBattleWindow'){webClosedBattle=null;webBattleWindowOpen=true;webRenderedRounds.delete(S().battle);webScrollToRound=false;render();}
   if(action==='webBattleClose'){webBattleWindowOpen=false;webClosedBattle=S().battle;modal.close();render();}
   if(action==='webEditionHub')showModal('征战与成长',`<div class="settings-row">${btn('开场战斗 / 教学','webOpening','','block',WebEdition.shared())}${btn('工程与军需','webSupplies','','block',WebEdition.shared())}${btn('晋升材料筹备','webGrowth','','block',WebEdition.shared())}${btn('征战补给模式','webConquest','','block',WebEdition.shared())}${btn('战后整备','webReplenish','','secondary block')}</div><p class="hint">本机扩展用于自己的征战进度。共享世界的资源与行动由原在线服务处理。</p>`,btn('关闭','close','','secondary'));
   if(action==='webMessages')showModal('消息记录',webMessages.length?webMessages.map(m=>`<article><small>${new Date(m.at).toLocaleTimeString('zh-CN')}</small><p>${esc(m.text)}</p></article>`).join(''):'<p>暂无消息。</p>',btn('关闭','close','','secondary'));
