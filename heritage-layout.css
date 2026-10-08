@@ -63,3 +63,8 @@
 #modal:has(.layout-more-menu){width:min(560px,calc(100vw - 24px));max-width:calc(100vw - 24px)}
 
 .heritage-requirements .requirement-met{color:#a4bf8c}.heritage-requirements .requirement-missing{color:#e2b989}.heritage-requirements li{line-height:1.8}.heritage-requirements li>span{display:inline-block;width:14px;font-weight:bold}
+
+/* Phone polish: readable stat rows, gift banner that wraps, compact army overview. */
+#modal-body .enemy-list .enemy-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;column-gap:8px}
+.quest-gift{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.quest-gift strong{flex:1 1 160px;min-width:0}
+@media(max-width:760px){.army-overview-counts{gap:6px}.army-overview-counts>div{display:flex;justify-content:space-between;align-items:baseline;gap:6px;padding:8px 10px;min-height:0}.army-overview-counts>div span{font-size:12px}.army-overview-counts>div strong{font-size:17px;line-height:1.2}}

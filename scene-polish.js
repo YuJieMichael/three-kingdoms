@@ -8,7 +8,9 @@ const SceneStyles={
 };
 // The selected art direction is the default for everyone. Old drafts remain in the preview archive.
 const sceneFieldStyle='heritage';
-let sceneEmptyPlotsVisible=false;
+// null follows the city: empty plots show until the first field is built, then the player's toggle wins.
+let sceneEmptyPlotsVisible=null;
+function sceneShowEmpty(){return sceneEmptyPlotsVisible??!S().plots.slice(0,Game.unlockedPlots()).some(p=>p.type);}
 const sceneObservedPlots=new Map(),sceneFreshPlots=new Map();
 function sceneObservePlotCapacity(cityId,unlocked){
   const previous=sceneObservedPlots.get(cityId);sceneObservedPlots.set(cityId,unlocked);
@@ -22,11 +24,11 @@ function sceneEmptyPlotMarker(index,fresh=false){
   return `<span class="scene-empty-marker ${fresh?'scene-new-marker':''}" aria-hidden="true"><svg class="scene-empty-outline" viewBox="0 0 120 60"><path d="M44 12L60 4 76 12M99 22L115 30 99 38M76 48L60 56 44 48M21 38L5 30 21 22"/></svg><span class="scene-empty-name">${fresh?'新 · ':''}${index+1}号空地</span></span>`;
 }
 function sceneEmptyPlotControls(count){
-  return `<div class="scene-empty-controls"><button type="button" data-scene-empty-toggle aria-pressed="${sceneEmptyPlotsVisible}" ${!count&&!sceneEmptyPlotsVisible?'disabled':''}>${sceneEmptyPlotsVisible?'收起空地':'查看空地'}${count?' · '+count+' 块':''}</button><span>${count?(sceneEmptyPlotsVisible?'标亮位置可建设 · 下滑查看全部':'开启后标出可建设位置'):'已无空闲地块'}</span></div>`;
+  return `<div class="scene-empty-controls"><button type="button" data-scene-empty-toggle aria-pressed="${sceneShowEmpty()}" ${!count&&!sceneShowEmpty()?'disabled':''}>${sceneShowEmpty()?'收起空地':'查看空地'}${count?' · '+count+' 块':''}</button><span>${count?(sceneShowEmpty()?'标亮位置可建设 · 下滑查看全部':'开启后标出可建设位置'):'已无空闲地块'}</span></div>`;
 }
 document.addEventListener('click',event=>{
   if(!event.target.closest('[data-scene-empty-toggle]'))return;
-  sceneEmptyPlotsVisible=!sceneEmptyPlotsVisible;
+  sceneEmptyPlotsVisible=!sceneShowEmpty();
   if(!sceneEmptyPlotsVisible)sceneFreshPlots.delete(Game.currentCityId());
   render();document.querySelector('[data-scene-empty-toggle]')?.focus({preventScroll:true});
 });
