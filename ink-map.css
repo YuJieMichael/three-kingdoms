@@ -1,0 +1,23 @@
+/* The map is a painted surface; coordinate buttons are transparent hit areas. */
+.screen-world .illustrated-map.ink-map{background:#e9e2cc;border:1px solid #aa9c76;box-shadow:inset 0 0 35px #83775425}
+.ink-map .web-world-ground{overflow:hidden;opacity:1}
+.ink-map .world-cell{border:0!important;background:transparent!important;box-shadow:none!important;filter:none!important;outline:0!important;overflow:visible!important;border-radius:0!important}
+.ink-map .world-cell::after{content:"";display:block!important;position:absolute;inset:15% 10%;border:1.5px solid transparent;border-radius:48% 43% 50% 39%;pointer-events:none;transform:rotate(-9deg);z-index:0;transition:background .15s,border-color .15s}
+.ink-map .world-cell.selected::after{border-color:#9e653c;background:#c1a66a16;box-shadow:0 0 0 3px #b49a5d10}
+.ink-map .world-cell:hover::after,.ink-map .world-cell:focus-visible::after{border-color:#866f44;background:#aa96611a}
+.ink-map .world-cell:focus-visible{outline:2px solid #745b35!important;outline-offset:-3px}
+.ink-map .world-cell .ink-site-art{position:absolute;inset:0;width:100%;height:100%;opacity:.95;pointer-events:none;filter:none}
+.ink-map .world-cell .world-site-name{bottom:0;color:#475747!important;background:#eee8d5df!important;border:0!important;border-radius:2px;font-family:var(--serif);font-size:12px;font-weight:600;box-shadow:none;text-shadow:none;max-width:94%;padding:2px 5px}
+.ink-map .world-cell .world-cell-level{display:none!important;color:#5a6d5c!important;background:#eee8d5e8!important;border:0;text-shadow:none;top:2px;right:3px;font-size:10px;font-weight:400;padding:1px 4px}
+.ink-map .world-cell:hover .world-cell-level,.ink-map .world-cell:focus-visible .world-cell-level,.ink-map .world-cell.selected .world-cell-level,.ink-map.tactical-map .world-cell-level{display:block!important}
+.ink-map .world-tile-caption{color:#445d50;background:#eee8d5e8;font-family:var(--serif);font-size:11px;padding:3px}
+.ink-map .world-owned{background:#668173cc!important;color:#fff8db!important;font-size:10px;padding:0 3px;text-shadow:none}
+.ink-map .world-march{color:#a65d3e!important;background:#eee8d5db!important;text-shadow:none;padding:1px 4px}
+.ink-map .world-landmark{color:#8b7153!important;text-shadow:none;font-size:10px}
+.ink-map .map-axis,.ink-map .axis-corner{background:#e3dcc5;color:#837c63!important;font-size:10px}
+.ink-map.tactical-map .world-cell{border:1px dotted #6d7c5c42!important}
+@media(max-width:760px){.ink-map .world-cell .world-site-name{font-size:10px;padding:2px 3px}.ink-map .world-cell .world-cell-level{font-size:9px}}
+.world-grid.illustrated-map.ink-map .world-cell.selected,.world-grid.illustrated-map.ink-map .world-cell:hover{outline:0!important;background:transparent!important;box-shadow:none!important;border:0!important}
+.world-grid.illustrated-map.ink-map .world-cell:focus-visible{outline:2px solid #745b35!important}
+.ink-world-ground .ink-mountain-body,.ink-world-ground .ink-pine-body{transform:scaleY(var(--ink-aspect,1));transform-origin:50% 100%;transform-box:fill-box}
+.ink-world-ground .ink-mountain-body .ink-pine-body{transform:none}
