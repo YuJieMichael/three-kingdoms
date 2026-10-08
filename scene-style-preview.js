@@ -8,17 +8,18 @@ const previewResourceIds=['farm','lumber','quarry','mine'];
 const previewNames={farm:'农田',lumber:'伐木场',quarry:'采石场',mine:'铁矿'};
 const previewPlots=Array(36).fill(null);
 [[0,'farm'],[5,'mine'],[7,'farm'],[10,'quarry'],[14,'lumber'],[16,'mine'],[19,'farm'],[21,'lumber'],[24,'quarry'],[28,'farm'],[30,'lumber'],[35,'mine']].forEach(([i,type])=>{previewPlots[i]=type;});
-const previewStyle=new URLSearchParams(location.search).get('style');
+const previewStyle=new URLSearchParams(location.search).get('style')||'heritage';
 const previewEntries=Object.entries(SceneStyles).filter(([id])=>!previewStyle||previewStyle===id);
 if(previewStyle&&Object.hasOwn(SceneStyles,previewStyle))document.body.classList.add('single');
 document.getElementById('choices').innerHTML=(previewEntries.length?previewEntries:Object.entries(SceneStyles)).map(([id,s])=>{
   const sites=previewPlots.map((type,i)=>{
     if(!type)return '';
-    const p=scenePoint(i%6,Math.floor(i/6)),n=previewResourceIds.indexOf(type);
+    const p=id==='heritage'?sceneFieldPoint(i,6):scenePoint(i%6,Math.floor(i/6)),n=previewResourceIds.indexOf(type);
     const caption=[0,5,14,24].includes(i)?`<span class="scene-name-tag" style="left:${p.x/11}%;top:${(p.y+12)*100/648}%">${previewNames[type]}</span>`:'';
-    return `<div class="scene-site built-field ${type}" style="${scenePosition(p,148,126,648)}"><span class="web-resource-art"><span class="web-resource-sprite" style="background-image:url('assets/realistic/buildings.png');background-size:500% 400%;background-position:${n/4*100}% 0"></span></span></div>${caption}`;
+    const art=id==='heritage'?scenePaintedResourceArt(type):`<span class="web-resource-sprite" style="background-image:url('assets/realistic/buildings.png');background-size:500% 400%;background-position:${n/4*100}% 0"></span>`;
+    return `<div class="scene-site built-field ${type}" style="${scenePosition(p,148,126,648)}"><span class="web-resource-art">${art}</span></div>${caption}`;
   }).join('');
-  return `<article class="choice"><header><h2><b>${s.letter}</b>${s.name}</h2><p>${s.description}</p></header><div class="scene-board"><div class="scene-stage scene-fields preview-scene" data-field-style="${id}" style="--scene-height:648">${sceneFieldLandscape(6,id)}${sites}</div></div><footer>空地保持自然地面 · <a href="?style=${id}">放大这套方案</a></footer></article>`;
+  return `<article class="choice"><header><h2><b>${s.letter}</b>${s.name}</h2><p>${s.description}</p></header><div class="scene-board"><div class="scene-stage scene-fields preview-scene" data-field-style="${id}" style="--scene-height:648">${sceneFieldLandscape(6,id)}${sites}</div></div><footer>独立资源建筑 · 空地保持自然地面 · <a href="./?v=0.34.13">进入游戏</a> · 旧稿：<a href="?style=central">中原</a> / <a href="?style=river">江南</a> / <a href="?style=ink">水墨</a></footer></article>`;
 }).join('');
 const previewCityIds=['house','house','academy','inn','drill','stable','warehouse','smith','tavern','market','embassy','barracks'];
 document.getElementById('city-stage').innerHTML=sceneGroundSVG()+previewCityIds.map((id,i)=>{
