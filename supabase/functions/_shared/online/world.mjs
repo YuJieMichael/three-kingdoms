@@ -77,7 +77,7 @@ export function applyWorldCommand(context,input,now){
   const target=players.get(params.targetId);if(!target||target.id===actor)fail('请选择其他玩家城池');
   if(input.type==='shared.aid'){
    const a=membership(actor),b=membership(target.id);if(!a||!b||a.alliance!==b.alliance)fail('只能向同盟城池派出援军');
-  }else {const reason=attackPermission(runtime(actor).Game.state,runtime(target.id).Game.state,actor,target.id,alliances,memberships,now);if(reason)fail(reason,'WAR_NOT_OPEN');if(params.mode!==undefined&&!['raid','occupy'].includes(params.mode))fail('出征方式无效');if(params.mode==='occupy'&&(params.targetCity||'capital')==='capital')fail('主城是保底城市，不能被占领','CAPITAL_PROTECTED');if(params.mode==='occupy'&&runtime(actor).Game.cityList().length>=runtime(actor).Game.cityLimit())fail('爵位允许的城池数量已满');}
+  }else {const reason=attackPermission(runtime(actor).Game.state,runtime(target.id).Game.state,actor,target.id,alliances,memberships,now);if(reason)fail(reason,'WAR_NOT_OPEN');if(params.mode!==undefined&&!['raid','occupy'].includes(params.mode))fail('出征方式无效');if(params.mode==='occupy'&&(params.targetCity||'capital')==='capital')fail('主城是保底城市，不能被占领','CAPITAL_PROTECTED');if(params.mode==='occupy'&&runtime(actor).Game.cityList().length>=runtime(actor).Game.cityLimit())fail('城池名额已满');}
   const targetGame=runtime(target.id,params.targetCity||'capital').Game;
   stageMarch(input.type==='shared.aid'?'aid':'pvp',location(target,targetGame,params.targetCity||'capital'),{mode:params.mode||'raid',returnAfterOccupy:params.returnAfterOccupy===true,targetNode:targetGame.cityMeta()?.node});persist(target.id);
  }else if(input.type==='shared.recallAid'){
