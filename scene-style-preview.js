@@ -19,7 +19,7 @@ document.getElementById('choices').innerHTML=(previewEntries.length?previewEntri
     const art=id==='heritage'?scenePaintedResourceArt(type):`<span class="web-resource-sprite" style="background-image:url('assets/realistic/buildings.png');background-size:500% 400%;background-position:${n/4*100}% 0"></span>`;
     return `<div class="scene-site built-field ${type}" style="${scenePosition(p,148,126,648)}"><span class="web-resource-art">${art}</span></div>${caption}`;
   }).join('');
-  return `<article class="choice"><header><h2><b>${s.letter}</b>${s.name}</h2><p>${s.description}</p></header><div class="scene-board"><div class="scene-stage scene-fields preview-scene" data-field-style="${id}" style="--scene-height:648">${sceneFieldLandscape(6,id)}${sites}</div></div><footer>独立资源建筑 · 空地保持自然地面 · <a href="./?v=0.34.13">进入游戏</a> · 旧稿：<a href="?style=central">中原</a> / <a href="?style=river">江南</a> / <a href="?style=ink">水墨</a></footer></article>`;
+  return `<article class="choice"><header><h2><b>${s.letter}</b>${s.name}</h2><p>${s.description}</p></header><div class="scene-board"><div class="scene-stage scene-fields preview-scene" data-field-style="${id}" style="--scene-height:648">${sceneFieldLandscape(6,id)}${id==='heritage'?sceneFieldRoads(previewPlots.map(type=>({type})),6,648):''}${sites}</div></div><footer>独立资源建筑 · 空地保持自然地面 · <a href="./?v=0.34.14">进入游戏</a> · 旧稿：<a href="?style=central">中原</a> / <a href="?style=river">江南</a> / <a href="?style=ink">水墨</a></footer></article>`;
 }).join('');
 const previewCityIds=['house','house','academy','inn','drill','stable','warehouse','smith','tavern','market','embassy','barracks'];
 document.getElementById('city-stage').innerHTML=sceneGroundSVG()+previewCityIds.map((id,i)=>{

@@ -9,7 +9,7 @@ const SceneStyles={
 // The selected art direction is the default for everyone. Old drafts remain in the preview archive.
 const sceneFieldStyle='heritage';
 function sceneStyleChooser(){
-  return '<span class="scene-art-selection">复古建筑 · 明亮田庄 <a href="scene-style-preview.html?v=0.34.13" target="_blank" rel="noopener">查看美术效果 ↗</a></span>';
+  return '<span class="scene-art-selection">复古建筑 · 明亮田庄 <a href="scene-style-preview.html?v=0.34.14" target="_blank" rel="noopener">查看美术效果 ↗</a></span>';
 }
 function scenePaintedResourceArt(type){
   const atlas=ScenePaintedArt.resources,region=atlas.regions[type];if(!region)return '';
@@ -18,6 +18,23 @@ function scenePaintedResourceArt(type){
 }
 function sceneResourceArt(type,style=sceneFieldStyle){
   return style==='heritage'?scenePaintedResourceArt(type):buildingIcon(type,'web-resource-sprite');
+}
+function sceneFieldRoads(plots,rows,stageHeight){
+  // A single network is painted on the ground, never onto a building's sprite.
+  // Only occupied sites become destinations; no per-plot ground bases are drawn.
+  const pending=plots.flatMap((plot,index)=>plot.type?[{...sceneFieldPoint(index,rows),index}]:[]);
+  if(!pending.length)return '';
+  const joined=[{x:550,y:stageHeight-28,index:-1}],paths=[];
+  while(pending.length){
+    let choice=null;
+    joined.forEach(a=>pending.forEach((b,i)=>{const distance=(a.x-b.x)**2+(a.y-b.y)**2;if(!choice||distance<choice.distance)choice={a,b,i,distance};}));
+    const {a,b,i}=choice,dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy)||1,bend=(b.index%2?1:-1)*Math.min(10,length*.08);
+    const cx=(a.x+b.x)/2-dy/length*bend,cy=(a.y+b.y)/2+dx/length*bend;
+    paths.push(`<path d="M${a.x.toFixed(1)} ${a.y.toFixed(1)}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}"/>`);
+    joined.push(b);pending.splice(i,1);
+  }
+  const network=paths.join('');
+  return `<svg class="scene-ground scene-field-network" viewBox="0 0 1100 ${stageHeight}" aria-hidden="true"><defs><filter id="scene-path-soft-edge" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="1.4"/></filter></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round"><g stroke="#c1a772" stroke-width="22" opacity=".22" filter="url(#scene-path-soft-edge)">${network}</g><g stroke="#d6bb89" stroke-width="13" opacity=".72">${network}</g><g stroke="#bea16f" stroke-width="3" opacity=".2" stroke-dasharray="5 9">${network}</g></g></svg>`;
 }
 function sceneLandscapeTree(x,y,scale,color,ink=false){
   if(!ink){const atlas=WebArt.city.environment,[rx,ry,w,h]=atlas.regions.tree;return `<svg x="${x-36*scale}" y="${y-58*scale}" width="${72*scale}" height="${58*scale}" viewBox="${rx} ${ry} ${w} ${h}" preserveAspectRatio="xMidYMax meet" opacity=".72"><image href="${atlas.texture}" width="1536" height="1024"/></svg>`;}
