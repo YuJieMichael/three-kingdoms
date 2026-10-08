@@ -34,3 +34,15 @@ PNG 保留生成的像素与透明通道，不做去底、抠图或重采样。a
 ## 检查范围
 
 进行了图像尺寸、alpha 与包围框读取、源码语法检查、只读样本画面与实际城外 UI 预览。没有运行游戏功能或平衡测试，没有主动建设、购买、出征或修改玩家存档。游戏原有生产／自动升级计时按正常页面行为继续运行。
+
+## v0.34.14 · 取消独立地皮
+
+当前资源图集改为 `resource-structures-ac-v3.png`，1254 × 1254 RGBA。SHA-256：`ab4fbf1090273446e7c055ec56fe961354b7f058b48085b6a8a850bc2b975441`。
+
+内置 imagegen 以 v2 为编辑目标，移除各图的独立土壤／草圈及装饰树丛，保留真实建筑、作物和生产设施；建筑间透明，统一背景地面可透过图案显示。运行时也移除额外椭圆阴影和整图 drop-shadow。小路由 sceneFieldRoads 在统一地面层绘制，连接已建地块；不属于图集，也不产生任何生产、运输或战斗加成。
+
+成品保留原像素与真实 alpha。中央两条象限边界的 alpha 最大值为 1；测量后的区域更新在 scene-art-data.js。v2 保留供参考，不再作为当前资源建筑渲染来源。
+
+### 最终生成提示（transparent_background=true）
+
+> Edit target: this 2x2 transparent game resource-building atlas. Correct the isolated-island appearance while preserving the chosen realistic grey-tile Chinese architecture with bright clear daylight, existing isometric camera, scale and 2x2 placement (farm top left, timber yard top right, stone quarry bottom left, iron mine bottom right). REMOVE every site's standalone lawn / earth / dirt base, the green grass fringe around each silhouette, the decorative bushes and decorative trees. Replace ALL exposed ground pixels surrounding AND between functional objects with genuine alpha transparency. Keep only the actual buildings, wheat plants, useful wooden fences around the wheat only, timber logs and crane, quarried rock and blocks, mine rocky face/entrance, ore carts and tools. These will be placed onto a separately rendered continuous ground; they MUST NOT carry their own disc/diamond/round/rectangular terrain patch or a perimeter outline. The timber yard must be an open workshop and log pile with transparent space between objects; the quarry and mine rock forms remain functional stone shapes, not a stone platform underneath. Farm wheat stays rooted in narrow crop strips with no large enclosing soil island. Remove broad cast shadows: retain only very subtle tiny contact shadows immediately under solid objects on alpha. No dark cutout outline, halo, white edge or grass-colored matte. Refine silhouette readability if foliage removal reveals hidden structural details, keeping all buildings complete. Leave at least 70 pixels transparent along each side of the central horizontal and vertical division, all objects completely inside their original equal square quadrant and no clipping at any edge. No sky, scene background, labels, artificial checkerboard or borders. Deliver genuine transparent RGBA atlas, square format, premium semi-realistic hand-painted 2.5D historical strategy game resource structures that can blend into ANY continuous earth terrain.

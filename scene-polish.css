@@ -26,7 +26,7 @@
 @media(max-width:760px){.scene-style-bar{gap:6px;padding:7px 9px}.scene-style-bar>span{display:none}.scene-style-chooser{width:100%}.scene-style-chooser button{flex:1;justify-content:center;min-height:44px;padding:5px 7px!important}}
 
 /* Selected A architecture + C readability. No color filters on the new source art. */
-.scene-board .scene-fields[data-field-style=heritage] .scene-painted-resource{filter:drop-shadow(1px 3px 1px #4d422522);max-width:none!important}
+.scene-board .scene-fields[data-field-style=heritage] .scene-painted-resource{filter:none;max-width:none!important}
 .scene-board .scene-fields[data-field-style=heritage] .scene-site .web-resource-art{width:80%;left:10%;height:76%;bottom:18%}
 .scene-art-selection{display:flex;align-items:center;gap:18px;font-size:12px;color:#665236}.scene-art-selection a{color:#5c6040;text-decoration:underline;text-underline-offset:3px}
 .scene-board .scene-field-caption{font-size:11px;line-height:15px;padding:2px 5px;background:#f7edcddd;color:#4b3a24;border-color:#bba775;box-shadow:0 1px 3px #53492520}
