@@ -83,13 +83,17 @@ function rememberInterfaceDisclosures(container){container?.querySelectorAll('de
 function restoreInterfaceDisclosures(container){container?.querySelectorAll('details[data-ui-disclosure]').forEach(el=>{if(interfaceDisclosures.has(el.dataset.uiDisclosure))el.open=interfaceDisclosures.get(el.dataset.uiDisclosure);});}
 let sceneScrollMemory=null;
 function sceneScrollKey(el){return `${page}:${el.querySelector('.scene-fields')?'fields':'city'}`;}
-function rememberSceneScroll(){const el=app.querySelector('.scene-scroll');sceneScrollMemory=el?{key:sceneScrollKey(el),left:el.scrollLeft}:null;}
+function rememberSceneScroll(){const el=app.querySelector('.scene-scroll');sceneScrollMemory=el?{key:sceneScrollKey(el),left:el.scrollLeft,top:el.scrollTop}:null;}
 function placeSceneScroll(){
-  const el=app.querySelector('.scene-scroll');if(!el||el.scrollWidth<=el.clientWidth)return;
-  if(sceneScrollMemory?.key===sceneScrollKey(el)){el.scrollLeft=sceneScrollMemory.left;return;}
-  const hall=el.querySelector('.scene-hall'),box=el.getBoundingClientRect(),hallBox=hall?.getBoundingClientRect();
-  const center=hallBox?hallBox.left-box.left+el.scrollLeft+hallBox.width/2:el.scrollWidth/2;
-  el.scrollLeft=Math.max(0,center-el.clientWidth/2);
+  const el=app.querySelector('.scene-scroll'),main=document.getElementById('main');if(!el)return;
+  // On short screens keep the scene inside the visible workspace, so alerts above it stay in view while the hall is centred.
+  if(main){const below=el.parentElement.getBoundingClientRect().bottom-el.getBoundingClientRect().bottom,room=main.clientHeight-(el.getBoundingClientRect().top-main.getBoundingClientRect().top+main.scrollTop)-below-parseFloat(getComputedStyle(main).paddingBottom);el.style.maxHeight=room>=120&&room<el.scrollHeight?room+'px':'';}
+  if(el.scrollWidth<=el.clientWidth&&el.scrollHeight<=el.clientHeight)return;
+  if(sceneScrollMemory?.key===sceneScrollKey(el)){el.scrollLeft=sceneScrollMemory.left;el.scrollTop=sceneScrollMemory.top;return;}
+  const hall=el.querySelector('.scene-hall'),box=el.getBoundingClientRect(),hallBox=hall?.getBoundingClientRect(),caption=el.querySelector('.scene-hall-caption')?.getBoundingClientRect();
+  const bottom=Math.max(hallBox?.bottom||0,caption?.bottom||0);
+  const x=hallBox?hallBox.left-box.left+el.scrollLeft+hallBox.width/2:el.scrollWidth/2,y=hallBox?(hallBox.top+bottom)/2-box.top+el.scrollTop:el.scrollHeight/2;
+  el.scrollLeft=Math.max(0,x-el.clientWidth/2);el.scrollTop=Math.max(0,y-el.clientHeight/2);
 }
 function render(){
   const previousMain=document.getElementById('main'),scrollTop=previousMain?.dataset.page===page?previousMain.scrollTop:0;
@@ -97,10 +101,10 @@ function render(){
   rememberSceneScroll();
   app.innerHTML=classicShell();
   restoreInterfaceDisclosures(app);
-  placeSceneScroll();
   startCombatFeedback();const main=document.getElementById('main');main.dataset.page=page;main.scrollTop=scrollTop;
   if(page==='world'&&S().battle)document.getElementById('battle-log')?.scrollTo(0,99999);
   if(page==='world'&&(!S().battle||S().battle.finished))drawWorldMiniMap();refreshSaveStatusUI();
+  placeSceneScroll();
 }
 // Original SVG scenery; no source-game screenshots or proprietary assets are used.
 function roof(x,y,scale=1,color='#344b40'){return `<g transform="translate(${x} ${y}) scale(${scale})"><path d="M-34 0L0-20 34 0 43 3H-43Z" fill="${color}" stroke="#9aaa83" stroke-width="1"/><path d="M-27 4h54v24h-54z" fill="#b8b391"/><path d="M-17 7v21m34-21v21" stroke="#64765a" stroke-width="4"/><path d="M-5 13h10v15H-5z" fill="#405847"/><path d="M-32 30h64" stroke="#607758" stroke-width="5"/></g>`;}
