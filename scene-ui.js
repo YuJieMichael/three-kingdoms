@@ -1,20 +1,50 @@
 'use strict';
 // Presentation coordinates only; logical sites, resource fields and world targets stay unchanged.
 function scenePoint(column,row){return {x:550+(column-row)*82,y:145+(column+row)*43};}
-// A wider street around the palace separates roofs from neighboring buildings.
-function sceneCityPoint(column,row){const p=scenePoint(column,row),depth=column+row;return {x:p.x+Math.sign(column-row)*14,y:p.y+(depth<5?-55:depth>5?25:0)};}
+// Presentation-only inset leaves a continuous lane between buildings and the perimeter.
+function sceneCityPoint(column,row){
+  const depth=column+row,difference=column-row,nearPalace=depth>=6&&depth<=8&&Math.abs(difference)<=2;
+  return {x:550+difference*76+(nearPalace?Math.sign(difference)*30:0),y:185+depth*34+(depth<5?-20:depth>5?16:0)+(nearPalace?28:depth===9?10:0)};
+}
+const sceneCityGate={x:305,y:490};
+function sceneCityBoundary(level=0,front=false){
+  const stone=level>0,h=stone?30:17,parts=[];
+  const corners=[{x:60,y:350},{x:550,y:95},{x:1040,y:350},{x:550,y:630}];
+  const edges=front?[[corners[0],corners[3]],[corners[3],corners[2]]]:[[corners[0],corners[1]],[corners[1],corners[2]]];
+  edges.forEach(([a,b],edge)=>{
+    const dx=b.x-a.x,slope=(b.y-a.y)/dx,length=Math.abs(dx),origin=dx>0?a:b;
+    const gate=front&&edge===0;
+    const spans=gate?[[0,200],[290,length]]:[[0,length]];
+    const face=stone?(edge===0?'#9c927b':'#817e6c'):'#79674c';
+    const blocks=spans.map(([start,end])=>{
+      if(!stone){
+        const stakes=[];for(let x=start;x<end;x+=13)stakes.push(`<path d="M${x} 0V-${h}l3-4 3 4V0" fill="#8c7654" stroke="#594d39" stroke-width="1"/>`);
+        return `${stakes.join('')}<path d="M${start} -6H${end}M${start} -13H${end}" stroke="#ae9568" stroke-width="3"/>`;
+      }
+      const merlons=[];for(let x=start+2;x<end-12;x+=24)merlons.push(`<path d="M${x} -${h}v-7h13v7" fill="#b8ae91" stroke="#6f6a59" stroke-width="1"/><path d="M${x+1} -${h+7}h11" stroke="#ded3b4" stroke-width="1.5"/>`);
+      return `<path d="M${start} 5H${end}" stroke="#494c37" stroke-width="11" opacity=".25"/><path d="M${start} 0V-${h}H${end}V0Z" fill="${face}" stroke="#706c58"/><path d="M${start} 0V-${h}H${end}V0Z" fill="url(#scene-wall-brick)" opacity=".5"/><path d="M${start} -${h}H${end}" stroke="#d3c7a6" stroke-width="5"/><path d="M${start} -3H${end}" stroke="#656653" stroke-width="5"/>${merlons.join('')}`;
+    }).join('');
+    parts.push(`<g transform="matrix(1 ${slope} 0 1 ${origin.x} ${origin.y})">${blocks}</g>`);
+  });
+  if(front&&stone){
+    const [x,y,w,h]=WebArt.city.regions.gateway;
+    parts.push(`<svg x="235" y="380" width="154" height="138" viewBox="${x} ${y} ${w} ${h}" preserveAspectRatio="xMidYMax meet"><svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="${x} ${y} ${w} ${h}"><image href="${WebArt.city.texture}" width="${WebArt.city.size[0]}" height="${WebArt.city.size[1]}"/></svg></svg>`);
+  }else if(front){
+    // The gate foundation follows the same front-left wall line, with a real opening.
+    parts.push(`<g transform="matrix(1 ${280/490} 0 1 260 ${350+200*280/490})"><path d="M-7 2H98V-65H-7Z" fill="${stone?'#a69b7e':'#876949'}" stroke="#645b46" stroke-width="2"/><path d="M-7 2H98V-65H-7Z" fill="url(#scene-wall-brick)" opacity="${stone?'.4':'0'}"/><path d="M24 2V-29Q45-58 67-29V2" fill="#3d392b" stroke="#cfbea0" stroke-width="5"/><path d="M29 2V-28Q45-49 62-28V2" fill="#6a4932"/><path d="M45 -41V2M34 -29V1M56 -29V1" stroke="#342c24" stroke-width="2"/><path d="M-4 -64V-83H95V-64" fill="#804f35" stroke="#473c2b" stroke-width="2"/><path d="M4 -66V-79H21V-66M32 -66V-79H50V-66M61 -66V-79H79V-66" fill="#332d27" stroke="#bd9060"/><path d="M-17 -83Q10-85 45-102Q73-85 108-83L97-72H-5Z" fill="#5b615c" stroke="#333c37" stroke-width="2"/><path d="M-12 -82L45-95L103-82M-7 -78H99" fill="none" stroke="#acafa0" stroke-width="2"/><path d="M-7 -61H98" stroke="#d6c9a7" stroke-width="4"/></g>`);
+  }
+  return `<svg class="scene-ground scene-city-boundary ${front?'scene-wall-front':'scene-wall-back'}" viewBox="0 0 1100 660" aria-hidden="true"><defs><pattern id="scene-wall-brick-${front?'front':'back'}" width="30" height="12" patternUnits="userSpaceOnUse"><path d="M0 0H30M0 6H30M8 0V6M23 6V12" stroke="#514f42" stroke-width=".7"/><path d="M0 1H30" stroke="#eee0bc" stroke-width=".6"/></pattern></defs>${parts.join('').replaceAll('url(#scene-wall-brick)',`url(#scene-wall-brick-${front?'front':'back'})`)}</svg>`;
+}
 function sceneDiamond(x,y,width=156,height=76){return `${x},${y-height/2} ${x+width/2},${y} ${x},${y+height/2} ${x-width/2},${y}`;}
 function sceneGroundSVG(rows=6,fields=false){
   if(fields)return sceneFieldLandscape(rows);
   const roads=[];
   // Open sites are uninterrupted soil or grass. Roads are city streets, not plot borders.
   if(!fields){
-    const a=scenePoint(2.5,-.5),b=scenePoint(2.5,rows-.5);
-    const c=scenePoint(-.5,2.5),d=scenePoint(5.5,2.5);
-    roads.push(`<path d="M${a.x} ${a.y}L${b.x} ${b.y}"/><path d="M${c.x} ${c.y}L${d.x} ${d.y}"/>`);
+    roads.push('<path d="M0 660L305 490 550 355 785 250"/><path d="M300 250L550 355 790 465"/>');
   }
   const stageHeight=fields?390+rows*43:660;
-  return `<svg class="scene-ground" viewBox="0 0 1100 ${stageHeight}" aria-hidden="true"><defs><pattern id="scene-soil" width="360" height="360" patternUnits="userSpaceOnUse"><image href="${WebArt.city.ground.texture}" width="360" height="360"/></pattern></defs><rect width="1100" height="720" fill="${fields?'#768450':'#8b9368'}"/><rect width="1100" height="720" fill="url(#scene-soil)" opacity="${fields?'.22':'.4'}"/><ellipse cx="550" cy="340" rx="500" ry="295" fill="${fields?'#8c9861':'#8b946c'}" opacity=".27"/><g fill="none" stroke="${fields?'#b9ad7b':'#d2c3a1'}" stroke-width="${fields?'7':'12'}" stroke-linecap="round">${roads.join('')}</g><g fill="none" stroke="${fields?'#d1c18c':'#8d8164'}" stroke-width="1" opacity=".55">${roads.join('')}</g>${!fields?`<path d="M58 374L550 632 1042 374" fill="none" stroke="#4b5642" stroke-width="18"/><path d="M58 360L550 618 1042 360" fill="none" stroke="#a09e7f" stroke-width="16"/><path d="M58 352L550 610 1042 352" fill="none" stroke="#d2c8a3" stroke-width="4"/>`:''}</svg>`;
+  return `<svg class="scene-ground" viewBox="0 0 1100 ${stageHeight}" aria-hidden="true"><polygon points="60,350 550,95 1040,350 550,630" fill="#c6ba92" opacity=".18"/><g fill="none" stroke="#d2c3a1" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">${roads.join('')}</g><g fill="none" stroke="#8d8164" stroke-width="1" opacity=".35">${roads.join('')}</g></svg>`;
 }
 function scenePosition(point,width=160,height=146,stageHeight=660){return `left:${(point.x/11).toFixed(3)}%;top:${((point.y-height+22)*100/stageHeight).toFixed(3)}%;width:${(width/11).toFixed(3)}%;height:${(height*100/stageHeight).toFixed(3)}%;--scene-depth:${Math.round(point.y)};`;}
 function sceneCaption(point,name,level,stageHeight=660,yieldText='',options={}){
@@ -22,19 +52,20 @@ function sceneCaption(point,name,level,stageHeight=660,yieldText='',options={}){
 }
 function sceneFocusButton(){return btn(document.body.classList.contains('scene-focus')?'返回常规':'全景','sceneFocus','','small secondary');}
 function webCityScene(){
-  const s=S(),hallPoints=s.cityLayout.map((id,i)=>(id==='hall'||id==='reserved')?scenePoint(i%6,Math.floor(i/6)):null).filter(Boolean);
-  const hallCenter=hallPoints.length?{x:hallPoints.reduce((n,p)=>n+p.x,0)/hallPoints.length,y:hallPoints.reduce((n,p)=>n+p.y,0)/hallPoints.length}:null;
+  const s=S(),hallPoints=s.cityLayout.map((id,i)=>(id==='hall'||id==='reserved')?{column:i%6,row:Math.floor(i/6)}:null).filter(Boolean);
+  const wallSite=s.cityLayout.indexOf('wall'),wallLevel=wallSite<0?0:s.cityLevels[wallSite];
+  const hallCenter=hallPoints.length?sceneCityPoint(hallPoints.reduce((n,p)=>n+p.column,0)/hallPoints.length,hallPoints.reduce((n,p)=>n+p.row,0)/hallPoints.length):null;
   const captions=[];
   const sites=s.cityLayout.map((id,i)=>{
     if(id==='reserved')return '';
-    const b=id?Game.buildings[id]:null,q=s.buildQueue.find(q=>q.site===i),lv=s.cityLevels[i],p=id==='hall'&&hallCenter?hallCenter:sceneCityPoint(i%6,Math.floor(i/6)),isHall=id==='hall';
+    const b=id?Game.buildings[id]:null,q=s.buildQueue.find(q=>q.site===i),lv=s.cityLevels[i],isWall=id==='wall',p=isWall?sceneCityGate:id==='hall'&&hallCenter?hallCenter:sceneCityPoint(i%6,Math.floor(i/6)),isHall=id==='hall';
     if(isHall)captions.push(sceneCaption({x:p.x,y:p.y+86},b.name,lv,660,'',{city:true,hall:true,queue:q}));
     const caption=b&&!isHall?`<span class="scene-name-tag scene-city-caption scene-inline-caption" aria-hidden="true">${esc(b.name)}<em>${lv}</em>${q?`<span class="scene-caption-queue"> · ${clock(q.end)}</span>`:''}</span>`:'';
-    const art=b?`<span class="scene-contact-shadow" aria-hidden="true"></span><span class="city-building-art">${webCityBuildingArt(id,lv)}</span>`:'';
-    return `<button class="city-grid-tile scene-site ${b?'built-city':'empty-city'} ${isHall?'scene-hall':''} ${q?'working':''}" style="${scenePosition(isHall?{x:p.x,y:p.y+64}:p,isHall?328:b?118:120,isHall?280:b?106:50)}" data-action="${b?'building':'citySlot'}" data-id="${b?'site:'+i:i}" title="${b?b.name+' · '+lv+'级'+(q?' · 营造中':''):'空地 · 点击建造'}" aria-label="城内 ${Math.floor(i/6)+1}行${i%6+1}列 ${b?b.name+' '+lv+'级'+(q?'，营造中':''):'空地，可建造'}">${art}${b?`<strong>${b.name}<em>${lv}</em></strong>`:''}${caption}${q?sceneConstructionMark():''}${q&&!b?`<small class="scene-construction">营造 · ${clock(q.end)}</small>`:''}</button>`;
+    const art=b&&!isWall?`<span class="scene-contact-shadow" aria-hidden="true"></span><span class="city-building-art">${webCityBuildingArt(id,lv)}</span>`:'';
+    return `<button class="city-grid-tile scene-site ${b?'built-city':'empty-city'} ${isHall?'scene-hall':''} ${isWall?'scene-wall-control':''} ${q?'working':''}" style="${scenePosition(isHall?{x:p.x,y:p.y+64}:p,isHall?328:isWall?130:b?118:120,isHall?280:isWall?130:b?106:50)}" data-action="${b?'building':'citySlot'}" data-id="${b?'site:'+i:i}" title="${b?b.name+' · '+lv+'级'+(q?' · 营造中':''):'空地 · 点击建造'}" aria-label="${isWall?'城门处 · ':''}城内 ${Math.floor(i/6)+1}行${i%6+1}列 ${b?b.name+' '+lv+'级'+(q?'，营造中':''):'空地，可建造'}">${art}${b?`<strong>${b.name}<em>${lv}</em></strong>`:''}${caption}${q?sceneConstructionMark():''}${q&&!b?`<small class="scene-construction">营造 · ${clock(q.end)}</small>`:''}</button>`;
   }).join('');
   const plaza=hallCenter?`<svg class="scene-ground scene-courtyard" viewBox="0 0 1100 660" aria-hidden="true"><defs><pattern id="scene-courtyard-stone" width="32" height="18" patternUnits="userSpaceOnUse"><rect width="32" height="18" fill="#c5bea5"/><path d="M0 0H32M0 9H32M8 0V9M24 9V18" stroke="#a49d87" stroke-width=".6"/><path d="M0 1H32" stroke="#e6ddc4" stroke-width=".6"/></pattern></defs><polygon points="${sceneDiamond(hallCenter.x,hallCenter.y+4,338,180)}" fill="#716e53" opacity=".25"/><polygon points="${sceneDiamond(hallCenter.x,hallCenter.y,328,172)}" fill="url(#scene-courtyard-stone)" stroke="#a49a7a" stroke-width="2"/><polygon points="${sceneDiamond(hallCenter.x,hallCenter.y,316,160)}" fill="none" stroke="#e9dec1" stroke-width="2"/></svg>`:'';
-  return `<section class="city-grid-board manual-city scene-board"><div class="outskirts-banner"><span class="outskirts-title">${esc(activeCityMeta().name)} · 城坊</span><span class="label">点击建筑办理城务 · 点击空地建设</span>${sceneFocusButton()}</div><div class="scene-scroll"><div class="city-grid scene-stage">${sceneGroundSVG()}${plaza}${sites}${captions.join('')}<span class="scene-place-label scene-south-gate">南门</span></div></div><p class="outskirts-note">官府院落占四格 · 民房、军营、仓库可重复建设 <span class="scene-touch-hint">· 横向滑动查看城坊</span></p></section>`;
+  return `<section class="city-grid-board manual-city scene-board"><div class="outskirts-banner"><span class="outskirts-title">${esc(activeCityMeta().name)} · 城坊</span><span class="label">点击建筑办理城务 · 点击空地建设</span>${sceneFocusButton()}</div><div class="scene-scroll"><div class="city-grid scene-stage">${sceneGroundSVG()}${sceneCityBoundary(wallLevel)}${plaza}${sites}${captions.join('')}${sceneCityBoundary(wallLevel,true)}</div></div><p class="outskirts-note">${wallLevel>0?'城门处办理城墙升级与城防':'尚未修筑城墙 · 木栅仅为城坊边界'} · 官府院落占四格 <span class="scene-touch-hint">· 横向滑动查看城坊</span></p></section>`;
 }
 function sceneFieldPoint(index,rows){const p=scenePoint(index%6,Math.floor(index/6));return {x:p.x+(rows-6)*41,y:p.y+50};}
 function webOutskirtsScene(){

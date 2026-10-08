@@ -55,3 +55,17 @@
 .scene-board .scene-fields.show-empty-plots .scene-empty-marker,.scene-board .scene-fields .empty-land:hover .scene-empty-marker,.scene-board .scene-fields .empty-land:focus-visible .scene-empty-marker{visibility:visible;opacity:1}
 .scene-board .scene-fields .scene-new-marker .scene-empty-outline{stroke:#ffe6a4;stroke-width:2.5}.scene-new-marker .scene-empty-name{background:#fff0bceF;border:1px solid #b17e30;color:#775025;font-weight:600}
 @media(max-width:760px){.scene-empty-controls{width:100%;gap:7px}.scene-empty-controls button{min-height:44px}.scene-empty-controls>span{font-size:10px}}
+
+/* A connected perimeter replaces the detached wall building; logical site IDs stay intact. */
+.scene-board .scene-wall-back{z-index:2}.scene-board .scene-wall-front{z-index:650}
+.scene-board.manual-city .scene-wall-control{z-index:700;clip-path:polygon(0 10%,100% 10%,100% 100%,0 100%)}
+.scene-board.manual-city .scene-wall-control .scene-inline-caption{visibility:visible!important;opacity:1!important;top:95%}
+.scene-board.manual-city .scene-wall-control.working .scene-work-mark{right:10%;top:20%}
+.manual-city .scene-scroll{background-color:#8b9368;background-image:linear-gradient(#8b936899,#8b936899),url('assets/migrated/environment/city/city_ground_rts_v2.png');background-size:auto,360px;overflow:auto}
+.layout-shell .scene-board.manual-city .scene-scroll{background-color:#8b9368;background-image:linear-gradient(#8b936899,#8b936899),url('assets/migrated/environment/city/city_ground_rts_v2.png');background-size:auto,360px;overflow:auto}
+.layout-shell .scene-board.manual-city .scene-stage{width:min(100%,calc(max(300px,100dvh - 340px)*1100/660))!important;min-width:0!important;max-width:none;aspect-ratio:1100 / 660;margin-inline:auto!important}
+.scene-focus .layout-shell .scene-board.manual-city .scene-stage{width:min(100%,calc((100dvh - 155px)*1100/660))!important}
+.scene-board.manual-city .scene-stage{aspect-ratio:1100 / 660}
+@media(max-width:760px){.layout-shell .scene-board.manual-city .scene-stage{width:880px!important;min-width:880px!important;margin-inline:0!important}}
+.city-only .choices{display:none}.city-only main{padding:16px}.city-only .city-preview{display:block;margin:0 auto;max-width:1100px}.city-only .city-preview>h2,.city-only .city-preview>p{display:none}
+.city-only .city-preview .scene-scroll{overflow:auto}
