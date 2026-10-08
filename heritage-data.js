@@ -1,5 +1,5 @@
 'use strict';
-// Rewritten numeric rules from the user-provided package; see REFERENCE-NOTES.md.
+// Numeric rules from the supplied package; rank/territory prerequisites are game adaptations. See REFERENCE-NOTES.md.
 const HeritageData={
   "version": 1,
   "offices": [
@@ -22,7 +22,9 @@ const HeritageData={
           "pearl": 1
         },
         "trial": false,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 1,
+        "rankTrial": true
       }
     },
     {
@@ -39,7 +41,9 @@ const HeritageData={
           "pearl": 2
         },
         "trial": false,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 2,
+        "rankTrial": true
       }
     },
     {
@@ -56,7 +60,9 @@ const HeritageData={
           "pearl": 3
         },
         "trial": false,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 3,
+        "rankTrial": true
       }
     },
     {
@@ -73,7 +79,9 @@ const HeritageData={
           "pearl": 4
         },
         "trial": false,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 4,
+        "rankTrial": true
       }
     },
     {
@@ -90,7 +98,9 @@ const HeritageData={
           "pearl": 5
         },
         "trial": false,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 5,
+        "rankTrial": true
       }
     },
     {
@@ -107,7 +117,10 @@ const HeritageData={
           "pearl": 6
         },
         "trial": false,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 6,
+        "rankTrial": true,
+        "county": true
       }
     },
     {
@@ -124,7 +137,10 @@ const HeritageData={
           "pearl": 7
         },
         "trial": false,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 7,
+        "rankTrial": true,
+        "county": true
       }
     },
     {
@@ -141,7 +157,10 @@ const HeritageData={
           "pearl": 8
         },
         "trial": false,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 9,
+        "rankTrial": true,
+        "county": true
       }
     },
     {
@@ -157,7 +176,10 @@ const HeritageData={
         "jewels": {
           "pearl": 5
         },
-        "trial": false
+        "trial": false,
+        "noble": 11,
+        "rankTrial": true,
+        "county": true
       }
     },
     {
@@ -173,7 +195,10 @@ const HeritageData={
         "jewels": {
           "coral": 5
         },
-        "trial": false
+        "trial": false,
+        "noble": 13,
+        "rankTrial": true,
+        "county": true
       }
     },
     {
@@ -189,7 +214,10 @@ const HeritageData={
         "jewels": {
           "glass": 5
         },
-        "trial": false
+        "trial": false,
+        "noble": 15,
+        "rankTrial": true,
+        "county": true
       }
     },
     {
@@ -205,7 +233,10 @@ const HeritageData={
         "jewels": {
           "amber": 5
         },
-        "trial": false
+        "trial": false,
+        "noble": 17,
+        "rankTrial": true,
+        "county": true
       }
     },
     {
@@ -224,7 +255,9 @@ const HeritageData={
         },
         "county": true,
         "trial": true,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 20,
+        "rankTrial": true
       }
     },
     {
@@ -243,7 +276,9 @@ const HeritageData={
         },
         "county": true,
         "trial": true,
-        "jewelTrial": true
+        "jewelTrial": true,
+        "noble": 21,
+        "rankTrial": true
       }
     }
   ],
@@ -262,14 +297,15 @@ const HeritageData={
       "promotion": {
         "taskId": 221,
         "prestige": 1000,
-        "office": 1,
+        "office": 0,
         "hall": 0,
         "gold": 20000,
         "jewels": {
           "pearl": 10,
           "coral": 5
         },
-        "trial": false
+        "trial": false,
+        "rankTrial": true
       }
     },
     {
@@ -280,14 +316,15 @@ const HeritageData={
       "promotion": {
         "taskId": 222,
         "prestige": 2000,
-        "office": 2,
+        "office": 1,
         "hall": 0,
         "gold": 40000,
         "jewels": {
           "coral": 10,
           "glass": 5
         },
-        "trial": false
+        "trial": false,
+        "rankTrial": true
       }
     },
     {
@@ -298,14 +335,15 @@ const HeritageData={
       "promotion": {
         "taskId": 223,
         "prestige": 4000,
-        "office": 3,
+        "office": 2,
         "hall": 0,
         "gold": 60000,
         "jewels": {
           "glass": 10,
           "amber": 5
         },
-        "trial": false
+        "trial": false,
+        "rankTrial": true
       }
     },
     {
@@ -316,14 +354,15 @@ const HeritageData={
       "promotion": {
         "taskId": 224,
         "prestige": 8000,
-        "office": 4,
+        "office": 3,
         "hall": 0,
         "gold": 80000,
         "jewels": {
           "amber": 10,
           "agate": 5
         },
-        "trial": false
+        "trial": false,
+        "rankTrial": true
       }
     },
     {
@@ -334,14 +373,15 @@ const HeritageData={
       "promotion": {
         "taskId": 225,
         "prestige": 16000,
-        "office": 5,
+        "office": 4,
         "hall": 0,
         "gold": 100000,
         "jewels": {
           "agate": 10,
           "crystal": 5
         },
-        "trial": false
+        "trial": false,
+        "rankTrial": true
       }
     },
     {
@@ -352,14 +392,15 @@ const HeritageData={
       "promotion": {
         "taskId": 226,
         "prestige": 32000,
-        "office": 6,
+        "office": 5,
         "hall": 0,
         "gold": 200000,
         "jewels": {
           "crystal": 10,
           "jadeite": 5
         },
-        "trial": false
+        "trial": false,
+        "rankTrial": true
       }
     },
     {
