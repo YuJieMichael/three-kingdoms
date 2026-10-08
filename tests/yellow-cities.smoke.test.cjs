@@ -20,7 +20,7 @@ function missionProgress(e){const g=e.Game;return copy({next:g.nextLandmark()?.i
 test('three open Yellow Turban cities use real map nodes and stay separate from the locked mission route',()=>{
  const e=loadGame(),g=e.Game,defs=copy(e.evaluate('YellowCityData.nodes'));
  assert.deepEqual(defs.map(n=>[n.id,n.x,n.y,n.level,n.population]),[[first,26,31,2,200],['yellow_baisha',41,38,3,300],['yellow_chigang',21,20,4,400]]);
- assert.match(g.attackBlocked(first,'occupy'),/爵位.*数量/);
+ assert.match(g.attackBlocked(first,'occupy'),/城池名额已满/);
  g.state.honors.noble=1; // A rank with one spare city slot, without unlocking campaign tasks.
  const before=JSON.stringify(g.state);assert.equal(g.countyUnlocked(),false);assert.ok(g.attackBlocked('fort','occupy'));assert.ok(g.attackBlocked('north_road','raid'));
  for(const n of defs){assert.equal(n.openCity,true);assert.equal(n.faction,'yellow_turban');assert.equal(n.terrain,'fort');assert.equal(g.nodes.some(x=>x.id===n.id),true);assert.equal(g.landmarkVisible(n.id),true);assert.equal(g.attackBlocked(n.id,'raid'),null);assert.equal(g.attackBlocked(n.id,'occupy'),null);assert.equal(g.isCity(g.getNode(n.id)),true);assert.equal(g.getWorldTile(n.x,n.y).id,n.id);assert.equal(g.getWorldTile(n.x,n.y).wild,false);assert.equal(g.getNode(`wild_${n.x}_${n.y}`),null);assert.deepEqual(copy(g.state.towns[n.id]),{morale:100,unrest:0,population:n.population});}
@@ -74,7 +74,10 @@ test('legacy city state migrates without resetting fort morale or portraits, and
 test('legacy wild armies keep their map cells while open cities relocate; candidate saves validate against their own map',()=>{
  for(const phase of ['march','stationed']){
   const e=setup(),g=e.Game,node='wild_26_31',checkpoint=copy(g.state);checkpoint.openCitySites[first]={x:26,y:30};checkpoint.wildGenerals.portraits=['wanderer'];g.importSave(checkpoint);
-  assert.equal(g.getNode(node).wild,true);assert.equal(g.setTactic('archer','advance',''),null);assert.equal(g.dispatch(node,'lin',{archer:300},'occupy'),null);
+  // v0.34.0 balanced wild refresh re-rolls free cells, so (26,31) is no longer the
+  // legacy level-2 plain; a full drill-1 column (prepared stock) wins the refreshed cell.
+  g.state.army.archer=10000;
+  assert.equal(g.getNode(node).wild,true);assert.equal(g.setTactic('archer','advance',''),null);assert.equal(g.dispatch(node,'lin',{archer:10000},'occupy'),null);
   if(phase==='stationed'){e.advance(Math.ceil(g.state.expedition.end-e.now())+1);assert.equal(g.startBattle(),null);const result=finish(e);assert.equal(result.won,true);assert.equal(result.stationed,true);}
   const modern=copy(g.state),old=copy(modern);delete old.openCitySites;for(const n of e.evaluate('YellowCityData.nodes'))delete old.towns[n.id];
   const fresh=loadGame(),other=fresh.Game;assert.equal(other.getNode(node),null);assert.equal(other.validSave(modern),true);const migrated=other.migrateSave(old);
@@ -89,11 +92,14 @@ test('legacy wild armies keep their map cells while open cities relocate; candid
 test('pre-handbook migration rebuilds a marching wild army from its original forest rather than a newly placed city',()=>{
  for(const manualSchema of [undefined,0]){
   const e=setup(),g=e.Game,node='wild_41_38',checkpoint=copy(g.state);checkpoint.openCitySites.yellow_baisha={x:41,y:37};g.importSave(checkpoint);
-  assert.equal(g.getNode(node).type,'forest');assert.equal(g.setTactic('archer','advance',''),null);assert.equal(g.dispatch(node,'lin',{archer:300},'raid'),null);assert.equal(g.state.expedition.phase,'march');
+  // Free cells now follow the balanced refresh; the original (legacy) map has forest here.
+  assert.equal(g.getNode(node).wild,true);assert.equal(g.legacyWildTile(41,38).type,'forest');assert.equal(g.setTactic('archer','advance',''),null);assert.equal(g.dispatch(node,'lin',{archer:300},'raid'),null);assert.equal(g.state.expedition.phase,'march');
   const old=copy(g.state),march=copy(old.expedition);if(manualSchema===undefined)delete old.manualSchema;else old.manualSchema=manualSchema;delete old.openCitySites;
   // A pre-handbook save predates realm. Keeping a modern city mirror while
   // replacing only its top-level layout would be an inconsistent modern save.
   delete old.realm;
+  // It also predates the v0.34.0 balanced wild refresh, so its targets use the legacy map.
+  delete old.wildRefresh;
   // The older layout has no reserved slots; the handbook migration creates them.
   old.cityLayout=Array(16).fill(null);old.cityLayout[5]='hall';old.cityLayout[10]='drill';for(const n of e.evaluate('YellowCityData.nodes'))delete old.towns[n.id];
   const untouched=JSON.stringify(old),fresh=loadGame(),other=fresh.Game;assert.equal(other.getWorldTile(41,38).terrain,'fort');const migrated=other.migrateSave(old);

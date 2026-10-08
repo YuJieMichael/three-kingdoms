@@ -8,8 +8,8 @@ function battle(){
   return e;
 }
 function ui(e){
-  e.evaluate('function S(){return Game.state;} function num(n){return String(n);} function esc(s){return String(s);} function resourceAmount(n){return String(n);} function btn(label,action,id=""){return `<button data-action="${action}" data-id="${id}">${label}</button>`;} function troopPortrait(){return "";} function battleAutoEnabled(){return !!S().battle?.auto;} function battleTimerText(){return "30 秒";} function battleOutcomeText(){return "";} function battleFailureHTML(){return "";} function battleCargoHTML(){return "";} function battleResourceHTML(){return "";} function battleDropsHTML(){return "";}');
-  e.evaluate(fs.readFileSync(path.join(__dirname,'../combat-ui.js'),'utf8'));
+  e.evaluate('function S(){return Game.state;} function num(n){return String(n);} function esc(s){return String(s);} function resourceAmount(n){return String(n);} function btn(label,action,id=""){return `<button data-action="${action}" data-id="${id}">${label}</button>`;} function troopPortrait(){return "";} function battleAutoEnabled(){return !!S().battle?.auto;} function battleTimerText(){return "30 秒";} function battleOutcomeText(){return "";} function battleFailureHTML(){return "";} function battleCargoHTML(){return "";} function battleResourceHTML(){return "";} function battleDropsHTML(){return "";} globalThis.Audio=class{};');
+  for(const file of ['combat-ui.js','web-edition-ui.js'])e.evaluate(fs.readFileSync(path.join(__dirname,'..',file),'utf8'));
 }
 test('one contact round records typed feedback, retains targeting and preserves old-save compatibility',()=>{
   const e=battle(),g=e.Game,b=g.state.battle,before=Object.fromEntries(b.enemy.map(r=>[r.id,Math.ceil(r.hp/r.stats.hp)]));g.battleRound();

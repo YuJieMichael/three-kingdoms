@@ -38,5 +38,7 @@ test('fresh normal APIs reach thirty archers with earned gifts and speedups unde
  const baseline=run(123,false);for(const seed of [123,456]){const actual=run(seed,true);assert.equal(actual.archers,30);assert.equal(actual.validSave,true);assert.ok(actual.minutes<90);assert.ok(actual.minutes<baseline.minutes);assert.ok(actual.spent.gold>20000);assert.ok(actual.used.speed_research_1h>0);assert.ok(actual.log.some(x=>x.target.includes('铁匠铺')));}
 });
 test('after the archer milestone all ten hall gifts are reachable through actual prerequisites, earned supplies and market purchases',()=>{
- for(const seed of [123,456]){const actual=run(seed,true,'ten-gifts');assert.equal(actual.hall,10);assert.equal(actual.gifts,10);assert.equal(actual.validSave,true);assert.equal(actual.victories,1);assert.equal(actual.firstBattle,'complete');assert.equal(actual.office,1);assert.ok(actual.log.some(x=>x.target.includes('市场')));assert.ok(actual.log.some(x=>x.target.includes('购买')));assert.ok(actual.used.speed_build_15_30h>0);}
+ for(const seed of [123,456]){const actual=run(seed,true,'ten-gifts',{includeState:true});assert.equal(actual.hall,10);assert.equal(actual.gifts,10);assert.equal(actual.validSave,true);assert.equal(actual.victories,1);assert.equal(actual.firstBattle,'complete');
+  // v0.34.9: 伍长 also requires 公士. The route still earns 伍长's prestige 1000 and first-win pearl, but no rank yet.
+  assert.equal(actual.office,0);assert.equal(actual.state.honors.noble,0);assert.ok(actual.state.prestige>=1000&&actual.state.jewels.pearl>=1);assert.ok(actual.log.some(x=>x.target.includes('市场')));assert.ok(actual.log.some(x=>x.target.includes('购买')));assert.ok(actual.used.speed_build_15_30h>0);}
 });

@@ -27,10 +27,14 @@ test('mainline uses actual milestones and exposes unchanged reward claims',()=>{
  assert.equal(e.evaluate('mainlineModel().ready.some(m=>m.id==="firstVictory")'),false);
 });
 test('mid-level wild raids add supply without changing occupation or cargo limits',()=>{
- const e=loadGame(),g=e.Game;const n=g.getNode('wild_31_25');assert.equal(n.level,3);
- assert.equal(g.attackInfo(n.id,'raid').loot.stone,Math.round(n.loot.stone*1.3*2));
- assert.equal(g.attackInfo(n.id,'occupy').loot.stone,n.loot.stone);
+ // v0.34.0 wild refresh (wild-fields.js) reshuffles free tiles' type/level per 8x8 block, so pick
+ // a level-3 and a low-level tile from the live map instead of fixed legacy coordinates.
+ const e=loadGame(),g=e.Game,wild=[];for(let y=24;y<32;y++)for(let x=24;x<32;x++){const t=g.getNode(`wild_${x}_${y}`);if(t?.wild)wild.push(t);}
+ const n=wild.find(t=>t.level===3),low=wild.find(t=>t.level>=1&&t.level<3);assert.equal(n.level,3);assert.ok(low.level<3);
+ const k=Object.keys(n.loot)[0],lk=Object.keys(low.loot)[0];assert.ok(n.loot[k]>0&&low.loot[lk]>0);
+ assert.equal(g.attackInfo(n.id,'raid').loot[k],Math.round(n.loot[k]*1.3*2));
+ assert.equal(g.attackInfo(n.id,'occupy').loot[k],n.loot[k]);
  assert.ok(g.lootPreview(n.id,'raid',{archer:1}).loaded<=g.carry({archer:1}));
- g.state.raided[n.id]=true;assert.equal(g.attackInfo(n.id,'raid').loot.stone,Math.round(n.loot.stone*1.3*2*.6));
- const low=g.getNode('wild_28_34');assert.equal(g.attackInfo(low.id,'raid').loot.wood,Math.round(low.loot.wood*1.3));
+ g.state.raided[n.id]=true;assert.equal(g.attackInfo(n.id,'raid').loot[k],Math.round(n.loot[k]*1.3*2*.6));
+ assert.equal(g.attackInfo(low.id,'raid').loot[lk],Math.round(low.loot[lk]*1.3));
 });

@@ -7,9 +7,10 @@ function ui(){
  e.evaluate(`
   globalThis.uiListeners=[];globalThis.uiElements=new Map();globalThis.uiSelectors=new Map();
   document.addEventListener=(type,callback,capture)=>uiListeners.push({type,callback,capture});
-  document.getElementById=id=>{if(!uiElements.has(id))uiElements.set(id,{innerHTML:'',textContent:'',open:false,scrollTop:0,dataset:{},classList:{add(){},remove(){}},querySelectorAll:()=>[],querySelector:()=>null,append(){},showModal(){this.open=true;},close(){this.open=false;}});return uiElements.get(id);};
+  document.getElementById=id=>{if(!uiElements.has(id))uiElements.set(id,{innerHTML:'',textContent:'',open:false,scrollTop:0,dataset:{},classList:{add(){},remove(){}},querySelectorAll:()=>[],querySelector:()=>null,append(){},focus(){},showModal(){this.open=true;},close(){this.open=false;}});return uiElements.get(id);};
   document.createElement=()=>({dataset:{},style:{},setAttribute(){}});
   document.querySelector=selector=>uiSelectors.get(selector)||null;document.querySelectorAll=()=>[];
+  document.body={classList:{contains:()=>false,add(){},remove(){}}};globalThis.Audio=class{};
   globalThis.setTimeout=()=>0;globalThis.clearTimeout=()=>{};
   globalThis.window={matchMedia:()=>({matches:false,addEventListener(){}})};
   globalThis.OnlineClient={shared:()=>false,status:()=>({busy:false}),pending:()=>false};
@@ -25,7 +26,7 @@ function ui(){
   function generalPortrait(){return '';}function troopPortrait(){return '';}
   function armyDeploymentHTML(){return '<section data-deployments></section>';}function cityLogisticsHTML(){return '';}function armyScoutHTML(){return '';}function captiveSummaryHTML(){return '';}
  `);
- for(const name of ['city-ui.js','named-city-ui.js','war-care-ui.js','governance-ui.js','mainline-ui.js','onboarding-ui.js','classic-ui.js'])e.evaluate(read(name));
+ for(const name of ['city-ui.js','named-city-ui.js','war-care-ui.js','governance-ui.js','mainline-ui.js','onboarding-ui.js','classic-ui.js','web-edition-ui.js','scene-ui.js','ink-map.js','layout-ui.js'])e.evaluate(read(name));
  const troopStart=app.indexOf('function troopDetailModal('),troopEnd=app.indexOf('function trainModal(');
  e.evaluate(app.slice(troopStart,troopEnd));
  return {...e,g};
@@ -34,21 +35,31 @@ function pressGuard(e,action){
  e.evaluate(`globalThis.guardResult={prevented:false,stopped:false};globalThis.guardElement={disabled:false,dataset:{action:${JSON.stringify(action)}}};uiListeners.find(x=>x.type==='click'&&x.capture===true).callback({target:{closest:()=>guardElement},preventDefault(){guardResult.prevented=true;},stopImmediatePropagation(){guardResult.stopped=true;}});`);
  return JSON.parse(e.evaluate('JSON.stringify(guardResult)'));
 }
-test('five primary destinations keep city areas local and reports/shop reachable from More',()=>{
- const e=ui(),before=JSON.stringify(e.g.state),html=e.evaluate('classicShell()'),primary=html.match(/<div class="classic-primary">([\s\S]*?)<\/div>/)[1];
- const names=[...primary.matchAll(/<button[^>]*>([^<]+)/g)].map(x=>x[1]);assert.deepEqual(names,['城池','地图','军队','将领','更多']);
- assert.match(html,/aria-label="城池区域"/);assert.match(html,/data-id="inner"/);assert.match(html,/data-id="outer"/);
+// v0.34.7 (7e75183, layout-ui.js layoutShell) replaced the five primary tabs and in-page 城池区域 tabs with an inner/outer/map scene
+// switch plus a fixed command dock, moving shop/reports out of More into that dock; v0.34.8 (75e206d, layoutMoreModal) split More into
+// 征战/城务/辅助 tabs and its README states the pinned shop, reports and settings are not repeated there.
+test('scene switch and command dock keep city areas and reports/shop one tap away while More holds the remaining tools',()=>{
+ const e=ui(),before=JSON.stringify(e.g.state),html=e.evaluate('classicShell()');
+ const nav=label=>html.match(new RegExp('<nav class="[^"]*" aria-label="'+label+'">([\\s\\S]*?)</nav>'))[1];
+ const buttons=part=>[...part.matchAll(/<button data-action="([^"]*)" data-id="([^"]*)"[^>]*aria-label="([^"]+)"/g)].map(([,action,id,label])=>[label,action,id]);
+ const scenes=nav('场景导航'),dock=nav('常用功能');
+ assert.deepEqual(buttons(scenes),[['城内','classicNav','inner'],['城外','classicNav','outer'],['地图','classicNav','world']]);
+ assert.match(scenes,/data-id="inner" class="active" aria-current="page"/,'the current city area is the active scene');
+ assert.match(html,/<nav class="classic-primary layout-command-dock"/);
+ assert.deepEqual(buttons(dock),[['任务','classicMission',''],['将领','classicNav','heroes'],['军队','classicNav','army'],['宝物','manualInventory',''],['商城','classicNav','shop'],['报告','classicNav','reports'],['营造','classicQueues',''],['更多','classicMore','']]);
  for(const action of ['classicQueues','manualInventory','classicMission'])assert.match(html,new RegExp('data-action="'+action+'"'));
- e.evaluate('classicMoreModal()');const more=e.evaluate("document.getElementById('modal-body').innerHTML");
- for(const page of ['reports','shop'])assert.match(more,new RegExp('data-action="classicNav" data-id="'+page+'"'));
+ const more=JSON.parse(e.evaluate("JSON.stringify(LAYOUT_MORE_TABS.map(([id])=>{layoutSelectMoreCategory(id);return document.getElementById('modal-body').innerHTML;}))")).join('');
+ for(const page of ['reports','shop']){assert.match(dock,new RegExp('data-action="classicNav" data-id="'+page+'"'));assert.doesNotMatch(more,new RegExp('data-action="classicNav" data-id="'+page+'"'));}
  for(const action of ['namedCities','governance','warCare'])assert.match(more,new RegExp('data-action="'+action+'"'));
  assert.equal(JSON.stringify(e.g.state),before,'navigation views must not change game progress');
 });
+// v0.34.7 (7e75183) moved the gift shortcut into the lord panel (layout-gift-button); the More entry lost "已领" in v0.34.2 (4ea959e)
+// and became 新手补给 · claims/10 in v0.34.8 (75e206d).
 test('all ten real gift claims hide the persistent shortcut but remain inspectable from More',()=>{
- const e=ui(),g=e.g;assert.match(e.evaluate('classicShell()'),/class="classic-gift"/);city(g,{hall:10});
+ const e=ui(),g=e.g;assert.match(e.evaluate('classicShell()'),/class="layout-gift-button" data-action="onboardingGifts"/);city(g,{hall:10});
  assert.equal(g.onboarding.claimAvailable(),null);assert.equal(g.state.onboarding.claims.length,10);
- const before=JSON.stringify(g.state);assert.equal(e.evaluate('classicGiftComplete()'),true);assert.doesNotMatch(e.evaluate('classicShell()'),/class="classic-gift"/);
- e.evaluate('classicMoreModal()');assert.match(e.evaluate("document.getElementById('modal-body').innerHTML"),/十阶礼包 · 10\/10 已领/);assert.equal(JSON.stringify(g.state),before);
+ const before=JSON.stringify(g.state);assert.equal(e.evaluate('classicGiftComplete()'),true);assert.doesNotMatch(e.evaluate('classicShell()'),/class="layout-gift-button"|data-action="onboardingGifts"/);
+ e.evaluate('classicMoreModal()');assert.match(e.evaluate("document.getElementById('modal-body').innerHTML"),/data-action="onboardingGifts"[^>]*>新手补给 · 10\/10</);assert.equal(JSON.stringify(g.state),before);
 });
 test('objective previews use current gift quotes and prioritize a genuinely claimable mission',()=>{
  const e=ui(),g=e.g,before=JSON.stringify(g.state),quote=g.onboarding.quote(g.state,1);let m=e.evaluate('currentObjectiveModel()');
