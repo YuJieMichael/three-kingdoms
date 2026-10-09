@@ -5,7 +5,7 @@ const HeroSystem=(()=>{
   // Free points only raise these three; 统御 and 统率 grow from level and equipment.
   const allocatable=['atk','pol','wis'];
   const slots={weapon:'兵器',armor:'铠甲',helmet:'头盔',accessory:'佩饰'};
-  const qualities=['','普通','精良','珍稀','传说'];
+  const qualities=['','普通','精良','珍稀','传说','神兵'];
   const names={weapon:['','精铁长枪','百炼战刃','龙纹战戟','赤霄战戟'],armor:['','皮甲','锁子甲','玄铁战甲','麒麟宝铠'],helmet:['','铁盔','明光盔','狮纹金盔','凤翅紫金冠'],accessory:['','竹简','青玉佩','龙凤玉印','传国玉珏']};
   const bases={weapon:{atk:8,lead:2},armor:{def:8,lead:2},helmet:{def:3,wis:5},accessory:{pol:6,wis:4}};
   const zero=()=>Object.fromEntries(Object.keys(attrs).map(k=>[k,0]));
@@ -127,14 +127,14 @@ const HeroSystem=(()=>{
   }
   const totalPoints=(s,id)=>Math.max(0,((s.generalLevels[id]||1)-1)*3);
   const remaining=(s,id)=>totalPoints(s,id)-Object.values(s.heroPoints[id]||zero()).reduce((a,b)=>a+b,0);
-  const itemName=e=>names[e.slot]?.[e.tier]||'未知装备';
-  const requiredLevel=e=>[0,1,5,10,15][e.tier];
+  const itemName=e=>e.named&&typeof LegendaryWeapons!=='undefined'?LegendaryWeapons.weapons[e.named]?.name||'神兵':names[e.slot]?.[e.tier]||'未知装备';
+  const requiredLevel=e=>[0,1,5,10,15,20][e.tier];
   // Late-game equipment (Sprint 6): legendary tier, four-piece set bonuses and one refined extra stat on rare+ items.
   const SET_BONUS={2:{atk:5},3:{atk:10,def:10},4:{atk:15,def:15,lead:10}},REFINE_STATS=['atk','def','pol','wis','lead'];
-  function stats(e){const out=Object.fromEntries(Object.entries(bases[e.slot]).map(([id,n])=>[id,Math.round(n*[0,1,2,4,8][e.tier]*(1+e.enhance*.15))]));if(e.refine)out[e.refine.stat]=(out[e.refine.stat]||0)+e.refine.value;return out;}
+  function stats(e){const out=Object.fromEntries(Object.entries(bases[e.slot]).map(([id,n])=>[id,Math.round(n*[0,1,2,4,8,12][e.tier]*(1+e.enhance*.15))]));if(e.refine)out[e.refine.stat]=(out[e.refine.stat]||0)+e.refine.value;return out;}
   function setTier(s,id){const worn=(s.equipment||[]).filter(e=>e.hero===id);if(worn.length!==4)return 0;const tier=Math.min(...worn.map(e=>e.tier));return tier>=2&&worn.every(e=>e.tier>=tier)?tier:0;}
   function bonus(s,id){const out={...zero(),...(s.heroPoints?.[id]||{})};for(const e of s.equipment||[])if(e.hero===id)for(const [k,n] of Object.entries(stats(e)))out[k]+=n;for(const [k,n] of Object.entries(SET_BONUS[setTier(s,id)]||{}))out[k]+=n;for(const [k,n] of Object.entries(typeof HeroBonds!=='undefined'?HeroBonds.statBonus(s,id):{}))out[k]=(out[k]||0)+n;return out;}
-  function validEquipment(e,s){return !!e&&typeof e==='object'&&!Array.isArray(e)&&Number.isSafeInteger(e.id)&&e.id>0&&e.id<=s.equipmentSeq&&Object.hasOwn(slots,e.slot)&&[1,2,3,4].includes(e.tier)&&Number.isInteger(e.enhance)&&e.enhance>=0&&e.enhance<=10&&(e.refine===undefined||e.tier>=3&&!!e.refine&&typeof e.refine==='object'&&Object.keys(e.refine).length===2&&REFINE_STATS.includes(e.refine.stat)&&Number.isInteger(e.refine.value)&&e.refine.value>=3&&e.refine.value<=8)&&(e.hero===''||s.generals.includes(e.hero)&&s.generalLevels[e.hero]>=requiredLevel(e));}
+  function validEquipment(e,s){return !!e&&typeof e==='object'&&!Array.isArray(e)&&Number.isSafeInteger(e.id)&&e.id>0&&e.id<=s.equipmentSeq&&Object.hasOwn(slots,e.slot)&&[1,2,3,4,5].includes(e.tier)&&(e.tier===5?e.slot==='weapon'&&typeof e.named==='string'&&(typeof LegendaryWeapons==='undefined'||Object.hasOwn(LegendaryWeapons.weapons,e.named)):e.named===undefined)&&Number.isInteger(e.enhance)&&e.enhance>=0&&e.enhance<=10&&(e.refine===undefined||e.tier>=3&&!!e.refine&&typeof e.refine==='object'&&Object.keys(e.refine).length===2&&REFINE_STATS.includes(e.refine.stat)&&Number.isInteger(e.refine.value)&&e.refine.value>=3&&e.refine.value<=8)&&(e.hero===''||s.generals.includes(e.hero)&&s.generalLevels[e.hero]>=requiredLevel(e));}
   function valid(s){
     const obj=x=>x&&typeof x==='object'&&!Array.isArray(x),int=n=>Number.isSafeInteger(n)&&n>=0;
     if(!wild.valid(s))return false;
@@ -147,7 +147,7 @@ const HeroSystem=(()=>{
   // Construction rewards depend on the completed level, not duration or game speed.
   const constructionXp=level=>level*10;
   function addXp(s,id,xp){s.generalXp[id]=(s.generalXp[id]||0)+xp;while(s.generalLevels[id]<10000&&s.generalXp[id]>=s.generalLevels[id]*80){s.generalXp[id]-=s.generalLevels[id]*80;s.generalLevels[id]++;}init(s);}
-  function addEquipment(s,slot,tier){const e={id:++s.equipmentSeq,slot,tier,enhance:0,hero:''};s.equipment.push(e);return e;}
+  function addEquipment(s,slot,tier,named){const e={id:++s.equipmentSeq,slot,tier,enhance:0,hero:'',...(named?{named}:{})};s.equipment.push(e);return e;}
   function drops(s,level){
     const result={equipmentDrops:[],equipmentDiscarded:0};
     if(Math.random()>=Math.min(.55,.25+level*.03))return result;
@@ -169,7 +169,7 @@ const HeroSystem=(()=>{
   function forge(slot,tier){const s=live(),q=forgeQuote(slot,tier);if(!q)return '请选择装备';if(s.buildings.smith<q.smith)return '需要 '+q.smith+' 级铁匠铺';if(s.equipment.length>=s.equipmentCapacity)return '装备库已满';if(!Game.canPay(q.cost))return '打造材料不足';for(const [id,n] of Object.entries(q.cost))s.res[id]-=n;addEquipment(s,slot,tier);return save();}
   function enhanceQuote(e){return {gold:1000*e.tier*(e.enhance+1),pearls:Math.ceil((e.enhance+1)/3)};}
   function enhance(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero&&busy(e.hero))return busy(e.hero);if(s.buildings.smith<1)return '请先建造铁匠铺';if(e.enhance>=10)return '强化已达 +10';const q=enhanceQuote(e);if(s.res.gold<q.gold||(s.inventory.pearl||0)<q.pearls)return '黄金或强化宝珠不足';s.res.gold-=q.gold;s.inventory.pearl-=q.pearls;e.enhance++;Progression.record(s,'item',q.pearls);return save();}
-  function salvage(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero)return '请先卸下装备';s.equipment=s.equipment.filter(x=>x.id!==eid);s.inventory.pearl=(s.inventory.pearl||0)+e.tier+Math.floor(e.enhance/3);return save();}
+  function salvage(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.named)return '神兵不能分解';if(e.hero)return '请先卸下装备';s.equipment=s.equipment.filter(x=>x.id!==eid);s.inventory.pearl=(s.inventory.pearl||0)+e.tier+Math.floor(e.enhance/3);return save();}
   // Legendary pieces come from the 铸神兵 quest line (legend-quest.js): first a timed quench, then direct quenching.
   function legendQuote(slot){const s=live();return LegendQuest.forgeQuote(s,slot);}
   function forgeLegend(slot){const s=live(),error=LegendQuest.startForge(s,slot,Date.now(),addEquipment);return error||save();}

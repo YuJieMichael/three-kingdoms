@@ -20,7 +20,7 @@ function layoutLordPanelHTML(){
   const s=S(),city=activeCityMeta();
   return `<aside class="layout-lord-panel" aria-label="君主与城务快捷栏">
     <div class="layout-rail-heading">君主 · ${esc(s.banner)}</div>
-    <div class="lord-card">${s.governor?generalPortrait(Game.general(s.governor),'lord-portrait'):'<span class="lord-seal">守</span>'}<div><strong>${esc(s.ruler)}</strong><button class="prestige-link" data-action="taskTab" data-id="honors">${HeritageSystem.office(s).name} · ${HeritageSystem.noble(s).name}</button><small>${s.governor?'城守 '+esc(Game.general(s.governor).name):'城守尚未任命'}</small></div></div>
+    <div class="lord-card">${s.governor?generalPortrait(Game.general(s.governor),'lord-portrait'):'<span class="lord-seal">守</span>'}<div><strong>${esc(s.ruler)}</strong><button class="prestige-link" data-action="taskTab" data-id="honors">${HeritageSystem.office(s).name} · ${HeritageSystem.noble(s).name}</button><small>${s.governor?'城守 '+esc(Game.general(s.governor).name):'城守尚未任命'}</small>${s.legendary?.qinglong?.obtainedAt?'<small class="lord-legendary">神兵 · 青龙偃月刀</small>':''}</div></div>
     <div class="layout-city-name"><strong>${esc(city.name)}</strong><span>坐标 ${city.x}, ${city.y} · 官府 ${s.buildings.hall} 级</span></div>
     <dl class="city-ledger">
       <div><dt>人口</dt><dd data-population>${num(s.population)} / ${num(Game.maxPop())}</dd></div>
