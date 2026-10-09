@@ -1,6 +1,6 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="38eff3165110716a05f4e93659e077cf042071b8dc8c142e5fb3ce3fcabc84bc";
-export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
+export const runtimeHash="5f99e8b8ba671d9f4c98f9bc1d20ecc1729cd76c710a7a98722cf3d33d28adea";
+export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
  const navigator=undefined,module=undefined,document={addEventListener(){}};
@@ -12335,6 +12335,37 @@ const HeroSystem=(()=>{
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
   return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
+})();
+
+
+// SOURCE: hero-identity.js
+'use strict';
+// Identity is derived from recruitment provenance, never from the displayed name.
+const HeroIdentity=(()=>{
+  const aliases=Object.freeze({warrior:'weiyan',strategist:'xushu'});
+  const garrisonKeys=Object.freeze({named_xiaopei:'zhangfei',named_wancheng:'dianwei',named_xiapi:'lvbu',named_beihai:'taishici'});
+  const matches=(hero,fields)=>Object.entries(fields).every(([k,v])=>hero[k]===v);
+  function key(s,id){
+    if(!s||!Array.isArray(s.generals)||!s.generals.includes(id)||!Array.isArray(s.customGenerals))return '';
+    const g=s.customGenerals.find(g=>g?.id===id);if(!g)return '';
+    if(g.origin==='wild'){
+      const w=s.wildGenerals,d=HeroSystem.wild.definitions.find(d=>d.line===g.wildLine);
+      if(!d?.historical||!Array.isArray(w?.recruited)||!w.recruited.includes(id)||!Array.isArray(w.rumors))return '';
+      const r=w.rumors.find(r=>r?.id===id&&r.line===d.line&&r.status==='recruited');
+      const sequence=typeof id==='string'&&/^local_\d+$/.test(id)?Number(id.slice(6))-1000000000000000:0;
+      if(!r||!Number.isSafeInteger(w.seq)||w.seq<1||w.seq>1000000||!Number.isSafeInteger(sequence)||sequence<1||sequence>w.seq)return '';
+      const node=/^wild_(\d{1,2})_(\d{1,2})$/.exec(r.node||'');
+      if(!node||+node[1]>63||+node[2]>63||r.node!=='wild_'+Number(node[1])+'_'+Number(node[2]))return '';
+      if(!matches(g,{name:d.name,title:d.title,type:'将',level:d.level,atk:d.atk,def:d.def,pol:d.pol,wis:d.wis,lead:d.level*10,price:d.gold,bonus:d.bonus,sourceNode:r.node}))return '';
+      return Object.hasOwn(aliases,d.line)?aliases[d.line]:d.line;
+    }
+    for(const [node,identity]of Object.entries(garrisonKeys)){
+      const d=NamedGarrison.generals[node],r=s.realm?.namedCities?.garrisons?.[node];
+      if(d?.id===id&&r?.recruited===true&&r.captive===false&&matches(g,NamedGarrison.hero(node)))return identity;
+    }
+    return '';
+  }
+  return {key};
 })();
 
 
