@@ -4,6 +4,8 @@ const Game = (() => {
   const KEY = 'sanguo-city-v2';
   // Income follows real time; the trial clock only speeds population and queues.
   const ECONOMY_OUTPUT_FACTOR=.7,RAID_LOOT_FACTOR=1.3;
+  // A Yellow Turban city pays its gold once per occupation victory, then refreshes after an hour.
+  const YELLOW_GOLD_REFRESH_MS=3600000;
   const resources = {food:{name:'粮食',icon:'穗'},wood:{name:'木材',icon:'木'},stone:{name:'石料',icon:'石'},iron:{name:'铁锭',icon:'铁'},gold:{name:'黄金',icon:'金'}};
   const buildings=ManualData.buildings,units=ManualData.units;
   const cityIds=Object.keys(buildings).filter(id=>!['farm','lumber','quarry','mine'].includes(id));
@@ -127,7 +129,7 @@ const Game = (() => {
   const blankArmy = () => Object.fromEntries(Object.keys(units).map(k=>[k,0]));
   const initialTown=(n,owned=false)=>({morale:owned?-5:100,unrest:0,population:n.population||400});
   const initialTowns=(owned={})=>Object.fromEntries(nodes.filter(n=>n.terrain==='fort').map(n=>[n.id,initialTown(n,!!owned[n.id])]));
-  const newState=()=>{const fresh=({version:2,manualSchema:1,last:Date.now(),speed:1,autoUpgrade:false,autoResearch:false,starterGiftClaimed:false,starterGiftVersion:0,missionSchema:2,missionClaims:[],res:{food:5000,wood:5000,stone:5000,iron:5000,gold:5000},buildings:Object.fromEntries(cityIds.map(id=>[id,id==='hall'?1:0])),cityLayout:defaultCityLayout(),cityLevels:Array.from({length:36},(_,i)=>i===14?1:0),tactics:Object.fromEntries(Object.keys(units).map(id=>[id,{command:id==='archer'?'advance':defaultOrder(id),target:''}])),plots:newPlots(),plotTemplate:newPlotTemplate(),army:blankArmy(),captives:blankArmy(),buildQueue:[],trainQueue:[],researchQueue:null,tech:Object.fromEntries(Object.keys(ManualData.technology).map(id=>[id,0])),generals:['lin','su'],generalLevels:{lin:1,su:1},generalXp:{lin:0,su:0},customGenerals:[],innCandidates:[],governor:'su',population:0,morale:80,unrest:0,tax:20,storageAllocation:{food:25,wood:25,stone:25,iron:25},gems:1000,inventory:{},buffs:{},itemCooldowns:{},civicCooldowns:{comfort:0,levy:0},trialGiftAt:0,ruler:'青溪城主',banner:'青',scouted:{},defenses:Object.fromEntries(Object.keys(ManualData.defenses).map(id=>[id,0])),defenseQueue:[],landClaims:{},conquered:{},raided:{},garrisons:{},towns:initialTowns(),openCitySites:YellowCityData.createSites(null,fixedSites),cooldowns:{},expedition:null,expeditions:[],battle:null,reports:[],mission:0,stats:{trained:0,victories:0},seen:[],tutorial:false});Progression.init(fresh);HeroSystem.init(fresh);HeritageSystem.init(fresh);NPCDefense.init(fresh);WarCare.init(fresh);GovernanceSystem.init(fresh);AutomationSystem.init(fresh);OnboardingSystem.init(fresh);WarOrders.init(fresh);GeneralGrowth.init(fresh);ScoutSystem.init(fresh);RegionalFront.init(fresh);HeroAdministration.init(fresh);CitySystem.init(fresh);NamedCitySystem.init(fresh);SupplyLines.init(fresh);fresh.prestige=0;return fresh;};
+  const newState=()=>{const fresh=({version:2,manualSchema:1,last:Date.now(),speed:1,autoUpgrade:false,autoResearch:false,starterGiftClaimed:false,starterGiftVersion:0,missionSchema:2,missionClaims:[],res:{food:5000,wood:5000,stone:5000,iron:5000,gold:5000},buildings:Object.fromEntries(cityIds.map(id=>[id,id==='hall'?1:0])),cityLayout:defaultCityLayout(),cityLevels:Array.from({length:36},(_,i)=>i===14?1:0),tactics:Object.fromEntries(Object.keys(units).map(id=>[id,{command:id==='archer'?'advance':defaultOrder(id),target:''}])),plots:newPlots(),plotTemplate:newPlotTemplate(),army:blankArmy(),captives:blankArmy(),buildQueue:[],trainQueue:[],researchQueue:null,tech:Object.fromEntries(Object.keys(ManualData.technology).map(id=>[id,0])),generals:['lin','su'],generalLevels:{lin:1,su:1},generalXp:{lin:0,su:0},customGenerals:[],innCandidates:[],governor:'su',population:0,morale:80,unrest:0,tax:20,storageAllocation:{food:25,wood:25,stone:25,iron:25},gems:1000,inventory:{},buffs:{},itemCooldowns:{},civicCooldowns:{comfort:0,levy:0},trialGiftAt:0,ruler:'青溪城主',banner:'青',scouted:{},defenses:Object.fromEntries(Object.keys(ManualData.defenses).map(id=>[id,0])),defenseQueue:[],landClaims:{},conquered:{},raided:{},garrisons:{},towns:initialTowns(),yellowGold:{},openCitySites:YellowCityData.createSites(null,fixedSites),cooldowns:{},expedition:null,expeditions:[],battle:null,reports:[],mission:0,stats:{trained:0,victories:0},seen:[],tutorial:false});Progression.init(fresh);HeroSystem.init(fresh);HeritageSystem.init(fresh);NPCDefense.init(fresh);WarCare.init(fresh);GovernanceSystem.init(fresh);AutomationSystem.init(fresh);OnboardingSystem.init(fresh);WarOrders.init(fresh);GeneralGrowth.init(fresh);ScoutSystem.init(fresh);RegionalFront.init(fresh);HeroAdministration.init(fresh);CitySystem.init(fresh);NamedCitySystem.init(fresh);SupplyLines.init(fresh);fresh.prestige=0;return fresh;};
   function migrateSave(data){
     if(!data||![1,2].includes(data.version))return data;
     const migrationNow=Date.now(),old=JSON.parse(JSON.stringify(data));
@@ -169,7 +171,8 @@ const Game = (() => {
     if(old.captives===undefined)old.captives=blankArmy();
     Progression.init(old);HeroSystem.init(old);HeritageSystem.init(old);NPCDefense.init(old);WarCare.init(old);GovernanceSystem.init(old,migrationNow);AutomationSystem.init(old);OnboardingSystem.init(old);WarOrders.init(old);GeneralGrowth.init(old);ScoutSystem.init(old);RegionalFront.init(old);HeroAdministration.init(old);CitySystem.init(old,nodes.filter(n=>isCity(n)).map(n=>getNode(n.id,old)));
     for(const c of CitySystem.list(old)){GeneralGrowth.init(old);ScoutSystem.init(c.data);RegionalFront.init(c.data);HeroAdministration.init(c.data);WarCare.init(c.data);GovernanceSystem.initCity(c.data,migrationNow);}NamedCitySystem.init(old);SupplyLines.init(old);
-    if(old.openCitySites&&typeof old.openCitySites==='object'&&!Array.isArray(old.openCitySites)&&Object.keys(old.openCitySites).length===YellowCityData.nodes.length&&YellowCityData.nodes.every(n=>Object.hasOwn(old.openCitySites,n.id)))old.openCitySites=YellowCityData.createSites(old,fixedSites,old.openCitySites);
+    if(old.openCitySites&&typeof old.openCitySites==='object'&&!Array.isArray(old.openCitySites)&&['yellow_qingshi','yellow_baisha','yellow_chigang'].every(id=>Object.hasOwn(old.openCitySites,id))&&Object.keys(old.openCitySites).every(id=>YellowCityData.allNodes().some(n=>n.id===id))&&YellowCityData.allNodes().some(n=>!Object.hasOwn(old.openCitySites,n.id)))old.openCitySites=YellowCityData.createSites(old,fixedSites,old.openCitySites);
+    if(old.yellowGold===undefined)old.yellowGold={};
     return old;
   }
   // Hold one origin-wide exclusive Web Lock throughout a browser writer's lifetime.
@@ -281,6 +284,7 @@ const Game = (() => {
     const army=a=>object(a)&&Object.keys(units).every(k=>integer(a[k]))&&Object.keys(a).every(k=>Object.hasOwn(units,k));
     const orders=o=>object(o)&&Object.keys(units).every(id=>object(o[id])&&['advance','hold','fallback'].includes(o[id].command)&&(o[id].target===''||Object.hasOwn(units,o[id].target)));
     const loot=a=>object(a)&&Object.entries(a).every(([k,n])=>Object.hasOwn(resources,k)&&finite(n));
+    if(object(d)&&d.yellowGold!==undefined&&(!object(d.yellowGold)||Object.entries(d.yellowGold).some(([id,at])=>!YellowCityData.nodes.some(n=>n.id===id)||!Number.isSafeInteger(at)||at<0)))return false;
     if(!object(d)||!object(d.openCitySites)||Object.keys(d.openCitySites).length!==YellowCityData.allNodes().length||Object.keys(d.openCitySites).some(id=>!YellowCityData.allNodes().some(n=>n.id===id)))return false;
     const reservedSites=new Set([home,...fixedSites].map(p=>p.x+':'+p.y));
     for(const n of YellowCityData.allNodes()){const p=d.openCitySites[n.id];if(!object(p)||!Number.isInteger(p.x)||!Number.isInteger(p.y)||p.x<0||p.y<0||p.x>=WORLD_SIZE||p.y>=WORLD_SIZE||reservedSites.has(p.x+':'+p.y))return false;reservedSites.add(p.x+':'+p.y);}
@@ -692,8 +696,9 @@ const Game = (() => {
     const n=getNode(id);if(!n)return null;const city=isCity(n),siege=(city||!!n.fortification)&&mode==='occupy',town=city?state.towns[id]:null;
     const militia=siege&&town?Math.ceil(town.population*.1):0,army={...n.army};if(militia)army.militia=(army.militia||0)+militia;
     const factor=(mode==='raid'?RAID_LOOT_FACTOR*(n.wild&&n.level>=3?2:1):1)*(state.raided[id]?.6:1)*(city&&mode==='raid'?Math.min(1,.6+state.tech.plunder*.03):1);
-    const loot=Object.fromEntries(Object.entries(n.loot).filter(([k])=>mode!=='raid'||k!=='gold').map(([k,v])=>[k,Math.round(v*factor)]));
-    return {army,loot,siege,militia,morale:town?.morale??null,unrest:town?.unrest??null,population:town?.population??null};
+    const yellowGold=n.faction==='yellow_turban'&&n.openCity&&mode==='occupy',goldReadyAt=yellowGold?state.yellowGold?.[id]||0:null;
+    const loot=Object.fromEntries(Object.entries(n.loot).filter(([k])=>mode!=='raid'||k!=='gold').map(([k,v])=>[k,k==='gold'&&yellowGold?(goldReadyAt>Date.now()?0:v):Math.round(v*factor)]));
+    return {army,loot,goldReadyAt,siege,militia,morale:town?.morale??null,unrest:town?.unrest??null,population:town?.population??null};
   }
   function recallGarrison(id){
     tick();const source=CitySystem.list(state).find(c=>CitySystem.scope(state,c).garrisons[id]);if(source&&source.id!==currentCityId())switchCity(source.id);const g=state.garrisons[id];if(!g)return '这里没有驻军';if(g.phase!=='stationed')return '部队已在返城途中';if(state.gatherings[id])return '请先收获或取消采集，再召回驻军';g.phase='return';g.start=Date.now();g.end=Date.now()+marchQuote(id,g.army).returnSeconds*1000;save();return null;
@@ -901,6 +906,7 @@ const Game = (() => {
     for(const [id,count] of Object.entries(drops.items))state.inventory[id]=(state.inventory[id]||0)+count;
     if(won){
       state.stats.victories++;if(!n.orderRoute)state.raided[n.id]=true;state.cooldowns[n.id]=Date.now()+90000;
+      if(n.faction==='yellow_turban'&&n.openCity&&mode==='occupy'&&availableLoot.gold>0){if(!state.yellowGold)state.yellowGold={};state.yellowGold[n.id]=Date.now()+YELLOW_GOLD_REFRESH_MS;}
       if(isCity(n)){const town=state.towns[n.id];if(mode==='occupy'){moraleBefore=town.morale;town.morale=Math.max(-100,town.morale-35);town.population=Math.max(0,town.population-40);moraleAfter=town.morale;claimed=town.morale<0&&!state.conquered[n.id]&&cityList().length<cityLimit();}else town.unrest=Math.min(100,town.unrest+10);}
       else if(mode==='occupy'&&!n.orderRoute)claimed=!state.conquered[n.id];
       if(claimed){Progression.record(state,'occupy');state.conquered[n.id]=true;if(n.wild){state.landClaims[n.id]={at:Date.now(),level:n.level};state.realm.wildOwners[n.id]=currentCityId();}if(isCity(n))state.realm.cities[CitySystem.idFor(n.id)]=CitySystem.empty(state,n,Date.now());}

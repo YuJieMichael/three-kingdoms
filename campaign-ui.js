@@ -13,6 +13,7 @@ function updateCampaignMarchPreview(){
   const target=document.getElementById('campaign-march-preview'),select=document.getElementById('dispatch-mode');if(!target||!select)return;
   const html=campaignMarchHTML(select.dataset.node,dispatchArmy());if(target.innerHTML!==html)target.innerHTML=html;
 }
+function yellowGoldText(n){const at=S().yellowGold?.[n.id]||0,left=at-Date.now();return left>0?`黄金刷新：${new Date(at).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false})}（约 ${duration(left/1000)}后）`:`黄金 ${num(n.loot?.gold||0)} · 占领战胜利可缴获`;}
 function resourceAmount(n){return n>0&&n<.01?'不足 0.01':n.toLocaleString('zh-CN',{maximumFractionDigits:2});}
 function dispatchStorageHTML(cargo){
   if(!cargo.loaded)return {warning:'',details:'<p class="hint">选择出征士兵后，可查看预计入库资源。</p>'};
@@ -63,7 +64,7 @@ function battleDropsHTML(result){
 }
 function campaignCityRulesHTML(n,info=Game.attackInfo(n.id,'occupy')){
   if(!Game.isCity(n))return '';
-  return `<p class="notice city-campaign-rules">${n.openCity?'黄巾城市无需史诗解锁，备兵后可攻打。<br>':''}掠夺：仅与驻军交战，城防与义兵不启用；仓储保护 ${Math.max(0,40-S().tech.plunder*3)}% 资源，基础黄金不被掠夺，胜利不易主。<br>占领：城防启用，义兵 +${num(info.militia)}，当前民心 ${info.morale}；每次胜利降低 35，低于 0 时易主。每次占领胜利均缴获基础资源与黄金。<br>资源与黄金共用幸存部队负重，胜利入库允许爆仓；部队随后返城，不重复发奖。</p>`;
+  return `<p class="notice city-campaign-rules">${n.openCity?'黄巾城市无需史诗解锁，备兵后可攻打。<br>'+(n.faction==='yellow_turban'?'<strong data-yellow-gold>'+esc(yellowGoldText(n))+'</strong>；每次占领战胜利缴获全部黄金，之后 1 小时刷新。<br>':''):''}掠夺：仅与驻军交战，城防与义兵不启用；仓储保护 ${Math.max(0,40-S().tech.plunder*3)}% 资源，基础黄金不被掠夺，胜利不易主。<br>占领：城防启用，义兵 +${num(info.militia)}，当前民心 ${info.morale}；每次胜利降低 35，低于 0 时易主。每次占领胜利均缴获基础资源与黄金。<br>资源与黄金共用幸存部队负重，胜利入库允许爆仓；部队随后返城，不重复发奖。</p>`;
 }
 function campaignOwnedCityHTML(n){
   const returning=Game.allExpeditions().find(e=>e.node===n.id&&e.phase==='return');
