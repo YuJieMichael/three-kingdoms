@@ -71,7 +71,8 @@ const RewardData = {
     for(const count of [200,500])add('victories_'+count,'征战里程','千军破阵 · '+count,'累计赢得 '+count+' 场战斗','world',s=>s.stats.victories>=count,supply(count*400,count*1500),{goldBrickLarge:1});
     for(const count of [10,50,200])add('captured_'+count,'征战里程','收容降卒 · '+count,'累计在战斗中获得 '+count+' 名俘虏','world',s=>metric(s,'capture')>=count,supply(count*400+10000,count*1000+20000));
     for(const count of [50,200])add('captiveRecruit_'+count,'征战里程','降卒归心 · '+count,'累计招降 '+count+' 名俘虏','captives',s=>metric(s,'captive_recruit')>=count,supply(count*400,count*1200));
-    for(const level of [3,5,8])add('victoryLevel_'+level,'征战里程','攻坚克敌 · '+level+'级','战胜任意 '+level+' 级或更高等级的野地／据点','world',s=>metric(s,'win_level_'+level)>0||Object.keys(s.raided).some(id=>Math.max(s.landClaims[id]?.level||0,Game.getNode(id)?.level||0)>=level),supply(level*14000,level*40000),{speed_train_1h:1});
+    // Refreshed wild tiles take new levels; only the battle metric or a claim counts for them.
+    for(const level of [3,5,8])add('victoryLevel_'+level,'征战里程','攻坚克敌 · '+level+'级','战胜任意 '+level+' 级或更高等级的野地／据点','world',s=>metric(s,'win_level_'+level)>0||Object.keys(s.raided).some(id=>Math.max(s.landClaims[id]?.level||0,id.startsWith('wild_')?0:Game.getNode(id)?.level||0)>=level),supply(level*14000,level*40000),{speed_train_1h:1});
     for(const count of [3,5])add('wildClaims_'+count,'征战里程','据土守疆 · '+count,'同时拥有 '+count+' 块网格野地','world',s=>Object.keys(s.landClaims).length>=count,supply(count*15000,count*40000));
     for(const count of [10,30])add('scouted_'+count,'征战里程','斥候经略 · '+count,'累计完成 '+count+' 次侦察','world',s=>metric(s,'scout')>=count,supply(count*1000,count*3000));
     add('countyAccess','征战里程','进军县城','完成黄巾史诗，开启县城攻打；旧档保留权限也可完成','epic',s=>Progression.countyUnlocked(s),supply(60000,180000),{speed_train_3h:1});

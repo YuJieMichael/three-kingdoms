@@ -6,56 +6,38 @@
 #   done           ↔  Complete
 #   blocked        ↔  Blocked
 
-sprint: 1
-goal: "让新玩家前 30 分钟少空等，并把手绘美术定成规范、在旧设备上也能显示。"
-start: "2026-10-09"
-end: "2026-10-22"
+sprint: 2
+goal: "让开局的每一步都有可见回报：看得清、升级会涨产量、资源要盘算、引导有起伏。"
+start: "2026-10-08"
+end: "2026-10-21"
 generated: "2026-10-08"
 updated: "2026-10-08"
 
 stories:
-  - id: "1-1"
-    name: "开局 30 分钟节奏分析"
-    file: "production/epics/opening-pace/story-001-balance-check.md"
+  - id: "3-1"
+    name: "建造弹窗文字对比度"
+    file: "production/sprints/sprint-002.md"
     priority: must-have
-    status: done
-    owner: ""
-    estimate_days: 1
-    blocker: ""
-    completed: "2026-10-08"
-  - id: "2-1"
-    name: "美术规范"
-    file: "production/epics/art-direction/story-001-art-bible.md"
-    priority: must-have
-    status: done
-    owner: ""
-    estimate_days: 1
-    blocker: ""
-    completed: "2026-10-08"
-  - id: "2-2"
-    name: "旧设备 PNG 备用图"
-    file: "production/epics/art-direction/story-002-png-fallback.md"
-    priority: must-have
-    status: done
-    owner: ""
-    estimate_days: 1.5
-    blocker: ""
-    completed: "2026-10-08"
-  - id: "1-2"
-    name: "按选定方案调整开局节奏"
-    file: "production/epics/opening-pace/story-002-opening-tuning.md"
-    priority: should-have
-    status: done
-    owner: ""
-    estimate_days: 2
-    blocker: ""
-    completed: "2026-10-08"
-  - id: "2-3"
-    name: "素材处理脚本入库"
-    file: "production/epics/art-direction/story-003-asset-pipeline.md"
-    priority: nice-to-have
     status: done
     owner: ""
     estimate_days: 0.5
     blocker: ""
     completed: "2026-10-08"
+  - id: "3-2"
+    name: "开局经济与引导节奏"
+    file: "production/epics/opening-pace/story-003-opening-economy.md"
+    priority: must-have
+    status: done
+    owner: ""
+    estimate_days: 2
+    blocker: ""
+    completed: "2026-10-08"
+  - id: "3-3"
+    name: "官府 2 级后的补给与造价联调"
+    file: "production/sprints/sprint-002.md"
+    priority: should-have
+    status: backlog
+    owner: ""
+    estimate_days: 1
+    blocker: ""
+    completed: ""

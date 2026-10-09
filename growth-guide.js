@@ -3,6 +3,8 @@
 const GrowthGuide=(()=>{
   function resources(game,cost){const rates=game.rates(),missing=Object.entries(cost||{}).filter(([id,n])=>game.state.res[id]<n).map(([id,n])=>({id,amount:Math.ceil(n-game.state.res[id]),blocked:n>game.capacity(id)||rates[id]<=0,seconds:rates[id]>0?Math.ceil((n-game.state.res[id])/rates[id]*60):null}));return {missing,seconds:missing.some(x=>x.blocked)?null:Math.max(0,...missing.map(x=>x.seconds))};}
   function held(game,id){const s=game.state;return s.army[id]+[...game.allExpeditions(),...Object.values(s.garrisons)].reduce((n,e)=>n+(e.army[id]||0),0);}
+  // The first battle is won on a landmark; the militia warm-up raid on a wild tile does not count.
+  function landmarkVictory(s){return Object.keys(s.raided||{}).some(id=>!id.startsWith('wild_'));}
   function archerComplete(game){const s=game.state;return held(game,'archer')>=OnboardingData.archerTarget||(s.activityMetrics.train_archer||0)>=OnboardingData.archerTarget||s.missionClaims.includes('army_archer');}
   function governorAdvice(game){
     const s=game.state,id=s.governor,points=HeroSystem.remaining(s,id);if(points<1)return null;
@@ -61,8 +63,8 @@ const GrowthGuide=(()=>{
       const returningGarrison=Object.entries(s.garrisons).find(([,g])=>g.phase==='return');if(returningGarrison)return {kind:'garrison',id:returningGarrison[0],end:returningGarrison[1].end,title:'等待驻军返城，完成整备',reason:'驻将与幸存部队正在返城。等队伍回到城内，再检查弓兵人数与首胜收获。'};
       const away=Object.entries(s.garrisons).find(([,g])=>g.army.archer>0);
       if(s.army.archer<OnboardingData.archerTarget&&away)return {kind:'garrison',id:away[0],title:'召回弓兵，整备首战部队',reason:'弓兵正在驻守或返城，不必重复征兵。召回保留领地归属，待返城后再出征。'};
-      const restore=train('archer',OnboardingData.archerTarget,s.stats.victories?'补回永久损失，恢复 30 名弓兵。幸存部队返城，伤兵需在伤兵营付金治疗，不需要重复训练。':'弓兵已解锁，补齐 30 人再战。先用「向前」进入射程，再按距离选择「坚守」。');if(restore)return restore;
-      if(s.stats.victories>0){const promotion=HeritageSystem.promotionQuote(s,'office');return {kind:'firstBattleComplete',id:target,title:'首战闭环完成，查看收获与官职晋升',reason:'首胜会获得珍珠，晋升伍长需先达到公士，另需声望 1000 与珍珠 1 枚；公士的黄金与珠宝条件可在官爵页查看。可先领取首胜任务、查看官爵；条件不足时继续官府成长。',promotionReady:!!promotion?.next&&!promotion.reason};}
+      const restore=train('archer',OnboardingData.archerTarget,landmarkVictory(s)?'补回永久损失，恢复 30 名弓兵。幸存部队返城，伤兵需在伤兵营付金治疗，不需要重复训练。':'弓兵已解锁，补齐 30 人再战。先用「向前」进入射程，再按距离选择「坚守」。');if(restore)return restore;
+      if(landmarkVictory(s)){const promotion=HeritageSystem.promotionQuote(s,'office');return {kind:'firstBattleComplete',id:target,title:'首战闭环完成，查看收获与官职晋升',reason:'首胜会获得珍珠，晋升伍长需先达到公士，另需声望 1000 与珍珠 1 枚；公士的黄金与珠宝条件可在官爵页查看。可先领取首胜任务、查看官爵；条件不足时继续官府成长。',promotionReady:!!promotion?.next&&!promotion.reason};}
       const drill=resolve('building','drill',1);if(drill)return drill;
       const scouting=resolve('tech','scouting',1);if(scouting)return {...scouting,reason:'出征前先探明敌情。研究侦察 1 级后，训练一名斥候；'+scouting.reason};
       if(!game.intel(target)){
@@ -104,12 +106,37 @@ const GrowthGuide=(()=>{
       }
       return {kind:'campaign',id,chapter,title:'占领'+n.name+'，推进'+(chapter===1?'第一章':ChapterData.chapterTitle(chapter)),reason:n.desc+'查看敌军、配兵与预计战利品，再自行确认占领；掠夺不推进章节。'+(n.fortification?'必须破城并歼敌，器械需要前排保护。':'弓兵为主力，按敌军组成安排前排。'),army:{archer:archers,...(front?{shield:front}:{})}};
     }
+    // Resource fields produce in proportion to population / required workers; staff them before more upgrades.
+    function staffing(){
+      const workers=game.workers(),people=Math.floor(s.population);
+      if(workers<=people||s.population>=game.maxPop()||!(s.inventory.population>0))return null;
+      return {kind:'population',item:true,people:workers-people,title:'使用典民令，补足资源田劳动人口',reason:'资源田共需 '+workers+' 名劳动人口，城中只有 '+people+' 人，所有资源田只按 '+Math.floor(people/workers*100)+'% 的效率生产。用典民令补充居民，升级资源田才会真正涨产量。'};
+    }
+    // A short militia raid on the nearest level-1 wild tile breaks up the opening run of construction steps.
+    function warmupTarget(){
+      const h=game.home;let best=null;
+      for(let r=1;r<=5&&!best;r++)for(let dx=-r;dx<=r;dx++)for(let dy=-r;dy<=r;dy++){if(Math.max(Math.abs(dx),Math.abs(dy))!==r)continue;const t=game.getNode('wild_'+(h.x+dx)+'_'+(h.y+dy));if(t?.wild&&t.level===1&&!game.attackBlocked(t.id,'raid')&&(!best||t.time<best.time))best=t;}
+      return best;
+    }
+    function warmup(){
+      const battle=s.battle,expedition=game.allExpeditions().find(e=>e.node.startsWith('wild_'));
+      if(battle&&!battle.finished)return {kind:'battle',id:battle.node,warmup:true,title:'指挥义兵推进下一回合',reason:'义兵人多但单兵较弱，保持「向前」压上即可。下好指令后点击下一回合，直到战斗结束。'};
+      if(expedition){const returning=expedition.phase==='return',arrived=expedition.phase==='march'&&expedition.end<=Date.now();return {kind:returning?'battleReturn':arrived?'battleArrival':'battleMarch',id:expedition.node,expedition,end:expedition.end,warmup:true,title:returning?'练兵出征结束，义兵正在返城':arrived?'义兵已抵达野地，进入战斗':'义兵正在行军',reason:returning?'掠夺所得已在战斗结算时入库，可查看战报。返城只需片刻，回城后继续建设。':arrived?'进入战斗后逐回合推进，义兵保持「向前」。':'行军需要一点时间，可以先查看行军，或继续等待抵达。'};}
+      if(Object.keys(s.raided).some(id=>id.startsWith('wild_')))return null;
+      const target=warmupTarget();if(!target)return null;
+      const goal=train('militia',30,'义兵是军营 1 级就能招的民兵。先招 30 名，到城外掠夺一块 1 级野地练练手，顺便带回一些物资。');if(goal)return goal;
+      const general=s.generals.find(id=>!HeritageSystem.roleOf(s,id)&&!game.generalBusy(id));if(!general)return null;
+      return {kind:'dispatch',id:target.id,general,count:30,army:{militia:30},warmup:true,title:'派 30 名义兵掠夺 '+target.name,reason:'这块 1 级野地守军很少，30 名义兵足以取胜。确认主将、人数和行军粮食后出发；掠夺不占领，打完部队自动返城。'};
+    }
     if(phase==='battle')return {...firstBattle(),phase};
-    if(phase==='hall'){if(s.buildings.hall<10){const goal=resolve('building','hall',s.buildings.hall+1);if(goal)return {...goal,phase,reason:'弓兵已经成队。推进官府 '+(s.buildings.hall+1)+' 级，解锁下一阶补给；'+goal.reason};}return {...campaign(),phase:'campaign'};}
-    for(const [id,level]of [['house',2],['farm',1],['lumber',2],['quarry',2],['mine',3],['hall',2],['barracks',4],['academy',4]]){const goal=resolve('building',id,level);if(goal)return goal;}
+    if(phase==='hall'){const staff=staffing();if(staff)return {...staff,phase};if(s.buildings.hall<10){const goal=resolve('building','hall',s.buildings.hall+1);if(goal)return {...goal,phase,reason:'弓兵已经成队。推进官府 '+(s.buildings.hall+1)+' 级，解锁下一阶补给；'+goal.reason};}return {...campaign(),phase:'campaign'};}
+    const staff=staffing();if(staff)return staff;
+    for(const [id,level]of [['house',2],['farm',1],['lumber',2],['quarry',2],['mine',3],['hall',2],['drill',1],['barracks',1]]){const goal=resolve('building',id,level);if(goal)return goal;}
+    const drill=warmup();if(drill)return drill;
+    for(const [id,level]of [['barracks',4],['academy',4]]){const goal=resolve('building',id,level);if(goal)return goal;}
     for(const [id,level]of [['training',4],['shooting',1]]){const goal=resolve('tech',id,level);if(goal)return goal;}
     return train('archer',OnboardingData.archerTarget,'义兵可临时补充兵力；弓箭兵是这条成长路线的远程主力，仍需步兵保护。');
   }
   function key(game){const m=model(game);return JSON.stringify([m.kind,m.phase,m.id,m.level,m.site,m.count,m.queue?.end,m.end,m.inRange,m.command,m.promotionReady,m.cost&&game.canPay(m.cost),m.people]);}
-  return {resources,held,archerComplete,governorAdvice,model,key};
+  return {resources,held,archerComplete,landmarkVictory,governorAdvice,model,key};
 })();
