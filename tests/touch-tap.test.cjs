@@ -29,3 +29,9 @@ test('the hall caption is rendered inside the hall box, so walls or stage height
   assert.doesNotMatch(js,/captions\.push\(sceneCaption\(\{x:p\.x,y:p\.y\+\d+\},b\.name/);assert.match(js,/isHall\?'scene-hall-caption':'scene-inline-caption'/);
   assert.match(css,/\.scene-site\.scene-hall>\.scene-hall-caption\{position:absolute;left:50%;top:58%/);
 });
+test('touch-generated hover cannot change scene positioning transforms',()=>{
+  const bad=[];
+  for(const file of fs.readdirSync(root).filter(f=>f.endsWith('.css')))for(const r of rules(fs.readFileSync(path.join(root,file),'utf8')))
+    if(/:hover/.test(r.sel)&&/\.(city-grid-tile|plot-tile|scene-site)\b/.test(r.sel)&&/(^|;)\s*transform\s*:/.test(r.body)&&!/hover:\s*hover/.test(r.media))bad.push(file+': '+r.sel);
+  assert.deepEqual(bad,[],'scene hover transforms must only apply with a real hover device');
+});

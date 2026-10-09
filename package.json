@@ -1,6 +1,6 @@
 {
   "name": "three-kingdoms-city",
-  "version": "0.34.46",
+  "version": "0.34.47",
   "private": true,
   "description": "山河策：多城经营、单机 PVE 与共享世界策略原型",
   "scripts": {
