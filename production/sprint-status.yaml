@@ -18,11 +18,11 @@ stories:
     name: "开局 30 分钟节奏分析"
     file: "production/epics/opening-pace/story-001-balance-check.md"
     priority: must-have
-    status: ready-for-dev
+    status: done
     owner: ""
     estimate_days: 1
     blocker: ""
-    completed: ""
+    completed: "2026-10-08"
   - id: "2-1"
     name: "美术规范"
     file: "production/epics/art-direction/story-001-art-bible.md"
