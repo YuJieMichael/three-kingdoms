@@ -60,7 +60,7 @@ test('governor advice accounts for an active politics modifier rather than promi
 
 // These following checkpoints only exercise the read-only planner's choices.
 // They do not establish economic affordability or normal campaign clear times.
-function prepared(e){const g=e.Game;for(const id of Object.keys(g.state.tech))g.state.tech[id]=10;city(g,{house:10,barracks:10,academy:10,smith:10});g.state.army.archer=1200;g.state.army.shield=400;g.state.army.ram=5;return g;}
+function prepared(e){const g=e.Game;for(const id of Object.keys(g.state.tech))g.state.tech[id]=10;city(g,{house:10,barracks:10,academy:10,smith:10});g.state.army.archer=1700;g.state.army.shield=550;g.state.army.ram=5;return g;}
 test('ten-hall guidance follows discovered sites, then explicit epic prerequisites, without re-running the first battle',()=>{
  const e=earnedHall(),g=prepared(e);let m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'wood');assert.equal(m.phase,'campaign');
  g.state.conquered.camp=true;m=inspect(e);assert.equal(m.kind,'epic');assert.equal(m.id,'kills');assert.match(m.reason,/四项史诗/);

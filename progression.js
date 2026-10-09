@@ -127,7 +127,7 @@ const Progression = (() => {
   }
   function claimReady(s,now=Date.now()){ensureDaily(s,now);let count=0;for(const t of [...s.daily.tasks])if(taskReady(s,t)){const error=claim(s,t.uid,now);if(!error)count++;}return count?null:'暂无已完成的每日任务';}
   const groups=s=>[
-    {id:'kills',name:'讨伐黄巾',progress:Math.min(1,s.epic.kills/targets.kills),detail:'掠夺野地／黄巾据点，胜利缴获黄巾头巾 '+s.epic.kills+' / '+targets.kills+' 件头巾'},
+    {id:'kills',name:'讨伐黄巾',progress:Math.min(1,s.epic.kills/targets.kills),detail:'掠夺野地或地图据点胜利可缴获黄巾头巾；县城、黄巾城等城池掠夺不计头巾。已缴获 '+s.epic.kills+' / '+targets.kills+' 件头巾'},
     {id:'resources',name:'捐献军资',progress:Object.values(s.epic.resources).reduce((n,v)=>n+v,0)/500000,detail:'五种物资各捐献 100,000，合计 500,000'},
     {id:'troops',name:'王于兴师',progress:Math.min(1,s.epic.troops/targets.troops),detail:'勤王诏 '+s.epic.troops+' / '+targets.troops+' · 捐献士兵后离开你的军队'},
     {id:'treasures',name:'进献珍宝',progress:Math.min(1,s.epic.treasures/targets.treasures),detail:'贡品录 '+s.epic.treasures+' / '+targets.treasures+' · 珍宝由战斗掉落／铜钱兑换获得'}

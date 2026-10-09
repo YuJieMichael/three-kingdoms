@@ -43,3 +43,6 @@ const YellowCityData={
     return sites;
   }
 };
+// v0.34.34: yellow-turban garrisons were 50–290 men; raised five-fold so taking a city needs a real army.
+YellowCityData.armyScale=5;
+for(const n of YellowCityData.nodes)for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*YellowCityData.armyScale);

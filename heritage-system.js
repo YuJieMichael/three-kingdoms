@@ -13,17 +13,27 @@ const HeritageSystem=(()=>{
  function assign(governor,commander,counsellor){const s=live(),all=[governor,commander,counsellor],chosen=all.filter(Boolean);if(!governor)return '请选择一位城守';if(chosen.some(id=>!s.generals.includes(id)||Game.generalBusy(id)))return '任职将领必须已经招募且留在城内';if(new Set(chosen).size!==chosen.length)return '一位将领只能担任一个职位';s.governor=governor;s.cityRoles={commander,counsellor};return save();}
  // Only current owned county cities count. Raid wins and former ownership do not.
  function ownedCounties(s){return Object.values(s?.realm?.cities||{}).filter(c=>NamedCityData.definition(c)?.tier==='county'&&NamedCitySystem.owned(s,c.node));}
+ // Missing jewels of the named kind may be covered by any spare jewels at twice their prestige value, cheapest first.
+ const JEWEL_SUBSTITUTE_RATE=2;
+ function jewelPayment(s,required){
+  const pay={},short={};let deficit=0;
+  for(const [id,n] of Object.entries(required||{})){const own=Math.max(0,Math.min(s.jewels[id]||0,n));if(own)pay[id]=own;if(n>own){short[id]=n-own;deficit+=(n-own)*Progression.jewels[id].prestige*JEWEL_SUBSTITUTE_RATE;}}
+  const substitute={};
+  for(const [id,j] of Object.entries(Progression.jewels).sort((a,b)=>a[1].prestige-b[1].prestige)){if(deficit<=0)break;const spare=(s.jewels[id]||0)-(required?.[id]||0);if(spare<1)continue;const use=Math.min(spare,Math.ceil(deficit/j.prestige));substitute[id]=use;deficit-=use*j.prestige;}
+  const total={...pay};for(const [id,n] of Object.entries(substitute))total[id]=(total[id]||0)+n;
+  return {pay,short,substitute,total,covered:deficit<=0,rate:JEWEL_SUBSTITUTE_RATE};
+ }
  function promotionQuote(s,kind){const list=kind==='office'?HeritageData.offices:kind==='noble'?HeritageData.nobles:null;if(!list)return null;const current=s.honors[kind],next=list[current+1];if(!next)return {next:null,reason:'已达最高级别'};const r=next.promotion,missing=[];
   if(s.prestige<r.prestige)missing.push('声望 '+r.prestige);
   if(s.honors.office<r.office)missing.push('官职 '+HeritageData.offices[r.office].name);
   if(r.noble&&s.honors.noble<r.noble)missing.push('爵位 '+HeritageData.nobles[r.noble].name);
   if(s.buildings.hall<r.hall)missing.push('官府 '+r.hall+' 级');
   if(s.res.gold<r.gold)missing.push('黄金 '+r.gold);
-  for(const [id,n] of Object.entries(r.jewels))if(s.jewels[id]<n)missing.push(Progression.jewels[id].name+' ×'+n);
+  const jewels=jewelPayment(s,r.jewels);if(!jewels.covered)for(const [id,n] of Object.entries(jewels.short))missing.push(Progression.jewels[id].name+' ×'+n+'（其他珠宝按 '+jewels.rate+' 倍价值折算也不足）');
   if(r.county&&!ownedCounties(s).length)missing.push('持有至少一座县城（须占领，掠夺不算）');
-  return {next,rule:r,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
+  return {next,rule:r,jewels,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
  }
- function promote(kind){const s=live(),q=promotionQuote(s,kind);if(!q?.next)return q?.reason||'请选择晋升类型';if(q.reason)return q.reason;s.res.gold-=q.rule.gold;for(const [id,n] of Object.entries(q.rule.jewels))s.jewels[id]-=n;s.honors[kind]=q.next.id;return save();}
+ function promote(kind){const s=live(),q=promotionQuote(s,kind);if(!q?.next)return q?.reason||'请选择晋升类型';if(q.reason)return q.reason;s.res.gold-=q.rule.gold;for(const [id,n] of Object.entries(q.jewels.total))s.jewels[id]-=n;s.honors[kind]=q.next.id;return save();}
  function salaryQuote(s,kind){const row=kind==='office'?office(s):kind==='noble'?noble(s):null;if(!row)return null;return {row,claimed:s.honors.salaryClaims[kind]===Progression.period(Date.now()),reward:kind==='office'?{gold:row.salary}:{food:row.salary,wood:row.salary,stone:row.salary,iron:row.salary}};}
  function record(s,r){s.heritageHistory.unshift({at:Date.now(),...r});s.heritageHistory=s.heritageHistory.slice(0,10);}
  function salary(kind){const s=live(),q=salaryQuote(s,kind);if(!q||q.row.salary<1)return '晋升后才能领取俸禄';if(q.claimed)return '今日已领取，北京时间 05:00 重置';for(const [id,n] of Object.entries(q.reward))s.res[id]+=n;s.honors.salaryClaims[kind]=Progression.period(Date.now());record(s,{kind:'salary',name:kind==='office'?'食君之禄':'采食封邑',loot:q.reward,jewels:{},xp:0});return save();}
@@ -45,5 +55,5 @@ const HeritageSystem=(()=>{
   if(!Array.isArray(s.heritageHistory)||s.heritageHistory.length>10)return false;
   return s.heritageHistory.every(r=>obj(r)&&int(r.at)&&['salary','gather'].includes(r.kind)&&typeof r.name==='string'&&r.name.length<=100&&obj(r.loot)&&Object.entries(r.loot).every(([k,n])=>['food','wood','stone','iron','gold'].includes(k)&&int(n))&&obj(r.jewels)&&Object.entries(r.jewels).every(([k,n])=>Object.hasOwn(Progression.jewels,k)&&int(n)&&n<=24)&&int(r.xp)&&(r.kind==='salary'||Game.getNode(r.node,s)?.wild&&int(r.discarded)&&(r.overCapacity===undefined||int(r.overCapacity)&&r.overCapacity<=Object.values(r.loot).reduce((sum,n)=>sum+n,0))));
  }
- return {roles,HOUR,init,office,noble,roleHero,roleOf,effectiveHero,assign,ownedCounties,promotionQuote,promote,salaryQuote,salary,gatherReason,startGather,gatherQuote,collectGather,cancelGather,valid};
+ return {roles,HOUR,init,office,noble,roleHero,roleOf,effectiveHero,assign,ownedCounties,jewelPayment,promotionQuote,promote,salaryQuote,salary,gatherReason,startGather,gatherQuote,collectGather,cancelGather,valid};
 })();

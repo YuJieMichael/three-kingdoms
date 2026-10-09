@@ -32,7 +32,7 @@ test('city raids exclude gold, militia and siege; occupation adds militia and al
   const before=JSON.stringify(g.state),raid=g.attackInfo(n.id,'raid'),occupy=g.attackInfo(n.id,'occupy');
   assert.equal(raid.siege,false);assert.equal(raid.militia,0);assert.deepEqual(copy(raid.army),copy(n.army));assert.deepEqual(Object.keys(raid.loot),resources.slice(0,4));assert.equal(raid.loot.gold,undefined);
   assert.equal(occupy.siege,true);assert.equal(occupy.militia,Math.ceil(n.population*.1));assert.equal(occupy.army.militia,(n.army.militia||0)+occupy.militia);assert.deepEqual(copy(occupy.loot),copy(n.loot));assert.deepEqual(Object.keys(occupy.loot),resources);assert.equal(n.fortification,undefined);
-  const limited=g.lootPreview(n.id,'occupy',{archer:1});assert.ok(limited.loaded<=g.carry({archer:1}));assert.ok(limited.discarded>0);assert.ok(limited.loot.gold>0);assert.equal(JSON.stringify(g.state),before);
+  const limited=g.lootPreview(n.id,'occupy',{archer:1});assert.ok(limited.loaded<=g.carry({archer:200}));assert.ok(limited.discarded>0);assert.ok(limited.loot.gold>0);assert.equal(JSON.stringify(g.state),before);
  }
  assert.deepEqual(copy(g.attackInfo(first,'occupy').loot),{food:800,wood:800,stone:800,iron:800,gold:1500});
 });
@@ -48,10 +48,10 @@ test('three real occupation victories lower morale to minus five and claim the c
 });
 
 test('city victory immediately settles cargo over warehouse limits and return/reload cannot award it twice',()=>{
- const e=setup(),g=e.Game;arrive(e,first,'occupy',80);
+ const e=setup(),g=e.Game;arrive(e,first,'occupy',200);
  for(const id of resources)g.state.res[id]=g.capacity(id)+100;
- const stock=copy(g.state.res),quote=copy(g.lootPreview(first,'occupy',{archer:80})),r=finish(e),b=g.state.battle;
- assert.equal(r.won,true);assert.equal(r.cargoCapacity,g.carry(Object.fromEntries(b.player.map(row=>[row.id,Math.ceil(row.hp/row.stats.hp)]))));assert.ok(r.cargoCapacity<g.carry({archer:80}));assert.ok(r.wounded.archer>0);assert.equal(r.cargoCapacity,g.carry(r.back));assert.ok(r.cargoCapacity<g.carry(Object.fromEntries(Object.keys(g.units).map(id=>[id,r.back[id]+r.wounded[id]]))));assert.equal(r.woundedInHospital,true);assert.equal(g.state.warCare.wounded.archer,r.wounded.archer);assert.ok(r.lootDiscarded>0);assert.ok(r.cargoLoaded<=r.cargoCapacity);assert.equal(r.overflow,0);assert.ok(r.overCapacity>0);assert.ok(quote.storage.overCapacity>0);
+ const stock=copy(g.state.res),quote=copy(g.lootPreview(first,'occupy',{archer:200})),r=finish(e),b=g.state.battle;
+ assert.equal(r.won,true);assert.equal(r.cargoCapacity,g.carry(Object.fromEntries(b.player.map(row=>[row.id,Math.ceil(row.hp/row.stats.hp)]))));assert.ok(r.cargoCapacity<g.carry({archer:400}));assert.ok(r.wounded.archer>0);assert.equal(r.cargoCapacity,g.carry(r.back));assert.ok(r.cargoCapacity<g.carry(Object.fromEntries(Object.keys(g.units).map(id=>[id,r.back[id]+r.wounded[id]]))));assert.equal(r.woundedInHospital,true);assert.equal(g.state.warCare.wounded.archer,r.wounded.archer);assert.ok(r.lootDiscarded>0);assert.ok(r.cargoLoaded<=r.cargoCapacity);assert.equal(r.overflow,0);assert.ok(r.overCapacity>0);assert.ok(quote.storage.overCapacity>0);
  for(const id of resources){assert.equal(r.resourceReceipt.base.received[id],r.loot[id]);assert.equal(g.state.res[id],stock[id]+r.loot[id]+(r.bonusLoot[id]||0));assert.ok(g.state.res[id]>g.capacity(id));}
  const settled=copy(g.state.res),morale=g.state.towns[first].morale,reportCount=g.state.reports.length;g.battleRound();assert.deepEqual(copy(g.state.res),settled);assert.equal(g.state.towns[first].morale,morale);
  e.offline(1);for(const id of ['wood','stone','iron','gold'])assert.equal(g.state.res[id],settled[id]);assert.ok(g.state.res.food<=settled.food);assert.equal(g.state.reports.length,reportCount);assert.equal(g.state.towns[first].morale,morale);
