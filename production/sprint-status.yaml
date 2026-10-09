@@ -1,0 +1,61 @@
+# Status value mapping (yaml ↔ story file Status field):
+#   backlog        ↔  Not Started
+#   ready-for-dev  ↔  Ready
+#   in-progress    ↔  In Progress
+#   review         ↔  In Review
+#   done           ↔  Complete
+#   blocked        ↔  Blocked
+
+sprint: 1
+goal: "让新玩家前 30 分钟少空等，并把手绘美术定成规范、在旧设备上也能显示。"
+start: "2026-10-09"
+end: "2026-10-22"
+generated: "2026-10-08"
+updated: "2026-10-08"
+
+stories:
+  - id: "1-1"
+    name: "开局 30 分钟节奏分析"
+    file: "production/epics/opening-pace/story-001-balance-check.md"
+    priority: must-have
+    status: ready-for-dev
+    owner: ""
+    estimate_days: 1
+    blocker: ""
+    completed: ""
+  - id: "2-1"
+    name: "美术规范"
+    file: "production/epics/art-direction/story-001-art-bible.md"
+    priority: must-have
+    status: ready-for-dev
+    owner: ""
+    estimate_days: 1
+    blocker: ""
+    completed: ""
+  - id: "2-2"
+    name: "旧设备 PNG 备用图"
+    file: "production/epics/art-direction/story-002-png-fallback.md"
+    priority: must-have
+    status: ready-for-dev
+    owner: ""
+    estimate_days: 1.5
+    blocker: ""
+    completed: ""
+  - id: "1-2"
+    name: "按选定方案调整开局节奏"
+    file: "production/epics/opening-pace/story-002-opening-tuning.md"
+    priority: should-have
+    status: backlog
+    owner: ""
+    estimate_days: 2
+    blocker: "等待 1-1 报告与负责人选定方案"
+    completed: ""
+  - id: "2-3"
+    name: "素材处理脚本入库"
+    file: "production/epics/art-direction/story-003-asset-pipeline.md"
+    priority: nice-to-have
+    status: backlog
+    owner: ""
+    estimate_days: 0.5
+    blocker: ""
+    completed: ""
