@@ -71,8 +71,7 @@ function webCityScene(){
   const sites=s.cityLayout.map((id,i)=>{
     if(id==='reserved')return '';
     const b=id?Game.buildings[id]:null,q=s.buildQueue.find(q=>q.site===i),lv=s.cityLevels[i],isWall=id==='wall',p=isWall?sceneCityGate:id==='hall'&&hallCenter?hallCenter:sceneCityPoint(i%6,Math.floor(i/6)),isHall=id==='hall';
-    if(isHall)captions.push(sceneCaption({x:p.x,y:p.y+28},b.name,lv,660,'',{city:true,hall:true,queue:q}));
-    const caption=b&&!isHall?`<span class="scene-name-tag scene-city-caption scene-inline-caption" aria-hidden="true">${esc(b.name)}<em>${lv}</em>${q?`<span class="scene-caption-queue"> · ${clock(q.end)}</span>`:''}</span>`:'';
+    const caption=b?`<span class="scene-name-tag scene-city-caption ${isHall?'scene-hall-caption':'scene-inline-caption'}" aria-hidden="true">${esc(b.name)}<em>${lv}</em>${q?`<span class="scene-caption-queue"> · ${clock(q.end)}</span>`:''}</span>`:'';
     const art=b&&!isWall?`<span class="scene-contact-shadow" aria-hidden="true"></span><span class="city-building-art">${webCityBuildingArt(id,lv)}</span>`:'';
     return `<button class="city-grid-tile scene-site ${b?'built-city':'empty-city'} ${isHall?'scene-hall':''} ${isWall?'scene-wall-control':''} ${q?'working':''}" style="${scenePosition(isHall?{x:p.x,y:p.y+58}:p,isHall?250:isWall?130:b?118:120,isHall?212:isWall?130:b?106:50)}" data-action="${b?'building':'citySlot'}" data-id="${b?'site:'+i:i}" title="${b?b.name+' · '+lv+'级'+(q?' · 营造中':''):'空地 · 点击建造'}" aria-label="${isWall?'城门处 · ':''}城内 ${Math.floor(i/6)+1}行${i%6+1}列 ${b?b.name+' '+lv+'级'+(q?'，营造中':''):'空地，可建造'}"><i class="scene-hit" aria-hidden="true"></i>${art}${b?`<strong>${b.name}<em>${lv}</em></strong>`:''}${caption}${q?sceneConstructionMark():''}${q&&!b?`<small class="scene-construction">营造 · ${clock(q.end)}</small>`:''}</button>`;
   }).join('');

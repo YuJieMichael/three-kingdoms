@@ -24,3 +24,8 @@ test('the world map follows the finger with a CSS translate during a drag and ph
   assert.match(ink,/const INK_MAP_LITE=typeof matchMedia==='function'&&matchMedia\('\(pointer:coarse\)'\)\.matches;/);
   assert.match(ink,/stdDeviation="\$\{INK_MAP_LITE\?10:16\}"/);assert.match(ink,/\$\{INK_MAP_LITE\?'':'<filter id="ink-paper-grain">/);
 });
+test('the hall caption is rendered inside the hall box, so walls or stage height cannot push it onto the row in front',()=>{
+  const js=fs.readFileSync(path.join(root,'scene-ui.js'),'utf8'),css=fs.readFileSync(path.join(root,'scene-ui.css'),'utf8');
+  assert.doesNotMatch(js,/captions\.push\(sceneCaption\(\{x:p\.x,y:p\.y\+\d+\},b\.name/);assert.match(js,/isHall\?'scene-hall-caption':'scene-inline-caption'/);
+  assert.match(css,/\.scene-site\.scene-hall>\.scene-hall-caption\{position:absolute;left:50%;top:58%/);
+});

@@ -76,4 +76,6 @@
 .scene-board.manual-city .scene-site:not(:focus-within) .scene-inline-caption{visibility:hidden;opacity:0}}.scene-board.manual-city .scene-site.working .web-atlas-art{filter:drop-shadow(0 4px 3px #342e3066) drop-shadow(0 0 3px #d8b15b)}
 /* v0.34.38: taps follow the isometric footprint (hexagon for buildings, diamond for empty plots) so neighbours stop covering each other */
 .scene-board.manual-city .scene-site{pointer-events:none}.scene-board.manual-city .scene-site>.scene-hit{position:absolute;inset:0;pointer-events:auto;clip-path:polygon(50% 6%,97% 33%,97% 74%,50% 100%,3% 74%,3% 33%);z-index:1}.scene-board.manual-city .scene-site.empty-city>.scene-hit{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}.scene-board.manual-city .scene-site.scene-hall>.scene-hit{clip-path:polygon(50% 0,100% 38%,100% 70%,50% 100%,0 70%,0 38%)}
+/* v0.34.46: the hall caption sits on the hall's own courtyard, so walls or stage height cannot push it onto the row in front */
+.scene-board.manual-city .scene-site.scene-hall>.scene-hall-caption{position:absolute;left:50%;top:58%;bottom:auto;transform:translateX(-50%);visibility:visible!important;opacity:1!important;z-index:3;pointer-events:none}
 
