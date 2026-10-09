@@ -26,7 +26,9 @@ function sceneCityBoundary(level=0,front=false){
     }).join('');
     parts.push(`<g transform="matrix(1 ${slope} 0 1 ${origin.x} ${origin.y})">${blocks}</g>`);
   });
-  if(front&&stone){
+  if(front&&stone&&typeof PaintedArt!=='undefined'){
+    parts.push(`<image href="${PaintedArt.src('buildings','wall')}" x="215" y="360" width="190" height="166" preserveAspectRatio="xMidYMax meet"/>`);
+  }else if(front&&stone){
     const [x,y,w,h]=WebArt.city.regions.gateway;
     parts.push(`<svg x="235" y="380" width="154" height="138" viewBox="${x} ${y} ${w} ${h}" preserveAspectRatio="xMidYMax meet"><svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="${x} ${y} ${w} ${h}"><image href="${WebArt.city.texture}" width="${WebArt.city.size[0]}" height="${WebArt.city.size[1]}"/></svg></svg>`);
   }else if(front){

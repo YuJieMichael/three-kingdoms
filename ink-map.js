@@ -43,12 +43,14 @@ function inkMapMountain(x,y,height,seed){
 }
 function inkWorldSiteArt(tile){
   if(tile.hidden||tile.wild)return '';
+  if(typeof PaintedArt!=='undefined'){const city=tile.id==='home'||tile.type==='fort'||Game.isCity(tile),id=tile.faction==='yellow_turban'&&!city?'yellow-camp':tile.faction==='yellow_turban'?'county':tile.id==='home'||tile.namedCity?'commandery':city?'county':'yellow-camp';return `<img class="ink-site-art painted-site" src="${PaintedArt.src('map',id)}" alt="" decoding="async" draggable="false">`;}
   const city=tile.id==='home'||tile.type==='fort'||Game.isCity(tile),owned=tile.id==='home'||!!S().conquered[tile.id],flag=owned?'#4c7770':tile.faction==='yellow_turban'?'#aa8a3f':'#a6654d';
   const cityBody='<path d="M11 44L45 32 79 44V64L46 79 11 65Z" fill="#d8cfb3" stroke="#606957"/><path d="M11 44L46 58 79 44M46 58V78" fill="none" stroke="#7b7b66"/><path d="M15 41v8m13-14v8m12-13v8m14-7v8m13-4v8m10-3v8" stroke="#687264" stroke-width="4"/><path d="M36 75V62q9-14 19 0v13" fill="#53665c"/><path d="M29 30h33v22H29Z" fill="#d9d0b4"/><path d="M21 32Q34 28 44 17Q57 28 69 31L62 36H29Z" fill="#566c60"/><path d="M20 32Q43 35 69 31M35 41h5m10 0h5" fill="none" stroke="#384e47"/>';
   const campBody='<path d="M19 58L46 31 72 57H19Z" fill="#c3b899" stroke="#6f7460"/><path d="M46 33v25m-8 0 8-18 9 18" fill="#667360" stroke="#737864"/><path d="M16 61q29 7 60-2M26 65l-7 6m43-6 9 5" fill="none" stroke="#7c8069" stroke-width="1"/>';
   return `<svg class="ink-site-art" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="47" cy="76" rx="36" ry="8" fill="#899680" opacity=".15"/>${city?cityBody:campBody}<path d="M78 17v35" stroke="#596756" stroke-width="1.5"/><path d="M79 17q10-5 17 1l-4 13q-7-6-13-2Z" fill="${flag}" opacity=".9"/><path d="M79 18l11 1" stroke="#f1dfb6" stroke-width=".8"/></svg>`;
 }
 function inkWorldGroundSVG(start,span,read){
+  const P=typeof PaintedArt!=='undefined'?PaintedArt:null;
   const originX=start.x*100,originY=start.y*100,size=span*100,washes={lake:[],swamp:[],forest:[],hill:[],grass:[]},waterLines=[],ridges=[],details=[],mist=[];
   const territory=[],ownedTile=t=>t&&(t.id==='home'||!!S().conquered?.[t.id]||!!S().garrisons?.[t.id]);
   const group=t=>t?.type==='lake'?'lake':t?.type==='swamp'?'swamp':t?.type==='forest'?'forest':['mountain','hill'].includes(t?.type)?'hill':t?.type==='grass'?'grass':null;
@@ -62,25 +64,27 @@ function inkWorldGroundSVG(start,span,read){
       for(const [dx,dy] of [[1,0],[0,1]])if(['mountain','hill'].includes(read(x+dx,y+dy)?.type)){
         ridges.push(`<path d="M${cx} ${cy-24}Q${cx+dx*40-dy*21} ${cy+dy*40-31} ${cx+dx*100} ${cy+dy*100-22}" fill="none" stroke="#799083" stroke-width="24" stroke-linecap="round" opacity=".18"/>`);
       }
-      const mx=cx+(r(4)-.5)*36,my=cy+15+(r(7)-.5)*18;details.push({y:my,html:inkMapMountain(mx,my,58+r(5)*48,seed)});
-      if(r(8)>.55){const sx=cx+(r(9)>.5?1:-1)*(30+r(10)*14),sy=cy+30+r(11)*10;details.push({y:sy,html:inkMapMountain(sx,sy,30+r(12)*20,seed+3)});}
+      const mx=cx+(r(4)-.5)*36,my=cy+15+(r(7)-.5)*18;details.push({y:my,html:P?P.mapImage(r(13)>.5?'mountain-a':'mountain-b',mx,my+18,105+r(5)*45):inkMapMountain(mx,my,58+r(5)*48,seed)});
+      if(r(8)>.55){const sx=cx+(r(9)>.5?1:-1)*(30+r(10)*14),sy=cy+30+r(11)*10;details.push({y:sy,html:P?P.mapImage('mountain-b',sx,sy+14,60+r(12)*24):inkMapMountain(sx,sy,30+r(12)*20,seed+3)});}
     }else if(t.type==='hill'){
       const h=17+r(6)*23;
-      details.push({y:cy,html:`<path d="M${cx-65} ${cy+13}Q${cx-18} ${cy-h-28} ${cx+61} ${cy+13}Q${cx+12} ${cy+29} ${cx-65} ${cy+13}Z" fill="#96a78b" opacity=".23"/><path d="M${cx-62} ${cy+10}Q${cx-6} ${cy-h} ${cx+58} ${cy+9}" fill="none" stroke="#6c8067" stroke-width="1.2" opacity=".5"/>${inkMapPine(cx-15,cy+4,15,seed)}`});
+      if(P)details.push({y:cy+14,html:P.mapImage('hill',cx+(r(6)-.5)*30,cy+30,96+r(7)*30)});else details.push({y:cy,html:`<path d="M${cx-65} ${cy+13}Q${cx-18} ${cy-h-28} ${cx+61} ${cy+13}Q${cx+12} ${cy+29} ${cx-65} ${cy+13}Z" fill="#96a78b" opacity=".23"/><path d="M${cx-62} ${cy+10}Q${cx-6} ${cy-h} ${cx+58} ${cy+9}" fill="none" stroke="#6c8067" stroke-width="1.2" opacity=".5"/>${inkMapPine(cx-15,cy+4,15,seed)}`});
     }else if(t.type==='forest'){
-      const n=4+Math.floor(r(29)*4);for(let i=0;i<n;i++){const tx=cx-50+r(i+10)*100,ty=cy-38+r(i+30)*82;details.push({y:ty,html:inkMapPine(tx,ty,20+r(i+40)*30,seed+i*17)});}
+      if(P){details.push({y:cy+20,html:P.mapImage(r(28)>.5?'forest-a':'forest-b',cx+(r(26)-.5)*34,cy+34+(r(27)-.5)*16,92+r(25)*26)});const n=1+Math.floor(r(29)*2);for(let i=0;i<n;i++){const tx=cx-46+r(i+10)*92,ty=cy-30+r(i+30)*76;details.push({y:ty,html:P.mapImage('pine',tx,ty+12,26+r(i+40)*14)});}}
+      else{const n=4+Math.floor(r(29)*4);for(let i=0;i<n;i++){const tx=cx-50+r(i+10)*100,ty=cy-38+r(i+30)*82;details.push({y:ty,html:inkMapPine(tx,ty,20+r(i+40)*30,seed+i*17)});}}
     }else if(t.type==='lake'||t.type==='swamp'){
       for(let i=0;i<3;i++){
         const wx=cx-36+r(i+51)*16,wy=cy-18+i*16,len=36+r(i+54)*23;
         waterLines.push(`<path d="M${wx} ${wy}q${len*.24} -3 ${len*.5} 0t${len*.5} 0" fill="none" stroke="#657f83" stroke-width=".8" opacity=".42"/>`);
       }
-      if(t.type==='swamp')for(let i=0;i<3;i++){
+      if(t.type==='swamp'&&P)details.push({y:cy+20,html:P.mapImage('reeds',cx+(r(62)-.5)*30,cy+36,70+r(63)*20)});
+      else if(t.type==='swamp')for(let i=0;i<3;i++){
         const bx=cx-27+r(i+62)*54,by=cy+11+r(i+68)*15;
         details.push({y:by,html:`<path d="M${bx} ${by}q-3-9 0-18m0 12-7-6m7 10 6-9" stroke="#798569" fill="none" stroke-width="1"/>`});
       }
     }else if(t.wild&&[[1,0],[-1,0],[0,1],[0,-1]].some(([dx,dy])=>read(x+dx,y+dy)?.type==='forest')&&r(73)>.35){
       const toward=[[1,0],[-1,0],[0,1],[0,-1]].find(([dx,dy])=>read(x+dx,y+dy)?.type==='forest');
-      for(let i=0;i<2;i++){const tx=cx+toward[0]*(28+r(74+i)*18)+(r(76+i)-.5)*40,ty=cy+toward[1]*(24+r(78+i)*16)+(r(80+i)-.5)*30;details.push({y:ty,html:inkMapPine(tx,ty,14+r(70+i)*12,seed+40+i)});}
+      for(let i=0;i<2;i++){const tx=cx+toward[0]*(28+r(74+i)*18)+(r(76+i)-.5)*40,ty=cy+toward[1]*(24+r(78+i)*16)+(r(80+i)-.5)*30;details.push({y:ty,html:P?P.mapImage('pine',tx,ty+10,22+r(70+i)*10):inkMapPine(tx,ty,14+r(70+i)*12,seed+40+i)});}
     }else if(t.wild){
       const gx=cx-26+r(71)*51,gy=cy-8+r(72)*24;
       details.push({y:gy,html:`<path d="M${gx} ${gy}l3-5 2 5m12 7 2-4 2 3" fill="none" stroke="#8b9574" stroke-width=".7" opacity=".55"/>`});
@@ -95,9 +99,10 @@ function inkWorldGroundSVG(start,span,read){
   }
   details.sort((a,b)=>a.y-b.y);
   const box=`x="${originX-60}" y="${originY-60}" width="${size+120}" height="${size+120}"`;
-  const region=(id,fill,opacity)=>washes[id].length?`<g opacity="${opacity}" filter="url(#ink-goo)"><path fill="${fill}" d="${washes[id].join('')}"/></g>`:'';
+  const region=(id,fill,opacity,pattern)=>washes[id].length?`<g opacity="${opacity}" filter="url(#ink-goo)"><path fill="${fill}" d="${washes[id].join('')}"/></g>${pattern&&P?`<g opacity=".75" filter="url(#ink-goo)" ><path fill="url(#painted-${id})" d="${washes[id].join('')}"/></g>`:''}`:'';
   const shore=id=>washes[id].length?`<g opacity=".28" filter="url(#ink-shore)"><path fill="#4f6d6e" d="${washes[id].join('')}"/></g>`:'';
   return `<svg class="web-world-ground ink-world-ground" viewBox="${originX} ${originY} ${size} ${size}" preserveAspectRatio="none" aria-hidden="true"><defs>
+    ${P?`<pattern id="painted-lake" width="220" height="220" patternUnits="userSpaceOnUse"><image href="${P.src('map','lake')}" width="220" height="220"/></pattern><pattern id="painted-grass" width="260" height="260" patternUnits="userSpaceOnUse"><image href="${P.src('map','grass')}" width="260" height="260"/></pattern>`:''}
     <filter id="ink-wash-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
     <filter id="ink-goo" filterUnits="userSpaceOnUse" ${box}><feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/><feGaussianBlur in="g" stdDeviation="5"/></filter>
     <filter id="ink-shore" filterUnits="userSpaceOnUse" ${box}><feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/><feMorphology in="g" operator="erode" radius="1.4" result="e"/><feComposite in="g" in2="e" operator="out" result="ring"/><feGaussianBlur in="ring" stdDeviation="1.1"/></filter>
@@ -106,7 +111,7 @@ function inkWorldGroundSVG(start,span,read){
     <linearGradient id="ink-mountain-wash" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#4d6c63" stop-opacity=".75"/><stop offset=".58" stop-color="#7d978b" stop-opacity=".62"/><stop offset="1" stop-color="#b9c4ab" stop-opacity=".1"/></linearGradient>
     <radialGradient id="ink-foot-mist"><stop stop-color="#e8e5d1" stop-opacity=".9"/><stop offset="1" stop-color="#e8e5d1" stop-opacity="0"/></radialGradient>
     </defs><rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="${InkMapArt.paper}"/>
-    ${region('grass','#8fae5f','.34')}${region('hill','#b9a06a','.34')}${region('forest','#4f7d4c','.36')}${region('swamp','#7f9a6c','.38')}${region('lake','#6fa7a6','.55')}${shore('lake')}${shore('swamp')}${territory.length?`<g opacity=".16" filter="url(#ink-goo)"><path fill="#3f7f74" d="${territory.join('')}"/></g><g opacity=".7" filter="url(#ink-shore)"><path fill="#2f6b62" d="${territory.join('')}"/></g>`:''}
+    ${region('grass','#8fae5f','.34',true)}${region('hill','#b9a06a','.34')}${region('forest','#4f7d4c','.36')}${region('swamp','#7f9a6c','.38')}${region('lake','#6fa7a6','.55',true)}${shore('lake')}${shore('swamp')}${territory.length?`<g opacity=".16" filter="url(#ink-goo)"><path fill="#3f7f74" d="${territory.join('')}"/></g><g opacity=".7" filter="url(#ink-shore)"><path fill="#2f6b62" d="${territory.join('')}"/></g>`:''}
     <g fill="none" stroke="#aca180" stroke-width="2.2" stroke-dasharray="2 6" stroke-linecap="round" opacity=".52">${roads.join('')}</g>
     ${ridges.join('')}${waterLines.join('')}${details.map(d=>d.html).join('')}<g filter="url(#ink-wash-soft)">${mist.join('')}</g>
     <rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="url(#ink-paper)" style="mix-blend-mode:multiply"/>
