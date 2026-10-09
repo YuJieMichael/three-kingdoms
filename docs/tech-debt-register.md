@@ -10,7 +10,7 @@ Priority = Impact ÷ Effort（Low 1 / Med 2 / High 3 / Critical 4；S 1 / M 2 / 
 
 | ID | Category | Description | Files | Effort | Impact | Priority | Status | Added | Sprint |
 |----|----------|-------------|-------|--------|--------|----------|--------|-------|--------|
-| TD-001 | Test | 联机运行时是手工生成物且无过期检测。`game-runtime.mjs` 760,220 B / 16,691 行，由 `build-online-runtime.cjs` 按 `index.html` 中 engine.js 之前的 36 个 `<script>` 顺序拼接并写入 `runtimeHash`；但没有任何测试比对 hash，`online/runtime.mjs` 直接 import 生成物，改了引擎忘记 `npm run online:build` 时联机测试会静默跑旧代码。另有 7 个 `online/*.mjs` 拷贝到 `_shared/online/`。今日实测 hash 一致（fresh）。成因：无构建步骤的取舍。 | supabase/functions/_shared/game-runtime.mjs, scripts/build-online-runtime.cjs, online/runtime.mjs, index.html | S | High | 3.0 | Open | 2026-10-08 | Sprint 1 |
+| TD-001 | Test | 联机运行时是手工生成物且无过期检测。`game-runtime.mjs` 760,220 B / 16,691 行，由 `build-online-runtime.cjs` 按 `index.html` 中 engine.js 之前的 36 个 `<script>` 顺序拼接并写入 `runtimeHash`；但没有任何测试比对 hash，`online/runtime.mjs` 直接 import 生成物，改了引擎忘记 `npm run online:build` 时联机测试会静默跑旧代码。另有 7 个 `online/*.mjs` 拷贝到 `_shared/online/`。今日实测 hash 一致（fresh）。成因：无构建步骤的取舍。 | supabase/functions/_shared/game-runtime.mjs, scripts/build-online-runtime.cjs, online/runtime.mjs, index.html | S | High | 3.0 | PR 待合并 | 2026-10-08 | Sprint 1 |
 | TD-002 | Test | 平衡测试的魔法阈值散落在断言里，无出处说明。全测试共 78 处 `assert.ok(x>=/<=数字)`，例：`growth-economy` 金币 90000–170000、50000–150000；`chapter-balance` totalHours 100–220；`late-game-balance` 河洛内城兵力 ≥1600、黄巾城 ≥250；`opening-economy` 首战 <10 分钟。调数值时无法区分"设计目标变了"和"回归"。 | tests/growth-economy.test.cjs, tests/chapter-balance.test.cjs, tests/late-game-balance.test.cjs, tests/opening-economy.test.cjs, tests/hall-growth-pacing.test.cjs | S | Med | 2.0 | Open | 2026-10-08 | Sprint 1 |
 | TD-003 | Code Quality | CSS 被压成超长单行，无法 diff/审查。`classic.css` 34,640 B 仅 64 行，最长 19,551 字符（第 3 行）；`style.css` 38,439 B 仅 27 行，最长 16,134 字符；`city-defense-events.css` 3 行最长 2,342。任何改动在 diff 中都是整行替换，合并冲突概率高（多人/多 agent 并行时尤甚）。 | style.css, classic.css, city-defense-events.css, command-ui.css | S | Med | 2.0 | In Progress — classic.css 已完成 | 2026-10-08 | Sprint 1 |
 | TD-004 | Architecture | 跨文件猴子补丁：通过重新赋值全局函数改行为，共 11 处，分布 3 个文件。`web-edition-ui.js` 7 处（render、toast、showModal、updateDispatch、tacticalLessonModal 保存原函数后包裹；battlePage、showInitialSaveState 直接覆盖）；`painted-art.js` 3 处（webCityBuildingArt、sceneResourceArt、buildingIcon）；`ink-map.js` 1 处（render 二次包裹）。另 `online-client.js` 运行时替换 `Game.generalBusy`。`render` 被包两层，最终行为取决于 `index.html` 第 122 行 `installWebEditionUI();installInkMapUI();` 的调用顺序与脚本加载顺序；`scene-polish.js` 定义的 sceneResourceArt 被 painted-art 覆盖，farm/lumber/quarry/mine 的 heritage 分支实际不可达。读代码无法从定义处知道真实行为。 | web-edition-ui.js, painted-art.js, ink-map.js, online-client.js, index.html | M | High | 1.5 | Open | 2026-10-08 | Sprint 2 |
@@ -59,3 +59,12 @@ Priority = Impact ÷ Effort（Low 1 / Med 2 / High 3 / Critical 4；S 1 / M 2 / 
 - 触摸/弹窗定向7/7，隔离完整578/578；主工作区含其他待办的组合回归605/605；独立审查无阻断问题。
 - style.css、city-defense-events.css、command-ui.css仍待整理，TD-003保持进行中。未改玩法、存档或版本，无需重建在线运行时。
 - 负责人已授权本地提交；未推送发布。
+
+## TD-001 独立 PR（2026-10-09）
+
+- 新增 `tests/online-runtime-freshness.test.cjs`，由 `npm test` 自动执行。独立按 index.html 的实际加载顺序计算 engine.js 及之前源码的 SHA-256，核对 runtimeSources、runtimeHash，并比对七个在线模块生成副本。
+- 源码变动、脚本新增或顺序改变、生成物及副本缺失或过期均拒绝通过，错误提示运行 `npm run online:build`。engine.js 之后的界面脚本变化不触发重建。
+- 本地 21 项针对性检查通过；受控读取夹具只在内存中改变文件内容，不写游戏文件。实现前 19 项拒绝检查失败，实现后通过，前轮独立审查无重要问题。
+- 本轮基于已发布 v0.34.49 的 main（1627f05）隔离复核，保留原工作区其他未提交工作。生产脚本、生成器、存档、玩法与版本均未改变。
+
+- 本轮完整 `npm test`：607/607 通过（0 失败）；`node --check` 与 `git diff --check` 通过。新工作区首次测试缺少已有 pglite 依赖，补装后完整重跑通过；依赖配置未改变。
