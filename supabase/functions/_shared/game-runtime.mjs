@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="a3c27c9eafe19d4427cdcb8e18f4b6be8c8bb39ab71282d6f33baa34001cfc99";
+export const runtimeHash="48b7ca0c1b92a74700c585747833ddfdeb8461a5476461b7d648814f523ca230";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -12014,7 +12014,7 @@ const OnboardingData={
   jewels:{min:2,max:5,weights:{pearl:40,coral:25,glass:15,amber:8,agate:5,crystal:3,jadeite:2,jade:1,nightPearl:1}},
   gifts:[
     {level:1,title:'开府建衙',resources:{food:8000,wood:8000,stone:8000,iron:8000,gold:10000},items:{speed_build_15m:6,speed_build_1h:2,population:2}},
-    {level:2,title:'筹备弓营',resources:{food:76000,wood:92000,stone:106000,iron:76000,gold:20000},items:{speed_build_1h:12,speed_build_3h:2,speed_research_1h:8,speed_research_3h:2,speed_train_1h:3,population:3}},
+    {level:2,title:'筹备弓营',resources:{food:26000,wood:92000,stone:76000,iron:76000,gold:20000},items:{speed_build_1h:12,speed_build_3h:2,speed_research_1h:8,speed_research_3h:2,speed_train_1h:3,population:3}},
     {level:3,title:'步弓协同',resources:{food:80000,wood:80000,stone:120000,iron:80000,gold:30000},items:{speed_build_3h:2,speed_research_3h:3,speed_train_1h:4,population:2}},
     {level:4,title:'整军经略',resources:{food:120000,wood:120000,stone:180000,iron:120000,gold:40000},items:{speed_build_3h:1,speed_research_3h:4,speed_train_3h:3}},
     // Pearl 10 and coral 5 match the jewels needed for the 公士 noble rank, which 伍长 now requires.
@@ -13190,7 +13190,7 @@ const HeritageSystem=(()=>{
 // Standalone PVE defense rules are trial values, independent of historical handbook tables.
 const NPCDefenseData={
   // Real (non-drill) defence wins may drop a building blueprint.
-  blueprintChance:.25,unlockHall:2,intervalMs:30*60*1000,warningMs:5*60*1000,maxLevel:10,classicMaxLevel:5,maxRounds:30,
+  blueprintChance:.05,unlockHall:2,intervalMs:30*60*1000,warningMs:5*60*1000,maxLevel:10,classicMaxLevel:5,maxRounds:30,
   distance:2000,marchPerRound:200,abatisSlow:.5,wallHp:2000,baseGateHp:3000,
   trapDamage:300,fortificationPerLevel:.1,repairPerLevel:.05,
   wonWounded:.35,lostWounded:.15,raidFraction:.1,rewardPerLevel:150,xpPerLevel:30,
