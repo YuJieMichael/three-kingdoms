@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="47bd31009dd3eb19269a20089aa689e11aae077f0609f6ebfe4bd1d29d930628";
+export const runtimeHash="a3c27c9eafe19d4427cdcb8e18f4b6be8c8bb39ab71282d6f33baa34001cfc99";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -13451,7 +13451,7 @@ const NPCDefense=(()=>{
     if(hospital){const error=WarCare.admit(s,b.careId,wounded,now,api.units);if(error)return error;}
     for(const f of b.forts){const cfg=api.defenses[f.id],alive=cfg.oneUse?Math.min(f.count-f.used,b.commandVersion===1&&cfg.hp>0?Math.ceil(f.hp/(cfg.hp*b.fortification)):f.count-f.used):Math.ceil(f.hp/(cfg.hp*b.fortification)),destroyed=f.count-alive;repaired[f.id]=cfg.oneUse?0:Math.floor(destroyed*s.tech.repair*C.repairPerLevel);defenseLost[f.id]=destroyed-repaired[f.id];}
     const reward=won?(b.rewardSnapshot||{food:b.level*C.rewardPerLevel,wood:b.level*C.rewardPerLevel}):{},resourceReceipt=b.drill?null:api.settleLoot(reward);
-    const blueprints=won&&!b.drill&&Math.random()<C.blueprintChance?1:0;if(blueprints)s.inventory.blueprint=(s.inventory.blueprint||0)+blueprints;
+    const blueprints=won&&!b.drill&&s.inventory&&Math.random()<C.blueprintChance?1:0;if(blueprints)s.inventory.blueprint=(s.inventory.blueprint||0)+blueprints;
     if(!b.drill){
       for(const id of Object.keys(back))s.army[id]+=back[id];
       for(const id of Object.keys(b.defenses))s.defenses[id]+=b.defenses[id]-(defenseLost[id]||0);

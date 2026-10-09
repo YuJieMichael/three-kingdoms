@@ -172,7 +172,7 @@ const NPCDefense=(()=>{
     if(hospital){const error=WarCare.admit(s,b.careId,wounded,now,api.units);if(error)return error;}
     for(const f of b.forts){const cfg=api.defenses[f.id],alive=cfg.oneUse?Math.min(f.count-f.used,b.commandVersion===1&&cfg.hp>0?Math.ceil(f.hp/(cfg.hp*b.fortification)):f.count-f.used):Math.ceil(f.hp/(cfg.hp*b.fortification)),destroyed=f.count-alive;repaired[f.id]=cfg.oneUse?0:Math.floor(destroyed*s.tech.repair*C.repairPerLevel);defenseLost[f.id]=destroyed-repaired[f.id];}
     const reward=won?(b.rewardSnapshot||{food:b.level*C.rewardPerLevel,wood:b.level*C.rewardPerLevel}):{},resourceReceipt=b.drill?null:api.settleLoot(reward);
-    const blueprints=won&&!b.drill&&Math.random()<C.blueprintChance?1:0;if(blueprints)s.inventory.blueprint=(s.inventory.blueprint||0)+blueprints;
+    const blueprints=won&&!b.drill&&s.inventory&&Math.random()<C.blueprintChance?1:0;if(blueprints)s.inventory.blueprint=(s.inventory.blueprint||0)+blueprints;
     if(!b.drill){
       for(const id of Object.keys(back))s.army[id]+=back[id];
       for(const id of Object.keys(b.defenses))s.defenses[id]+=b.defenses[id]-(defenseLost[id]||0);
