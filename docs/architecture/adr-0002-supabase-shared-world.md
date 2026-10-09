@@ -2,9 +2,9 @@
 
 ## Status
 
-Proposed
+Accepted
 
-> Reverse-documented from the shipped code on 2026-10-08. Moving this to `Accepted` needs the project owner's explicit confirmation.
+> Reverse-documented from the shipped code on 2026-10-08; accepted by the project owner on 2026-10-08.
 
 ## Date
 
