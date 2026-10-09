@@ -7,7 +7,9 @@ const close=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-6,actual+'
 test('hall pacing keeps the opening reference times and applies the normal governor and speed bonuses',()=>{
   const e=loadGame(),g=e.Game;
   const divisor=()=>1+g.state.tech.construction*.1+g.general(g.state.governor).pol/100;
-  for(const level of [1,2])close(g.buildSeconds('hall',level),g.buildRecord('hall',level).seconds/divisor());
+  close(g.buildSeconds('hall',1),g.buildRecord('hall',1).seconds/divisor());
+  // Hall 2 is shortened to 8 minutes (design/balance/opening-pace-2026-10-08.md).
+  close(g.buildSeconds('hall',2),480/divisor());
   let previous=g.buildSeconds('hall',3);
   for(let level=4;level<=10;level++){
     const seconds=g.buildSeconds('hall',level);

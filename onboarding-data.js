@@ -5,7 +5,8 @@ const OnboardingData={
   // Prototype hall pacing before governor, construction technology and game speed.
   // The first two levels retain the reference rules used by the archer route.
   hallSeconds:[1800,3995,9000,18000,36000,72000,126000,198000,288000,396000],
-  hallBuildSeconds(level,referenceSeconds){return level<=2?referenceSeconds:this.hallSeconds[level-1]??referenceSeconds;},
+  // Hall 2 is 8 minutes so the second starter supply arrives early (design/balance/opening-pace-2026-10-08.md).
+  hallBuildSeconds(level,referenceSeconds){return level===2?480:level<=2?referenceSeconds:this.hallSeconds[level-1]??referenceSeconds;},
   jewels:{min:2,max:5,weights:{pearl:40,coral:25,glass:15,amber:8,agate:5,crystal:3,jadeite:2,jade:1,nightPearl:1}},
   gifts:[
     {level:1,title:'开府建衙',resources:{food:40000,wood:40000,stone:40000,iron:40000,gold:10000},items:{speed_build_15m:6,speed_build_1h:2,population:2}},

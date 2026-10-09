@@ -11,7 +11,8 @@ test('opening mission income leaves useful gold reserves without the old three-q
  assert.equal(r.archers,30);assert.ok(r.minutes<90);assert.equal(l.supplies.gold,30000);
  assert.ok(l.missions.gold>=90000&&l.missions.gold<=150000);
  assert.ok(r.stock.gold>=50000&&r.stock.gold<=150000);
- assert.ok(l.natural.iron>100);assert.equal(r.validSave,true);
+ // With hall 2 at 8 minutes and free finishes the route takes minutes, so natural output is near zero but never negative.
+ assert.ok(l.natural.iron>=0);assert.equal(r.validSave,true);
 });
 
 test('real resource fields contribute to the unaccelerated opening while reward overcapacity remains supported',()=>{
