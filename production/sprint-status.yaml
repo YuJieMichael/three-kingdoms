@@ -27,20 +27,20 @@ stories:
     name: "美术规范"
     file: "production/epics/art-direction/story-001-art-bible.md"
     priority: must-have
-    status: ready-for-dev
+    status: done
     owner: ""
     estimate_days: 1
     blocker: ""
-    completed: ""
+    completed: "2026-10-08"
   - id: "2-2"
     name: "旧设备 PNG 备用图"
     file: "production/epics/art-direction/story-002-png-fallback.md"
     priority: must-have
-    status: ready-for-dev
+    status: done
     owner: ""
     estimate_days: 1.5
     blocker: ""
-    completed: ""
+    completed: "2026-10-08"
   - id: "1-2"
     name: "按选定方案调整开局节奏"
     file: "production/epics/opening-pace/story-002-opening-tuning.md"
