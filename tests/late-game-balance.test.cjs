@@ -28,7 +28,7 @@ test('inn candidates in one refresh never share a name, also against hired gener
 });
 test('late garrisons are raised by a fixed factor: chapter 2 ×1.3, chapter 3 ×1.5, yellow-turban cities ×5',()=>{
   const e=loadGame(),c=e.Chapter,y=e.evaluate('YellowCityData');
-  assert.equal(JSON.stringify(c.armyScale),'{"2":1.3,"3":1.5}');assert.equal(y.armyScale,5);
+  assert.equal(JSON.stringify(c.armyScale),'{"2":1.3,"3":1.5,"4":1}');assert.equal(y.armyScale,5);
   assert.ok(total(c.chapterThreeNodes.at(-1).army)>=1600,'河洛内城 '+total(c.chapterThreeNodes.at(-1).army));
   assert.ok(y.nodes.every(n=>total(n.army)>=250),y.nodes.map(n=>total(n.army)).join());
 });

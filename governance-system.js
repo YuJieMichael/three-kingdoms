@@ -16,7 +16,7 @@ const GovernanceSystem=(()=>{
  function valid(s){
   const h=s.heroService;return validCity(s)&&object(h)&&h.version===1&&time(h.lastPay)&&int(h.seq)&&h.seq<=1000000&&object(h.owed)&&Object.entries(h.owed).every(([id,n])=>s.generals.includes(id)&&int(n))&&Array.isArray(h.pending)&&new Set(h.pending).size===h.pending.length&&h.pending.every(id=>s.generals.includes(id)&&s.heroLoyalty[id]===0)&&Array.isArray(h.captives)&&h.captives.length<=100&&new Set(h.captives.map(c=>c.id)).size===h.captives.length&&h.captives.every(c=>object(c)&&/^local_\d+$/.test(c.id)&&!s.generals.includes(c.id)&&object(c.hero)&&c.hero.id===c.id&&typeof c.hero.name==='string'&&c.hero.name.length<=20&&['atk','def','pol','wis','lead','level','price'].every(k=>Number.isFinite(c.hero[k])&&c.hero[k]>=0)&&int(c.level)&&c.level>=1&&c.level<=10000&&Number.isFinite(c.xp)&&c.xp>=0&&time(c.at)&&typeof c.previousOwner==='string'&&typeof c.originCity==='string')&&Array.isArray(h.log)&&h.log.length<=40&&h.log.every(r=>object(r)&&time(r.at)&&typeof r.text==='string'&&r.text.length<=500);
  }
- const moraleTarget=s=>Math.max(0,100-s.tax-s.unrest);
+ const moraleTarget=s=>Math.min(100,Math.max(0,100-s.tax-s.unrest+(typeof ChapterData!=='undefined'&&ChapterData.hasSeal(s)?5:0)));
  const wage=(s,id)=>20*(s.generalLevels[id]||1);
  const scopes=s=>Object.values(s.realm?.cities||{});
  const scopeData=(s,c)=>c.id===s.realm.activeCity?s:c.data;
@@ -79,7 +79,7 @@ const GovernanceSystem=(()=>{
   if(g.autoRelief&&(s.morale<40||s.unrest>=40)&&s.civicCooldowns.comfort<=now){const cost=Math.max(100,Math.ceil(s.population));if(s.res.gold>=cost){s.res.gold-=cost;s.morale=Math.min(100,s.morale+25);s.unrest=Math.max(0,s.unrest-15);s.civicCooldowns.comfort=now+900000;record(g,{at:now,text:'自动祈福：消耗 '+cost+' 黄金，民心+25、民怨-15'});}}
   const unrestDanger=s.morale<20||s.unrest>=60;
   if(!unrestDanger)g.crisisSince=0;else if(!g.crisisSince)g.crisisSince=now;else if(now-g.crisisSince>=HOUR){const lost=Math.ceil(s.population*.05);s.population=Math.max(0,s.population-lost);for(const k of ['wood','stone','iron','gold'])s.res[k]*=.95;s.unrest=Math.min(100,s.unrest+5);g.crisisSince=now;record(g,{at:now,text:'内乱：流失人口 '+lost+'，木石铁金各损失5%；请降低税率或安抚'});}
-  const starving=s.res.food<=0&&Object.values(s.army).some(n=>n>0);
+  const starving=s.res.food<=0&&Object.values(s.army).some(n=>n>0)&&!Object.values(s.buffs||{}).some(b=>b.effect==='noMutiny'&&b.end>now);
   if(!starving)g.starvedSince=0;else if(!g.starvedSince)g.starvedSince=now;else if(now-g.starvedSince>=HOUR){let lost=0;for(const [id,n]of Object.entries(s.army)){const amount=n?Math.max(1,Math.floor(n*.01)):0;s.army[id]-=amount;lost+=amount;}g.starvedSince=now;record(g,{at:now,text:'断粮超过1小时：本城驻军逃散 '+lost+' 人；在途部队按出发快照保留，请补粮'});}
   if(g.eventsEnabled&&g.nextEvent&&g.nextEvent<=now){let count=0;while(g.nextEvent<=now&&count++<2){const at=g.nextEvent,e=nextEvent(s);if(e.bad&&g.wardUntil>=at){g.wardUntil=0;record(g,{at,text:'祭天庇护免除了 '+e.name});}else if(e.bad){const amount=Math.floor(s.res[e.resource]*.05);s.res[e.resource]-=amount;s.unrest=Math.min(100,s.unrest+10);record(g,{at,text:e.name+'：'+Game.resources[e.resource].name+'损失 '+amount+'，民怨+10'});}else{const amount=Math.max(500,Math.floor(s.population*5))*(g.blessingUntil>=at?2:1);s.res[e.resource]+=amount;if(g.blessingUntil>=at)g.blessingUntil=0;record(g,{at,text:'天赐 '+e.name+'：'+Game.resources[e.resource].name+' +'+amount+'，允许爆仓'});}g.eventSeq++;g.nextEvent+=4*HOUR;}}
  }

@@ -94,3 +94,6 @@ const RewardData = {
   }
 };
 for(const brick of RewardData.goldBricks)ManualData.shop.push({...brick,category:'黄金补给',effect:'gold',seconds:0,trialPrice:true,trialEffect:true,desc:'使用后获得 '+brick.gold.toLocaleString('zh-CN')+' 黄金，可暂时超过官府黄金容量。'});
+// 安军符 (owner request): for 3 days no city's troops desert while it has no food.
+ManualData.shop.push({id:'armyPledge',name:'安军符',category:'军事',desc:'3 天内，所有城池断粮时驻军不会逃散（粮食仍为 0，请尽快补粮）。可叠加延长。',price:50,effect:'noMutiny',seconds:259200,trialPrice:true});
+

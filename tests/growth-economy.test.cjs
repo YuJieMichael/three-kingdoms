@@ -83,7 +83,8 @@ test('chapter guidance preserves second-chapter gates, claims ally rewards and o
  g.state.conquered.luo_outpost=true;m=inspect(e);assert.equal(m.kind,'campaignReward');assert.equal(m.id,'chapter3_luo_outpost');
  g.state.missionClaims.push('chapter3_luo_outpost');m=inspect(e);assert.equal(m.id,'luo_gate');
  for(const n of c.chapterThreeNodes)g.state.conquered[n.id]=true;
- g.state.missionClaims.push(...c.chapterThreeNodes.slice(1).map(n=>'chapter3_'+n.id));m=inspect(e);assert.equal(m.kind,'orders');assert.equal(m.id,'order_field_1');
+ g.state.missionClaims.push(...c.chapterThreeNodes.slice(1).map(n=>'chapter3_'+n.id));m=inspect(e);assert.notEqual(m.kind,'orders','chapter 4 comes before war orders');
+ for(const n of c.chapterFourNodes)g.state.conquered[n.id]=true;g.state.missionClaims.push(...c.chapterFourNodes.map(n=>'chapter4_'+n.id));m=inspect(e);assert.equal(m.kind,'orders');assert.equal(m.id,'order_field_1');
  g.state.warOrders.cleared={field:10,siege:10,elite:10};m=inspect(e);assert.equal(m.id,'order_challenge_field_5_preserve');
  for(const q of g.warOrders.challenges)g.state.warOrders.challenges.completed[q.id]=true;m=inspect(e);assert.equal(m.id,'repeat');
 });

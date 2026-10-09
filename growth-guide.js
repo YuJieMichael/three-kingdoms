@@ -99,7 +99,7 @@ const GrowthGuide=(()=>{
       else if(!s.conquered.fort){
         if(!game.countyUnlocked()){const groups=game.progression.groups(s),group=groups.find(g=>g.progress<1);return {kind:'epic',id:group.id,title:'开放县城 · '+group.name,reason:group.detail+'。四项史诗完成后才能攻打古渡县城；捐献士兵会离队，请保留出征主力。',progress:Math.min(100,Math.floor(group.progress*100)),route:'epic',shortages:group.id==='resources'?Object.keys(game.progression.resourceDonations).filter(key=>s.epic.resources[key]<100000).map(key=>({id:key,amount:Math.max(0,100000-s.res[key])})):[]};}
         id='fort';
-      }else{chapter=ChapterData.completed(s,2)?3:2;id=ChapterData.progress(s,chapter).next?.id;}
+      }else{chapter=ChapterData.completed(s,3)?4:ChapterData.completed(s,2)?3:2;id=ChapterData.progress(s,chapter).next?.id;}
       if(!id){
         const route=Object.keys(game.warOrders.routes).find(r=>s.warOrders.cleared[r]<10);
         if(route){const tier=s.warOrders.cleared[route]+1;return {kind:'orders',id:'order_'+route+'_'+tier,route,tier,title:'军令进阶 · '+game.warOrders.routes[route].name+'第 '+tier+' 阶',reason:'河洛已平定，继续三路军令。查看守军组成与攻城要求，补充永久损失、调整配兵；首通双倍军功可兑换加速、珠宝和装备。'};}
@@ -107,7 +107,7 @@ const GrowthGuide=(()=>{
         return {kind:'orders',id:'repeat',title:'军令循环 · 选择补给与战术目标',reason:'三路十阶与全部战术挑战已达成。按军功兑换需求选择复战路线；培养将领、强化装备，并留意补兵资源与耗粮。'};
       }
       if(!game.landmarkVisible(id))id=game.nextLandmark()?.id||id;
-      const n=game.getNode(id),archers=chapter===1?(id==='fort'?300:n.level<=1?60:n.level===2?100:160):chapter===2?910:1650,front=chapter===1?(id==='fort'?60:id==='pass'||id==='mine'?30:0):chapter===2?325:525,technology=chapter===1?(id==='fort'?3:n.level<=1?1:2):5;
+      const n=game.getNode(id),archers=chapter===1?(id==='fort'?300:n.level<=1?60:n.level===2?100:160):chapter===2?910:chapter===4?3000:1650,front=chapter===1?(id==='fort'?60:id==='pass'||id==='mine'?30:0):chapter===2?325:chapter===4?1500:525,technology=chapter===1?(id==='fort'?3:n.level<=1?1:2):5;
       for(const [tech,level]of [['combat',technology],['shooting',technology],...(front?[['protection',technology]]:[])]){const goal=resolve('tech',tech,level);if(goal)return {...goal,reason:'准备'+n.name+'：提升弓兵输出与前排防护；'+goal.reason};}
       for(const [unit,count]of [['archer',archers],...(front?[['shield',front]]:[]),...(n.fortification?[['ram',5]]:[])]){
         if(s.army[unit]<count){const away=Object.entries(s.garrisons).find(([,g])=>g.army[unit]>0);if(away)return {kind:'garrison',id:away[0],title:'查看外驻'+game.units[unit].name+'，准备'+n.name,reason:'该兵种已有部队在外驻守；可先收获采集并召回，或保留驻军另行练兵。不要将驻军误当成损失。'};}
