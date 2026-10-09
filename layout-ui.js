@@ -38,11 +38,11 @@ function layoutLordPanelHTML(){
 // New players start with a few entries; the rest appear as the city grows (then stay).
 function layoutFeatureOpen(id){
   const s=S(),hall=s.buildings.hall||0,fought=s.stats.victories>0||s.reports.length>0||(s.cityDefense?.reports?.length||0)>0;
-  return ({inventory:Object.values(s.inventory||{}).some(n=>n>0)||Object.values(s.jewels||{}).some(n=>n>0)||hall>=2,queues:hall>=2||s.buildQueue.length>0||!!s.researchQueue,reports:fought,shop:hall>=3,research:(s.buildings.academy||0)>=1,market:(s.buildings.market||0)>=1,warCare:fought,territory:hall>=3||Object.keys(s.conquered||{}).length>0,defense:hall>=3||(s.buildings.wall||0)>=1})[id]??true;
+  return ({inventory:Object.values(s.inventory||{}).some(n=>n>0)||Object.values(s.jewels||{}).some(n=>n>0)||hall>=2,queues:hall>=2||s.buildQueue.length>0||!!s.researchQueue,reports:fought,shop:hall>=3,research:(s.buildings.academy||0)>=1,market:(s.buildings.market||0)>=1,warCare:fought,territory:hall>=3||Object.keys(s.conquered||{}).length>0,defense:hall>=3||(s.buildings.wall||0)>=1,automation:hall>=3})[id]??true;
 }
 let layoutOpenedFeatures=null;
 function layoutAnnounceFeatures(){
-  const names={inventory:'宝物',queues:'营造',reports:'报告',shop:'商城',research:'科技',market:'交易',warCare:'伤兵',territory:'领地',defense:'城防'},open=Object.keys(names).filter(layoutFeatureOpen);
+  const names={inventory:'宝物',queues:'营造',reports:'报告',shop:'商城',research:'科技',market:'交易',warCare:'伤兵',territory:'领地',defense:'城防',automation:'自动助手'},open=Object.keys(names).filter(layoutFeatureOpen);
   if(layoutOpenedFeatures){const fresh=open.filter(id=>!layoutOpenedFeatures.includes(id));if(fresh.length&&typeof toast==='function')setTimeout(()=>toast('新功能开放：'+fresh.map(id=>names[id]).join('、')),0);}
   layoutOpenedFeatures=open;
 }
@@ -77,7 +77,7 @@ function layoutMoreModal(){
   const groups={
     war:btn('征战与成长','webEditionHub','','secondary')+btn('掠夺找资源','webRaids','','secondary',WebEdition.shared())+btn('名城版图','namedCities','','secondary')+btn('新手补给 · '+S().onboarding.claims.length+'/10','onboardingGifts','','secondary'),
     city:btn('领地与驻军','classicTerritory','','secondary')+btn('来袭与守城','npcDefense','','secondary')+btn('城务与薪俸','governance','','secondary')+btn('伤兵营','warCare','','secondary')+btn('城池详情','classicInfo','','secondary'),
-    tools:btn('自动助手'+(unread?' · '+unread+' 未读':''),'automationOpen','','secondary')+btn('消息记录','webMessages','','secondary')+btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','secondary')
+    tools:(layoutFeatureOpen('automation')?btn('自动助手'+(unread?' · '+unread+' 未读':''),'automationOpen','','secondary'):'')+btn('消息记录','webMessages','','secondary')+btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','secondary')
   };
   const tabs=LAYOUT_MORE_TABS.map(([id,label])=>`<button role="tab" id="more-tab-${id}" aria-controls="more-category-panel" aria-selected="${layoutMoreCategory===id}" tabindex="${layoutMoreCategory===id?0:-1}" data-action="layoutMoreTab" data-id="${id}">${label}${id==='tools'&&unread?'<i aria-label="有未读记录"></i>':''}</button>`).join('');
   showModal('更多',`<section class="layout-more-menu"><nav class="layout-more-tabs" role="tablist" aria-label="更多功能分类">${tabs}</nav><div id="more-category-panel" class="layout-more-panel" role="tabpanel" aria-labelledby="more-tab-${layoutMoreCategory}">${groups[layoutMoreCategory]}</div></section>`,btn('关闭','close','','secondary'));

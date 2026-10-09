@@ -2,8 +2,11 @@
 let taskTab='growth',dailyCategory='全部',dailyPage=0;
 const DAILY_PAGE_SIZE=8;
 function dailyTaskCategory(t){const d=Game.progression.definition(t);return ['inner','outer','defense'].includes(d.route)?'建设':d.route==='research'?'科技':['army','captives'].includes(d.route)?'军备':d.route==='world'?'征战':'内政';}
-function taskTabs(){return `<div class="shop-tabs task-tabs" role="group" aria-label="任务分类">${[['growth','成长任务'],['daily','每日任务'],['honors','官职爵位'],['chapter','章节征程'],['orders','战役军令'],['epic','黄巾史诗']].map(([id,name])=>btn(name,'taskTab',id,'small secondary '+(taskTab===id?'active-order':''))).join('')}</div>`;}
+// Playtest scope: honours after the first stronghold win or hall 3, the epic after 黄巾营寨, war orders after chapter 1.
+function taskTabOpen(id){const s=S();return ({honors:(s.buildings.hall||0)>=3||Object.keys(s.raided||{}).some(k=>!k.startsWith('wild_')),epic:!!s.conquered.camp,orders:!!s.conquered.fort})[id]??true;}
+function taskTabs(){return `<div class="shop-tabs task-tabs" role="group" aria-label="任务分类">${[['growth','成长任务'],['daily','每日任务'],['honors','官职爵位'],['chapter','章节征程'],['orders','战役军令'],['epic','黄巾史诗']].filter(([id])=>taskTabOpen(id)).map(([id,name])=>btn(name,'taskTab',id,'small secondary '+(taskTab===id?'active-order':''))).join('')}</div>`;}
 function classicMissionModal(){
+  if(!taskTabOpen(taskTab))taskTab='growth';
   if(taskTab==='growth'){growthMissionModal();return;}
   if(taskTab==='orders'){warOrdersModal();return;}
   if(taskTab==='chapter'){chapterMissionModal();return;}

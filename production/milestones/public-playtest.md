@@ -1,6 +1,6 @@
 # Milestone: 公开试玩版（Public Playtest）
 
-> **Status**: Proposed — 需负责人批准后生效。批准前不按本文件排冲刺。
+> **Status**: Approved（负责人 2026-10-08 批准；同时选定隐藏范围检查建议的功能、图纸改为玩法掉落）
 > **提出**: 2026-10-08（依据 `production/retrospectives/retro-sprint-001-003-2026-10-08.md`）
 > **范围评估**: `production/scope-checks/scope-check-public-playtest-2026-10-08.md`
 
