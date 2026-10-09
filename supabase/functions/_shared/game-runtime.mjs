@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="e3ac44bef9eabc59e3792448753f728376375329c463db1b2f317fb501fed06b";
+export const runtimeHash="7e7e6eb34dbd9d53ee8227fb158da5c69a86f856e36914767945901d4ffae9f1";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -11951,7 +11951,7 @@ const Progression = (() => {
   }
   function claimReady(s,now=Date.now()){ensureDaily(s,now);let count=0;for(const t of [...s.daily.tasks])if(taskReady(s,t)){const error=claim(s,t.uid,now);if(!error)count++;}return count?null:'暂无已完成的每日任务';}
   const groups=s=>[
-    {id:'kills',name:'讨伐黄巾',progress:Math.min(1,s.epic.kills/targets.kills),detail:'掠夺野地／黄巾据点，胜利缴获黄巾头巾 '+s.epic.kills+' / '+targets.kills+' 件头巾'},
+    {id:'kills',name:'讨伐黄巾',progress:Math.min(1,s.epic.kills/targets.kills),detail:'掠夺野地或地图据点胜利可缴获黄巾头巾；县城、黄巾城等城池掠夺不计头巾。已缴获 '+s.epic.kills+' / '+targets.kills+' 件头巾'},
     {id:'resources',name:'捐献军资',progress:Object.values(s.epic.resources).reduce((n,v)=>n+v,0)/500000,detail:'五种物资各捐献 100,000，合计 500,000'},
     {id:'troops',name:'王于兴师',progress:Math.min(1,s.epic.troops/targets.troops),detail:'勤王诏 '+s.epic.troops+' / '+targets.troops+' · 捐献士兵后离开你的军队'},
     {id:'treasures',name:'进献珍宝',progress:Math.min(1,s.epic.treasures/targets.treasures),detail:'贡品录 '+s.epic.treasures+' / '+targets.treasures+' · 珍宝由战斗掉落／铜钱兑换获得'}
@@ -13139,17 +13139,27 @@ const HeritageSystem=(()=>{
  function assign(governor,commander,counsellor){const s=live(),all=[governor,commander,counsellor],chosen=all.filter(Boolean);if(!governor)return '请选择一位城守';if(chosen.some(id=>!s.generals.includes(id)||Game.generalBusy(id)))return '任职将领必须已经招募且留在城内';if(new Set(chosen).size!==chosen.length)return '一位将领只能担任一个职位';s.governor=governor;s.cityRoles={commander,counsellor};return save();}
  // Only current owned county cities count. Raid wins and former ownership do not.
  function ownedCounties(s){return Object.values(s?.realm?.cities||{}).filter(c=>NamedCityData.definition(c)?.tier==='county'&&NamedCitySystem.owned(s,c.node));}
+ // Missing jewels of the named kind may be covered by any spare jewels at twice their prestige value, cheapest first.
+ const JEWEL_SUBSTITUTE_RATE=2;
+ function jewelPayment(s,required){
+  const pay={},short={};let deficit=0;
+  for(const [id,n] of Object.entries(required||{})){const own=Math.max(0,Math.min(s.jewels[id]||0,n));if(own)pay[id]=own;if(n>own){short[id]=n-own;deficit+=(n-own)*Progression.jewels[id].prestige*JEWEL_SUBSTITUTE_RATE;}}
+  const substitute={};
+  for(const [id,j] of Object.entries(Progression.jewels).sort((a,b)=>a[1].prestige-b[1].prestige)){if(deficit<=0)break;const spare=(s.jewels[id]||0)-(required?.[id]||0);if(spare<1)continue;const use=Math.min(spare,Math.ceil(deficit/j.prestige));substitute[id]=use;deficit-=use*j.prestige;}
+  const total={...pay};for(const [id,n] of Object.entries(substitute))total[id]=(total[id]||0)+n;
+  return {pay,short,substitute,total,covered:deficit<=0,rate:JEWEL_SUBSTITUTE_RATE};
+ }
  function promotionQuote(s,kind){const list=kind==='office'?HeritageData.offices:kind==='noble'?HeritageData.nobles:null;if(!list)return null;const current=s.honors[kind],next=list[current+1];if(!next)return {next:null,reason:'已达最高级别'};const r=next.promotion,missing=[];
   if(s.prestige<r.prestige)missing.push('声望 '+r.prestige);
   if(s.honors.office<r.office)missing.push('官职 '+HeritageData.offices[r.office].name);
   if(r.noble&&s.honors.noble<r.noble)missing.push('爵位 '+HeritageData.nobles[r.noble].name);
   if(s.buildings.hall<r.hall)missing.push('官府 '+r.hall+' 级');
   if(s.res.gold<r.gold)missing.push('黄金 '+r.gold);
-  for(const [id,n] of Object.entries(r.jewels))if(s.jewels[id]<n)missing.push(Progression.jewels[id].name+' ×'+n);
+  const jewels=jewelPayment(s,r.jewels);if(!jewels.covered)for(const [id,n] of Object.entries(jewels.short))missing.push(Progression.jewels[id].name+' ×'+n+'（其他珠宝按 '+jewels.rate+' 倍价值折算也不足）');
   if(r.county&&!ownedCounties(s).length)missing.push('持有至少一座县城（须占领，掠夺不算）');
-  return {next,rule:r,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
+  return {next,rule:r,jewels,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
  }
- function promote(kind){const s=live(),q=promotionQuote(s,kind);if(!q?.next)return q?.reason||'请选择晋升类型';if(q.reason)return q.reason;s.res.gold-=q.rule.gold;for(const [id,n] of Object.entries(q.rule.jewels))s.jewels[id]-=n;s.honors[kind]=q.next.id;return save();}
+ function promote(kind){const s=live(),q=promotionQuote(s,kind);if(!q?.next)return q?.reason||'请选择晋升类型';if(q.reason)return q.reason;s.res.gold-=q.rule.gold;for(const [id,n] of Object.entries(q.jewels.total))s.jewels[id]-=n;s.honors[kind]=q.next.id;return save();}
  function salaryQuote(s,kind){const row=kind==='office'?office(s):kind==='noble'?noble(s):null;if(!row)return null;return {row,claimed:s.honors.salaryClaims[kind]===Progression.period(Date.now()),reward:kind==='office'?{gold:row.salary}:{food:row.salary,wood:row.salary,stone:row.salary,iron:row.salary}};}
  function record(s,r){s.heritageHistory.unshift({at:Date.now(),...r});s.heritageHistory=s.heritageHistory.slice(0,10);}
  function salary(kind){const s=live(),q=salaryQuote(s,kind);if(!q||q.row.salary<1)return '晋升后才能领取俸禄';if(q.claimed)return '今日已领取，北京时间 05:00 重置';for(const [id,n] of Object.entries(q.reward))s.res[id]+=n;s.honors.salaryClaims[kind]=Progression.period(Date.now());record(s,{kind:'salary',name:kind==='office'?'食君之禄':'采食封邑',loot:q.reward,jewels:{},xp:0});return save();}
@@ -13171,7 +13181,7 @@ const HeritageSystem=(()=>{
   if(!Array.isArray(s.heritageHistory)||s.heritageHistory.length>10)return false;
   return s.heritageHistory.every(r=>obj(r)&&int(r.at)&&['salary','gather'].includes(r.kind)&&typeof r.name==='string'&&r.name.length<=100&&obj(r.loot)&&Object.entries(r.loot).every(([k,n])=>['food','wood','stone','iron','gold'].includes(k)&&int(n))&&obj(r.jewels)&&Object.entries(r.jewels).every(([k,n])=>Object.hasOwn(Progression.jewels,k)&&int(n)&&n<=24)&&int(r.xp)&&(r.kind==='salary'||Game.getNode(r.node,s)?.wild&&int(r.discarded)&&(r.overCapacity===undefined||int(r.overCapacity)&&r.overCapacity<=Object.values(r.loot).reduce((sum,n)=>sum+n,0))));
  }
- return {roles,HOUR,init,office,noble,roleHero,roleOf,effectiveHero,assign,ownedCounties,promotionQuote,promote,salaryQuote,salary,gatherReason,startGather,gatherQuote,collectGather,cancelGather,valid};
+ return {roles,HOUR,init,office,noble,roleHero,roleOf,effectiveHero,assign,ownedCounties,jewelPayment,promotionQuote,promote,salaryQuote,salary,gatherReason,startGather,gatherQuote,collectGather,cancelGather,valid};
 })();
 
 
@@ -13530,6 +13540,9 @@ const ChapterData={
   progress(s,chapter=2){const nodes=this.chapterNodes(chapter);return {unlocked:this.unlocked(s,chapter),conquered:nodes.filter(n=>s.conquered[n.id]).length,claimed:nodes.filter(n=>s.missionClaims.includes('chapter'+chapter+'_'+n.id)).length,next:nodes.find(n=>!s.conquered[n.id])||null};},
   extendMissions(missions){[2,3].forEach(chapter=>this.chapterNodes(chapter).forEach((n,i)=>{const r=(chapter===3?this.chapterThreeRewards:this.rewards)[i];missions.push({id:'chapter'+chapter+'_'+n.id,node:n.id,chapter,stage:this.chapterTitle(chapter),title:n.name+' · 平定',desc:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&!!s.conquered[n.id],reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items,army:r.army});}));}
 };
+// v0.34.34: late battles were too easy in the 4-day playtest, so garrisons are raised by a fixed factor (not tied to player strength). Higher factors starve the unaccelerated campaign of food (design/balance/late-battle-difficulty-2026-10-08.md).
+ChapterData.armyScale={2:1.3,3:1.5};
+for(const n of ChapterData.allNodes())for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*ChapterData.armyScale[n.chapter]);
 
 
 // SOURCE: siege-data.js
@@ -13774,6 +13787,9 @@ const YellowCityData={
     return sites;
   }
 };
+// v0.34.34: yellow-turban garrisons were 50–290 men; raised five-fold so taking a city needs a real army.
+YellowCityData.armyScale=5;
+for(const n of YellowCityData.nodes)for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*YellowCityData.armyScale);
 
 
 // SOURCE: plot-template-data.js
@@ -16532,7 +16548,7 @@ const Game = (() => {
   function intel(id){if(getNode(id)?.orderRoute||getNode(id)?.chapter===2)return {exact:true,public:true};const report=ScoutSystem.intel(state,id);if(report)return report;const entry=state.scouted[id];return entry&&Date.now()-entry.at<((15+entry.level*5)*60000)?{...entry,exact:entry.level>=5,legacy:true}:null;}
   function troopBand(n){if(n===0)return '无';const bands=[[10,'几个'],[25,'少数'],[50,'小队'],[100,'一些'],[250,'一群'],[500,'许多'],[1000,'大队'],[2500,'大群'],[5000,'大批'],[10000,'巨量'],[Infinity,'无数']];return bands.find(([max])=>n<max)[1];}
   function npcName(id,n){return n?.wild?ManualData.npcNames[id]||units[id].name:units[id].name;}
-  function refreshInn(){tick();if(state.buildings.inn<1)return '请先建造客栈';const surnames=['魏','邵','程','陆','叶','夏','徐','陶'],given=['衡','舟','川','岚','松','宁','瑜','晏'];state.innCandidates=Array.from({length:state.buildings.inn},(_,i)=>{const number=Date.now()+i,seed=hash(number%10000,i),level=1+seed%Math.max(1,state.buildings.inn*2);return {id:'local_'+number,name:surnames[seed%8]+given[Math.floor(seed/8)%8],level,atk:35+seed%46,def:35+Math.floor(seed/5)%46,pol:35+Math.floor(seed/13)%46,wis:35+Math.floor(seed/17)%46,lead:level*10,price:level*1000,type:'将',title:'客栈游士',desc:'愿以一身所学，助城池安稳发展。',bonus:['spear','archer','shield'][seed%3]};});save();return null;}
+  function refreshInn(){tick();if(state.buildings.inn<1)return '请先建造客栈';const surnames=['魏','邵','程','陆','叶','夏','徐','陶'],given=['衡','舟','川','岚','松','宁','瑜','晏'];const taken=new Set(state.customGenerals.map(g=>g.name));state.innCandidates=Array.from({length:state.buildings.inn},(_,i)=>{const number=Date.now()+i,seed=hash(number%10000,i),level=1+seed%Math.max(1,state.buildings.inn*2);let k=seed%64;for(let n=0;n<64&&taken.has(surnames[k%8]+given[Math.floor(k/8)]);n++)k=(k+1)%64;const name=surnames[k%8]+given[Math.floor(k/8)];taken.add(name);return {id:'local_'+number,name,level,atk:35+seed%46,def:35+Math.floor(seed/5)%46,pol:35+Math.floor(seed/13)%46,wis:35+Math.floor(seed/17)%46,lead:level*10,price:level*1000,type:'将',title:'客栈游士',desc:'愿以一身所学，助城池安稳发展。',bonus:['spear','archer','shield'][seed%3]};});save();return null;}
   function recruit(id){tick();const hero=state.innCandidates.find(g=>g.id===id);if(!hero)return '候选已离开';if(HeroSystem.wild.roomUsed(state)>=heroCapacity())return '招贤馆没有空闲房间（包含被俘将领）';if(state.customGenerals.length+HeroSystem.wild.heldCaptives(state)>=100)return '将领总量已达上限';if(state.res.gold<hero.price)return '黄金不足';state.res.gold-=hero.price;state.customGenerals.push(hero);state.generals.push(hero.id);state.generalLevels[hero.id]=hero.level;state.generalXp[hero.id]=0;state.innCandidates=state.innCandidates.filter(g=>g.id!==id);HeroSystem.init(state);save();return null;}
   function tradeQuote(resource,buy=true){
     const scale=state.buildings.market*100000;

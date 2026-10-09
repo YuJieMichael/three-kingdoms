@@ -6,38 +6,38 @@
 #   done           ↔  Complete
 #   blocked        ↔  Blocked
 
-sprint: 2
-goal: "让开局的每一步都有可见回报：看得清、升级会涨产量、资源要盘算、引导有起伏。"
+sprint: 3
+goal: "中后期打仗有压力，晋升不靠运气，消除误导性说明。"
 start: "2026-10-08"
 end: "2026-10-21"
 generated: "2026-10-08"
 updated: "2026-10-08"
 
 stories:
-  - id: "3-1"
-    name: "建造弹窗文字对比度"
-    file: "production/sprints/sprint-002.md"
+  - id: "4-1"
+    name: "讨伐黄巾说明、客栈重名、占城提示、.gitignore"
+    file: "production/sprints/sprint-003.md"
     priority: must-have
     status: done
     owner: ""
     estimate_days: 0.5
     blocker: ""
     completed: "2026-10-08"
-  - id: "3-2"
-    name: "开局经济与引导节奏"
-    file: "production/epics/opening-pace/story-003-opening-economy.md"
+  - id: "4-2"
+    name: "晋升珠宝按价值折算"
+    file: "production/sprints/sprint-003.md"
     priority: must-have
     status: done
     owner: ""
-    estimate_days: 2
-    blocker: ""
-    completed: "2026-10-08"
-  - id: "3-3"
-    name: "官府 2 级后的补给与造价联调"
-    file: "production/sprints/sprint-002.md"
-    priority: should-have
-    status: backlog
-    owner: ""
     estimate_days: 1
     blocker: ""
-    completed: ""
+    completed: "2026-10-08"
+  - id: "4-3"
+    name: "提高第 2、3 章与黄巾城守军"
+    file: "design/balance/late-battle-difficulty-2026-10-08.md"
+    priority: must-have
+    status: done
+    owner: ""
+    estimate_days: 1.5
+    blocker: ""
+    completed: "2026-10-08"

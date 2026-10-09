@@ -95,7 +95,7 @@ const GrowthGuide=(()=>{
         return {kind:'orders',id:'repeat',title:'军令循环 · 选择补给与战术目标',reason:'三路十阶与全部战术挑战已达成。按军功兑换需求选择复战路线；培养将领、强化装备，并留意补兵资源与耗粮。'};
       }
       if(!game.landmarkVisible(id))id=game.nextLandmark()?.id||id;
-      const n=game.getNode(id),archers=chapter===1?(id==='fort'?300:n.level<=1?60:n.level===2?100:160):chapter===2?700:1100,front=chapter===1?(id==='fort'?60:id==='pass'||id==='mine'?30:0):chapter===2?250:350,technology=chapter===1?(id==='fort'?3:n.level<=1?1:2):5;
+      const n=game.getNode(id),archers=chapter===1?(id==='fort'?300:n.level<=1?60:n.level===2?100:160):chapter===2?910:1650,front=chapter===1?(id==='fort'?60:id==='pass'||id==='mine'?30:0):chapter===2?325:525,technology=chapter===1?(id==='fort'?3:n.level<=1?1:2):5;
       for(const [tech,level]of [['combat',technology],['shooting',technology],...(front?[['protection',technology]]:[])]){const goal=resolve('tech',tech,level);if(goal)return {...goal,reason:'准备'+n.name+'：提升弓兵输出与前排防护；'+goal.reason};}
       for(const [unit,count]of [['archer',archers],...(front?[['shield',front]]:[]),...(n.fortification?[['ram',5]]:[])]){
         if(s.army[unit]<count){const away=Object.entries(s.garrisons).find(([,g])=>g.army[unit]>0);if(away)return {kind:'garrison',id:away[0],title:'查看外驻'+game.units[unit].name+'，准备'+n.name,reason:'该兵种已有部队在外驻守；可先收获采集并召回，或保留驻军另行练兵。不要将驻军误当成损失。'};}
@@ -129,7 +129,7 @@ const GrowthGuide=(()=>{
       return {kind:'dispatch',id:target.id,general,count:30,army:{militia:30},warmup:true,title:'派 30 名义兵掠夺 '+target.name,reason:'这块 1 级野地守军很少，30 名义兵足以取胜。确认主将、人数和行军粮食后出发；掠夺不占领，打完部队自动返城。'};
     }
     if(phase==='battle')return {...firstBattle(),phase};
-    if(phase==='hall'){const staff=staffing();if(staff)return {...staff,phase};if(s.buildings.hall<10){const goal=resolve('building','hall',s.buildings.hall+1);if(goal)return {...goal,phase,reason:'弓兵已经成队。推进官府 '+(s.buildings.hall+1)+' 级，解锁下一阶补给；'+goal.reason};}return {...campaign(),phase:'campaign'};}
+    if(phase==='hall'){if(s.buildings.hall<10){const staff=staffing();if(staff)return {...staff,phase};const goal=resolve('building','hall',s.buildings.hall+1);if(goal)return {...goal,phase,reason:'弓兵已经成队。推进官府 '+(s.buildings.hall+1)+' 级，解锁下一阶补给；'+goal.reason};}return {...campaign(),phase:'campaign'};}
     const staff=staffing();if(staff)return staff;
     for(const [id,level]of [['house',2],['farm',1],['lumber',2],['quarry',2],['mine',3],['hall',2],['drill',1],['barracks',1]]){const goal=resolve('building',id,level);if(goal)return goal;}
     const drill=warmup();if(drill)return drill;
