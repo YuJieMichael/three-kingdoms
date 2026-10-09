@@ -70,7 +70,7 @@
 @media(max-width:760px){.army-overview-counts{gap:6px}.army-overview-counts>div{display:flex;justify-content:space-between;align-items:baseline;gap:6px;padding:8px 10px;min-height:0}.army-overview-counts>div span{font-size:12px}.army-overview-counts>div strong{font-size:17px;line-height:1.2}}
 /* Phone: one row of eight dock buttons and a one-line objective strip, to give the game view more height. */
 @media(max-width:760px){
-.heritage-layout.layout-shell .layout-command-dock{grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;padding:3px 3px calc(3px + env(safe-area-inset-bottom,0px))}
+.heritage-layout.layout-shell .layout-command-dock{grid-template-columns:repeat(var(--dock-count,8),minmax(0,1fr));gap:2px;padding:3px 3px calc(3px + env(safe-area-inset-bottom,0px))}
 .heritage-layout.layout-shell .layout-command-dock button{flex-direction:column;justify-content:center;min-height:46px;padding:2px 0;gap:1px;font-size:10px;line-height:1.1}
 .heritage-layout.layout-shell .layout-command-dock .layout-dock-emblem{width:24px;height:24px;min-width:24px}
 .heritage-layout .layout-command-dock .layout-nav-icon{width:18px;height:18px}

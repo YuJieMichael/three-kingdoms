@@ -12,9 +12,11 @@ const GrowthGuide=(()=>{
   }
   function model(game){
     const s=game.state,gift=OnboardingSystem.available(s)[0];
-    if(gift)return {kind:'gift',id:gift.level,title:'领取第 '+gift.level+' 阶 · '+gift.title,reason:'官府等级已达标，领取资源和道具，为下一段成长备齐补给。'};
+    if(gift)return {kind:'gift',id:gift.level,title:'领取新手补给 · 第 '+gift.level+' 阶',reason:'官府等级已达标，领取这一阶新手补给的资源和道具'+(gift.level===1?'；领取后任务「奉诏立城」即可完成。':'，为下一段成长备齐补给。')};
     const phase=archerComplete(game)?s.onboarding.firstBattle==='active'?'battle':'hall':'archer';
     const seen=new Set();
+    // A brand-new city first gets one farm: an immediate, visible source of food before the archer route.
+    if(!s.plots.slice(0,game.unlockedPlots()).some((p,i)=>p.type||game.plotJob(i))){const step=resolve('building','farm',1);if(step?.kind==='building')return {...step,title:'开垦第一块农田',reason:'城外有空地可以开垦。先建一块农田，建成后每小时稳定产出粮食，供养百姓与士兵。'};if(step)return step;}
     function resolve(kind,id,target,trail=[]){
       const current=kind==='tech'?s.tech[id]:game.requirementLevel(id);if(current>=target)return null;
       const key=kind+':'+id+':'+target;if(seen.has(key))return {kind:'blocked',title:'检查成长条件',reason:'前置条件发生循环，请查看任务与建筑详情。'};seen.add(key);

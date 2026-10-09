@@ -39,8 +39,11 @@ function pressGuard(e,action){
 // switch plus a fixed command dock, moving shop/reports out of More into that dock; v0.34.8 (75e206d, layoutMoreModal) split More into
 // 征战/城务/辅助 tabs and its README states the pinned shop, reports and settings are not repeated there.
 test('scene switch and command dock keep city areas and reports/shop one tap away while More holds the remaining tools',()=>{
- const e=ui(),before=JSON.stringify(e.g.state),html=e.evaluate('classicShell()');
- const nav=label=>html.match(new RegExp('<nav class="[^"]*" aria-label="'+label+'">([\\s\\S]*?)</nav>'))[1];
+ const e=ui(),navOf=(source,label)=>source.match(new RegExp('<nav class="[^"]*" aria-label="'+label+'"[^>]*>([\\s\\S]*?)</nav>'))[1];
+ // A new city shows four entries; the rest open with hall level, the first battle and the first items.
+ const fresh=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...fresh.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','更多']);
+ city(e.g,{hall:3});e.g.state.stats.victories=1;e.g.state.inventory.speed_build_15m=1;
+ const before=JSON.stringify(e.g.state),html=e.evaluate('classicShell()'),nav=label=>navOf(html,label);
  const buttons=part=>[...part.matchAll(/<button data-action="([^"]*)" data-id="([^"]*)"[^>]*aria-label="([^"]+)"/g)].map(([,action,id,label])=>[label,action,id]);
  const scenes=nav('场景导航'),dock=nav('常用功能');
  assert.deepEqual(buttons(scenes),[['城内','classicNav','inner'],['城外','classicNav','outer'],['地图','classicNav','world']]);
@@ -79,7 +82,7 @@ test('objective previews use current gift quotes and prioritize a genuinely clai
  assert.equal(g.claimMission(m.arg),null);assert.notEqual(e.evaluate('currentObjectiveModel().arg'),ready.id,'claimed rewards must leave the objective');
 });
 test('objective resource gaps and queue countdowns follow actual current state without modifying it',()=>{
- const e=ui(),g=e.g;assert.equal(g.onboarding.claim(1),null);assert.equal(g.claimReadyMissions(),null);g.state.res.food=0;
+ const e=ui(),g=e.g;g.state.plots[0]={type:'farm',level:1};assert.equal(g.onboarding.claim(1),null);assert.equal(g.claimReadyMissions(),null);g.state.res.food=0;
  let m=e.evaluate('currentObjectiveModel()');assert.equal(m.growth.kind,'building');const missing=m.growth.cost.food;
  assert.ok(m.status.includes('粮食 '+missing),'show the real missing amount');const before=JSON.stringify(g.state);e.evaluate('currentObjectiveHTML()');assert.equal(JSON.stringify(g.state),before);
  g.state.res.food=10000;assert.equal(g.queueBuilding(m.growth.site,m.growth.id),null);assert.equal(e.evaluate('currentObjectiveModel().growth.kind'),'queue');
@@ -106,7 +109,7 @@ test('readonly named-city, governance and hospital panels show real state while 
  assert.equal(JSON.stringify(g.state),before);assert.equal(g.validSave(g.state),true);
 });
 test('sidebar and home objectives preserve a stable key until visible task, resource-gap or queue information changes',()=>{
- const e=ui(),g=e.g;
+ const e=ui(),g=e.g;g.state.plots[0]={type:'farm',level:1};
  e.evaluate(`
   globalThis.objectiveNodes=new Map();
   const decodeObjectiveKey=html=>html.match(/data-objective-key="([^"]*)"/)[1].replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');

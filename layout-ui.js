@@ -29,11 +29,22 @@ function layoutLordPanelHTML(){
       <div><dt>税率</dt><dd>${s.tax}%</dd></div>
       <div><dt>声望</dt><dd><button class="prestige-link" data-action="prestigeInfo">${num(s.prestige)}</button></dd></div>
     </dl>
-    <section class="layout-rail-section"><h3>城务办理</h3><div class="rail-actions">${btn('内政','citySettings','','small secondary')}${btn('生产','classicNav','outer','small secondary')}${btn('仓储','manualStorage','','small secondary')}${btn('交易','manualMarket','','small secondary')}${btn('领地','classicTerritory','','small secondary')}${btn('城防','manualDefense','','small secondary')}${btn('科技','manualResearch','','small secondary')}${btn('伤兵','warCare','','small secondary')}</div></section>
+    <section class="layout-rail-section"><h3>城务办理</h3><div class="rail-actions">${btn('内政','citySettings','','small secondary')}${btn('生产','classicNav','outer','small secondary')}${btn('仓储','manualStorage','','small secondary')}${layoutFeatureOpen('market')?btn('交易','manualMarket','','small secondary'):''}${layoutFeatureOpen('territory')?btn('领地','classicTerritory','','small secondary'):''}${layoutFeatureOpen('defense')?btn('城防','manualDefense','','small secondary'):''}${layoutFeatureOpen('research')?btn('科技','manualResearch','','small secondary'):''}${layoutFeatureOpen('warCare')?btn('伤兵','warCare','','small secondary'):''}</div></section>
     <section class="layout-rail-section"><h3>营造动态 <button data-action="classicQueues" aria-label="查看全部队列">查看</button></h3><div class="layout-queue-summary">${s.buildQueue.length?s.buildQueue.slice(0,3).map(q=>queueHTML(q,'build')).join(''):'<p class="hint">暂无施工，点击场景中的空地建设。</p>'}</div></section>
     ${classicGiftComplete()?'':`<button class="layout-gift-button" data-action="onboardingGifts">新手补给${Game.starterGiftPending()?' · 可领取':''}<span>官府 1–10 级分阶礼包</span></button>`}
     <button class="layout-rail-details" data-action="classicInfo">君主与城池详情 ›</button>
   </aside>`;
+}
+// New players start with a few entries; the rest appear as the city grows (then stay).
+function layoutFeatureOpen(id){
+  const s=S(),hall=s.buildings.hall||0,fought=s.stats.victories>0||s.reports.length>0||(s.cityDefense?.reports?.length||0)>0;
+  return ({inventory:Object.values(s.inventory||{}).some(n=>n>0)||Object.values(s.jewels||{}).some(n=>n>0)||hall>=2,queues:hall>=2||s.buildQueue.length>0||!!s.researchQueue,reports:fought,shop:hall>=3,research:(s.buildings.academy||0)>=1,market:(s.buildings.market||0)>=1,warCare:fought,territory:hall>=3||Object.keys(s.conquered||{}).length>0,defense:hall>=3||(s.buildings.wall||0)>=1})[id]??true;
+}
+let layoutOpenedFeatures=null;
+function layoutAnnounceFeatures(){
+  const names={inventory:'宝物',queues:'营造',reports:'报告',shop:'商城',research:'科技',market:'交易',warCare:'伤兵',territory:'领地',defense:'城防'},open=Object.keys(names).filter(layoutFeatureOpen);
+  if(layoutOpenedFeatures){const fresh=open.filter(id=>!layoutOpenedFeatures.includes(id));if(fresh.length&&typeof toast==='function')setTimeout(()=>toast('新功能开放：'+fresh.map(id=>names[id]).join('、')),0);}
+  layoutOpenedFeatures=open;
 }
 function layoutShell(){
   const s=S(),focus=page==='world'&&s.battle&&!s.battle.finished;
@@ -41,7 +52,7 @@ function layoutShell(){
   const arrivals=Game.allExpeditions().filter(e=>e.phase==='march'&&e.end<=Date.now()).length,bulletin=classicMilitaryBulletin();
   const taskReady=Game.missions.some(x=>Game.missionReady(x))||s.daily.tasks.some(t=>Game.progression.taskReady(s,t))||Game.progression.milestones.some(m=>s.daily.claimed>=m.count&&!s.daily.milestoneClaims.includes(m.count));
   const scenes=[['inner','城内','city'],['outer','城外','outer'],['world','地图','world']];
-  const commands=[['tasks','任务','classicMission','',taskReady?'可领':''],['heroes','将领','classicNav','heroes',''],['army','军队','classicNav','army',arrivals?String(arrivals):''],['inventory','宝物','manualInventory','',''],['shop','商城','classicNav','shop',''],['reports','报告','classicNav','reports',''],['queues','营造','classicQueues','',s.buildQueue.length?String(s.buildQueue.length):''],['more','更多','classicMore','','']];
+  const commands=[['tasks','任务','classicMission','',taskReady?'可领':''],['heroes','将领','classicNav','heroes',''],['army','军队','classicNav','army',arrivals?String(arrivals):''],['inventory','宝物','manualInventory','',''],['shop','商城','classicNav','shop',''],['reports','报告','classicNav','reports',''],['queues','营造','classicQueues','',s.buildQueue.length?String(s.buildQueue.length):''],['more','更多','classicMore','','']].filter(([icon])=>layoutFeatureOpen(icon));layoutAnnounceFeatures();
   return `<div class="classic-frame command-frame layout-shell heritage-layout ${page==='world'?'world-frame':''} ${focus?'battle-focus':''} ${bulletin?'has-military-bulletin':''} ${classicInfoOpen?'info-open':''}">
     <header class="classic-header">
       <div class="classic-brand"><span class="brand-mark">三</span><h1>山河策</h1><span class="classic-edition">${OnlineClient.shared()?'共享世界':'单机'}</span></div>
@@ -54,7 +65,7 @@ function layoutShell(){
       <main id="main" class="classic-content screen-${page}" aria-label="游戏主界面">${npcDefenseNoticeHTML()}${typeof otherRegionalFrontNoticeHTML==='function'?otherRegionalFrontNoticeHTML():''}${view}</main>
     </div>
     <footer class="classic-footer"><div class="layout-status-strip">${bulletin}${focus?'':currentObjectiveHTML()}</div>
-      <nav class="classic-primary layout-command-dock" aria-label="常用功能">${commands.map(([icon,label,action,id,badge])=>`<button data-action="${action}" data-id="${id}" class="${action==='classicNav'&&page===id?'active':''}" ${action==='classicNav'&&page===id?'aria-current="page"':''} aria-label="${label}"><span class="layout-dock-emblem">${layoutNavIcon(icon)}</span><span class="layout-nav-label">${label}</span>${badge?`<i>${badge}</i>`:''}</button>`).join('')}</nav>
+      <nav class="classic-primary layout-command-dock" aria-label="常用功能" style="--dock-count:${commands.length}">${commands.map(([icon,label,action,id,badge])=>`<button data-action="${action}" data-id="${id}" class="${action==='classicNav'&&page===id?'active':''}" ${action==='classicNav'&&page===id?'aria-current="page"':''} aria-label="${label}"><span class="layout-dock-emblem">${layoutNavIcon(icon)}</span><span class="layout-nav-label">${label}</span>${badge?`<i>${badge}</i>`:''}</button>`).join('')}</nav>
     </footer>
   </div>`;
 }

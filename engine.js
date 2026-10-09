@@ -93,7 +93,7 @@ const Game = (() => {
   const supplies=(amount,gold)=>({food:amount,wood:amount,stone:amount,iron:amount,gold});
   const plotReached=(s,type,level=1)=>s.plots.some(p=>p.type===type&&p.level>=level);
   const missions = [
-    {id:'gift',stage:'立城补给',title:'奉诏立城',desc:'领取新手礼包，取得第一批建城物资',route:'gift',check:s=>s.starterGiftClaimed,reward:supplies(3000,8000)},
+    {id:'gift',stage:'立城补给',title:'奉诏立城',desc:'领取新手补给第 1 阶（官府礼包），取得第一批建城物资',route:'gift',check:s=>s.starterGiftClaimed,reward:supplies(3000,8000)},
     {id:'house',stage:'立城补给',title:'安置百姓',desc:'完成 1 座 1 级民房，为招兵提供人口',route:'inner',check:s=>s.buildings.house>=1,reward:{food:5000,wood:4000,stone:3000,iron:2000,gold:6000}},
     {id:'farm',stage:'立城补给',title:'开垦农田',desc:'在城外完成 1 块农田',route:'outer',check:s=>plotReached(s,'farm'),reward:{food:6000,wood:4000,stone:3000,iron:2000,gold:5000}},
     {id:'lumber',stage:'立城补给',title:'伐木备料',desc:'在城外完成 1 块伐木场',route:'outer',check:s=>plotReached(s,'lumber'),reward:{food:3000,wood:7000,stone:3000,iron:2000,gold:5000}},
