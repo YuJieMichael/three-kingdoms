@@ -1,4 +1,6 @@
 'use strict';
+// Phones (coarse pointer) redraw the whole map on every pan; lighter filters keep that fast on mobile Safari.
+const INK_MAP_LITE=typeof matchMedia==='function'&&matchMedia('(pointer:coarse)').matches;
 // One coordinate-anchored painting. No terrain sprites or per-cell island bases.
 const InkMapArt={paper:'#ddd3ae',ink:'#334943',water:'#88a5a5',forest:'#809782',earth:'#b3ae8d'};
 function inkMapRandom(seed,salt){return ((Math.imul(seed^Math.imul(salt+1,2654435761),1597334677)>>>0)%10000)/10000;}
@@ -104,11 +106,11 @@ function inkWorldGroundSVG(start,span,read){
   return `<svg class="web-world-ground ink-world-ground" viewBox="${originX} ${originY} ${size} ${size}" preserveAspectRatio="none" aria-hidden="true"><defs>
     ${P?`<pattern id="painted-lake" width="220" height="220" patternUnits="userSpaceOnUse"><image href="${P.src('map','lake')}" width="220" height="220"/></pattern><pattern id="painted-grass" width="260" height="260" patternUnits="userSpaceOnUse"><image href="${P.src('map','grass')}" width="260" height="260"/></pattern>`:''}
     <filter id="ink-wash-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
-    <filter id="ink-goo" filterUnits="userSpaceOnUse" ${box}><feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/><feGaussianBlur in="g" stdDeviation="5"/></filter>
-    <filter id="ink-sand" filterUnits="userSpaceOnUse" ${box}><feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/><feMorphology in="g" operator="dilate" radius="7" result="d"/><feGaussianBlur in="d" stdDeviation="4"/></filter>
-    <filter id="ink-shore" filterUnits="userSpaceOnUse" ${box}><feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/><feMorphology in="g" operator="erode" radius="1.4" result="e"/><feComposite in="g" in2="e" operator="out" result="ring"/><feGaussianBlur in="ring" stdDeviation="1.1"/></filter>
-    <filter id="ink-paper-grain"><feTurbulence type="fractalNoise" baseFrequency=".68" numOctaves="3" seed="7" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
-    <pattern id="ink-paper" width="180" height="180" patternUnits="userSpaceOnUse"><rect width="180" height="180" filter="url(#ink-paper-grain)" opacity=".1"/></pattern>
+    <filter id="ink-goo" filterUnits="userSpaceOnUse" ${box}><feGaussianBlur in="SourceGraphic" stdDeviation="${INK_MAP_LITE?10:16}" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/><feGaussianBlur in="g" stdDeviation="5"/></filter>
+    <filter id="ink-sand" filterUnits="userSpaceOnUse" ${box}><feGaussianBlur in="SourceGraphic" stdDeviation="${INK_MAP_LITE?10:16}" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/><feMorphology in="g" operator="dilate" radius="7" result="d"/><feGaussianBlur in="d" stdDeviation="4"/></filter>
+    <filter id="ink-shore" filterUnits="userSpaceOnUse" ${box}><feGaussianBlur in="SourceGraphic" stdDeviation="${INK_MAP_LITE?10:16}" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/><feMorphology in="g" operator="erode" radius="1.4" result="e"/><feComposite in="g" in2="e" operator="out" result="ring"/><feGaussianBlur in="ring" stdDeviation="1.1"/></filter>
+    ${INK_MAP_LITE?'':'<filter id="ink-paper-grain"><feTurbulence type="fractalNoise" baseFrequency=".68" numOctaves="3" seed="7" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>'}
+    <pattern id="ink-paper" width="180" height="180" patternUnits="userSpaceOnUse">${INK_MAP_LITE?'':'<rect width="180" height="180" filter="url(#ink-paper-grain)" opacity=".1"/>'}</pattern>
     <linearGradient id="ink-mountain-wash" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#4d6c63" stop-opacity=".75"/><stop offset=".58" stop-color="#7d978b" stop-opacity=".62"/><stop offset="1" stop-color="#b9c4ab" stop-opacity=".1"/></linearGradient>
     <radialGradient id="ink-foot-mist"><stop stop-color="#e8e5d1" stop-opacity=".9"/><stop offset="1" stop-color="#e8e5d1" stop-opacity="0"/></radialGradient>
     </defs><rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="${InkMapArt.paper}"/>${P?`<rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="url(#painted-grass)" opacity=".62"/>`:''}

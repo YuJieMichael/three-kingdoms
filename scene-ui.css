@@ -11,8 +11,8 @@
 .scene-board .scene-stage{position:relative;display:block;isolation:isolate;min-width:640px;width:100%;aspect-ratio:1100 / 720;padding:0;margin:0;background:none;container-type:inline-size}
 .scene-board .scene-stage.scene-fields{aspect-ratio:1100 / var(--scene-height,720)}
 .scene-ground{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}.scene-courtyard{z-index:1}
-.scene-board .scene-site{position:absolute!important;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0!important;margin:0;min-height:0!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0;overflow:visible;z-index:var(--scene-depth,1);cursor:pointer;transition:filter .12s}
-.scene-board .scene-site:hover{outline:none;transform:translateX(-50%);background:transparent!important;filter:brightness(1.12);z-index:1000}
+.scene-board .scene-site{position:absolute!important;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0!important;margin:0;min-height:0!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0;overflow:visible;z-index:var(--scene-depth,1);cursor:pointer;transition:filter .12s}@media (hover:hover){
+.scene-board .scene-site:hover{outline:none;transform:translateX(-50%);background:transparent!important;filter:brightness(1.12);z-index:1000}}
 .scene-board .scene-site:focus-visible{outline:3px solid #ffdf8b!important;outline-offset:1px;border-radius:8px}
 .scene-board .scene-site .city-building-art{position:absolute;bottom:18%;width:100%!important;height:87%!important;margin:0;pointer-events:none}
 .scene-board .scene-hall .city-building-art{height:92%!important;bottom:13%}
@@ -74,3 +74,6 @@
 .scene-board.manual-city .scene-site .scene-inline-caption{left:50%;top:90.566%;z-index:2}.scene-board.manual-city .scene-site:focus-within{z-index:1000}@media (hover:hover){
 .scene-board.manual-city .scene-site:not(:hover):not(:focus-within) .scene-inline-caption{visibility:hidden;opacity:0}}@media (hover:none){
 .scene-board.manual-city .scene-site:not(:focus-within) .scene-inline-caption{visibility:hidden;opacity:0}}.scene-board.manual-city .scene-site.working .web-atlas-art{filter:drop-shadow(0 4px 3px #342e3066) drop-shadow(0 0 3px #d8b15b)}
+/* v0.34.38: taps follow the isometric footprint (hexagon for buildings, diamond for empty plots) so neighbours stop covering each other */
+.scene-board.manual-city .scene-site{pointer-events:none}.scene-board.manual-city .scene-site>.scene-hit{position:absolute;inset:0;pointer-events:auto;clip-path:polygon(50% 6%,97% 33%,97% 74%,50% 100%,3% 74%,3% 33%);z-index:1}.scene-board.manual-city .scene-site.empty-city>.scene-hit{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}.scene-board.manual-city .scene-site.scene-hall>.scene-hit{clip-path:polygon(50% 0,100% 38%,100% 70%,50% 100%,0 70%,0 38%)}
+

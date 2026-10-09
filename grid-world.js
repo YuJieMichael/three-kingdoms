@@ -168,12 +168,13 @@ document.addEventListener('pointerdown',event=>{
 document.addEventListener('pointermove',event=>{
   if(!mapDrag||event.pointerId!==mapDrag.pointer)return;
   if(Math.hypot(event.clientX-mapDrag.x,event.clientY-mapDrag.y)>mapDrag.slop){mapDrag.moved=true;mapDrag.grid.classList.add('dragging');}
+  if(mapDrag.moved)mapDrag.grid.style.transform=`translate3d(${event.clientX-mapDrag.x}px,${event.clientY-mapDrag.y}px,0)`;
 });
 document.addEventListener('pointerup',event=>{
   if(!mapDrag||event.pointerId!==mapDrag.pointer)return;
-  const drag=mapDrag;mapDrag=null;drag.grid.classList.remove('dragging');
+  const drag=mapDrag;mapDrag=null;drag.grid.classList.remove('dragging');drag.grid.style.transform='';
   const dx=Math.round((event.clientX-drag.x)/drag.cellX),dy=Math.round((event.clientY-drag.y)/drag.cellY);
   if(drag.moved&&(dx||dy)){suppressMapClick=true;centerWorld(drag.start.x-dx,drag.start.y-dy,false);setTimeout(()=>suppressMapClick=false,300);}
 });
-document.addEventListener('pointercancel',()=>{mapDrag?.grid.classList.remove('dragging');mapDrag=null;});
+document.addEventListener('pointercancel',()=>{if(mapDrag){mapDrag.grid.classList.remove('dragging');mapDrag.grid.style.transform='';}mapDrag=null;});
 document.addEventListener('click',event=>{if(suppressMapClick){event.preventDefault();event.stopImmediatePropagation();}},{capture:true});
