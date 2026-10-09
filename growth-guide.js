@@ -21,7 +21,7 @@ const GrowthGuide=(()=>{
     const hungry=rows.filter(r=>r.rate<0&&r.army>0&&!fed.has(r.id)&&r.food/-r.rate<6).sort((a,b)=>a.food/-a.rate-b.food/-b.rate)[0];if(!hungry)return null;
     const source=rows.filter(r=>r.id!==hungry.id&&r.rate>0).sort((a,b)=>b.rate-a.rate)[0];
     const hours=hungry.food/-hungry.rate,left=hungry.food<=0?'已经断粮，断粮 1 小时后驻军每小时逃散 1%':'存粮约 '+(hours<1?Math.max(1,Math.round(hours*60))+' 分钟':hours.toFixed(1)+' 小时')+'后耗尽，之后驻军每小时逃散 1%';
-    return {kind:'supply',id:hungry.id,source:source?.id||'',rate:Math.round(hungry.rate),title:'为'+hungry.name+'建立运粮线',reason:hungry.name+'每小时耗粮 '+Math.round(-hungry.rate)+'，'+left+'。'+(source?'从'+source.name+'（每小时 +'+Math.round(source.rate)+'）建立运粮线，需要辎重车；也可以召回部队，或在新城开垦农田。':'目前没有余粮充足的城池可以调粮，请召回部队或先在新城开垦农田。')};
+    return {kind:'supply',id:hungry.id,source:source?.id||'',rate:Math.round(hungry.rate),title:'为'+hungry.name+'建立运粮线',reason:hungry.name+'每小时耗粮 '+Math.round(-hungry.rate)+'，'+left+'。'+(source?'官府自动调粮赶不上消耗时，可从'+source.name+'（每小时 +'+Math.round(source.rate)+'）另建运粮线（需要辎重车），或召回部队、在新城开垦农田。':'各城都没有富余粮食，官府无法自动调粮。请召回部队、多建农田，或减少驻军。')};
   }
   function model(game){
     const s=game.state,gift=OnboardingSystem.available(s)[0];

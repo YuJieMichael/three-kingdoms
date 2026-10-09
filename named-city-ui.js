@@ -9,7 +9,7 @@ function namedCityDetailsHTML(value){
 function namedCityDevelopmentHTML(value){
   const q=Game.namedCityDevelopmentQuote?.(value)||NamedCitySystem.developmentQuote(S(),value);if(!q)return '';
   const names={hall:'官府等级',morale:'民心',population:'人口',plots:'已开垦资源田'};
-  return `<section class="named-city-development"><h4>稳定发展奖励${q.claimed?' · 已领取':''}</h4>${q.claimed?'<p class="hint">本城奖励只领取一次，迁移或切换城市不会重置。</p>':`<ul>${q.checks.map(c=>`<li>${c.complete?'✓':'○'} ${names[c.id]} ${num(c.current)} / ${num(c.required)}</li>`).join('')}</ul><p class="hint">奖励入此城：${Object.entries(q.reward).map(([id,n])=>Game.resources[id].name+' '+num(n)).join('、')}，允许暂时超仓。</p>${btn(q.reason||'领取本城发展奖励','namedCityDevelopment',q.id,'small secondary',!!q.reason)}`}</section>`;
+  return `<section class="named-city-development"><h4>稳定发展奖励${q.claimed?' · 已领取':''}</h4>${q.claimed?'<p class="hint">本城奖励只领取一次，迁移或切换城市不会重置。</p>':`<ul>${q.checks.map(c=>`<li>${c.complete?'✓':'○'} ${names[c.id]} ${num(c.current)} / ${num(c.required)}</li>`).join('')}</ul><p class="hint">奖励入此城：${Object.entries(q.reward).map(([id,n])=>Game.resources[id].name+' '+num(n)).join('、')}，允许暂时超仓。${Object.keys(q.jewels||{}).length?'另得珠宝：'+Object.entries(q.jewels).map(([id,n])=>(Game.progression?.jewels?.[id]?.name||id)+' ×'+n).join('、')+'。':''}</p>${btn(q.reason||'领取本城发展奖励','namedCityDevelopment',q.id,'small secondary',!!q.reason)}`}</section>`;
 }
 function namedCityOverviewHTML(){
   const rows=Game.namedCities?.()||NamedCitySystem.list(S());
