@@ -170,12 +170,14 @@ const HeroSystem=(()=>{
   function enhanceQuote(e){return {gold:1000*e.tier*(e.enhance+1),pearls:Math.ceil((e.enhance+1)/3)};}
   function enhance(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero&&busy(e.hero))return busy(e.hero);if(s.buildings.smith<1)return '请先建造铁匠铺';if(e.enhance>=10)return '强化已达 +10';const q=enhanceQuote(e);if(s.res.gold<q.gold||(s.inventory.pearl||0)<q.pearls)return '黄金或强化宝珠不足';s.res.gold-=q.gold;s.inventory.pearl-=q.pearls;e.enhance++;Progression.record(s,'item',q.pearls);return save();}
   function salvage(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero)return '请先卸下装备';s.equipment=s.equipment.filter(x=>x.id!==eid);s.inventory.pearl=(s.inventory.pearl||0)+e.tier+Math.floor(e.enhance/3);return save();}
-  // Three idle rare pieces of one slot plus 2 jade make one legendary piece.
-  function legendQuote(slot){const s=live();if(!Object.hasOwn(slots,slot))return null;const pool=s.equipment.filter(e=>e.slot===slot&&e.tier===3&&!e.hero).sort((a,b)=>a.enhance-b.enhance||a.id-b.id);return {slot,use:pool.slice(0,3).map(e=>e.id),jade:2,reason:pool.length<3?'需要 3 件闲置的'+qualities[3]+slots[slot]:(s.jewels?.jade||0)<2?'需要玉石 ×2':s.buildings.smith<10?'需要 10 级铁匠铺':''};}
-  function forgeLegend(slot){const s=live(),q=legendQuote(slot);if(!q)return '请选择装备';if(q.reason)return q.reason;s.equipment=s.equipment.filter(e=>!q.use.includes(e.id));s.jewels.jade-=q.jade;addEquipment(s,slot,4);return save();}
+  // Legendary pieces come from the 铸神兵 quest line (legend-quest.js): first a timed quench, then direct quenching.
+  function legendQuote(slot){const s=live();return LegendQuest.forgeQuote(s,slot);}
+  function forgeLegend(slot){const s=live(),error=LegendQuest.startForge(s,slot,Date.now(),addEquipment);return error||save();}
+  function claimLegend(){const s=live(),error=LegendQuest.claim(s,Date.now(),addEquipment);return error||save();}
+  function seekLegend(){const s=live(),error=LegendQuest.seek(s);return error||save();}
   // 炼化鼎: add (or reroll) one extra stat of +3..+8 on a rare or legendary piece.
   function refine(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,refine};
+  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();
