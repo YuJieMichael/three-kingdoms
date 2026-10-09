@@ -11,21 +11,30 @@ function sceneCityBoundary(level=0,front=false){
   const stone=level>0,h=stone?30:17,parts=[];
   const corners=[{x:60,y:350},{x:550,y:95},{x:1040,y:350},{x:550,y:630}];
   const edges=front?[[corners[0],corners[3]],[corners[3],corners[2]]]:[[corners[0],corners[1]],[corners[1],corners[2]]];
+  // Inward direction of each edge along the other isometric axis, for the wall's top walkway.
+  const inward=(a,b)=>{const c=corners,key=c.indexOf(a)+''+c.indexOf(b),d={'01':[490,280],'12':[-490,280],'03':[490,-255],'32':[-490,-255]}[key],n=Math.hypot(d[0],d[1]);return {x:d[0]/n*20,y:d[1]/n*20};};
   edges.forEach(([a,b],edge)=>{
     const dx=b.x-a.x,slope=(b.y-a.y)/dx,length=Math.abs(dx),origin=dx>0?a:b;
     const gate=front&&edge===0;
     const spans=gate?[[0,200],[290,length]]:[[0,length]];
-    const face=stone?(edge===0?'#9c927b':'#817e6c'):'#79674c';
-    const blocks=spans.map(([start,end])=>{
-      if(!stone){
-        const stakes=[];for(let x=start;x<end;x+=13)stakes.push(`<path d="M${x} 0V-${h}l3-4 3 4V0" fill="#8c7654" stroke="#594d39" stroke-width="1"/>`);
-        return `${stakes.join('')}<path d="M${start} -6H${end}M${start} -13H${end}" stroke="#ae9568" stroke-width="3"/>`;
-      }
-      const merlons=[];for(let x=start+2;x<end-12;x+=24)merlons.push(`<path d="M${x} -${h}v-7h13v7" fill="#b8ae91" stroke="#6f6a59" stroke-width="1"/><path d="M${x+1} -${h+7}h11" stroke="#ded3b4" stroke-width="1.5"/>`);
-      return `<path d="M${start} 5H${end}" stroke="#494c37" stroke-width="11" opacity=".25"/><path d="M${start} 0V-${h}H${end}V0Z" fill="${face}" stroke="#706c58"/><path d="M${start} 0V-${h}H${end}V0Z" fill="url(#scene-wall-brick)" opacity=".5"/><path d="M${start} -${h}H${end}" stroke="#d3c7a6" stroke-width="5"/><path d="M${start} -3H${end}" stroke="#656653" stroke-width="5"/>${merlons.join('')}`;
-    }).join('');
-    parts.push(`<g transform="matrix(1 ${slope} 0 1 ${origin.x} ${origin.y})">${blocks}</g>`);
+    const matrix=`matrix(1 ${slope} 0 1 ${origin.x} ${origin.y})`;
+    if(!stone){
+      const blocks=spans.map(([start,end])=>{const stakes=[];for(let x=start;x<end;x+=13)stakes.push(`<path d="M${x} 0V-${h}l3-4 3 4V0" fill="#8c7654" stroke="#594d39" stroke-width="1"/>`);return `${stakes.join('')}<path d="M${start} -6H${end}M${start} -13H${end}" stroke="#ae9568" stroke-width="3"/>`;}).join('');
+      parts.push(`<g transform="${matrix}">${blocks}</g>`);return;
+    }
+    // A thick brick wall: outer face, a paved walkway on top and, for the far walls, the inner face the viewer sees.
+    const H=34,v=inward(a,b),at=x=>({x:origin.x+x,y:origin.y+slope*x}),face=front?'#a39880':'#8f8771';
+    spans.forEach(([start,end])=>{
+      const A=at(start),B=at(end),top=`M${A.x} ${A.y-H}L${B.x} ${B.y-H}L${B.x+v.x} ${B.y-H+v.y}L${A.x+v.x} ${A.y-H+v.y}Z`;
+      const merlons=[];for(let x=start+3;x<end-14;x+=26)merlons.push(`<path d="M${x} -${H}v-9h15v9" fill="#bfb497" stroke="#6f6a59" stroke-width="1"/><path d="M${x+1} -${H+9}h13" stroke="#e3d8b8" stroke-width="1.6"/>`);
+      const wallFace=`<path d="M${start} 0V-${H}H${end}V0Z" fill="${face}" stroke="#6d6855"/><path d="M${start} 0V-${H}H${end}V0Z" fill="url(#scene-wall-brick)" opacity=".62"/><path d="M${start} -2H${end}" stroke="#5f604e" stroke-width="4"/>`;
+      const walkway=`<path d="${top}" fill="#c4b999" stroke="#7d7660" stroke-width="1"/><path d="${top}" fill="url(#scene-wall-brick)" opacity=".28"/>`;
+      if(front)parts.push(`<path d="M${A.x} ${A.y+6}L${B.x} ${B.y+6}" stroke="#494c37" stroke-width="12" opacity=".22"/><g transform="${matrix}">${wallFace}</g>${walkway}<g transform="${matrix}">${merlons.join('')}</g>`);
+      else parts.push(`<g transform="${matrix}">${merlons.join('')}</g>${walkway}<g transform="translate(${v.x} ${v.y}) ${matrix}">${wallFace}</g>`);
+    });
   });
+  // Corner towers close the joints where two walls meet.
+  if(stone)(front?[corners[0],corners[3],corners[2]]:[corners[0],corners[1],corners[2]]).forEach(c=>{const x=c.x,y=c.y;parts.push(`<g transform="translate(${x} ${y})"><path d="M-17 -2L0 7 17 -2V-46L0 -37 -17 -46Z" fill="#9a9079" stroke="#6d6855"/><path d="M0 7V-37" stroke="#7a735f"/><path d="M-17 -46L0 -55 17 -46 0 -37Z" fill="#c9be9e" stroke="#7d7660"/><path d="M-17 -46v-7l6 3v-4l5 3v-4l6 3v-3l6-3v4l5-3v4l6-3v7" fill="#bfb497" stroke="#6f6a59" stroke-width="1"/></g>`);});
   if(front&&stone&&typeof PaintedArt!=='undefined'){
     parts.push(`<image href="${PaintedArt.src('buildings','wall')}" x="215" y="360" width="190" height="166" preserveAspectRatio="xMidYMax meet"/>`);
   }else if(front&&stone){
@@ -65,7 +74,7 @@ function webCityScene(){
     if(isHall)captions.push(sceneCaption({x:p.x,y:p.y+86},b.name,lv,660,'',{city:true,hall:true,queue:q}));
     const caption=b&&!isHall?`<span class="scene-name-tag scene-city-caption scene-inline-caption" aria-hidden="true">${esc(b.name)}<em>${lv}</em>${q?`<span class="scene-caption-queue"> · ${clock(q.end)}</span>`:''}</span>`:'';
     const art=b&&!isWall?`<span class="scene-contact-shadow" aria-hidden="true"></span><span class="city-building-art">${webCityBuildingArt(id,lv)}</span>`:'';
-    return `<button class="city-grid-tile scene-site ${b?'built-city':'empty-city'} ${isHall?'scene-hall':''} ${isWall?'scene-wall-control':''} ${q?'working':''}" style="${scenePosition(isHall?{x:p.x,y:p.y+64}:p,isHall?328:isWall?130:b?118:120,isHall?280:isWall?130:b?106:50)}" data-action="${b?'building':'citySlot'}" data-id="${b?'site:'+i:i}" title="${b?b.name+' · '+lv+'级'+(q?' · 营造中':''):'空地 · 点击建造'}" aria-label="${isWall?'城门处 · ':''}城内 ${Math.floor(i/6)+1}行${i%6+1}列 ${b?b.name+' '+lv+'级'+(q?'，营造中':''):'空地，可建造'}">${art}${b?`<strong>${b.name}<em>${lv}</em></strong>`:''}${caption}${q?sceneConstructionMark():''}${q&&!b?`<small class="scene-construction">营造 · ${clock(q.end)}</small>`:''}</button>`;
+    return `<button class="city-grid-tile scene-site ${b?'built-city':'empty-city'} ${isHall?'scene-hall':''} ${isWall?'scene-wall-control':''} ${q?'working':''}" style="${scenePosition(isHall?{x:p.x,y:p.y+58}:p,isHall?250:isWall?130:b?118:120,isHall?212:isWall?130:b?106:50)}" data-action="${b?'building':'citySlot'}" data-id="${b?'site:'+i:i}" title="${b?b.name+' · '+lv+'级'+(q?' · 营造中':''):'空地 · 点击建造'}" aria-label="${isWall?'城门处 · ':''}城内 ${Math.floor(i/6)+1}行${i%6+1}列 ${b?b.name+' '+lv+'级'+(q?'，营造中':''):'空地，可建造'}">${art}${b?`<strong>${b.name}<em>${lv}</em></strong>`:''}${caption}${q?sceneConstructionMark():''}${q&&!b?`<small class="scene-construction">营造 · ${clock(q.end)}</small>`:''}</button>`;
   }).join('');
   const plaza=hallCenter?`<svg class="scene-ground scene-courtyard" viewBox="0 0 1100 660" aria-hidden="true"><defs><pattern id="scene-courtyard-stone" width="32" height="18" patternUnits="userSpaceOnUse"><rect width="32" height="18" fill="#c5bea5"/><path d="M0 0H32M0 9H32M8 0V9M24 9V18" stroke="#a49d87" stroke-width=".6"/><path d="M0 1H32" stroke="#e6ddc4" stroke-width=".6"/></pattern></defs><polygon points="${sceneDiamond(hallCenter.x,hallCenter.y+4,338,180)}" fill="#716e53" opacity=".25"/><polygon points="${sceneDiamond(hallCenter.x,hallCenter.y,328,172)}" fill="url(#scene-courtyard-stone)" stroke="#a49a7a" stroke-width="2"/><polygon points="${sceneDiamond(hallCenter.x,hallCenter.y,316,160)}" fill="none" stroke="#e9dec1" stroke-width="2"/></svg>`:'';
   return `<section class="city-grid-board manual-city scene-board"><div class="outskirts-banner"><span class="outskirts-title">${esc(activeCityMeta().name)} · 城坊</span><span class="label">点击建筑办理城务 · 点击空地建设</span>${sceneFocusButton()}</div><div class="scene-scroll"><div class="city-grid scene-stage">${sceneGroundSVG()}${sceneCityBoundary(wallLevel)}${plaza}${sites}${captions.join('')}${sceneCityBoundary(wallLevel,true)}</div></div><p class="outskirts-note">${wallLevel>0?'城门处办理城墙升级与城防':'尚未修筑城墙 · 木栅仅为城坊边界'} · 官府院落占四格 <span class="scene-touch-hint">· 横向滑动查看城坊</span></p></section>`;
