@@ -77,9 +77,11 @@ function classicQueuesModal(){
 let growthStage='立城补给',growthPage=0;
 const GROWTH_PAGE_SIZE=10;
 function missionItemHTML(items){return Object.keys(items||{}).length?'<div class="loot">'+Object.entries(items).map(([id,n])=>'<span>'+Game.manual.shop.find(x=>x.id===id).name+' ×'+num(n)+'</span>').join('')+'</div>':'';}
+// Playtest scope: research, army and campaign routes appear once their buildings exist, keeping day one short.
+function growthStageOpen(stage){const s=S(),b=s.buildings;return ({'书院研习':(b.academy||0)>=1,'整军出征':(b.barracks||0)>=1,'征战里程':(b.drill||0)>=1||s.stats.victories>0})[stage]??true;}
 function growthMissionModal(){
   const pool=Game.missions.filter(m=>!m.chapter);
-  const ready=pool.filter(m=>Game.missionReady(m)),claimed=pool.filter(m=>Game.missionClaimed(m.id)).length,groups=['立城补给','城池经营','书院研习','整军出征','征战里程'];
+  const ready=pool.filter(m=>Game.missionReady(m)),claimed=pool.filter(m=>Game.missionClaimed(m.id)).length,groups=['立城补给','城池经营','书院研习','整军出征','征战里程'].filter(stage=>growthStageOpen(stage));if(!groups.includes(growthStage))growthStage=groups[0];
   const nav='<div class="shop-tabs" role="group" aria-label="成长任务路线">'+groups.map(stage=>{const list=pool.filter(m=>m.stage===stage),count=list.filter(m=>Game.missionReady(m)).length;return btn(stage+(count?' · '+count+' 可领':''),'growthStage',stage,'small secondary '+(stage===growthStage?'active-order':''));}).join('')+'</div>';
   const rows=list=>list.map(m=>{const done=Game.missionClaimed(m.id),available=Game.missionReady(m);return `<article class="quest-card ${done?'quest-claimed':available?'quest-ready':''}"><div class="quest-heading"><h3>${esc(m.title)}</h3><span class="badge">${done?'已领取':available?'可领取':'待达成'}</span></div><p class="hint">${esc(m.desc)}</p>${lootHtml(m.reward)}${missionItemHTML(m.items)}<p class="hint">声望 +300</p><div class="quest-actions">${done?'':available?btn('领取奖励','mission',m.id,'small'):btn(m.route==='gift'?'领取礼包':'前往完成','missionGo',m.id,'small secondary')}</div></article>`;}).join('');
   const list=pool.filter(m=>m.stage===growthStage),pending=list.filter(m=>!Game.missionClaimed(m.id)).sort((a,b)=>Number(Game.missionReady(b))-Number(Game.missionReady(a))),done=list.filter(m=>Game.missionClaimed(m.id));

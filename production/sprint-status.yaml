@@ -6,38 +6,75 @@
 #   done           ↔  Complete
 #   blocked        ↔  Blocked
 
-sprint: 3
-goal: "中后期打仗有压力，晋升不靠运气，消除误导性说明。"
-start: "2026-10-08"
-end: "2026-10-21"
+sprint: 4
+goal: "无测试补给也能稳定经营多城；试玩版只露出单机必需的功能。"
+milestone: "production/milestones/public-playtest.md"
+start: "2026-10-09"
+end: "2026-10-18"
 generated: "2026-10-08"
 updated: "2026-10-08"
 
 stories:
-  - id: "4-1"
-    name: "讨伐黄巾说明、客栈重名、占城提示、.gitignore"
-    file: "production/sprints/sprint-003.md"
-    priority: must-have
-    status: done
-    owner: ""
-    estimate_days: 0.5
-    blocker: ""
-    completed: "2026-10-08"
-  - id: "4-2"
-    name: "晋升珠宝按价值折算"
-    file: "production/sprints/sprint-003.md"
+  - id: "5-1"
+    name: "新城运粮引导"
+    file: "production/sprints/sprint-004.md"
     priority: must-have
     status: done
     owner: ""
     estimate_days: 1
     blocker: ""
     completed: "2026-10-08"
-  - id: "4-3"
-    name: "提高第 2、3 章与黄巾城守军"
-    file: "design/balance/late-battle-difficulty-2026-10-08.md"
+  - id: "5-2"
+    name: "长局模拟入库"
+    file: "production/sprints/sprint-004.md"
     priority: must-have
     status: done
     owner: ""
-    estimate_days: 1.5
+    estimate_days: 1
     blocker: ""
     completed: "2026-10-08"
+  - id: "5-3"
+    name: "图纸玩法掉落"
+    file: "production/sprints/sprint-004.md"
+    priority: must-have
+    status: done
+    owner: ""
+    estimate_days: 0.5
+    blocker: ""
+    completed: "2026-10-08"
+  - id: "5-4"
+    name: "试玩范围隐藏"
+    file: "production/sprints/sprint-004.md"
+    priority: must-have
+    status: done
+    owner: ""
+    estimate_days: 1
+    blocker: ""
+    completed: "2026-10-08"
+  - id: "5-5"
+    name: "官府 2 级后补给与造价联调"
+    file: "production/sprints/sprint-004.md"
+    priority: should-have
+    status: backlog
+    owner: ""
+    estimate_days: 1
+    blocker: ""
+    completed: ""
+  - id: "5-6"
+    name: "长局脚本扩展（1 倍、5 城、72 小时）"
+    file: "production/sprints/sprint-004.md"
+    priority: must-have
+    status: backlog
+    owner: ""
+    estimate_days: 1
+    blocker: ""
+    completed: ""
+  - id: "5-7"
+    name: "真机清单"
+    file: "production/sprints/sprint-004.md"
+    priority: must-have
+    status: backlog
+    owner: ""
+    estimate_days: 0.5
+    blocker: ""
+    completed: ""
