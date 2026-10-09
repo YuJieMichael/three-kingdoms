@@ -6,7 +6,7 @@ const total=a=>Object.values(a||{}).reduce((x,y)=>x+y,0);
 function prepared(seed,army,owned=null){
   const e=loadGame(seed),g=e.Game,s=g.state;
   city(g,{hall:10,house:10,drill:10,barracks:10,academy:10,smith:10,tavern:10,inn:5,market:5});s.honors.noble=10;
-  for(const id of Object.keys(s.tech))s.tech[id]=10;for(const n of e.Chapter.nodes)s.conquered[n.id]=true;s.conquered.fort=true;s.conquered.camp=true;
+  for(const id of Object.keys(s.tech))s.tech[id]=10;for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes])s.conquered[n.id]=true;s.conquered.fort=true;s.conquered.camp=true;
   Object.assign(s.army,army);if(owned)for(const id of owned){s.conquered[id]=true;s.realm.cities['city_'+id]=e.evaluate(`CitySystem.empty(Game.state,Game.getNode('${id}'),Date.now())`);}for(const id of Object.keys(g.resources))s.res[id]=5000000;s.governor=null;s.cityRoles.counsellor='su';
   e.evaluate('Math.random=()=>.5');return e;
 }

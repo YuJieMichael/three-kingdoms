@@ -33,15 +33,35 @@ const ChapterData={
     {resources:65000,gold:230000,jewels:{amber:10},items:{speed_build_3h:2}},
     {resources:80000,gold:300000,jewels:{jade:5,nightPearl:1},items:{speed_train_3h:3,speed_research_3h:2}}
   ],
-  allNodes(){return [...this.nodes,...this.chapterThreeNodes];},
-  chapterNodes(chapter=2){return chapter===3?this.chapterThreeNodes:this.nodes;},
-  chapterTitle(chapter=2){return chapter===3?this.chapterThreeTitle:this.title;},
+  // Chapter 4: each battle has one rule (design/quick-specs/chapter-four-2026-10-09.md); rules live in node.rule.
+  chapterFourTitle:'第四章 · 讨伐董卓',
+  chapterFourNodes:[
+    {id:'c4_sishui',name:'汜水关',terrain:'mountain',x:61,y:24,level:10,chapter:4,requires:'luo_citadel',desc:'华雄据汜水关搦战。开战时敌将出阵斗将：我方主将武力低于 92，全军攻击 −35%。派武力 92 以上的主将，或多带兵硬抗。',commander:{name:'华雄',title:'骁骑都督',attack:1.3,defense:1.15,order:'advance'},rule:{kind:'duel',might:92,penalty:.65},fortification:{name:'汜水关门',hp:150000,protection:1.7,tower:2500,range:1300,engineWall:true},army:{shield:4000,spear:5000,archer:4000,cavalry:3000},loot:{food:20000,wood:16000,iron:16000,gold:30000},reward:'斩将夺关',time:80},
+    {id:'c4_hulao',name:'虎牢关',terrain:'mountain',x:62,y:19,level:10,chapter:4,requires:'c4_sishui',desc:'徐荣扼守虎牢关，关道狭窄：出征总兵力最多 6,000，骑兵最多 1,500。靠科技、装备与兵种克制取胜。',commander:{name:'徐荣',title:'中郎将',attack:1.25,defense:1.3,order:'hold'},rule:{kind:'cap',total:6000,cavalry:1500},fortification:{name:'虎牢关门',hp:100000,protection:1.8,tower:1800,range:1300,engineWall:true},army:{shield:2200,spear:1800,archer:2200,cavalry:800,ballista:60},loot:{food:22000,wood:18000,stone:18000,gold:32000},reward:'精兵破关',time:84},
+    {id:'c4_xingyang',name:'荥阳伏兵',terrain:'grass',x:60,y:14,level:10,chapter:4,requires:'c4_hulao',desc:'李傕在荥阳设伏：第 6 回合敌方 10,000 骑兵从侧后杀到。6 回合内歼灭前军，或留枪兵、盾兵断后。',commander:{name:'李傕',title:'校尉',attack:1.25,defense:1.1,order:'advance'},rule:{kind:'reinforce',round:6,army:{cavalry:10000}},army:{spear:7000,archer:9000,cavalry:7000,heavy:1500},loot:{food:24000,wood:18000,iron:20000,gold:34000},reward:'破伏追敌',time:88},
+    {id:'c4_meiwu',name:'夜袭郿坞',terrain:'camp',x:55,y:6,level:10,chapter:4,requires:'c4_xingyang',desc:'郭汜守郿坞，夜色掩护：前 4 回合所有远程射程减半，箭楼不射击。步骑趁夜抢攻，弓兵与器械天亮后再发力。',commander:{name:'郭汜',title:'校尉',attack:1.2,defense:1.2,order:'hold'},rule:{kind:'night',rounds:4},fortification:{name:'郿坞坞墙',hp:120000,protection:1.7,tower:2600,range:1400,engineWall:true},army:{shield:5000,spear:3000,archer:7000,ballista:200},loot:{food:30000,wood:24000,stone:24000,gold:38000},reward:'夜破郿坞',time:92},
+    {id:'c4_lianying',name:'火烧连营',terrain:'forest',x:50,y:4,level:10,chapter:4,requires:'c4_meiwu',desc:'张济连营于林间，风向不定：每回合火势烧伤敌我前排各 8%。主将智力 80 以上可借风势，只烧敌方。',commander:{name:'张济',title:'骠骑将军',attack:1.2,defense:1.15,order:'advance'},rule:{kind:'fire',share:.08,wis:80},army:{spear:7000,shield:6000,archer:6000,cavalry:4000},loot:{food:32000,wood:30000,iron:24000,gold:42000},reward:'火攻破营',time:96},
+    {id:'c4_luoyang',name:'洛阳焚城',terrain:'camp',x:57,y:11,level:10,chapter:4,requires:'c4_lianying',desc:'董卓欲焚洛阳西迁：12 回合内必须破城歼敌，否则董卓焚城撤走，本次判负。器械与主力一次投入。',commander:{name:'董卓',title:'相国',attack:1.35,defense:1.3,order:'hold'},rule:{kind:'timeLimit',rounds:12},fortification:{name:'洛阳宫城',hp:300000,protection:1.9,tower:3500,range:1400,engineWall:true},army:{shield:7000,spear:6000,archer:7000,cavalry:4000,heavy:1500,ballista:150},loot:{food:50000,wood:40000,stone:40000,iron:40000,gold:80000},reward:'传国玉玺：天子诏令、城池名额 +1、万民景仰',time:100}
+  ],
+  chapterFourRewards:[
+    {resources:90000,gold:320000,jewels:{jadeite:3},items:{speed_train_3h:2,blueprint:2}},
+    {resources:100000,gold:350000,jewels:{jadeite:4},items:{speed_build_3h:2,blueprint:2}},
+    {resources:110000,gold:380000,jewels:{jade:2},items:{speed_research_3h:2,blueprint:2}},
+    {resources:120000,gold:420000,jewels:{jade:3},items:{speed_train_8h:2,blueprint:3}},
+    {resources:140000,gold:460000,jewels:{jade:3,nightPearl:1},items:{speed_build_8h:2,blueprint:3}},
+    {resources:200000,gold:600000,jewels:{jade:5,nightPearl:2},items:{speed_build_8h:3,speed_research_8h:2,blueprint:5}}
+  ],
+  // The jade seal (chapter 4 cleared) grants 天子诏令, +1 city slot and 万民景仰 (morale target +5, tax +10%).
+  hasSeal(s){return !!s?.conquered?.c4_luoyang;},
+  allNodes(){return [...this.nodes,...this.chapterThreeNodes,...this.chapterFourNodes];},
+  chapterNodes(chapter=2){return chapter===4?this.chapterFourNodes:chapter===3?this.chapterThreeNodes:this.nodes;},
+  chapterTitle(chapter=2){return chapter===4?this.chapterFourTitle:chapter===3?this.chapterThreeTitle:this.title;},
   completed(s,chapter=2){return this.chapterNodes(chapter).every(n=>!!s.conquered[n.id]);},
-  unlocked(s,chapter=2){return !!s.conquered.fort&&(chapter!==3||this.completed(s,2));},
-  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!s.conquered.fort)return '先占领古渡县城，开启第二章';if(n.chapter===3&&!this.unlocked(s,3))return '先完成第二章六关（含北境大营），开启第三章';if(!s.conquered[n.requires])return '先占领'+this.allNodes().find(row=>row.id===n.requires).name;return null;},
+  unlocked(s,chapter=2){return !!s.conquered.fort&&(chapter===4?this.completed(s,3):chapter!==3||this.completed(s,2));},
+  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!s.conquered.fort)return '先占领古渡县城，开启第二章';if(n.chapter===3&&!this.unlocked(s,3))return '先完成第二章六关（含北境大营），开启第三章';if(n.chapter===4&&!this.unlocked(s,4))return '先完成第三章（河洛内城），开启第四章';if(!s.conquered[n.requires])return '先占领'+this.allNodes().find(row=>row.id===n.requires).name;return null;},
   progress(s,chapter=2){const nodes=this.chapterNodes(chapter);return {unlocked:this.unlocked(s,chapter),conquered:nodes.filter(n=>s.conquered[n.id]).length,claimed:nodes.filter(n=>s.missionClaims.includes('chapter'+chapter+'_'+n.id)).length,next:nodes.find(n=>!s.conquered[n.id])||null};},
-  extendMissions(missions){[2,3].forEach(chapter=>this.chapterNodes(chapter).forEach((n,i)=>{const r=(chapter===3?this.chapterThreeRewards:this.rewards)[i];missions.push({id:'chapter'+chapter+'_'+n.id,node:n.id,chapter,stage:this.chapterTitle(chapter),title:n.name+' · 平定',desc:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&!!s.conquered[n.id],reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items,army:r.army});}));}
+  extendMissions(missions){[2,3,4].forEach(chapter=>this.chapterNodes(chapter).forEach((n,i)=>{const r=(chapter===4?this.chapterFourRewards:chapter===3?this.chapterThreeRewards:this.rewards)[i];missions.push({id:'chapter'+chapter+'_'+n.id,node:n.id,chapter,stage:this.chapterTitle(chapter),title:n.name+' · 平定',desc:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&!!s.conquered[n.id],reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items,army:r.army});}));}
 };
 // v0.34.34: late battles were too easy in the 4-day playtest, so garrisons are raised by a fixed factor (not tied to player strength). Higher factors starve the unaccelerated campaign of food (design/balance/late-battle-difficulty-2026-10-08.md).
-ChapterData.armyScale={2:1.3,3:1.5};
+ChapterData.armyScale={2:1.3,3:1.5,4:1};
 for(const n of ChapterData.allNodes())for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*ChapterData.armyScale[n.chapter]);

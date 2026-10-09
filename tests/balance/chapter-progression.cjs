@@ -29,7 +29,7 @@ function run(seed=123,speed=60,reinforce=true){
  const target={shield:325,spear:455,archer:910,cavalry:130};
  for(const [id,count]of Object.entries(target))train(id,count);
  log.push({stage:'normal preparation',hours:(env.now()-initial)/3600000,army:{...Game.state.army},spent:{...spent},stock:{...Game.state.res}});
- for(const n of env.evaluate('ChapterData.allNodes()')){
+ for(const n of env.evaluate('ChapterData.allNodes()').filter(n=>n.chapter<=3)){
   if(n.chapter===3&&reinforce){Object.assign(target,{shield:525,spear:750,archer:1650,cavalry:225});for(const [id,count]of Object.entries(target)){if(Game.state.army[id]<count)train(id,count-Game.state.army[id]);}}
   wait({food:Math.ceil(Game.totalArmy(Game.state.army)*1.2+n.time*2)});
   const army={...Game.state.army},before={...Game.state.res};const result=battle(env,n.id,'occupy',army);log.push({stage:n.id,won:result.won,rounds:Game.state.battle.round,hours:(env.now()-initial)/3600000,army,loss:result.lost,wounded:result.wounded,foodSupply:Math.ceil(Game.totalArmy(army)*1.2+n.time*2),resourcesBefore:before});

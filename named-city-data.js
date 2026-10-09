@@ -15,11 +15,11 @@ const NamedCityData=(()=>{
     {id:'named_heluo',name:'河洛郡城',tier:'prefecture',district:'中原州 · 河洛郡',parent:'named_zhongyuan',strategy:'mine',children:['named_luoshui','named_baishi']},
     {id:'named_zhongyuan',name:'中原州城',tier:'province',district:'中原州',parent:'named_luoyang',strategy:'balanced',children:['named_beiyuan','named_heluo']},
     {id:'named_luoyang',name:'洛阳都城',tier:'capital',district:'京畿 · 洛阳',parent:null,strategy:'balanced',children:['named_zhongyuan'],requiresChapter:3},
-    // Garrisoned by famous generals (named-garrison.js); found once chapter 2 is complete.
-    {id:'named_xiaopei',name:'小沛',tier:'county',district:'徐州 · 沛国 · 小沛',parent:null,strategy:'pass',children:[],discoverChapter:2,garrison:true},
-    {id:'named_wancheng',name:'宛城',tier:'county',district:'荆州 · 南阳郡 · 宛县',parent:null,strategy:'mine',children:[],discoverChapter:2,garrison:true},
-    {id:'named_xiapi',name:'下邳',tier:'prefecture',district:'徐州 · 下邳国',parent:null,strategy:'granary',children:[],discoverChapter:2,garrison:true},
-    {id:'named_beihai',name:'北海',tier:'prefecture',district:'青州 · 北海国',parent:null,strategy:'balanced',children:[],discoverChapter:2,garrison:true}
+    // Garrisoned by famous generals (named-garrison.js); found once chapter 3 is complete (chapter 4 opens).
+    {id:'named_xiaopei',name:'小沛',tier:'county',district:'徐州 · 沛国 · 小沛',parent:null,strategy:'pass',children:[],discoverChapter:3,garrison:true},
+    {id:'named_wancheng',name:'宛城',tier:'county',district:'荆州 · 南阳郡 · 宛县',parent:null,strategy:'mine',children:[],discoverChapter:3,garrison:true},
+    {id:'named_xiapi',name:'下邳',tier:'prefecture',district:'徐州 · 下邳国',parent:null,strategy:'granary',children:[],discoverChapter:3,garrison:true},
+    {id:'named_beihai',name:'北海',tier:'prefecture',district:'青州 · 北海国',parent:null,strategy:'balanced',children:[],discoverChapter:3,garrison:true}
   ].map(d=>Object.freeze({...d,tierName:tiers[d.tier].name,plotMax:tiers[d.tier].plotMax,goldFactor:tiers[d.tier].goldFactor,children:Object.freeze(d.children),development:Object.freeze({hall:tiers[d.tier].hall,morale:70,population:tiers[d.tier].population,plots:tiers[d.tier].plots,reward:Object.freeze({food:tiers[d.tier].reward,wood:tiers[d.tier].reward,stone:tiers[d.tier].reward,iron:tiers[d.tier].reward,gold:tiers[d.tier].reward/2}),jewels:Object.freeze({...tiers[d.tier].jewels})})}));
   const byId=new Map(definitions.map(d=>[d.id,d]));
   function nodeId(value){if(typeof value==='string')return value.replace(/^city_/,'');if(!value||typeof value!=='object'||value.capital===true)return '';return typeof value.node==='string'?value.node:typeof value.id==='string'?value.id.replace(/^city_/,''):'';}

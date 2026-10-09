@@ -1,5 +1,5 @@
 'use strict';
-function speedupQueueButton(kind,q){return (kind==='build'&&Game.freeFinishReady?.(q)?btn('免费完成','freeFinishBuild',Game.speedupKey(kind,q),'small'):'')+btn('加速','speedupQuick',kind+'|'+Game.speedupKey(kind,q),'small secondary');}
+function speedupQueueButton(kind,q){return (Game.edictReady?.()?btn('天子诏令','useEdict',Game.speedupKey(kind,q),'small'):'')+(kind==='build'&&Game.freeFinishReady?.(q)?btn('免费完成','freeFinishBuild',Game.speedupKey(kind,q),'small'):'')+btn('加速','speedupQuick',kind+'|'+Game.speedupKey(kind,q),'small secondary');}
 function speedupQueueLabel(target){return target.name+(target.waitSeconds>0?' · 等待 '+duration(target.waitSeconds):'')+' · 剩余工作 '+duration(target.workSeconds);}
 function speedupChoices(kind,key=''){
   const target=Game.speedupTargets(kind).find(t=>t.key===key)||(!key?Game.speedupTargets(kind)[0]:null);
@@ -57,3 +57,5 @@ document.addEventListener('click',event=>{
     actResult(null,'已缩短 '+duration(result.removedMs/1000)+(result.completed?'，任务已完成':result.waitMs>0?'，等待前一批后开训':'')+(result.requestedMs>result.removedMs?'；超出部分未保留':''));
   }
 });
+document.addEventListener('click',event=>{const el=event.target.closest('[data-action="useEdict"]');if(!el||el.disabled)return;if(actResult(Game.useEdict(el.dataset.id),'天子诏令：工程立即完成')){if(modal.open&&typeof manualModalContext==='function')manualModalContext();render();}});
+
