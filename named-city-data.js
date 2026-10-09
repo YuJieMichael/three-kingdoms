@@ -2,7 +2,7 @@
 // Administrative hierarchy and all armies/bonuses are this game's PVE parameters.
 // Existing chapter sites remain chapter sites; these cities do not enter that sequence.
 const NamedCityData=(()=>{
-  const tiers=Object.freeze({county:{name:'县城',plotMax:12,goldFactor:1.1,hall:3,population:500,plots:6,reward:5000},prefecture:{name:'郡城',plotMax:15,goldFactor:1.2,hall:5,population:1000,plots:9,reward:10000},province:{name:'州城',plotMax:18,goldFactor:1.3,hall:7,population:1500,plots:12,reward:20000},capital:{name:'都城',plotMax:18,goldFactor:1.4,hall:8,population:2000,plots:12,reward:30000}});
+  const tiers=Object.freeze({county:{name:'县城',plotMax:12,goldFactor:1.1,hall:3,population:500,plots:6,reward:5000,jewels:{jadeite:2}},prefecture:{name:'郡城',plotMax:15,goldFactor:1.2,hall:5,population:1000,plots:9,reward:10000,jewels:{jadeite:3,jade:1}},province:{name:'州城',plotMax:18,goldFactor:1.3,hall:7,population:1500,plots:12,reward:20000,jewels:{jade:3,nightPearl:1}},capital:{name:'都城',plotMax:18,goldFactor:1.4,hall:8,population:2000,plots:12,reward:30000,jewels:{jade:4,nightPearl:2}}});
   const definitions=[
     {id:'fort',name:'古渡县城',tier:'county',district:'北原郡 · 古渡县',parent:'named_beiyuan',strategy:'granary',children:[]},
     {id:'yellow_qingshi',name:'青石黄巾城',tier:'county',district:'中原外围 · 青石县',parent:null,strategy:'granary',children:[]},
@@ -15,7 +15,7 @@ const NamedCityData=(()=>{
     {id:'named_heluo',name:'河洛郡城',tier:'prefecture',district:'中原州 · 河洛郡',parent:'named_zhongyuan',strategy:'mine',children:['named_luoshui','named_baishi']},
     {id:'named_zhongyuan',name:'中原州城',tier:'province',district:'中原州',parent:'named_luoyang',strategy:'balanced',children:['named_beiyuan','named_heluo']},
     {id:'named_luoyang',name:'洛阳都城',tier:'capital',district:'京畿 · 洛阳',parent:null,strategy:'balanced',children:['named_zhongyuan'],requiresChapter:3}
-  ].map(d=>Object.freeze({...d,tierName:tiers[d.tier].name,plotMax:tiers[d.tier].plotMax,goldFactor:tiers[d.tier].goldFactor,children:Object.freeze(d.children),development:Object.freeze({hall:tiers[d.tier].hall,morale:70,population:tiers[d.tier].population,plots:tiers[d.tier].plots,reward:Object.freeze({food:tiers[d.tier].reward,wood:tiers[d.tier].reward,stone:tiers[d.tier].reward,iron:tiers[d.tier].reward,gold:tiers[d.tier].reward/2})})}));
+  ].map(d=>Object.freeze({...d,tierName:tiers[d.tier].name,plotMax:tiers[d.tier].plotMax,goldFactor:tiers[d.tier].goldFactor,children:Object.freeze(d.children),development:Object.freeze({hall:tiers[d.tier].hall,morale:70,population:tiers[d.tier].population,plots:tiers[d.tier].plots,reward:Object.freeze({food:tiers[d.tier].reward,wood:tiers[d.tier].reward,stone:tiers[d.tier].reward,iron:tiers[d.tier].reward,gold:tiers[d.tier].reward/2}),jewels:Object.freeze({...tiers[d.tier].jewels})})}));
   const byId=new Map(definitions.map(d=>[d.id,d]));
   function nodeId(value){if(typeof value==='string')return value.replace(/^city_/,'');if(!value||typeof value!=='object'||value.capital===true)return '';return typeof value.node==='string'?value.node:typeof value.id==='string'?value.id.replace(/^city_/,''):'';}
   function definition(value){return byId.get(nodeId(value))||null;}

@@ -4,6 +4,8 @@ const Progression = (() => {
   const DAY=86400000, REFILL=7200000, SERVER_OFFSET=8*3600000;
   // China server day starts at 05:00, independent of the device time zone.
   const period=now=>Math.floor((now+SERVER_OFFSET-5*3600000)/DAY)*DAY-SERVER_OFFSET+5*3600000;
+  // Promotion jewels stop being pure luck (Sprint 5): 3 of a kind combine into the next kind, and 5+ level wins carry a pity counter.
+  const JEWEL_ORDER=['pearl','coral','glass','amber','agate','crystal','jadeite','jade','nightPearl'],JEWEL_SYNTH=3,HIGH_JEWELS=['jadeite','jade','nightPearl'],JEWEL_PITY=20;
   const jewels={pearl:{name:'珍珠',prestige:1000,points:1},coral:{name:'珊瑚',prestige:1200,points:1},glass:{name:'琉璃',prestige:1500,points:1},amber:{name:'琥珀',prestige:2000,points:2},agate:{name:'玛瑙',prestige:2500,points:2},crystal:{name:'水晶',prestige:3000,points:2},jadeite:{name:'翡翠',prestige:3500,points:3},jade:{name:'玉石',prestige:4000,points:4},nightPearl:{name:'夜明珠',prestige:5000,points:5}};
   const resourceDonations={food:{amount:100000,prestige:1000},wood:{amount:100000,prestige:1500},stone:{amount:100000,prestige:2000},iron:{amount:100000,prestige:2500},gold:{amount:100000,prestige:3000}};
   const troopDonations={militia:{amount:2000,prestige:2000,points:1},spear:{amount:1500,prestige:2000,points:2},shield:{amount:1200,prestige:2000,points:2},archer:{amount:1000,prestige:3000,points:2},cavalry:{amount:750,prestige:3500,points:3},heavy:{amount:500,prestige:4500,points:4},ballista:{amount:300,prestige:5000,points:5},ram:{amount:200,prestige:5500,points:6},catapult:{amount:100,prestige:6000,points:8}};
@@ -75,6 +77,7 @@ const Progression = (() => {
     if(s.daily&&s.daily.milestoneClaims===undefined)s.daily.milestoneClaims=[];
     if(s.daily&&s.daily.brickPurchases===undefined)s.daily.brickPurchases=Object.fromEntries(RewardData.goldBricks.map(b=>[b.id,0]));
     if(s.daily&&(s.daily.rulesVersion===undefined||s.daily.rulesVersion<3)){s.daily.rulesVersion=3;while(s.daily.tasks.filter(t=>t.status==='available').length<BOARD_SIZE)s.daily.tasks.push(makeTask(s,s.daily.serial++));}
+    if(s.jewelPity===undefined)s.jewelPity=0;
     if(s.progressionSchema===1)return;
     // One-time estimate preserves existing development; no old rewards are reissued.
     s.prestige=Math.floor((s.cityLevels||[]).reduce((n,l)=>n+l*l*50,0)+(s.plots||[]).reduce((n,p)=>n+p.level*p.level*50,0)+Object.values(s.tech||{}).reduce((n,l)=>n+l*l*100,0)+(s.stats?.trained||0)/5+(s.stats?.victories||0)*100+(s.missionClaims||[]).length*300);
@@ -153,10 +156,13 @@ const Progression = (() => {
     const jewelDrops={};if(won){record(s,'victory');record(s,'kill',kills);if(n.wild)record(s,'wild_victory');if(n.terrain==='fort')record(s,'siege_victory');for(const level of [3,5,8])if(n.level>=level)record(s,'win_level_'+level);if(b.mode==='raid'){for(const [id,count] of Object.entries(received))record(s,'raid_'+id,count);if(!n.terrain||n.terrain!=='fort'){s.epic.kills=Math.min(targets.kills,s.epic.kills+kills);const batches=Math.floor(s.epic.kills/500);s.prestige+=(batches-s.epic.killRewards)*500;s.epic.killRewards=batches;}}
       // Prototype drops: a low-tier pearl every win, plus a rarer jewel at higher levels.
       jewelDrops.pearl=1;if(Math.random()<Math.min(.5,n.level*.05)){const choices=Object.keys(jewels).slice(1,Math.min(9,n.level+2));jewelDrops[choices[Math.floor(Math.random()*choices.length)]]=1;}
+      if(n.level>=5){if(HIGH_JEWELS.some(id=>jewelDrops[id]))s.jewelPity=0;else if((s.jewelPity=(s.jewelPity||0)+1)>=JEWEL_PITY){const roll=Math.random(),id=roll<.15?'nightPearl':roll<.55?'jade':'jadeite';jewelDrops[id]=(jewelDrops[id]||0)+1;s.jewelPity=0;}}
       for(const [id,count] of Object.entries(jewelDrops))s.jewels[id]+=count;
     }
     return {prestigeDelta:s.prestige-before,jewelDrops};
   }
+  function synthesizeQuote(s,id,times=1){const i=JEWEL_ORDER.indexOf(id),next=JEWEL_ORDER[i+1];if(i<0||!next)return {reason:'这种珠宝不能再合成'};const max=Math.floor((s.jewels[id]||0)/JEWEL_SYNTH),count=times==='all'?max:Math.floor(Number(times));return {id,next,cost:JEWEL_SYNTH*count,count,max,reason:!Number.isSafeInteger(count)||count<1?(max<1?jewels[id].name+'不足 '+JEWEL_SYNTH+' 枚':'请选择合成次数'):count>max?jewels[id].name+'不足':''};}
+  function synthesize(s,id,times=1){const q=synthesizeQuote(s,id,times);if(q.reason)return q.reason;s.jewels[id]-=q.cost;s.jewels[q.next]+=q.count;return null;}
   function exchangeOffers(s){const available=ManualData.shop.filter(i=>i.effect&&!i.rewardOnly),seed=Math.floor(s.daily.start/DAY);return [{id:'pearl',name:'珍珠 ×1',cost:40},...Array.from({length:3},(_,i)=>{const item=available[(seed+i*5)%available.length];return {id:item.id,name:item.name+' ×1',cost:Math.max(20,Math.ceil(item.price/5))};})];}
   function exchange(s,id,now=Date.now()){
     ensureDaily(s,now);const offer=exchangeOffers(s).find(x=>x.id===id);if(!offer)return '商品已刷新';
@@ -165,6 +171,7 @@ const Progression = (() => {
   }
   function valid(s){
     const int=n=>Number.isSafeInteger(n)&&n>=0,object=o=>o&&typeof o==='object'&&!Array.isArray(o);
+    if(s.jewelPity!==undefined&&!int(s.jewelPity))return false;
     if(s.progressionSchema!==1||!int(s.prestige)||!int(s.copper)||!object(s.jewels)||Object.keys(s.jewels).length!==Object.keys(jewels).length||!Object.keys(jewels).every(id=>int(s.jewels[id])))return false;
     if(!object(s.activityMetrics)||Object.keys(s.activityMetrics).length!==metricIds.length||!metricIds.every(id=>int(s.activityMetrics[id])))return false;
     const e=s.epic;if(!object(e)||!int(e.kills)||e.kills>targets.kills||e.killRewards!==Math.floor(e.kills/500)||!int(e.troops)||!int(e.treasures)||typeof e.legacyAccess!=='boolean'||!object(e.resources)||Object.keys(e.resources).length!==5||!Object.keys(resourceDonations).every(id=>[0,100000].includes(e.resources[id])))return false;
@@ -173,5 +180,5 @@ const Progression = (() => {
     if(d.tasks.filter(t=>t.status==='available').length>BOARD_SIZE||d.tasks.filter(t=>t.status==='accepted').length>ACCEPT_LIMIT)return false;
     return d.tasks.every(t=>object(t)&&typeof t.uid==='string'&&/^\d+_\d+$/.test(t.uid)&&t.uid.startsWith(d.start+'_')&&definition(t)&&int(t.target)&&t.target>0&&int(t.progress)&&t.progress<=t.target&&['available','accepted'].includes(t.status)&&int(t.acceptedAt)&&(t.status==='available'?t.acceptedAt===0:t.acceptedAt>=d.start&&t.acceptedAt<d.start+DAY)&&[1,2,3,4].includes(t.tier)&&t.target===definition(t).amount*(fixedMetrics.includes(definition(t).metric)?1:t.tier));
   }
-  return {researchMetric,DAY,REFILL,BOARD_SIZE,ACCEPT_LIMIT,milestones,period,jewels,resourceDonations,troopDonations,targets,templates,init,ensureDaily,record,definition,taskReady,reward,taskItem,accept,abandon,claim,claimMilestone,claimReady,groups,countyUnlocked,donationQuote,donate,battle,exchangeOffers,exchange,valid,tier};
+  return {researchMetric,DAY,REFILL,BOARD_SIZE,ACCEPT_LIMIT,milestones,period,jewels,resourceDonations,troopDonations,targets,templates,init,ensureDaily,record,definition,taskReady,reward,taskItem,accept,abandon,claim,claimMilestone,claimReady,groups,countyUnlocked,donationQuote,donate,battle,exchangeOffers,exchange,synthesizeQuote,synthesize,JEWEL_ORDER,JEWEL_SYNTH,JEWEL_PITY,valid,tier};
 })();

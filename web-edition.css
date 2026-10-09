@@ -51,3 +51,4 @@ dialog.web-battle-dialog{width:min(1450px,97vw);max-width:97vw;height:95dvh;max-
 
 /* Light dialog panels: war-theme text colors are for dark panels */
 dialog .modal-info{color:#5e4b2c}dialog .modal-info strong{color:#7a5520}dialog .modal-info .label{color:#7e6b4c}dialog .web-plot-preview h3{color:#3c4328}
+.jewel-synth-rows{display:grid;gap:6px;margin-top:8px}.jewel-synth-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.jewel-synth-row>span{flex:1 1 160px;font-size:12px}
