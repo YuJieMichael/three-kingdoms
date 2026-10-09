@@ -40,8 +40,10 @@ function pressGuard(e,action){
 // 征战/城务/辅助 tabs and its README states the pinned shop, reports and settings are not repeated there.
 test('scene switch and command dock keep city areas and reports/shop one tap away while More holds the remaining tools',()=>{
  const e=ui(),navOf=(source,label)=>source.match(new RegExp('<nav class="[^"]*" aria-label="'+label+'"[^>]*>([\\s\\S]*?)</nav>'))[1];
- // A new city shows four entries; the rest open with hall level, the first battle and the first items.
- const fresh=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...fresh.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','更多']);
+ // Shop is always present; the starting decree also exposes inventory immediately.
+ const fresh=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...fresh.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','宝物','商城','更多']);
+ delete e.g.state.inventory.labor;
+ const emptyInventory=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...emptyInventory.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','商城','更多']);
  city(e.g,{hall:3});e.g.state.stats.victories=1;e.g.state.inventory.speed_build_15m=1;
  const before=JSON.stringify(e.g.state),html=e.evaluate('classicShell()'),nav=label=>navOf(html,label);
  const buttons=part=>[...part.matchAll(/<button data-action="([^"]*)" data-id="([^"]*)"[^>]*aria-label="([^"]+)"/g)].map(([,action,id,label])=>[label,action,id]);
@@ -184,4 +186,19 @@ test('selecting a folded formation opens its controls before render persists dis
  e.evaluate(`globalThis.foldedUnits=[{dataset:{uiDisclosure:'battle-unit-spear'},open:false},{dataset:{uiDisclosure:'battle-unit-archer'},open:false}];document.querySelectorAll=()=>foldedUnits;`);
  for(const action of ['formationSelect','tacticalLessonSelect']){e.evaluate(`foldedUnits.forEach((d,i)=>{d.open=false;d.dataset.uiDisclosure='battle-unit-'+(${JSON.stringify(action)}==='tacticalLessonSelect'?'lesson-':'')+(i?'archer':'spear');});globalThis.selectEvent={target:{closest:()=>({disabled:false,dataset:{action:${JSON.stringify(action)},id:'spear'}})},preventDefault(){},stopImmediatePropagation(){}};uiListeners.filter(x=>x.type==='click'&&x.capture===true).forEach(x=>x.callback(selectEvent));`);assert.equal(e.evaluate('foldedUnits[0].open'),true);assert.equal(e.evaluate('foldedUnits[1].open'),false);}
  assert.equal(JSON.stringify(e.g.state),before);
+});
+
+test('the shop is open in a fresh hall-one city and an existing empty-inventory save without changing game state',()=>{
+ const e=ui(),g=e.g;
+ e.evaluate(read('playtest-config.js'));
+ e.evaluate("var shopCategory='全部';function itemIcon(){return '';}");
+ assert.equal(g.state.buildings.hall,1);
+ for(const inventory of [{labor:1},{}]){
+  g.state.inventory=inventory;
+  const before=JSON.stringify(g.state);
+  assert.equal(e.evaluate("layoutFeatureOpen('shop')"),true);
+  assert.match(e.evaluate('classicShell()'),/data-action="classicNav" data-id="shop"[^>]*aria-label="商城"/);
+  assert.match(e.evaluate('manualShopPage()'),/珍宝商城/);
+  assert.equal(JSON.stringify(g.state),before);
+ }
 });
