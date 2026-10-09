@@ -17,9 +17,9 @@ function arrive(e,id=first,mode='occupy',count=1000){
 function finish(e){const g=e.Game;for(let i=0;i<30&&!g.state.battle.finished;i++)g.battleRound();assert.equal(g.state.battle.finished,true);assert.equal(g.validSave(g.state),true);return copy(g.state.battle.result);}
 function missionProgress(e){const g=e.Game;return copy({next:g.nextLandmark()?.id,visible:g.nodes.filter(n=>!n.openCity&&g.landmarkVisible(n.id)).map(n=>n.id),chapter:e.Chapter.progress(g.state),second:e.Chapter.unlocked(g.state,2),third:e.Chapter.unlocked(g.state,3),namedReady:g.missions.filter(m=>['field','camp','fort'].includes(m.id)).map(m=>[m.id,g.missionReady(m)])});}
 
-test('three open Yellow Turban cities use real map nodes and stay separate from the locked mission route',()=>{
+test('open Yellow Turban cities use real map nodes and stay separate from the locked mission route',()=>{
  const e=loadGame(),g=e.Game,defs=copy(e.evaluate('YellowCityData.nodes'));
- assert.deepEqual(defs.map(n=>[n.id,n.x,n.y,n.level,n.population]),[[first,26,31,2,200],['yellow_baisha',41,38,3,300],['yellow_chigang',21,20,4,400]]);
+ assert.deepEqual(defs.map(n=>[n.id,n.x,n.y,n.level,n.population]),[[first,26,31,2,200],['yellow_baisha',41,38,3,300],['yellow_chigang',21,20,4,400],['yellow_liulin',37,40,2,200],['yellow_heishan',24,40,3,300],['yellow_yuntai',44,24,5,500],['yellow_tieling',48,42,5,500],['yellow_huangsha',14,28,6,600]]);
  assert.match(g.attackBlocked(first,'occupy'),/城池名额已满/);
  g.state.honors.noble=1; // A rank with one spare city slot, without unlocking campaign tasks.
  const before=JSON.stringify(g.state);assert.equal(g.countyUnlocked(),false);assert.ok(g.attackBlocked('fort','occupy'));assert.ok(g.attackBlocked('north_road','raid'));
@@ -34,15 +34,15 @@ test('city raids exclude gold, militia and siege; occupation adds militia and al
   assert.equal(occupy.siege,true);assert.equal(occupy.militia,Math.ceil(n.population*.1));assert.equal(occupy.army.militia,(n.army.militia||0)+occupy.militia);assert.deepEqual(copy(occupy.loot),copy(n.loot));assert.deepEqual(Object.keys(occupy.loot),resources);assert.equal(n.fortification,undefined);
   const limited=g.lootPreview(n.id,'occupy',{archer:1});assert.ok(limited.loaded<=g.carry({archer:1}));assert.ok(limited.discarded>0);assert.ok(limited.loot.gold>0);assert.equal(JSON.stringify(g.state),before);
  }
- assert.deepEqual(copy(g.attackInfo(first,'occupy').loot),{food:800,wood:800,stone:800,iron:800,gold:500});
+ assert.deepEqual(copy(g.attackInfo(first,'occupy').loot),{food:800,wood:800,stone:800,iron:800,gold:1500});
 });
 
 test('three real occupation victories lower morale to minus five and claim the city without unlocking chapters or task landmarks',()=>{
  const e=setup(),g=e.Game,before=missionProgress(e);let reports=0;
  for(const [index,morale]of [65,30,-5].entries()){
   const quote=copy(g.attackInfo(first,'occupy').loot);arrive(e);assert.equal(g.state.battle.siege,true);assert.equal(g.state.battle.gate,null);assert.equal(g.state.battle.militia,Math.ceil(g.state.towns[first].population*.1));assert.equal(e.evaluate('SiegeSystem.protection(Game.state.battle,Game.getNode(Game.state.battle.node))'),1.25);const result=finish(e);
-  assert.equal(result.won,true);assert.equal(result.moraleBefore,100-index*35);assert.equal(result.moraleAfter,morale);assert.equal(g.state.towns[first].morale,morale);assert.equal(result.claimed,index===2);assert.equal(!!g.state.conquered[first],index===2);assert.deepEqual(result.loot,quote);assert.ok(result.loot.gold>0);assert.equal(result.stationed,false);assert.equal(g.state.expedition.phase,'return');assert.equal(g.state.reports.length,++reports);assert.deepEqual(missionProgress(e),before);
-  assert.equal(g.countyUnlocked(),false);assert.ok(g.attackBlocked('fort','occupy'));assert.ok(g.attackBlocked('north_road','occupy'));e.advance(90001);
+  assert.equal(result.won,true);assert.equal(result.moraleBefore,100-index*35);assert.equal(result.moraleAfter,morale);assert.equal(g.state.towns[first].morale,morale);assert.equal(result.claimed,index===2);assert.equal(!!g.state.conquered[first],index===2);assert.deepEqual(result.loot,quote);assert.equal(result.loot.gold>0,index!==1,'gold pays once, then refreshes an hour later');assert.equal(result.stationed,false);assert.equal(g.state.expedition.phase,'return');assert.equal(g.state.reports.length,++reports);assert.deepEqual(missionProgress(e),before);
+  assert.equal(g.countyUnlocked(),false);assert.ok(g.attackBlocked('fort','occupy'));assert.ok(g.attackBlocked('north_road','occupy'));e.advance(index===1?3600001:90001);
  }
  assert.ok(g.attackBlocked(first,'occupy'));assert.ok(g.attackBlocked(first,'raid'));assert.equal(g.state.garrisons[first],undefined);assert.equal(g.wildOwned(),0);assert.equal(g.validSave(g.state),true);
 });
@@ -108,4 +108,23 @@ test('pre-handbook migration rebuilds a marching wild army from its original for
   // cavalry 3*3. A fort/other-terrain misread would produce only 13 archers.
   assert.deepEqual(copy(migrated.expedition.enemySnapshot),{spear:34,archer:24,cavalry:9});assert.equal(other.validSave(migrated),true);other.importSave(old);assert.equal(other.validSave(other.state),true);assert.equal(other.getNode(node).type,'forest');assert.equal(other.state.expedition.start,march.start);assert.equal(other.state.expedition.end,march.end);assert.deepEqual(copy(other.state.expedition.enemySnapshot),{spear:34,archer:24,cavalry:9});
  }
+});
+
+test('a Yellow Turban occupation victory pays its full gold once, then refreshes after an hour, and the refresh survives reload',()=>{
+ const e=setup(),g=e.Game,full=e.evaluate(`YellowCityData.nodes.find(n=>n.id===${JSON.stringify(first)}).loot.gold`);
+ assert.equal(g.attackInfo(first,'occupy').loot.gold,full);assert.equal(g.attackInfo(first,'occupy').goldReadyAt,0);
+ arrive(e);let result=finish(e);assert.equal(result.won,true);assert.equal(result.loot.gold,full);
+ const readyAt=g.state.yellowGold[first];assert.ok(readyAt>e.now()+3599000&&readyAt<=e.now()+3600000);assert.equal(g.attackInfo(first,'occupy').loot.gold,0);assert.equal(g.attackInfo(first,'occupy').goldReadyAt,readyAt);
+ assert.equal(g.attackInfo(first,'raid').loot.gold,undefined);assert.equal(g.validSave(g.state),true);
+ g.save();g.init();assert.equal(g.state.yellowGold[first],readyAt);
+ e.advance(3600001);assert.equal(g.attackInfo(first,'occupy').loot.gold,full);
+ for(const bad of [{fake:1},{[first]:-1},{[first]:1.5},[]]){const d=JSON.parse(JSON.stringify(g.state));d.yellowGold=bad;assert.equal(g.validSave(d),false,JSON.stringify(bad));}
+});
+test('saves from before the extra Yellow Turban cities gain their sites without moving the original three',()=>{
+ const e=loadGame(),g=e.Game,old=JSON.parse(JSON.stringify(g.state)),kept={};
+ for(const id of ['yellow_liulin','yellow_heishan','yellow_yuntai','yellow_tieling','yellow_huangsha']){delete old.openCitySites[id];delete old.towns[id];}
+ for(const id of ['yellow_qingshi','yellow_baisha','yellow_chigang'])kept[id]=JSON.stringify(old.openCitySites[id]);delete old.yellowGold;
+ const migrated=g.migrateSave(old);assert.equal(g.validSave(migrated),true);
+ for(const [id,site] of Object.entries(kept))assert.equal(JSON.stringify(migrated.openCitySites[id]),site);
+ assert.equal(Object.keys(migrated.openCitySites).length,e.evaluate('YellowCityData.allNodes().length'));assert.deepEqual({...migrated.yellowGold},{});
 });
