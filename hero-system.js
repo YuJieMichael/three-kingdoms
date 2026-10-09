@@ -2,7 +2,7 @@
 // General cultivation and equipment numbers are prototype rules, not historical tables.
 const HeroSystem=(()=>{
   // This game's initial command values, not an original-game or historical table.
-  const initialLeadershipValues=Object.freeze({weiyan:85,xushu:80,zhaoyun:90,huangzhong:85,ganning:90,zhangliao:105,machao:90,xunyu:75,pangtong:90,zhouyu:110,guanyu:100,zhangfei:85,dianwei:70,lvbu:95,taishici:85,liubei:100,sunjian:100,gaoshun:95,chengong:85,lejin:85,yujin:95,zhanghe:100,xuhuang:100,zhugeliang:110,sunce:105,xuchu:70});
+  const initialLeadershipValues=Object.freeze({weiyan:20,xushu:18,zhaoyun:23,huangzhong:20,ganning:21,zhangliao:28,machao:23,xunyu:16,pangtong:23,zhouyu:30,guanyu:25,zhangfei:20,dianwei:15,lvbu:24,taishici:20,liubei:25,sunjian:25,gaoshun:24,chengong:20,lejin:20,yujin:24,zhanghe:25,xuhuang:25,zhugeliang:30,sunce:28,xuchu:15});
   const initialLeadership=key=>Object.hasOwn(initialLeadershipValues,key)?initialLeadershipValues[key]:0;
   function baseLeadership(raw,currentLevel){
     if(!raw.lead)return currentLevel*10;
