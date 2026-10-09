@@ -5,8 +5,8 @@ const HeroSystem=(()=>{
   // Free points only raise these three; 统御 and 统率 grow from level and equipment.
   const allocatable=['atk','pol','wis'];
   const slots={weapon:'兵器',armor:'铠甲',helmet:'头盔',accessory:'佩饰'};
-  const qualities=['','普通','精良','珍稀'];
-  const names={weapon:['','精铁长枪','百炼战刃','龙纹战戟'],armor:['','皮甲','锁子甲','玄铁战甲'],helmet:['','铁盔','明光盔','狮纹金盔'],accessory:['','竹简','青玉佩','龙凤玉印']};
+  const qualities=['','普通','精良','珍稀','传说'];
+  const names={weapon:['','精铁长枪','百炼战刃','龙纹战戟','赤霄战戟'],armor:['','皮甲','锁子甲','玄铁战甲','麒麟宝铠'],helmet:['','铁盔','明光盔','狮纹金盔','凤翅紫金冠'],accessory:['','竹简','青玉佩','龙凤玉印','传国玉珏']};
   const bases={weapon:{atk:8,lead:2},armor:{def:8,lead:2},helmet:{def:3,wis:5},accessory:{pol:6,wis:4}};
   const zero=()=>Object.fromEntries(Object.keys(attrs).map(k=>[k,0]));
   // Prototype: defeated wild generals are held first, then recruited manually.
@@ -128,10 +128,13 @@ const HeroSystem=(()=>{
   const totalPoints=(s,id)=>Math.max(0,((s.generalLevels[id]||1)-1)*3);
   const remaining=(s,id)=>totalPoints(s,id)-Object.values(s.heroPoints[id]||zero()).reduce((a,b)=>a+b,0);
   const itemName=e=>names[e.slot]?.[e.tier]||'未知装备';
-  const requiredLevel=e=>[0,1,5,10][e.tier];
-  function stats(e){return Object.fromEntries(Object.entries(bases[e.slot]).map(([id,n])=>[id,Math.round(n*[0,1,2,4][e.tier]*(1+e.enhance*.15))]));}
-  function bonus(s,id){const out={...zero(),...(s.heroPoints?.[id]||{})};for(const e of s.equipment||[])if(e.hero===id)for(const [k,n] of Object.entries(stats(e)))out[k]+=n;return out;}
-  function validEquipment(e,s){return !!e&&typeof e==='object'&&!Array.isArray(e)&&Number.isSafeInteger(e.id)&&e.id>0&&e.id<=s.equipmentSeq&&Object.hasOwn(slots,e.slot)&&[1,2,3].includes(e.tier)&&Number.isInteger(e.enhance)&&e.enhance>=0&&e.enhance<=10&&(e.hero===''||s.generals.includes(e.hero)&&s.generalLevels[e.hero]>=requiredLevel(e));}
+  const requiredLevel=e=>[0,1,5,10,15][e.tier];
+  // Late-game equipment (Sprint 6): legendary tier, four-piece set bonuses and one refined extra stat on rare+ items.
+  const SET_BONUS={2:{atk:5},3:{atk:10,def:10},4:{atk:15,def:15,lead:10}},REFINE_STATS=['atk','def','pol','wis','lead'];
+  function stats(e){const out=Object.fromEntries(Object.entries(bases[e.slot]).map(([id,n])=>[id,Math.round(n*[0,1,2,4,8][e.tier]*(1+e.enhance*.15))]));if(e.refine)out[e.refine.stat]=(out[e.refine.stat]||0)+e.refine.value;return out;}
+  function setTier(s,id){const worn=(s.equipment||[]).filter(e=>e.hero===id);if(worn.length!==4)return 0;const tier=Math.min(...worn.map(e=>e.tier));return tier>=2&&worn.every(e=>e.tier>=tier)?tier:0;}
+  function bonus(s,id){const out={...zero(),...(s.heroPoints?.[id]||{})};for(const e of s.equipment||[])if(e.hero===id)for(const [k,n] of Object.entries(stats(e)))out[k]+=n;for(const [k,n] of Object.entries(SET_BONUS[setTier(s,id)]||{}))out[k]+=n;for(const [k,n] of Object.entries(typeof HeroBonds!=='undefined'?HeroBonds.statBonus(s,id):{}))out[k]=(out[k]||0)+n;return out;}
+  function validEquipment(e,s){return !!e&&typeof e==='object'&&!Array.isArray(e)&&Number.isSafeInteger(e.id)&&e.id>0&&e.id<=s.equipmentSeq&&Object.hasOwn(slots,e.slot)&&[1,2,3,4].includes(e.tier)&&Number.isInteger(e.enhance)&&e.enhance>=0&&e.enhance<=10&&(e.refine===undefined||e.tier>=3&&!!e.refine&&typeof e.refine==='object'&&Object.keys(e.refine).length===2&&REFINE_STATS.includes(e.refine.stat)&&Number.isInteger(e.refine.value)&&e.refine.value>=3&&e.refine.value<=8)&&(e.hero===''||s.generals.includes(e.hero)&&s.generalLevels[e.hero]>=requiredLevel(e));}
   function valid(s){
     const obj=x=>x&&typeof x==='object'&&!Array.isArray(x),int=n=>Number.isSafeInteger(n)&&n>=0;
     if(!wild.valid(s))return false;
@@ -162,12 +165,17 @@ const HeroSystem=(()=>{
   function gift(){const s=live();if(s.heroGiftClaimed)return '将领装备礼包已领取';if(s.equipment.length+8>s.equipmentCapacity)return '需要 8 格装备空间';for(let i=0;i<2;i++)for(const slot of Object.keys(slots))addEquipment(s,slot,1);s.inventory.pearl=(s.inventory.pearl||0)+5;s.inventory.resetHero=(s.inventory.resetHero||0)+2;s.heroGiftClaimed=true;return save();}
   function equip(eid,id){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';const error=busy(id)||(e.hero&&busy(e.hero));if(error)return error;if(s.generalLevels[id]<requiredLevel(e))return '需要将领 '+requiredLevel(e)+' 级';for(const old of s.equipment)if(old.hero===id&&old.slot===e.slot)old.hero='';e.hero=id;return save();}
   function unequip(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e?.hero)return '装备未穿戴';const error=busy(e.hero);if(error)return error;e.hero='';return save();}
-  function forgeQuote(slot,tier){if(!Object.hasOwn(slots,slot)||![1,2,3].includes(tier))return null;const factor=[0,1,4,12][tier];return {smith:[0,1,3,6][tier],cost:{wood:1000*factor,stone:800*factor,iron:2000*factor,gold:3000*factor}};}
+  function forgeQuote(slot,tier){if(!Object.hasOwn(slots,slot)||![1,2,3].includes(tier))return null;const factor=[0,1,4,12][tier]*(1-(typeof Game!=='undefined'&&Game.forgeDiscount?Game.forgeDiscount():0));return {smith:[0,1,3,6][tier],cost:{wood:Math.round(1000*factor),stone:Math.round(800*factor),iron:Math.round(2000*factor),gold:Math.round(3000*factor)}};}
   function forge(slot,tier){const s=live(),q=forgeQuote(slot,tier);if(!q)return '请选择装备';if(s.buildings.smith<q.smith)return '需要 '+q.smith+' 级铁匠铺';if(s.equipment.length>=s.equipmentCapacity)return '装备库已满';if(!Game.canPay(q.cost))return '打造材料不足';for(const [id,n] of Object.entries(q.cost))s.res[id]-=n;addEquipment(s,slot,tier);return save();}
   function enhanceQuote(e){return {gold:1000*e.tier*(e.enhance+1),pearls:Math.ceil((e.enhance+1)/3)};}
   function enhance(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero&&busy(e.hero))return busy(e.hero);if(s.buildings.smith<1)return '请先建造铁匠铺';if(e.enhance>=10)return '强化已达 +10';const q=enhanceQuote(e);if(s.res.gold<q.gold||(s.inventory.pearl||0)<q.pearls)return '黄金或强化宝珠不足';s.res.gold-=q.gold;s.inventory.pearl-=q.pearls;e.enhance++;Progression.record(s,'item',q.pearls);return save();}
   function salvage(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero)return '请先卸下装备';s.equipment=s.equipment.filter(x=>x.id!==eid);s.inventory.pearl=(s.inventory.pearl||0)+e.tier+Math.floor(e.enhance/3);return save();}
+  // Three idle rare pieces of one slot plus 2 jade make one legendary piece.
+  function legendQuote(slot){const s=live();if(!Object.hasOwn(slots,slot))return null;const pool=s.equipment.filter(e=>e.slot===slot&&e.tier===3&&!e.hero).sort((a,b)=>a.enhance-b.enhance||a.id-b.id);return {slot,use:pool.slice(0,3).map(e=>e.id),jade:2,reason:pool.length<3?'需要 3 件闲置的'+qualities[3]+slots[slot]:(s.jewels?.jade||0)<2?'需要玉石 ×2':s.buildings.smith<10?'需要 10 级铁匠铺':''};}
+  function forgeLegend(slot){const s=live(),q=legendQuote(slot);if(!q)return '请选择装备';if(q.reason)return q.reason;s.equipment=s.equipment.filter(e=>!q.use.includes(e.id));s.jewels.jade-=q.jade;addEquipment(s,slot,4);return save();}
+  // 炼化鼎: add (or reroll) one extra stat of +3..+8 on a rare or legendary piece.
+  function refine(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
-  for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand};
+  for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
+  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,refine};
 })();

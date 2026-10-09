@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {loadGame,city}=require('./helpers/game.cjs');
 const read=name=>fs.readFileSync(path.join(__dirname,'..',name),'utf8'),copy=x=>JSON.parse(JSON.stringify(x));
-function env(){const e=loadGame(931);if(e.evaluate('typeof CityStrategy')==='undefined')e.evaluate(read('city-strategy.js'));return e;}
+function env(){const e=loadGame(931);if(e.evaluate('typeof CityStrategy')==='undefined')e.evaluate(read('city-strategy.js','city-specialty.js'));return e;}
 const close=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-8,`${actual} must equal ${expected}`);
 // Prepared city scopes compare the real production and dispatch APIs, not natural pacing.
 function prepared(){
