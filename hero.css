@@ -40,3 +40,10 @@ dialog:has(.inn-table-scroll){width:min(960px,calc(100% - 32px))}
  .inn-action-cell .btn{min-width:58px;padding-left:5px;padding-right:5px}
  .inn-stat-legend{font-size:11px;gap:5px 10px}
 }
+/* Free points: three rows of − / + / 全部 instead of number fields. */
+.hero-allocation{display:flex;flex-direction:column;gap:6px}
+.hero-point-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 8px;border:1px solid #5d6b4c;border-radius:6px;background:#26312499}
+.hero-point-name{display:flex;flex-direction:column;font-size:14px;font-weight:700}.hero-point-name small{font-size:11px;font-weight:400;opacity:.75}
+.hero-point-controls{display:flex;align-items:center;gap:6px}.hero-point-controls strong{min-width:34px;text-align:center;font-variant-numeric:tabular-nums}
+.hero-point-controls .btn,.hero-point-controls button{min-width:36px;min-height:32px;padding:4px 8px}
+.hero-allocation .hint{margin:2px 0 0}
