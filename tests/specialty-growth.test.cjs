@@ -9,7 +9,7 @@ test('the capital 都护府 opens at hall 10, costs blueprints and resources, fi
   const q=g.specialtyQuote();assert.equal(q.line.name,'都护府');assert.equal(q.cost.blueprint,4);
 });
 test('铸神兵: clues at the inn, gathering, three level-5 raids and a county win, then a 30-minute quench unlock legendary gear',()=>{
-  const e=loadGame(),g=e.Game,s=g.state,H=e.evaluate('HeroSystem'),Q=e.evaluate('LegendQuest');city(g,{smith:10,inn:1});s.res.gold=1e6;s.jewels.jade=5;
+  const e=loadGame(),g=e.Game,s=g.state,H=e.evaluate('HeroSystem'),Q=e.evaluate('LegendQuest');city(g,{smith:9,inn:1});assert.equal(Q.rumour(s),false,'hidden until a level-10 smithy');assert.match(H.seekLegend(),/没有这样的传闻/);city(g,{smith:10});assert.equal(Q.rumour(s),true);s.res.gold=1e6;s.jewels.jade=5;
   for(let i=0;i<2;i++)H.addEquipment(s,'weapon',3);
   assert.match(H.legendQuote('weapon').reason,/先完成铸神兵的线索/);assert.equal(H.seekLegend(),null);assert.equal(Q.status(s,e.now()).stage,'clues');
   e.evaluate("LegendQuest.onBattle(Game.state,{wild:true,level:4,terrain:'grass'},{won:true,mode:'raid'})");assert.equal(Q.status(s,e.now()).raids,0,'level 4 does not count');

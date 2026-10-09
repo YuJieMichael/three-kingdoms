@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="b2a11238be61c9e0c9966eb5d88bd7fec1de6d83943997b97b13aba60e3075b1";
+export const runtimeHash="5eeb0c9b072e407afe47dc17a29768f9ba4d6369d9c6aba2f7a00a65bae4ba82";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-bonds.js","legend-quest.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -12378,7 +12378,7 @@ const LegendQuest=(()=>{
   const unlocked=s=>get(s).stage==='done';
   const cluesDone=q=>q.gathered&&q.raids>=C.raids&&q.county;
   function status(s,now){const q=get(s);return {...q,unlocked:q.stage==='done',cluesDone:cluesDone(q),forgeReady:q.stage==='forging'&&q.forgeEnd<=now,C};}
-  function seek(s){const q=get(s);if(q.stage!=='none')return '已经得到铸匠线索';if((s.buildings.inn||0)<1)return '需要 1 级客栈';if(s.res.gold<C.clueGold)return '黄金不足';s.res.gold-=C.clueGold;s.legendQuest={...fresh(),stage:'clues',startAt:Date.now()};return null;}
+  function seek(s){const q=get(s);if(q.stage!=='none')return '已经得到铸匠线索';if((s.buildings.inn||0)<1)return '需要 1 级客栈';if((s.buildings.smith||0)<C.smith)return '客栈里没有这样的传闻';if(s.res.gold<C.clueGold)return '黄金不足';s.res.gold-=C.clueGold;s.legendQuest={...fresh(),stage:'clues',startAt:Date.now()};return null;}
   // Progress hooks (no effect outside the clue stage).
   function onGather(s,level){const q=s.legendQuest;if(q?.stage==='clues'&&level>=C.wildLevel)q.gathered=true;}
   function onBattle(s,n,o){const q=s.legendQuest;if(q?.stage!=='clues'||!o.won)return;if(n.wild&&o.mode==='raid'&&n.level>=C.wildLevel)q.raids=Math.min(C.raids,q.raids+1);if(n.terrain==='fort'&&typeof NamedCityData!=='undefined'&&NamedCityData.definition(n.id)?.tier==='county')q.county=true;}
@@ -12389,7 +12389,8 @@ const LegendQuest=(()=>{
   function startForge(s,slot,now,addEquipment){const f=forgeQuote(s,slot);if(f.reason)return f.reason;s.equipment=s.equipment.filter(e=>e.id!==f.piece);s.jewels.jade-=C.jade;
     if(!f.timed){addEquipment(s,slot,4);return null;}s.legendQuest={...get(s),stage:'forging',forgeEnd:now+C.forgeMs,forgeSlot:slot};return null;}
   function claim(s,now,addEquipment){const q=get(s);if(q.stage!=='forging')return '没有正在淬火的神兵';if(q.forgeEnd>now)return '神兵还在淬火';if(s.equipment.length>=s.equipmentCapacity)return '装备库已满';addEquipment(s,q.forgeSlot,4);s.legendQuest={...q,stage:'done',forgeSlot:''};return null;}
-  return {C,valid,unlocked,status,seek,onGather,onBattle,forgeQuote,startForge,claim};
+  const rumour=s=>get(s).stage==='none'&&(s.buildings.smith||0)>=C.smith&&(s.buildings.inn||0)>=1;
+  return {C,valid,unlocked,rumour,status,seek,onGather,onBattle,forgeQuote,startForge,claim};
 })();
 
 

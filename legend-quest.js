@@ -13,7 +13,7 @@ const LegendQuest=(()=>{
   const unlocked=s=>get(s).stage==='done';
   const cluesDone=q=>q.gathered&&q.raids>=C.raids&&q.county;
   function status(s,now){const q=get(s);return {...q,unlocked:q.stage==='done',cluesDone:cluesDone(q),forgeReady:q.stage==='forging'&&q.forgeEnd<=now,C};}
-  function seek(s){const q=get(s);if(q.stage!=='none')return '已经得到铸匠线索';if((s.buildings.inn||0)<1)return '需要 1 级客栈';if(s.res.gold<C.clueGold)return '黄金不足';s.res.gold-=C.clueGold;s.legendQuest={...fresh(),stage:'clues',startAt:Date.now()};return null;}
+  function seek(s){const q=get(s);if(q.stage!=='none')return '已经得到铸匠线索';if((s.buildings.inn||0)<1)return '需要 1 级客栈';if((s.buildings.smith||0)<C.smith)return '客栈里没有这样的传闻';if(s.res.gold<C.clueGold)return '黄金不足';s.res.gold-=C.clueGold;s.legendQuest={...fresh(),stage:'clues',startAt:Date.now()};return null;}
   // Progress hooks (no effect outside the clue stage).
   function onGather(s,level){const q=s.legendQuest;if(q?.stage==='clues'&&level>=C.wildLevel)q.gathered=true;}
   function onBattle(s,n,o){const q=s.legendQuest;if(q?.stage!=='clues'||!o.won)return;if(n.wild&&o.mode==='raid'&&n.level>=C.wildLevel)q.raids=Math.min(C.raids,q.raids+1);if(n.terrain==='fort'&&typeof NamedCityData!=='undefined'&&NamedCityData.definition(n.id)?.tier==='county')q.county=true;}
@@ -24,5 +24,6 @@ const LegendQuest=(()=>{
   function startForge(s,slot,now,addEquipment){const f=forgeQuote(s,slot);if(f.reason)return f.reason;s.equipment=s.equipment.filter(e=>e.id!==f.piece);s.jewels.jade-=C.jade;
     if(!f.timed){addEquipment(s,slot,4);return null;}s.legendQuest={...get(s),stage:'forging',forgeEnd:now+C.forgeMs,forgeSlot:slot};return null;}
   function claim(s,now,addEquipment){const q=get(s);if(q.stage!=='forging')return '没有正在淬火的神兵';if(q.forgeEnd>now)return '神兵还在淬火';if(s.equipment.length>=s.equipmentCapacity)return '装备库已满';addEquipment(s,q.forgeSlot,4);s.legendQuest={...q,stage:'done',forgeSlot:''};return null;}
-  return {C,valid,unlocked,status,seek,onGather,onBattle,forgeQuote,startForge,claim};
+  const rumour=s=>get(s).stage==='none'&&(s.buildings.smith||0)>=C.smith&&(s.buildings.inn||0)>=1;
+  return {C,valid,unlocked,rumour,status,seek,onGather,onBattle,forgeQuote,startForge,claim};
 })();
