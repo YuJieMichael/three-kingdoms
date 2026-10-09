@@ -1,7 +1,7 @@
 # 旧设备 PNG 备用图
 
 **ID:** TR-art-direction-002
-**Status:** Ready
+**Status:** Complete
 **Last Updated:** 2026-10-08
 **Type:** UI
 **Layer:** Presentation
@@ -15,8 +15,12 @@
 
 ## Acceptance Criteria
 
-- [ ] AC-1：为 assets/painted 下 32 张 AVIF 生成同尺寸的压缩 PNG 备用图，总体积不超过 6MB。
-- [ ] AC-2：启动时检测 AVIF 支持一次；不支持时所有手绘图片（城内、城外、建筑图标、地图物件与纹理）改用 PNG。
-- [ ] AC-3：支持 AVIF 的浏览器不额外下载 PNG。
-- [ ] AC-4：模拟「不支持 AVIF」时，城内、城外、大地图截图中没有缺图。
-- [ ] AC-5：新增测试覆盖图片地址的选择；`npm test` 全部通过。
+- [x] AC-1：为 assets/painted 下 32 张 AVIF 生成同尺寸的压缩 PNG 备用图，总体积不超过 6MB。
+- [x] AC-2：启动时检测 AVIF 支持一次；不支持时所有手绘图片（城内、城外、建筑图标、地图物件与纹理）改用 PNG。
+- [x] AC-3：支持 AVIF 的浏览器不额外下载 PNG。
+- [x] AC-4：模拟「不支持 AVIF」时，城内、城外、大地图截图中没有缺图。
+- [x] AC-5：新增测试覆盖图片地址的选择；`npm test` 全部通过。
+
+## Completion Notes
+
+2026-10-08：v0.34.31 完成。32 张 PNG 备用图与 AVIF 同目录同名，合计约 3.2MB；`PaintedArt.detect` 启动时用一张内嵌的 2×2 AVIF 检测一次，失败则全部改用 PNG 并重绘；支持 AVIF 时不请求 PNG。测试：`tests/painted-art-fallback.test.cjs`；模拟不支持 AVIF 时城内、城外、大地图无缺图。
