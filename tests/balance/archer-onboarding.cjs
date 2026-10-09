@@ -7,6 +7,8 @@ function run(seed=123,accelerate=true,target='archer',options={}){
  function finish(kind,q){
   const began=env.now(),rawSeconds=(q.end-q.start)/1000;
   if(accelerate){for(let i=0;i<80&&q.end>env.now()+1;i++){const choices=Game.manual.shop.filter(x=>x.effect==='speedup'&&x.queueKind===kind&&(Game.state.inventory[x.id]||0)>0&&(x.speedup.seconds||x.speedup.minHours)).sort((a,b)=>(a.speedup.seconds||a.speedup.minHours*3600)-(b.speedup.seconds||b.speedup.minHours*3600));if(!choices.length)break;const remaining=(q.end-Math.max(env.now(),q.start))/1000,item=choices.find(x=>(x.speedup.seconds||x.speedup.minHours*3600)>=remaining)||choices.at(-1);use(item.id,Game.speedupKey(kind,q));}}
+  // Like a player, finish a build for free once 5 minutes or less are left instead of waiting.
+  if(kind==='build'&&q.end>env.now()&&Game.freeFinishReady){if(q.end-env.now()>300000)env.advance(Math.ceil(q.end-env.now()-300000));if(Game.freeFinishReady(q))ok(Game.freeFinishBuild(Game.speedupKey('build',q)));}
   if(q.end>env.now())env.advance(Math.ceil(q.end-env.now())+1);else env.advance(1);collect();
   queueLog.push({kind,id:q.id,level:q.level,count:q.count,rawSeconds,waitSeconds:(env.now()-began)/1000,finishedMinutes:(env.now()-start)/60000});
  }

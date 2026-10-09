@@ -1,5 +1,5 @@
 'use strict';
-function speedupQueueButton(kind,q){return btn('加速','speedupQuick',kind+'|'+Game.speedupKey(kind,q),'small secondary');}
+function speedupQueueButton(kind,q){return (kind==='build'&&Game.freeFinishReady?.(q)?btn('免费完成','freeFinishBuild',Game.speedupKey(kind,q),'small'):'')+btn('加速','speedupQuick',kind+'|'+Game.speedupKey(kind,q),'small secondary');}
 function speedupQueueLabel(target){return target.name+(target.waitSeconds>0?' · 等待 '+duration(target.waitSeconds):'')+' · 剩余工作 '+duration(target.workSeconds);}
 function speedupChoices(kind,key=''){
   const target=Game.speedupTargets(kind).find(t=>t.key===key)||(!key?Game.speedupTargets(kind)[0]:null);
@@ -45,6 +45,7 @@ function updateSpeedupPreview(){
 document.addEventListener('change',event=>{if(event.target.id==='speedup-target')updateSpeedupPreview();});
 document.addEventListener('click',event=>{
   const el=event.target.closest('[data-action]');if(!el||el.disabled)return;const a=el.dataset.action,id=el.dataset.id;
+  if(a==='freeFinishBuild'&&actResult(Game.freeFinishBuild(id),'工程已免费完成')&&modal.open&&typeof manualModalContext==='function')manualModalContext();
   if(a==='speedupQuick'){const [kind,key]=id.split('|');speedupQuickModal(kind,key||'');}
   if(a==='speedupPicker'){const [kind,key]=id.split('|');speedupPickerModal(kind,key||'');}
   if(a==='speedupPlan'){const [item,key]=id.split('|');speedupPlanModal(item,key||'');}
