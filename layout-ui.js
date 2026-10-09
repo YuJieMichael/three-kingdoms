@@ -38,7 +38,7 @@ function layoutLordPanelHTML(){
 // New players start with a few entries; the rest appear as the city grows (then stay).
 function layoutFeatureOpen(id){
   const s=S(),hall=s.buildings.hall||0,fought=s.stats.victories>0||s.reports.length>0||(s.cityDefense?.reports?.length||0)>0;
-  return ({inventory:Object.values(s.inventory||{}).some(n=>n>0)||Object.values(s.jewels||{}).some(n=>n>0)||hall>=2,queues:hall>=2||s.buildQueue.length>0||!!s.researchQueue,reports:fought,shop:hall>=3,research:(s.buildings.academy||0)>=1,market:(s.buildings.market||0)>=1,warCare:fought,territory:hall>=3||Object.keys(s.conquered||{}).length>0,defense:hall>=3||(s.buildings.wall||0)>=1,automation:hall>=3})[id]??true;
+  return ({inventory:Object.values(s.inventory||{}).some(n=>n>0)||Object.values(s.jewels||{}).some(n=>n>0)||hall>=2,queues:hall>=2||s.buildQueue.length>0||!!s.researchQueue,reports:fought,shop:true,research:(s.buildings.academy||0)>=1,market:(s.buildings.market||0)>=1,warCare:fought,territory:hall>=3||Object.keys(s.conquered||{}).length>0,defense:hall>=3||(s.buildings.wall||0)>=1,automation:hall>=3})[id]??true;
 }
 let layoutOpenedFeatures=null;
 function layoutAnnounceFeatures(){

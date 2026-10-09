@@ -79,3 +79,8 @@
 /* v0.34.46: the hall caption sits on the hall's own courtyard, so walls or stage height cannot push it onto the row in front */
 .scene-board.manual-city .scene-site.scene-hall>.scene-hall-caption{position:absolute;left:50%;top:58%;bottom:auto;transform:translateX(-50%);visibility:visible!important;opacity:1!important;z-index:3;pointer-events:none}
 
+
+/* Outskirts use the visible footprint too: transparent neighbour corners must not steal a field tap. */
+.scene-board.outskirts-board .scene-site{pointer-events:none}
+.scene-board.outskirts-board .scene-site>.scene-hit{position:absolute;inset:0;pointer-events:auto;clip-path:polygon(50% 6%,97% 33%,97% 74%,50% 100%,3% 74%,3% 33%);z-index:1}
+.scene-board.outskirts-board .scene-site.empty-land>.scene-hit{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
