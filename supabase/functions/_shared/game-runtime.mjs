@@ -1,6 +1,6 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="ac356df15ceddf3c542c3d7120056803cc29aed48d1cb80093cdd23bd474c378";
-export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-bonds.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
+export const runtimeHash="5eeb0c9b072e407afe47dc17a29768f9ba4d6369d9c6aba2f7a00a65bae4ba82";
+export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-bonds.js","legend-quest.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
  const navigator=undefined,module=undefined,document={addEventListener(){}};
@@ -12325,14 +12325,16 @@ const HeroSystem=(()=>{
   function enhanceQuote(e){return {gold:1000*e.tier*(e.enhance+1),pearls:Math.ceil((e.enhance+1)/3)};}
   function enhance(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero&&busy(e.hero))return busy(e.hero);if(s.buildings.smith<1)return '请先建造铁匠铺';if(e.enhance>=10)return '强化已达 +10';const q=enhanceQuote(e);if(s.res.gold<q.gold||(s.inventory.pearl||0)<q.pearls)return '黄金或强化宝珠不足';s.res.gold-=q.gold;s.inventory.pearl-=q.pearls;e.enhance++;Progression.record(s,'item',q.pearls);return save();}
   function salvage(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.hero)return '请先卸下装备';s.equipment=s.equipment.filter(x=>x.id!==eid);s.inventory.pearl=(s.inventory.pearl||0)+e.tier+Math.floor(e.enhance/3);return save();}
-  // Three idle rare pieces of one slot plus 2 jade make one legendary piece.
-  function legendQuote(slot){const s=live();if(!Object.hasOwn(slots,slot))return null;const pool=s.equipment.filter(e=>e.slot===slot&&e.tier===3&&!e.hero).sort((a,b)=>a.enhance-b.enhance||a.id-b.id);return {slot,use:pool.slice(0,3).map(e=>e.id),jade:2,reason:pool.length<3?'需要 3 件闲置的'+qualities[3]+slots[slot]:(s.jewels?.jade||0)<2?'需要玉石 ×2':s.buildings.smith<10?'需要 10 级铁匠铺':''};}
-  function forgeLegend(slot){const s=live(),q=legendQuote(slot);if(!q)return '请选择装备';if(q.reason)return q.reason;s.equipment=s.equipment.filter(e=>!q.use.includes(e.id));s.jewels.jade-=q.jade;addEquipment(s,slot,4);return save();}
+  // Legendary pieces come from the 铸神兵 quest line (legend-quest.js): first a timed quench, then direct quenching.
+  function legendQuote(slot){const s=live();return LegendQuest.forgeQuote(s,slot);}
+  function forgeLegend(slot){const s=live(),error=LegendQuest.startForge(s,slot,Date.now(),addEquipment);return error||save();}
+  function claimLegend(){const s=live(),error=LegendQuest.claim(s,Date.now(),addEquipment);return error||save();}
+  function seekLegend(){const s=live(),error=LegendQuest.seek(s);return error||save();}
   // 炼化鼎: add (or reroll) one extra stat of +3..+8 on a rare or legendary piece.
   function refine(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,refine};
+  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();
 
 
@@ -12341,7 +12343,8 @@ const HeroSystem=(()=>{
 // Famous-general bonds (design/quick-specs/city-specialty-and-hero-growth-2026-10-09.md): owning both generals of a pair
 // gives both a bonus; when one of them leads the army the battle part of the bonus doubles.
 const HeroBonds=(()=>{
-  const bonds=Object.freeze([
+  // Disabled 2026-10-09 (owner): pairs lacked historical ties. Rebuild after more generals (design/backlog/hero-roster-and-bonds.md).
+  const archived=Object.freeze([
     {id:'eelai',name:'虎痴恶来',members:['id:local_7100000000000002','id:local_7100000000000001'],desc:'枪兵、刀盾兵受到伤害 −8%',defense:{spear:.08,shield:.08}},
     {id:'archers',name:'弓马双绝',members:['line:huangzhong','id:local_7100000000000004'],desc:'弓箭兵攻击 +8%',attack:{archer:.08}},
     {id:'riders',name:'骁将并驰',members:['id:local_7100000000000003','line:machao'],desc:'轻骑兵、铁骑兵攻击 +8%',attack:{cavalry:.08,heavy:.08}},
@@ -12349,12 +12352,45 @@ const HeroBonds=(()=>{
     {id:'jiangdong',name:'江东双璧',members:['line:zhouyu','line:ganning'],desc:'全军攻击 +4%',attackAll:.04},
     {id:'liangjiang',name:'五子良将',members:['line:zhangliao','line:zhaoyun'],desc:'出征行军时间 −5%',march:.05}
   ]);
+  const bonds=Object.freeze([]);
   function memberId(s,m){const [kind,v]=m.split(':');if(kind==='id')return s.generals?.includes(v)?v:'';const g=(s.customGenerals||[]).find(g=>g.wildLine===v);return g&&s.generals?.includes(g.id)?g.id:'';}
   function active(s){return bonds.map(b=>({...b,ids:b.members.map(m=>memberId(s,m))})).filter(b=>b.ids.every(Boolean));}
   function statBonus(s,id){const out={};for(const b of active(s))if(b.stats&&b.ids.includes(id))for(const [k,n] of Object.entries(b.stats))out[k]=(out[k]||0)+n;return out;}
   // Battle factors for the army led by `leader`.
   function battle(s,leader){const out={attack:{},defense:{},attackAll:0,march:0};for(const b of active(s)){const f=b.ids.includes(leader)?2:1;for(const [u,n] of Object.entries(b.attack||{}))out.attack[u]=(out.attack[u]||0)+n*f;for(const [u,n] of Object.entries(b.defense||{}))out.defense[u]=(out.defense[u]||0)+n*f;out.attackAll+=(b.attackAll||0)*f;out.march+=(b.march||0)*f;}out.march=Math.min(.3,out.march);return out;}
-  return {bonds,active,statBonus,battle};
+  return {bonds,archived,active,statBonus,battle};
+})();
+
+
+// SOURCE: legend-quest.js
+'use strict';
+// 铸神兵: a one-time quest line (about an hour) that unlocks legendary forging. Owner decision 2026-10-09:
+// ① seek the smith's clue at the inn → in parallel ② gather 1 h on an owned level-5+ wild tile,
+// ③ win 3 raids on level-5+ wild tiles, ④ win a battle at a county city → ⑤ 30-minute quench at a level-10 smithy
+// with one rare piece and 1 jade, which yields the first legendary piece and unlocks direct quenching.
+const LegendQuest=(()=>{
+  const C=Object.freeze({clueGold:20000,raids:3,wildLevel:5,forgeMs:30*60000,smith:10,jade:1});
+  const STAGES=['none','clues','forging','done'];
+  const object=v=>!!v&&typeof v==='object'&&!Array.isArray(v),int=n=>Number.isSafeInteger(n)&&n>=0;
+  const fresh=()=>({stage:'none',startAt:0,gathered:false,raids:0,county:false,forgeEnd:0,forgeSlot:''});
+  const get=s=>s.legendQuest||fresh();
+  function valid(s){const q=s.legendQuest;if(q===undefined)return true;return object(q)&&Object.keys(q).length===7&&STAGES.includes(q.stage)&&int(q.startAt)&&typeof q.gathered==='boolean'&&int(q.raids)&&q.raids<=C.raids&&typeof q.county==='boolean'&&int(q.forgeEnd)&&(q.forgeSlot===''||['weapon','armor','helmet','accessory'].includes(q.forgeSlot));}
+  const unlocked=s=>get(s).stage==='done';
+  const cluesDone=q=>q.gathered&&q.raids>=C.raids&&q.county;
+  function status(s,now){const q=get(s);return {...q,unlocked:q.stage==='done',cluesDone:cluesDone(q),forgeReady:q.stage==='forging'&&q.forgeEnd<=now,C};}
+  function seek(s){const q=get(s);if(q.stage!=='none')return '已经得到铸匠线索';if((s.buildings.inn||0)<1)return '需要 1 级客栈';if((s.buildings.smith||0)<C.smith)return '客栈里没有这样的传闻';if(s.res.gold<C.clueGold)return '黄金不足';s.res.gold-=C.clueGold;s.legendQuest={...fresh(),stage:'clues',startAt:Date.now()};return null;}
+  // Progress hooks (no effect outside the clue stage).
+  function onGather(s,level){const q=s.legendQuest;if(q?.stage==='clues'&&level>=C.wildLevel)q.gathered=true;}
+  function onBattle(s,n,o){const q=s.legendQuest;if(q?.stage!=='clues'||!o.won)return;if(n.wild&&o.mode==='raid'&&n.level>=C.wildLevel)q.raids=Math.min(C.raids,q.raids+1);if(n.terrain==='fort'&&typeof NamedCityData!=='undefined'&&NamedCityData.definition(n.id)?.tier==='county')q.county=true;}
+  function forgeQuote(s,slot){const q=get(s),piece=(s.equipment||[]).filter(e=>e.slot===slot&&e.tier===3&&!e.hero).sort((a,b)=>a.enhance-b.enhance||a.id-b.id)[0];
+    const reason=!['weapon','armor','helmet','accessory'].includes(slot)?'请选择部位':q.stage==='forging'?'正在淬火':q.stage!=='done'&&!cluesDone(q)?'先完成铸神兵的线索':(s.buildings.smith||0)<C.smith?'需要 10 级铁匠铺':!piece?'需要 1 件闲置的同部位珍稀装备':(s.jewels?.jade||0)<C.jade?'需要玉石 ×1':(s.equipment||[]).length>s.equipmentCapacity?'装备库已满':'';
+    return {slot,piece:piece?.id||0,reason,timed:q.stage!=='done'};}
+  // First time: a 30-minute quench ends the quest. Afterwards quenching is immediate.
+  function startForge(s,slot,now,addEquipment){const f=forgeQuote(s,slot);if(f.reason)return f.reason;s.equipment=s.equipment.filter(e=>e.id!==f.piece);s.jewels.jade-=C.jade;
+    if(!f.timed){addEquipment(s,slot,4);return null;}s.legendQuest={...get(s),stage:'forging',forgeEnd:now+C.forgeMs,forgeSlot:slot};return null;}
+  function claim(s,now,addEquipment){const q=get(s);if(q.stage!=='forging')return '没有正在淬火的神兵';if(q.forgeEnd>now)return '神兵还在淬火';if(s.equipment.length>=s.equipmentCapacity)return '装备库已满';addEquipment(s,q.forgeSlot,4);s.legendQuest={...q,stage:'done',forgeSlot:''};return null;}
+  const rumour=s=>get(s).stage==='none'&&(s.buildings.smith||0)>=C.smith&&(s.buildings.inn||0)>=1;
+  return {C,valid,unlocked,rumour,status,seek,onGather,onBattle,forgeQuote,startForge,claim};
 })();
 
 
@@ -13209,7 +13245,7 @@ const HeritageSystem=(()=>{
   return {elapsed,hours,amount,resource,carry,room,received,overCapacity,discarded:amount-received,rolls,chance,xp:Math.floor(received*.01),ready:elapsed>=HOUR,cap:elapsed>=24*HOUR};
  }
  function weightedJewel(weights){const total=weights.reduce((a,b)=>a+b,0);let roll=Math.random()*total;for(let i=0;i<weights.length;i++){roll-=weights[i];if(roll<0)return Object.keys(Progression.jewels)[i];}return 'nightPearl';}
- function collectGather(id){const s=live(),q=gatherQuote(s,id),a=s.gatherings[id];if(!q)return '没有可以结束的采集';if(!q.ready)return '至少采集 1 小时才能收获，可选择取消';const jewels={};for(let i=0;i<q.rolls;i++)if(Math.random()<q.chance){const key=weightedJewel(HeritageData.fields[a.type].weights);jewels[key]=(jewels[key]||0)+1;}
+ function collectGather(id){const s=live(),q=gatherQuote(s,id),a=s.gatherings[id];if(!q)return '没有可以结束的采集';if(!q.ready)return '至少采集 1 小时才能收获，可选择取消';if(typeof LegendQuest!=='undefined')LegendQuest.onGather(s,s.landClaims?.[id]?.level||Game.getNode(id)?.level||0);const jewels={};for(let i=0;i<q.rolls;i++)if(Math.random()<q.chance){const key=weightedJewel(HeritageData.fields[a.type].weights);jewels[key]=(jewels[key]||0)+1;}
   const loot={[q.resource]:q.received};s.res[q.resource]+=q.received;for(const [key,n] of Object.entries(jewels))s.jewels[key]+=n;HeroSystem.addXp(s,a.general,q.xp);delete s.gatherings[id];record(s,{kind:'gather',node:id,name:Game.getNode(id).name,loot,jewels,xp:q.xp,discarded:q.discarded,overCapacity:q.overCapacity});return save();
  }
  function cancelGather(id){const s=live();if(!s.gatherings[id])return '这里没有进行采集';delete s.gatherings[id];return save();}
@@ -16016,7 +16052,7 @@ const Game = (() => {
     if(d.expedition!==null){const e=d.expedition;if(!object(e)||!frozen(e)||!node(e.node)||!d.generals.includes(e.general)||e.general===d.governor||!army(e.army)||!['raid','occupy'].includes(e.mode)||(e.returnAfterOccupy!==undefined&&typeof e.returnAfterOccupy!=='boolean')||!orders(e.orders)||!['march','battle','return'].includes(e.phase)||!timing(e))return false;}
     if(!Array.isArray(d.expeditions)||d.expeditions.length>10||!d.expeditions.every(e=>object(e)&&frozen(e)&&node(e.node)&&d.generals.includes(e.general)&&e.general!==d.governor&&army(e.army)&&['raid','occupy'].includes(e.mode)&&(e.returnAfterOccupy===undefined||typeof e.returnAfterOccupy==='boolean')&&orders(e.orders)&&['march','return'].includes(e.phase)&&timing(e)))return false;
     const deployment=[...(d.expedition?[d.expedition]:[]),...d.expeditions,...Object.values(d.garrisons)];if(new Set(deployment.map(e=>e.general)).size!==deployment.length)return false;
-    if(!['food','wood','stone','iron'].every(k=>integer(d.storageAllocation[k])&&d.storageAllocation[k]<=100)||!Object.values(d.buffs).every(b=>object(b)&&typeof b.effect==='string'&&finite(b.end)&&(b.general===null||d.generals.includes(b.general)))||!Object.values(d.itemCooldowns).every(finite)||!finite(d.trialGiftAt)||d.edictDay!==undefined&&!Number.isSafeInteger(d.edictDay)||typeof d.ruler!=='string'||d.ruler.length>12||typeof d.banner!=='string'||d.banner.length>2)return false;
+    if(!['food','wood','stone','iron'].every(k=>integer(d.storageAllocation[k])&&d.storageAllocation[k]<=100)||!Object.values(d.buffs).every(b=>object(b)&&typeof b.effect==='string'&&finite(b.end)&&(b.general===null||d.generals.includes(b.general)))||!Object.values(d.itemCooldowns).every(finite)||!finite(d.trialGiftAt)||d.edictDay!==undefined&&!Number.isSafeInteger(d.edictDay)||!LegendQuest.valid(d)||typeof d.ruler!=='string'||d.ruler.length>12||typeof d.banner!=='string'||d.banner.length>2)return false;
     if(!d.defenseQueue.every(q=>object(q)&&Object.hasOwn(ManualData.defenses,q.id)&&integer(q.count)&&q.count>0&&q.count<=10000&&timing(q)))return false;
     if(!Object.entries(d.landClaims).every(([id,c])=>getNode(id,d)?.wild&&object(c)&&finite(c.at)&&integer(c.level)&&c.level<=10)||!Object.entries(d.scouted).every(([id,c])=>node(id)&&object(c)&&finite(c.at)&&integer(c.level)&&c.level<=10))return false;
     const roundSummary=(s,b)=>object(s)&&s.round===b.round&&Array.isArray(s.events)&&s.events.length<=150&&s.events.every(e=>object(e)&&['move','strike','recoil','gate','tower'].includes(e.type)&&['player','enemy'].includes(e.side)&&(Object.hasOwn(units,e.unit)||['gate','tower'].includes(e.unit))&&(e.target===''||Object.hasOwn(units,e.target)||['gate','tower'].includes(e.target))&&['from','to','damage'].every(k=>finite(e[k]))&&e.from<=b.length&&e.to<=b.length&&integer(e.killed)&&typeof e.counter==='boolean'&&typeof e.ranged==='boolean'&&(e.type!=='move'||e.damage===0&&e.killed===0)&&(e.type!=='gate'||e.target==='gate'&&e.killed===0)&&(e.type!=='tower'||e.unit==='tower')&&(e.type!=='strike'||Object.hasOwn(units,e.unit)&&Object.hasOwn(units,e.target)));
@@ -16617,6 +16653,7 @@ const Game = (() => {
     const cargoCapacity=carry(alive),availableLoot=won?attackInfo(n.id,mode).loot:{},loot=won?capLoot(availableLoot,cargoCapacity):{},lootDiscarded=Object.values(availableLoot).reduce((v,n)=>v+n,0)-Object.values(loot).reduce((v,n)=>v+n,0),drops=won?rollBattleDrops(n):{items:{},resources:{}},remainingCarry=Math.max(0,cargoCapacity-Object.values(loot).reduce((v,n)=>v+n,0)),bonusLoot=capLoot(drops.resources,remainingCarry),bonusDiscarded=Object.values(drops.resources).reduce((v,n)=>v+n,0)-Object.values(bonusLoot).reduce((v,n)=>v+n,0),baseReceipt=settleLoot(loot,true),bonusReceipt=settleLoot(bonusLoot,true),resourceReceipt={base:baseReceipt,bonus:bonusReceipt},overflow=receiptOverflow(baseReceipt)+receiptOverflow(bonusReceipt),overCapacity=Object.values(baseReceipt.overCapacity).reduce((sum,n)=>sum+n,0)+Object.values(bonusReceipt.overCapacity).reduce((sum,n)=>sum+n,0);let recruit=null,claimed=false,stationed=false,moraleBefore=null,moraleAfter=null;
     for(const [id,count] of Object.entries(drops.items))state.inventory[id]=(state.inventory[id]||0)+count;
     const garrisonResult=NamedGarrison.has(n.id)?NamedGarrison.settleBattle(state,n.id,{won,mode,gateBroken:!!b.gate&&b.gate.hp<=0,enemyStart:b.enemy.reduce((v,r)=>v+r.initial,0),enemyLeft:b.enemy.reduce((v,r)=>v+Math.ceil(r.hp/r.stats.hp),0),enemyArmyLeft:Object.fromEntries(b.enemy.map(r=>[r.id,Math.ceil(r.hp/r.stats.hp)]))},Date.now(),garrisonApi()):null;
+    LegendQuest.onBattle(state,n,{won,mode});
     if(won){
       state.stats.victories++;if(!n.orderRoute)state.raided[n.id]=true;state.cooldowns[n.id]=garrisonResult&&!garrisonResult.capturable?NamedGarrison.regroupUntil(n.id,Date.now()):Date.now()+90000;
       if(n.faction==='yellow_turban'&&n.openCity&&mode==='occupy'&&availableLoot.gold>0){if(!state.yellowGold)state.yellowGold={};state.yellowGold[n.id]=Date.now()+YELLOW_GOLD_REFRESH_MS;}

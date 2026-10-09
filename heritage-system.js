@@ -43,7 +43,7 @@ const HeritageSystem=(()=>{
   return {elapsed,hours,amount,resource,carry,room,received,overCapacity,discarded:amount-received,rolls,chance,xp:Math.floor(received*.01),ready:elapsed>=HOUR,cap:elapsed>=24*HOUR};
  }
  function weightedJewel(weights){const total=weights.reduce((a,b)=>a+b,0);let roll=Math.random()*total;for(let i=0;i<weights.length;i++){roll-=weights[i];if(roll<0)return Object.keys(Progression.jewels)[i];}return 'nightPearl';}
- function collectGather(id){const s=live(),q=gatherQuote(s,id),a=s.gatherings[id];if(!q)return '没有可以结束的采集';if(!q.ready)return '至少采集 1 小时才能收获，可选择取消';const jewels={};for(let i=0;i<q.rolls;i++)if(Math.random()<q.chance){const key=weightedJewel(HeritageData.fields[a.type].weights);jewels[key]=(jewels[key]||0)+1;}
+ function collectGather(id){const s=live(),q=gatherQuote(s,id),a=s.gatherings[id];if(!q)return '没有可以结束的采集';if(!q.ready)return '至少采集 1 小时才能收获，可选择取消';if(typeof LegendQuest!=='undefined')LegendQuest.onGather(s,s.landClaims?.[id]?.level||Game.getNode(id)?.level||0);const jewels={};for(let i=0;i<q.rolls;i++)if(Math.random()<q.chance){const key=weightedJewel(HeritageData.fields[a.type].weights);jewels[key]=(jewels[key]||0)+1;}
   const loot={[q.resource]:q.received};s.res[q.resource]+=q.received;for(const [key,n] of Object.entries(jewels))s.jewels[key]+=n;HeroSystem.addXp(s,a.general,q.xp);delete s.gatherings[id];record(s,{kind:'gather',node:id,name:Game.getNode(id).name,loot,jewels,xp:q.xp,discarded:q.discarded,overCapacity:q.overCapacity});return save();
  }
  function cancelGather(id){const s=live();if(!s.gatherings[id])return '这里没有进行采集';delete s.gatherings[id];return save();}
