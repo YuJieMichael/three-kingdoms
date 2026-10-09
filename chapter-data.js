@@ -45,11 +45,11 @@ const ChapterData={
   ],
   chapterFourRewards:[
     {resources:90000,gold:320000,jewels:{jadeite:3},items:{speed_train_3h:2,blueprint:2}},
-    {resources:100000,gold:350000,jewels:{jadeite:4},items:{speed_build_3h:2,blueprint:2}},
+    {resources:100000,gold:350000,jewels:{jadeite:4},items:{speed_build_3h:2,blueprint:2,refine:1}},
     {resources:110000,gold:380000,jewels:{jade:2},items:{speed_research_3h:2,blueprint:2}},
-    {resources:120000,gold:420000,jewels:{jade:3},items:{speed_train_8h:2,blueprint:3}},
+    {resources:120000,gold:420000,jewels:{jade:3},items:{speed_train_8h:2,blueprint:3,refine:2}},
     {resources:140000,gold:460000,jewels:{jade:3,nightPearl:1},items:{speed_build_8h:2,blueprint:3}},
-    {resources:200000,gold:600000,jewels:{jade:5,nightPearl:2},items:{speed_build_8h:3,speed_research_8h:2,blueprint:5}}
+    {resources:200000,gold:600000,jewels:{jade:5,nightPearl:2},items:{speed_build_8h:3,speed_research_8h:2,blueprint:5,refine:3}}
   ],
   // The jade seal (chapter 4 cleared) grants 天子诏令, +1 city slot and 万民景仰 (morale target +5, tax +10%).
   hasSeal(s){return !!s?.conquered?.c4_luoyang;},
