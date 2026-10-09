@@ -40,7 +40,7 @@
 #   Each entry: name, status, source, referenced_by[], attributes{}, added, revised
 
 version: 1
-last_updated: ""
+last_updated: "2026-10-08"
 
 # ─── ENTITIES ────────────────────────────────────────────────────────────────
 # Named game-world objects: enemies, NPCs, characters, factions, bosses.
@@ -142,7 +142,116 @@ formulas: []
 #
 # Required fields: name, status, source, referenced_by, value, unit, added
 
-constants: []
+constants:
+  # Added 2026-10-08 when propagating v0.34.29–v0.34.34. Sources are quick-specs
+  # (this project has no system GDDs for these systems yet); code_ref is the
+  # implementation the value was verified against.
+  - name: hall_level2_build_seconds
+    status: active
+    source: design/quick-specs/onboarding-growth-challenges-2026-10-05.md
+    referenced_by:
+      - design/quick-specs/archer-onboarding-2026-10-05.md
+      - design/quick-specs/governor-construction-xp-2026-10-05.md
+      - design/balance/opening-pace-2026-10-08.md
+    value: 480          # was: reference curve (37.4 min observed in sim) before 2026-10-08 (v0.34.29)
+    unit: seconds (before governor/tech bonuses)
+    code_ref: onboarding-data.js OnboardingData.hallBuildSeconds
+    added: 2026-10-08
+    revised: ""
+
+  - name: free_finish_threshold
+    status: active
+    source: design/quick-specs/governor-construction-xp-2026-10-05.md
+    referenced_by:
+      - design/quick-specs/onboarding-growth-challenges-2026-10-05.md
+      - design/quick-specs/archer-onboarding-2026-10-05.md
+    value: 300          # construction only; not research/training; not shared world
+    unit: seconds remaining
+    code_ref: engine.js FREE_FINISH_MS
+    added: 2026-10-08
+    revised: ""
+
+  - name: starter_supply_tier1_resource
+    status: active
+    source: design/quick-specs/archer-onboarding-2026-10-05.md
+    referenced_by:
+      - design/quick-specs/starter-gold-tuning-2026-10-05.md
+      - design/balance/opening-economy-2026-10-08.md
+    value: 8000         # was: 40000 before 2026-10-08 (v0.34.33); gold 10000 unchanged
+    unit: each of food/wood/stone/iron
+    code_ref: onboarding-data.js OnboardingData tier 1
+    added: 2026-10-08
+    revised: ""
+
+  - name: starter_supply_tier2_resources
+    status: active
+    source: design/quick-specs/archer-onboarding-2026-10-05.md
+    referenced_by:
+      - design/balance/opening-economy-2026-10-08.md
+    value: {food: 76000, wood: 92000, stone: 106000, iron: 76000}   # was: 60000/60000/90000/60000
+    unit: resources
+    code_ref: onboarding-data.js OnboardingData tier 2
+    added: 2026-10-08
+    revised: ""
+
+  - name: militia_warmup_raid
+    status: active
+    source: design/quick-specs/onboarding-growth-challenges-2026-10-05.md
+    referenced_by:
+      - design/quick-specs/archer-onboarding-2026-10-05.md
+      - design/balance/opening-economy-2026-10-08.md
+    value: {militia: 30, target: nearest level-1 wild tile, after: [hall 2, drill 1, barracks 1]}
+    unit: guide step
+    code_ref: growth-guide.js warmup()
+    added: 2026-10-08
+    revised: ""
+
+  - name: chapter_army_scale
+    status: active
+    source: design/quick-specs/chapter-two-2026-10-05.md
+    referenced_by:
+      - design/quick-specs/chapter-three-2026-10-05.md
+      - design/balance/late-battle-difficulty-2026-10-08.md
+      - design/balance/chapter-progression-2026-10-05.md
+    value: {chapter2: 1.3, chapter3: 1.5}
+    unit: garrison multiplier
+    code_ref: chapter-data.js ChapterData.armyScale
+    added: 2026-10-08
+    revised: ""
+
+  - name: yellow_city_army_scale
+    status: active
+    source: design/quick-specs/yellow-cities-v0.26.0.md
+    referenced_by:
+      - design/balance/late-battle-difficulty-2026-10-08.md
+    value: 5
+    unit: garrison multiplier
+    code_ref: yellow-city-data.js YellowCityData.armyScale
+    added: 2026-10-08
+    revised: ""
+
+  - name: guide_recommended_army
+    status: active
+    source: design/quick-specs/chapter-two-2026-10-05.md
+    referenced_by:
+      - design/quick-specs/chapter-three-2026-10-05.md
+      - design/balance/late-battle-difficulty-2026-10-08.md
+    value: {chapter2: {archer: 910, shield: 325}, chapter3: {archer: 1650, shield: 525}}   # was: archer 700 / shield 250
+    unit: soldiers
+    code_ref: growth-guide.js campaign()
+    added: 2026-10-08
+    revised: ""
+
+  - name: jewel_substitute_rate
+    status: active
+    source: design/quick-specs/city-defense-2026-10-05.md
+    referenced_by:
+      - design/balance/late-battle-difficulty-2026-10-08.md
+    value: 2            # cheapest spare jewels first
+    unit: x prestige value
+    code_ref: heritage-system.js JEWEL_SUBSTITUTE_RATE / jewelPayment
+    added: 2026-10-08
+    revised: ""
 
 # Example:
 #
