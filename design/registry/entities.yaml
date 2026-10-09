@@ -188,7 +188,7 @@ constants:
     source: design/quick-specs/archer-onboarding-2026-10-05.md
     referenced_by:
       - design/balance/opening-economy-2026-10-08.md
-    value: {food: 76000, wood: 92000, stone: 106000, iron: 76000}   # was: 60000/60000/90000/60000
+    value: {food: 26000, wood: 92000, stone: 76000, iron: 76000}   # v0.34.37; v0.34.33: 76000/92000/106000/76000; was: 60000/60000/90000/60000
     unit: resources
     code_ref: onboarding-data.js OnboardingData tier 2
     added: 2026-10-08

@@ -55,26 +55,26 @@ stories:
     name: "官府 2 级后补给与造价联调"
     file: "production/sprints/sprint-004.md"
     priority: should-have
-    status: backlog
+    status: done
     owner: ""
     estimate_days: 1
     blocker: ""
-    completed: ""
+    completed: "2026-10-09"
   - id: "5-6"
     name: "长局脚本扩展（1 倍、5 城、72 小时）"
     file: "production/sprints/sprint-004.md"
     priority: must-have
-    status: backlog
+    status: done
     owner: ""
     estimate_days: 1
     blocker: ""
-    completed: ""
+    completed: "2026-10-09"
   - id: "5-7"
     name: "真机清单"
     file: "production/sprints/sprint-004.md"
     priority: must-have
-    status: backlog
+    status: done
     owner: ""
     estimate_days: 0.5
     blocker: ""
-    completed: ""
+    completed: "2026-10-09"
