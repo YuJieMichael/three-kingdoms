@@ -54,8 +54,8 @@ stories:
     name: "素材处理脚本入库"
     file: "production/epics/art-direction/story-003-asset-pipeline.md"
     priority: nice-to-have
-    status: backlog
+    status: done
     owner: ""
     estimate_days: 0.5
     blocker: ""
-    completed: ""
+    completed: "2026-10-08"

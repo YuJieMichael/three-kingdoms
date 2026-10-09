@@ -53,7 +53,7 @@
 
 **生成：** 透明背景 PNG，1024×1024，主体完整，四周留一点透明边。纹理是不透明的无缝图。
 
-**处理：**
+**处理：** 用 `tools/painted-art/process.sh` 一条命令完成下面 1–4 步（需要 macOS，见 [tools/painted-art/README.md](../../tools/painted-art/README.md)）。
 
 1. 裁掉透明边（alpha 不为 0 的包围框）。
 2. 缩放：建筑长边 **512px**；地图物件长边 **384px**；纹理 **512×512**，不裁边。
