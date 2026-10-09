@@ -8,13 +8,13 @@ function supplyLinesHTML(){
   return `<section class="panel supply-lines-panel"><div class="section-title"><h3>自动补给线</h3><span class="badge">${rows.length}/12</span></div><p class="hint">目的城库存低于目标时按缺口运输，每条线路同时只有一队。源城保留量与行军粮优先扣算。</p>${available?'': '<p class="notice">共享世界暂不支持自动补给线，请使用手动运输。</p>'}<div class="guide-actions">${btn('新增补给线','supplyLineNew','','small secondary',!available||rows.length>=12)}</div>${rows.length?`<div class="supply-lines-grid">${rows.map(row=>`<article class="supply-line-card"><div class="quest-heading"><h4>${esc(supplyLineCityName(row.sourceCity))} → ${esc(supplyLineCityName(row.destinationCity))}</h4><span class="badge">${!row.enabled&&row.state==='inflight'?'已暂停 · ':''}${esc(supplyLineStateName(row))}</span></div><p>${esc(Game.resources[row.resource].name)}目标 ${num(row.targetStock)} · 源城保留 ${num(row.sourceReserve)}</p><p class="hint">${esc(row.reason||'')}${row.pending?` · 待到货 ${num(row.pending)}`:''}</p>${row.job?`<p class="hint">${row.job.phase==='return'?'返城':'送达'}剩余 ${clock(row.job.end)}</p>`:row.state==='ready'?`<p class="hint">下趟装载 ${num(row.amount)} · 单程 ${duration(row.quote?.seconds||0)} · 行军粮 ${num(row.quote?.foodCost||0)}</p>`:''}<div class="guide-actions">${btn(row.enabled?'暂停':'恢复','supplyLineToggle',row.id,'small secondary',!available)}${btn('修改','supplyLineEdit',row.id,'small secondary',!available||row.state==='inflight')}${btn('删除','supplyLineRemoveAsk',row.id,'small secondary',!available)}</div></article>`).join('')}</div>`:'<p class="empty">尚未配置补给线。可从粮城向驻军城持续供粮，也可运送木、石、铁和黄金。</p>'}<details class="world-tool-details" data-ui-disclosure="supply-lines-rules"><summary>补给规则与离线说明</summary><p class="hint">固定运输队需在源城待命，市场、校场、单队人数、负重和行军粮按手动运输规则检查。运输队未返城前不会再次派遣；手动召回会暂停对应路线。源城助手设置的资源保留量也会生效。</p><p class="hint">离线期间只结算已经出发的队伍。重开游戏后根据当前库存派遣一趟，不补算离线期间的历史往返。暂停不会召回已经出发的队伍；有在途队伍时需等返城后修改或删除配置。</p></details></section>`;
 }
 function supplyLinesModal(){showModal('城际自动补给',supplyLinesHTML(),btn('关闭','close','','secondary'));manualModalContext=supplyLinesModal;}
-function supplyLineEditor(id=''){
+function supplyLineEditor(id='',preset={}){
   if(!supplyLinesAvailable()){toast('共享世界暂不支持自动补给线');return;}
   const cities=Game.cityList(),old=id?Game.supplyLines().find(row=>row.id===id):null;
   if(cities.length<2){showModal('自动补给线','<p class="notice">至少拥有两座城市后可配置补给线。</p>',btn('关闭','close'));return;}
   if(id&&!old){toast('补给线不存在');return;}
   if(old?.state==='inflight'){toast('运输队仍在途中，请等返城后再修改');return;}
-  const source=old?.sourceCity||activeCityMeta().id,destination=old?.destinationCity||cities.find(c=>c.id!==source).id;
+  const source=old?.sourceCity||preset.sourceCity||activeCityMeta().id,destination=old?.destinationCity||preset.destinationCity||cities.find(c=>c.id!==source).id;
   supplyLineDraft={id,sourceCity:source,destinationCity:destination,resource:old?.resource||'food',targetStock:old?.targetStock||10000,sourceReserve:old?.sourceReserve??10000,army:{...(old?.army||{})},enabled:old?.enabled??true,key:''};
   if(!old){const army=Game.getCityState(source)?.army||{};if(army.wagon>0)supplyLineDraft.army.wagon=Math.min(army.wagon,10);}
   manualModalContext=null;

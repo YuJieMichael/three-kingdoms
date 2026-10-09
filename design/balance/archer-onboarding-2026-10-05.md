@@ -1,5 +1,7 @@
 # 弓兵引导与十阶补给节奏
 
+> 2026-10-08 注：本报告为历史记录。第 1、2 阶补给资源、官府 2 级工期与引导路线已由 `opening-pace-2026-10-08.md`（v0.34.29）和 `opening-economy-2026-10-08.md`（v0.34.33）取代，耗时数字不再代表当前版本。
+
 输入 FOUND：onboarding-data.js、growth-guide.js、reward-data.js、reference-rules.js、manual-data.js、engine.js、tests/balance/archer-onboarding.cjs，以及本轮 quick spec 的 90 分钟首支弓兵队目标。历史 GDD / registry 目标 ABSENT；十阶全程的理想耗时尚无已批准范围。
 
 | 路线 | 正常倍率模拟耗时 | 结果 |

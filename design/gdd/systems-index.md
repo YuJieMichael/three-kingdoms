@@ -2,7 +2,7 @@
 
 > **Status**: Draft — reverse-documented from the shipped game (v0.34.17)
 > **Created**: 2026-10-08
-> **Last Updated**: 2026-10-08
+> **Last Updated**: 2026-10-08（同步 v0.34.29–v0.34.34 设计变更）
 > **Source Concept**: design/game-brief.md (this project has a brief, not a concept doc)
 
 ---
@@ -30,9 +30,9 @@
 | 9 | 侦察与情报 | Gameplay | MVP | Implemented | `design/quick-specs/garrison-visibility-2026-10-05.md` | `scout-system.js` |
 | 10 | 守城与城防事件 | Gameplay | MVP | Implemented | `design/quick-specs/city-defense-2026-10-05.md` | `npc-defense.js`, `city-strategy.js` |
 | 11 | 多城、运输与区域战线 | Gameplay | Alpha | Implemented | `design/quick-specs/territory-supply-v0.32.0.md` | `regional-front.js`, `supply-lines.js` |
-| 12 | 官职、爵位与内政 | Progression | Alpha | Implemented | `design/quick-specs/governor-construction-xp-2026-10-05.md` | `heritage-system.js`, `governance-system.js` |
-| 13 | 新手引导与十阶礼包 | Meta | MVP | Implemented | `design/quick-specs/onboarding-growth-challenges-2026-10-05.md` | `onboarding-system.js`, `growth-guide.js` |
-| 14 | 章节与战役 | Progression | MVP | Implemented | `design/quick-specs/chapter-two-2026-10-05.md`, `chapter-three-2026-10-05.md`, `chapter-unlock-2026-10-05.md` | `chapter-data.js`, `chapter-ui.js`, `mainline-ui.js` |
+| 12 | 官职、爵位与内政 | Progression | Alpha | Implemented | `design/quick-specs/governor-construction-xp-2026-10-05.md`, `design/quick-specs/city-defense-2026-10-05.md`（官职珠宝）, `design/balance/late-battle-difficulty-2026-10-08.md`（珠宝折算） | `heritage-system.js`, `governance-system.js` |
+| 13 | 新手引导与十阶礼包 | Meta | MVP | Implemented | `design/quick-specs/onboarding-growth-challenges-2026-10-05.md`, `design/quick-specs/archer-onboarding-2026-10-05.md`, `design/balance/opening-economy-2026-10-08.md` | `onboarding-system.js`, `growth-guide.js` |
+| 14 | 章节与战役 | Progression | MVP | Implemented | `design/quick-specs/chapter-two-2026-10-05.md`, `chapter-three-2026-10-05.md`, `chapter-unlock-2026-10-05.md`, `design/balance/late-battle-difficulty-2026-10-08.md`（守军倍数） | `chapter-data.js`, `chapter-ui.js`, `mainline-ui.js` |
 | 15 | 军令与挑战 | Progression | Vertical Slice | Implemented | `design/quick-specs/war-orders-2026-10-05.md` | `war-orders.js`, `war-orders-ui.js` |
 | 16 | 每日任务与成长奖励 | Progression | Alpha | Implemented | `design/quick-specs/onboarding-growth-challenges-2026-10-05.md` | `progression.js`, `reward-data.js` |
 | 17 | 背包、掉落与装备 | Economy | Alpha | Implemented | `design/quick-specs/loot-overcap-2026-10-05.md` | `inventory-ui.js`, `hero-system.js` |
@@ -57,3 +57,9 @@
 - 上表中只有 #6 有正式 GDD；其余系统的设计在 quick-specs 里，章节结构不符合 GDD 模板。按 `docs/adoption-plan-2026-10-08.md`，等某个系统下一次要改时再把它的 quick-spec 提升为 GDD。
 - 没有美术规范（art bible）；画面风格目前由 `scene-style-preview.html` 和 `design/quick-specs/` 里的零散说明约束。standard 档不强制。
 - 本表由代码与现有文档反推，系统划分和优先级（MVP／Alpha 等）是推断值，请你确认。
+
+---
+
+## Change Log
+
+- 2026-10-08：同步 v0.34.29–v0.34.34 的数值与规则到各 quick-spec（官府 2 级 8 分钟、免费完成、第 1/2 阶补给、典民令与义兵引导步骤、首战仅限据点、攻坚克敌判定、章节与黄巾城守军倍数、晋升珠宝折算、头巾计数、城池占领后返回），关键常量登记到 `design/registry/entities.yaml`。一致性检查见 `design/gdd/gdd-cross-review-2026-10-08.md`。

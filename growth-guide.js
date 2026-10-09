@@ -12,9 +12,21 @@ const GrowthGuide=(()=>{
     const before=1+s.tech.construction*.1+g.pol/100,after=before+points*multiplier/100;
     return {id,name:g.name,points,pol:g.pol,nextPol:g.pol+points*multiplier,reduction:(1-before/after)*100};
   }
+  // Captured cities start without farms; troops left there eat only that city's food (design/balance/balance-check-food-2026-10-08.md).
+  function supplyGoal(game){
+    if(typeof game.cityList!=='function'||typeof game.supplyLines!=='function'||Object.keys(game.state.realm?.cities||{}).length<2)return null;
+    const cities=game.cityList();if(cities.length<2)return null;
+    const fed=new Set(game.supplyLines().filter(l=>l.enabled&&l.resource==='food').map(l=>l.destinationCity));
+    const rows=cities.map(c=>{const sum=game.citySummary(c.id),rate=sum.rates.food*60;return {id:c.id,name:c.name,rate,food:sum.res.food,army:Object.values(sum.army).reduce((a,b)=>a+b,0)};});
+    const hungry=rows.filter(r=>r.rate<0&&r.army>0&&!fed.has(r.id)&&r.food/-r.rate<6).sort((a,b)=>a.food/-a.rate-b.food/-b.rate)[0];if(!hungry)return null;
+    const source=rows.filter(r=>r.id!==hungry.id&&r.rate>0).sort((a,b)=>b.rate-a.rate)[0];
+    const hours=hungry.food/-hungry.rate,left=hungry.food<=0?'已经断粮，断粮 1 小时后驻军每小时逃散 1%':'存粮约 '+(hours<1?Math.max(1,Math.round(hours*60))+' 分钟':hours.toFixed(1)+' 小时')+'后耗尽，之后驻军每小时逃散 1%';
+    return {kind:'supply',id:hungry.id,source:source?.id||'',rate:Math.round(hungry.rate),title:'为'+hungry.name+'建立运粮线',reason:hungry.name+'每小时耗粮 '+Math.round(-hungry.rate)+'，'+left+'。'+(source?'从'+source.name+'（每小时 +'+Math.round(source.rate)+'）建立运粮线，需要辎重车；也可以召回部队，或在新城开垦农田。':'目前没有余粮充足的城池可以调粮，请召回部队或先在新城开垦农田。')};
+  }
   function model(game){
     const s=game.state,gift=OnboardingSystem.available(s)[0];
     if(gift)return {kind:'gift',id:gift.level,title:'领取新手补给 · 第 '+gift.level+' 阶',reason:'官府等级已达标，领取这一阶新手补给的资源和道具'+(gift.level===1?'；领取后任务「奉诏立城」即可完成。':'，为下一段成长备齐补给。')};
+    const hungry=supplyGoal(game);if(hungry)return hungry;
     const phase=archerComplete(game)?s.onboarding.firstBattle==='active'?'battle':'hall':'archer';
     const seen=new Set();
     // A brand-new city first gets one farm: an immediate, visible source of food before the archer route.
@@ -138,5 +150,5 @@ const GrowthGuide=(()=>{
     return train('archer',OnboardingData.archerTarget,'义兵可临时补充兵力；弓箭兵是这条成长路线的远程主力，仍需步兵保护。');
   }
   function key(game){const m=model(game);return JSON.stringify([m.kind,m.phase,m.id,m.level,m.site,m.count,m.queue?.end,m.end,m.inRange,m.command,m.promotionReady,m.cost&&game.canPay(m.cost),m.people]);}
-  return {resources,held,archerComplete,landmarkVictory,governorAdvice,model,key};
+  return {resources,held,archerComplete,landmarkVictory,supplyGoal,governorAdvice,model,key};
 })();

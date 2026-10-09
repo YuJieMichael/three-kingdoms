@@ -1,5 +1,7 @@
 # v0.21.1 新手礼包黄金调整
 
+> 2026-10-08 注：本报告为历史记录。黄金数值仍有效；「其他四资源不变」已被 `opening-economy-2026-10-08.md`（v0.34.33，第 1 阶各 8,000、第 2 阶粮铁 76,000 / 木 92,000 / 石 106,000）取代。
+
 输入 FOUND：onboarding-data.js、onboarding-system.js、engine.js、growth-guide.js、tests/balance/archer-onboarding.cjs、tests/onboarding.test.cjs、原 v0.21.0 提交 5144eb1 的同路线模拟结果；调整目标见 starter-gold-tuning-2026-10-05.md。历史黄金区间、整体经济 GDD／registry、真人长期体验数据 ABSENT。
 
 黄金总量由 5,980,000 减为 1,000,000，降低 83.28%。首阶 60,000 → 10,000，第二阶 120,000 → 20,000，第十阶 1,600,000 → 270,000。其他四资源及道具不变，不抵扣已经领取的余额。
