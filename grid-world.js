@@ -163,16 +163,17 @@ document.addEventListener('click',event=>{
 document.addEventListener('pointerdown',event=>{
   const grid=event.target.closest('.world-grid');if(!grid||event.button>0)return;
   const cell=grid.querySelector('.world-cell')?.getBoundingClientRect(),fallback=grid.getBoundingClientRect().width/(worldSpan()+.4);
-  mapDrag={grid,pointer:event.pointerId,x:event.clientX,y:event.clientY,start:{...worldView},moved:false,cellX:cell?.width||fallback,cellY:cell?.height||fallback};
+  mapDrag={grid,pointer:event.pointerId,x:event.clientX,y:event.clientY,start:{...worldView},moved:false,slop:event.pointerType==='mouse'?10:18,cellX:cell?.width||fallback,cellY:cell?.height||fallback};
 });
 document.addEventListener('pointermove',event=>{
   if(!mapDrag||event.pointerId!==mapDrag.pointer)return;
-  if(Math.hypot(event.clientX-mapDrag.x,event.clientY-mapDrag.y)>10){if(!mapDrag.moved)mapDrag.grid.setPointerCapture(event.pointerId);mapDrag.moved=true;mapDrag.grid.classList.add('dragging');}
+  if(Math.hypot(event.clientX-mapDrag.x,event.clientY-mapDrag.y)>mapDrag.slop){mapDrag.moved=true;mapDrag.grid.classList.add('dragging');}
 });
 document.addEventListener('pointerup',event=>{
   if(!mapDrag||event.pointerId!==mapDrag.pointer)return;
   const drag=mapDrag;mapDrag=null;drag.grid.classList.remove('dragging');
-  if(drag.moved){suppressMapClick=true;centerWorld(drag.start.x-Math.round((event.clientX-drag.x)/drag.cellX),drag.start.y-Math.round((event.clientY-drag.y)/drag.cellY),false);setTimeout(()=>suppressMapClick=false,300);}
+  const dx=Math.round((event.clientX-drag.x)/drag.cellX),dy=Math.round((event.clientY-drag.y)/drag.cellY);
+  if(drag.moved&&(dx||dy)){suppressMapClick=true;centerWorld(drag.start.x-dx,drag.start.y-dy,false);setTimeout(()=>suppressMapClick=false,300);}
 });
 document.addEventListener('pointercancel',()=>{mapDrag?.grid.classList.remove('dragging');mapDrag=null;});
 document.addEventListener('click',event=>{if(suppressMapClick){event.preventDefault();event.stopImmediatePropagation();}},{capture:true});

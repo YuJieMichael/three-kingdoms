@@ -46,8 +46,8 @@
 .illustrated-map .world-cell:hover{outline:1px solid #ffedb3;background:#ffedbb22!important;border-radius:3px}
 .illustrated-map .world-cell .world-site-name{font-size:11px;color:#f8e5b6!important;background:#3a4030ed!important;border:1px solid #dcc48d66;max-width:100%;padding:3px 5px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:4}
 .illustrated-map .world-cell .world-cell-level{font-size:11px;top:3px;right:4px;bottom:auto;background:#3f4630eb!important;color:#ffe4a2!important;padding:2px 4px}
-.world-tile-caption{display:none;position:absolute;bottom:0;left:0;right:0;font-size:11px;background:#343e2bed;color:#f8e8bb;padding:3px;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
-.world-cell:hover .world-tile-caption,.world-cell:focus-visible .world-tile-caption{display:block}
+.world-tile-caption{display:none;position:absolute;bottom:0;left:0;right:0;font-size:11px;background:#343e2bed;color:#f8e8bb;padding:3px;z-index:5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}.world-cell:focus-visible .world-tile-caption{display:block}@media (hover:hover){
+.world-cell:hover .world-tile-caption{display:block}}
 .illustrated-map .map-axis,.illustrated-map .axis-corner{color:#dfd9b8!important;background:#3d4933;font-size:11px}
 .screen-world .map-toolbar .label{color:#c6c5a5;font-size:11px}
 .world-cell:focus-visible{outline:3px solid #ffe4a0!important;outline-offset:-3px;z-index:4}
@@ -71,5 +71,6 @@
 .scene-hall-caption{font-size:12px;padding:3px 8px;border-color:#c7a969;background:#5c492be8}
 .scene-hall-caption em{font-size:10px}
 
-.scene-board.manual-city .scene-site .scene-inline-caption{left:50%;top:90.566%;z-index:2}.scene-board.manual-city .scene-site:focus-within{z-index:1000}
-.scene-board.manual-city .scene-site:not(:hover):not(:focus-within) .scene-inline-caption{visibility:hidden;opacity:0}.scene-board.manual-city .scene-site.working .web-atlas-art{filter:drop-shadow(0 4px 3px #342e3066) drop-shadow(0 0 3px #d8b15b)}
+.scene-board.manual-city .scene-site .scene-inline-caption{left:50%;top:90.566%;z-index:2}.scene-board.manual-city .scene-site:focus-within{z-index:1000}@media (hover:hover){
+.scene-board.manual-city .scene-site:not(:hover):not(:focus-within) .scene-inline-caption{visibility:hidden;opacity:0}}@media (hover:none){
+.scene-board.manual-city .scene-site:not(:focus-within) .scene-inline-caption{visibility:hidden;opacity:0}}.scene-board.manual-city .scene-site.working .web-atlas-art{filter:drop-shadow(0 4px 3px #342e3066) drop-shadow(0 0 3px #d8b15b)}
