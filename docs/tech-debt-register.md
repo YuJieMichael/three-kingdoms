@@ -11,7 +11,7 @@ Priority = Impact ÷ Effort（Low 1 / Med 2 / High 3 / Critical 4；S 1 / M 2 / 
 | ID | Category | Description | Files | Effort | Impact | Priority | Status | Added | Sprint |
 |----|----------|-------------|-------|--------|--------|----------|--------|-------|--------|
 | TD-001 | Test | 联机运行时是手工生成物且无过期检测。`game-runtime.mjs` 760,220 B / 16,691 行，由 `build-online-runtime.cjs` 按 `index.html` 中 engine.js 之前的 36 个 `<script>` 顺序拼接并写入 `runtimeHash`；但没有任何测试比对 hash，`online/runtime.mjs` 直接 import 生成物，改了引擎忘记 `npm run online:build` 时联机测试会静默跑旧代码。另有 7 个 `online/*.mjs` 拷贝到 `_shared/online/`。今日实测 hash 一致（fresh）。成因：无构建步骤的取舍。 | supabase/functions/_shared/game-runtime.mjs, scripts/build-online-runtime.cjs, online/runtime.mjs, index.html | S | High | 3.0 | Open | 2026-10-08 | Sprint 1 |
-| TD-002 | Test | 平衡测试的魔法阈值散落在断言里，无出处说明。全测试共 78 处 `assert.ok(x>=/<=数字)`，例：`growth-economy` 金币 90000–170000、50000–150000；`chapter-balance` totalHours 100–220；`late-game-balance` 河洛内城兵力 ≥1600、黄巾城 ≥250；`opening-economy` 首战 <10 分钟。调数值时无法区分"设计目标变了"和"回归"。 | tests/growth-economy.test.cjs, tests/chapter-balance.test.cjs, tests/late-game-balance.test.cjs, tests/opening-economy.test.cjs, tests/hall-growth-pacing.test.cjs | S | Med | 2.0 | Open | 2026-10-08 | Sprint 1 |
+| TD-002 | Test | 平衡测试的魔法阈值散落在断言里，无出处说明。全测试共 78 处 `assert.ok(x>=/<=数字)`，例：`growth-economy` 金币 90000–170000、50000–150000；`chapter-balance` totalHours 100–220；`late-game-balance` 河洛内城兵力 ≥1600、黄巾城 ≥250；`opening-economy` 首战 <10 分钟。调数值时无法区分"设计目标变了"和"回归"。 | tests/growth-economy.test.cjs, tests/chapter-balance.test.cjs, tests/late-game-balance.test.cjs, tests/opening-economy.test.cjs, tests/hall-growth-pacing.test.cjs | S | Med | 2.0 | PR 待合并 — 登记的五个文件已整理 | 2026-10-08 | Sprint 1 |
 | TD-003 | Code Quality | CSS 被压成超长单行，无法 diff/审查。`classic.css` 34,640 B 仅 64 行，最长 19,551 字符（第 3 行）；`style.css` 38,439 B 仅 27 行，最长 16,134 字符；`city-defense-events.css` 3 行最长 2,342。任何改动在 diff 中都是整行替换，合并冲突概率高（多人/多 agent 并行时尤甚）。 | style.css, classic.css, city-defense-events.css, command-ui.css | S | Med | 2.0 | In Progress — classic.css 已完成 | 2026-10-08 | Sprint 1 |
 | TD-004 | Architecture | 跨文件猴子补丁：通过重新赋值全局函数改行为，共 11 处，分布 3 个文件。`web-edition-ui.js` 7 处（render、toast、showModal、updateDispatch、tacticalLessonModal 保存原函数后包裹；battlePage、showInitialSaveState 直接覆盖）；`painted-art.js` 3 处（webCityBuildingArt、sceneResourceArt、buildingIcon）；`ink-map.js` 1 处（render 二次包裹）。另 `online-client.js` 运行时替换 `Game.generalBusy`。`render` 被包两层，最终行为取决于 `index.html` 第 122 行 `installWebEditionUI();installInkMapUI();` 的调用顺序与脚本加载顺序；`scene-polish.js` 定义的 sceneResourceArt 被 painted-art 覆盖，farm/lumber/quarry/mine 的 heritage 分支实际不可达。读代码无法从定义处知道真实行为。 | web-edition-ui.js, painted-art.js, ink-map.js, online-client.js, index.html | M | High | 1.5 | Open | 2026-10-08 | Sprint 2 |
 | TD-005 | Architecture | CSS 层叠靠加载顺序 + `!important` 互相压制。`index.html` 依次加载 25 个样式表；`!important` 共 241 处分布 12 个文件：scene-ui 28 行、war-theme 21、web-edition 18、ink-map 16、scene-polish 10、layout-ui 8、heritage-layout 6、art 4 …（按含该关键字的行计）。`.modal` 在 style/classic/war-theme/web-edition 4 个文件里均有定义；`dialog-contrast.test.cjs` 甚至把"web-edition.css 必须在 war-theme.css 之后加载"写成断言。新增样式只能继续往后叠、加 `!important`。 | style.css, classic.css, war-theme.css, web-edition.css, scene-ui.css, layout-ui.css, ink-map.css, scene-polish.css, heritage-layout.css, index.html | L | High | 1.0 | Open | 2026-10-08 | Backlog |
@@ -59,3 +59,22 @@ Priority = Impact ÷ Effort（Low 1 / Med 2 / High 3 / Critical 4；S 1 / M 2 / 
 - 触摸/弹窗定向7/7，隔离完整578/578；主工作区含其他待办的组合回归605/605；独立审查无阻断问题。
 - style.css、city-defense-events.css、command-ui.css仍待整理，TD-003保持进行中。未改玩法、存档或版本，无需重建在线运行时。
 - 负责人已授权本地提交；未推送发布。
+
+## TD-002 首批实施结果（2026-10-09）
+
+- 新增tests/balance/targets.cjs，仅供测试消费；将growth-economy的三个黄金区间及两个礼包总额移入growthGold，数值和含端点/不含端点完全不变。登记册原“四个区间”描述不准确，已按实际范围记录。
+- 出处及性质见design/balance/growth-gold-targets-2026-10-09.md：礼包有明确设计数值，三个区间为现有回归窗口，不伪称已批准长期平衡目标。
+- 整理前后growth-economy均10/10通过；内存临时把任务黄金下限抬至9,999,999，真实消费测试如期失败（实际125,250），证明集中配置接入有效，未修改磁盘阈值。
+- 完整npm test：604/604通过。其它平衡测试阈值仍待逐项整理，TD-002整体保持进行中；未改生产代码、玩法数值或发布版本。
+
+## TD-002 后续实施结果（2026-10-09）
+
+- 已整理登记项列出的五个文件：growth-economy、chapter-balance、late-game-balance、opening-economy、hall-growth-pacing。集中章节时长与消耗、后期守军下限、开局与官府节奏、自然产出与余额回归范围；数值、单位、种子、倍率与比较边界不变。
+- 重复的首弓 <90 分钟、十阶补给 24–48 小时共用配置。详细出处与范围性质见 `design/balance/acceptance-targets-2026-10-09.md`。缺少明确设计数值的范围标为既有回归范围；数学误差、规则精确倍数和夹具数字保留原位。
+- 五文件整理前后 29/29 通过；五组代表阈值仅在子进程 require 缓存中改成不可能值，原测试各出现一项预期失败，磁盘配置未改。
+- 隔离分支 `test/balance-targets` 基于已发布 v0.34.47，完整 `npm test` 578/578 通过。未新增生产依赖，未改玩法或存档，无需重建联机运行时。
+- 完成本登记项五文件的整理，不表示全仓库所有数值断言已整理，也不表示完成真人或真机验证。未提交、推送或发布。
+
+- TD-002 后续收尾：独立审查无阻断问题；同步首批历史文档后，主工作区组合回归605/605通过，diff检查通过。
+
+收尾验证（2026-10-09）：负责人授权「收尾」后同步 main v0.34.49（1627f05），完整 npm test 586/586 通过，语法和 diff 检查通过；本轮检测及阈值实现保持原样，仅补充提交记录。进入独立 PR，尚未合并上线。

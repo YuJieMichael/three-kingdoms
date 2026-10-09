@@ -1,3 +1,4 @@
+const {opening,hallGrowth}=require('./balance/targets.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {loadGame,city}=require('./helpers/game.cjs');
 const {run}=require('./balance/archer-onboarding.cjs');
@@ -9,16 +10,16 @@ test('hall pacing keeps the opening reference times and applies the normal gover
   const divisor=()=>1+g.state.tech.construction*.1+g.general(g.state.governor).pol/100;
   close(g.buildSeconds('hall',1),g.buildRecord('hall',1).seconds/divisor());
   // Hall 2 is shortened to 8 minutes (design/balance/opening-pace-2026-10-08.md).
-  close(g.buildSeconds('hall',2),480/divisor());
+  close(g.buildSeconds('hall',2),hallGrowth.levelTwoSeconds/divisor());
   let previous=g.buildSeconds('hall',3);
   for(let level=4;level<=10;level++){
     const seconds=g.buildSeconds('hall',level);
     assert.ok(seconds>previous);
-    assert.ok(seconds<=previous*2);
+    assert.ok(seconds<=previous*hallGrowth.stepMaxRatio);
     previous=seconds;
   }
   const hall=g.buildSeconds('hall',10);
-  assert.ok(hall<g.buildRecord('hall',10).seconds/divisor()/2);
+  assert.ok(hall<g.buildRecord('hall',10).seconds/divisor()*hallGrowth.levelTenReferenceMaxRatio);
   close(g.buildSeconds('wall',8),g.buildRecord('wall',8).seconds/divisor());
   close(g.buildSeconds('house',10),g.buildRecord('house',10).seconds/divisor());
   assert.equal(g.setGovernor('lin'),null);
@@ -81,7 +82,7 @@ test('earned gifts keep the thirty-archer opening under ninety minutes',()=>{
   for(const seed of [123,456]){
     const result=run(seed,true);
     assert.equal(result.archers,30);
-    assert.ok(result.minutes<90);
+    assert.ok(result.minutes<opening.archersMaxMinutes);
     assert.equal(result.hall,2);
     assert.equal(result.validSave,true);
   }
@@ -93,12 +94,12 @@ test('normal APIs distribute hall growth over one to two days instead of a final
     assert.equal(result.hall,10);
     assert.equal(result.gifts,10);
     assert.equal(result.firstBattle,'complete');
-    assert.ok(hours>=24&&hours<=48,'seed '+seed+': '+hours+' hours');
+    assert.ok(hours>=hallGrowth.tenGiftsHours.min&&hours<=hallGrowth.tenGiftsHours.max,'seed '+seed+': '+hours+' hours');
     const halls=result.queueLog.filter(q=>q.kind==='build'&&q.id==='hall');
     const waiting=level=>halls.find(q=>q.level===level).waitSeconds/3600;
-    for(const level of [7,8,9,10])assert.ok(waiting(level)>=1&&waiting(level)<24,'seed '+seed+', hall '+level);
+    for(const level of [7,8,9,10])assert.ok(waiting(level)>=hallGrowth.lateWaitHours.min&&waiting(level)<hallGrowth.lateWaitHours.max,'seed '+seed+', hall '+level);
     assert.ok(waiting(7)<waiting(8)&&waiting(8)<waiting(9));
-    assert.ok(waiting(10)<=waiting(9)*2.5);
+    assert.ok(waiting(10)<=waiting(9)*hallGrowth.finalWaitMaxRatio);
     assert.equal(result.validSave,true);
   }
 });

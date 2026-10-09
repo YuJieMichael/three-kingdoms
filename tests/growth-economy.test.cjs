@@ -1,6 +1,8 @@
+const {opening,hallGrowth,growthEconomy}=require('./balance/targets.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {loadGame,city}=require('./helpers/game.cjs');
 const {run}=require('./balance/archer-onboarding.cjs');
+const {growthGold}=require('./balance/targets.cjs');
 const copy=x=>JSON.parse(JSON.stringify(x));
 function earnedHall(){const r=run(123,true,'ten-gifts',{includeState:true}),e=loadGame(123);e.advance(r.state.last-e.now());e.Game.importSave(r.state);return e;}
 function ledger(r){const e=loadGame(),g=e.Game,initial=copy(g.state.res),gifts=e.evaluate('OnboardingData.gifts');const supplies=Object.fromEntries(Object.keys(initial).map(id=>[id,0])),missions={...supplies};for(const level of r.state.onboarding.claims)for(const [id,n]of Object.entries(gifts.find(x=>x.level===level).resources))supplies[id]+=n;for(const id of r.state.missionClaims)for(const [key,n]of Object.entries(g.missions.find(m=>m.id===id).reward))missions[key]+=n;return {supplies,missions,natural:Object.fromEntries(Object.keys(initial).map(id=>[id,r.stock[id]-initial[id]-supplies[id]-missions[id]+r.spent[id]]))};}
@@ -8,10 +10,10 @@ function inspect(e){const before=JSON.stringify(e.Game.state),m=e.evaluate('Grow
 
 test('opening mission income leaves useful gold reserves without the old three-quarter-million stockpile',()=>{
  const r=run(123,true,'archer',{includeState:true}),l=ledger(r);
- assert.equal(r.archers,30);assert.ok(r.minutes<90);assert.equal(l.supplies.gold,30000);
+ assert.equal(r.archers,30);assert.ok(r.minutes<opening.archersMaxMinutes);assert.equal(l.supplies.gold,growthGold.openingGiftTotal);
  // The militia warm-up raid also completes 首战告捷 and 收容降卒 on this route.
- assert.ok(l.missions.gold>=90000&&l.missions.gold<=170000);
- assert.ok(r.stock.gold>=50000&&r.stock.gold<=150000);
+ assert.ok(l.missions.gold>=growthGold.openingMissionIncome.min&&l.missions.gold<=growthGold.openingMissionIncome.max,`opening mission gold: ${l.missions.gold}`);
+ assert.ok(r.stock.gold>=growthGold.openingStock.min&&r.stock.gold<=growthGold.openingStock.max,`opening stock gold: ${r.stock.gold}`);
  // With hall 2 at 8 minutes and free finishes the route takes minutes, so natural output is near zero but never negative.
  assert.ok(l.natural.iron>=0);assert.equal(r.validSave,true);
 });
@@ -19,8 +21,8 @@ test('opening mission income leaves useful gold reserves without the old three-q
 test('real resource fields contribute to the unaccelerated opening while reward overcapacity remains supported',()=>{
  const r=run(123,false,'archer',{includeState:true}),l=ledger(r);
  // Tier 2 now carries most of the opening wood, so wood sits above capacity longer and grows less on its own.
- assert.ok(l.natural.wood>200);assert.ok(l.natural.iron>500);
- assert.ok(r.stock.food>10000);assert.ok(r.stock.stone>30000);
+ assert.ok(l.natural.wood>growthEconomy.naturalWoodMin);assert.ok(l.natural.iron>growthEconomy.naturalIronMin);
+ assert.ok(r.stock.food>growthEconomy.stockFoodMin);assert.ok(r.stock.stone>growthEconomy.stockStoneMin);
  assert.equal(r.validSave,true);
 });
 
@@ -28,8 +30,8 @@ test('all ten gifts remain funded by normal APIs in the one-to-two-day route acr
  for(const seed of [1,2,3,4,5,6,7,8,18,123,456,9876]){
   const r=run(seed,true,'ten-gifts',{includeState:true}),l=ledger(r);
   assert.equal(r.hall,10);assert.equal(r.gifts,10);assert.equal(r.firstBattle,'complete');
-  assert.ok(r.minutes/60>=24&&r.minutes/60<=48,seed+': '+r.minutes/60);
-  assert.equal(l.supplies.gold,1000000);assert.ok(r.stock.gold>100000&&r.stock.gold<750000);
+  assert.ok(r.minutes/60>=hallGrowth.tenGiftsHours.min&&r.minutes/60<=hallGrowth.tenGiftsHours.max,seed+': '+r.minutes/60);
+  assert.equal(l.supplies.gold,growthGold.tenGiftTotal);assert.ok(r.stock.gold>growthGold.tenGiftStock.min&&r.stock.gold<growthGold.tenGiftStock.max,`${seed}: ten-gift stock gold: ${r.stock.gold}`);
   assert.equal(r.validSave,true);
  }
 });
@@ -43,7 +45,7 @@ test('rebalanced task claims are still one-time and saved stocks are not clawed 
 
 test('governor advice is optional, read-only and matches new work while preserving existing queue completion',()=>{
  const e=earnedHall(),g=e.Game,before=JSON.stringify(g.state),a=e.evaluate('GrowthGuide.governorAdvice(Game)');
- assert.equal(a.points,15);assert.equal(a.nextPol,93);assert.ok(a.reduction>7&&a.reduction<8);assert.equal(JSON.stringify(g.state),before);
+ assert.equal(a.points,15);assert.equal(a.nextPol,93);assert.ok(a.reduction>growthEconomy.governorReductionPercent.min&&a.reduction<growthEconomy.governorReductionPercent.max);assert.equal(JSON.stringify(g.state),before);
  const site=g.primarySite('house');assert.equal(g.queueBuilding(site,'house'),null);const end=g.state.buildQueue[0].end,seconds=g.buildSeconds('house',3);
  assert.equal(e.evaluate("HeroSystem.allocate('su',{atk:0,def:0,pol:15,wis:0,lead:0})"),null);
  assert.ok(Math.abs((1-g.buildSeconds('house',3)/seconds)*100-a.reduction)<1e-9);
