@@ -73,3 +73,8 @@
 .painted-building{display:block;width:100%;height:100%;object-fit:contain;object-position:50% 100%;pointer-events:none;user-select:none}
 .scene-board .scene-site .city-building-art>.painted-building{filter:drop-shadow(3px 5px 3px #2a302255)}
 .building-detail-art.painted-building{width:120px;height:110px;object-fit:contain}
+/* Built fields float a small "+粮 / +木 …" now and then, so production is visible at a glance. */
+.scene-board .built-field[data-yield]:not([data-yield=""])::after{content:attr(data-yield);position:absolute;left:50%;top:6%;transform:translate(-50%,0);padding:1px 7px;border-radius:9px;background:#fff6dbe8;color:#5a4a1f;font-size:12px;font-weight:700;box-shadow:0 1px 3px #0003;opacity:0;pointer-events:none;animation:scene-yield 6s ease-out infinite;z-index:5}
+.scene-board .built-field:nth-child(3n+1)::after{animation-delay:1.2s}.scene-board .built-field:nth-child(3n+2)::after{animation-delay:3.1s}
+@keyframes scene-yield{0%,70%{opacity:0;transform:translate(-50%,8px)}78%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-18px)}}
+@media(prefers-reduced-motion:reduce){.scene-board .built-field::after{animation:none!important;opacity:0}}
