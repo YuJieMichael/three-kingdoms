@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="5f99e8b8ba671d9f4c98f9bc1d20ecc1729cd76c710a7a98722cf3d33d28adea";
+export const runtimeHash="d71b38967fb896d85cd51c01055244d69b4eccb6b3f1827a5d3418ae3cbf3bd9";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -12156,6 +12156,14 @@ const GovernanceSystem=(()=>{
 'use strict';
 // General cultivation and equipment numbers are prototype rules, not historical tables.
 const HeroSystem=(()=>{
+  // This game's initial command values, not an original-game or historical table.
+  const initialLeadershipValues=Object.freeze({weiyan:85,xushu:80,zhaoyun:90,huangzhong:85,ganning:90,zhangliao:105,machao:90,xunyu:75,pangtong:90,zhouyu:110,guanyu:100,zhangfei:85,dianwei:70,lvbu:95,taishici:85,liubei:100,sunjian:100,gaoshun:95,chengong:85,lejin:85,yujin:95,zhanghe:100,xuhuang:100,zhugeliang:110,sunce:105,xuchu:70});
+  const initialLeadership=key=>Object.hasOwn(initialLeadershipValues,key)?initialLeadershipValues[key]:0;
+  function baseLeadership(raw,currentLevel){
+    if(!raw.lead)return currentLevel*10;
+    const recruitedLevel=Number.isFinite(raw.level)?raw.level:currentLevel;
+    return raw.lead+10*Math.max(0,currentLevel-recruitedLevel);
+  }
   const attrs={atk:'勇武',def:'统御',pol:'内政',wis:'智谋',lead:'统率'};
   // Free points only raise these three; 统御 and 统率 grow from level and equipment.
   const allocatable=['atk','pol','wis'];
@@ -12334,7 +12342,7 @@ const HeroSystem=(()=>{
   function refine(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
+  return {initialLeadership,baseLeadership,attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();
 
 
@@ -16470,7 +16478,7 @@ const Game = (() => {
   function trainSeconds(id,count){const u=units[id],tech=u.kind==='machine'?state.tech.manufacture:state.tech.training;return Math.max(1,count*u.time/(1+tech*.1+general(HeritageSystem.effectiveHero(state,'train')).atk/100)/state.speed);}
   function train(id,count){tick();count=Math.floor(count);if(!units[id]||count<1||count>100000)return '请选择训练数量';const needed=unitRequirements(id);if(needed)return '需要 '+needed;if(state.trainQueue.length>=trainingLimit())return '军营训练队列已满';if(count*(units[id].people||1)>freePopulation())return '空闲人口不足，每名'+units[id].name+'需要 '+(units[id].people||1)+' 人口';const cost=trainCost(id,count);if(!canPay(cost))return '训练资源不足';pay(cost);state.population-=count*(units[id].people||1);const start=Math.max(Date.now(),...state.trainQueue.map(q=>q.end));state.trainQueue.push({id,count,start,end:start+trainSeconds(id,count)*1000});save();return null;}
   function dismissTroops(id,count){tick();count=Math.floor(count);if(!units[id]||count<1||count>state.army[id])return '数量不足';state.army[id]-=count;state.population=Math.min(maxPop(),state.population+count*(units[id].people||1));save();return null;}
-  function general(id){const g=[...generals,...state.customGenerals].find(g=>g.id===id),lv=state.generalLevels[id]||1;if(!g)return {id,name:id?'未知将领':'尚未任命',level:1,atk:0,def:0,pol:0,wis:0,lead:0};const baseExtra=HeroSystem.bonus(state,id),skillExtra=GeneralGrowth.statBonus(state,id),extra=Object.fromEntries(Object.keys(baseExtra).map(k=>[k,baseExtra[k]+(skillExtra[k]||0)]));return {...g,level:lv,atk:(g.atk+(lv-1)*4+extra.atk)*(activeBuff('valor',id)?1.25:1),def:g.def+(lv-1)*3+extra.def,pol:(g.pol+extra.pol)*(activeBuff('politics',id)?1.25:1),wis:((g.wis||g.def)+extra.wis)*(activeBuff('wisdom',id)?1.25:1),lead:((g.lead||lv*10)+extra.lead)*(1+state.tech.leadership*.1)*(activeBuff('tiger',id)?1.5:1)};}
+  function general(id){const g=[...generals,...state.customGenerals].find(g=>g.id===id),lv=state.generalLevels[id]||1;if(!g)return {id,name:id?'未知将领':'尚未任命',level:1,atk:0,def:0,pol:0,wis:0,lead:0};const baseExtra=HeroSystem.bonus(state,id),skillExtra=GeneralGrowth.statBonus(state,id),extra=Object.fromEntries(Object.keys(baseExtra).map(k=>[k,baseExtra[k]+(skillExtra[k]||0)]));return {...g,level:lv,atk:(g.atk+(lv-1)*4+extra.atk)*(activeBuff('valor',id)?1.25:1),def:g.def+(lv-1)*3+extra.def,pol:(g.pol+extra.pol)*(activeBuff('politics',id)?1.25:1),wis:((g.wis||g.def)+extra.wis)*(activeBuff('wisdom',id)?1.25:1),lead:(HeroSystem.baseLeadership(g,lv)+HeroSystem.initialLeadership(HeroIdentity.key(state,id))*10+extra.lead)*(1+state.tech.leadership*.1)*(activeBuff('tiger',id)?1.5:1)};}
   function setGovernor(id){tick(Date.now(),false);if(!state.generals.includes(id))return '尚未招募该武将';if(generalBusy(id))return '该武将正在出征或驻守';for(const role of ['commander','counsellor'])if(state.cityRoles[role]===id)state.cityRoles[role]='';state.governor=id;save();return null;}
   function setTax(value){tick();state.tax=Math.max(0,Math.min(100,Math.round(Number(value)||0)));save();}
   function civicOrderPreview(id){
