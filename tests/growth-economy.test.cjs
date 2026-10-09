@@ -9,7 +9,8 @@ function inspect(e){const before=JSON.stringify(e.Game.state),m=e.evaluate('Grow
 test('opening mission income leaves useful gold reserves without the old three-quarter-million stockpile',()=>{
  const r=run(123,true,'archer',{includeState:true}),l=ledger(r);
  assert.equal(r.archers,30);assert.ok(r.minutes<90);assert.equal(l.supplies.gold,30000);
- assert.ok(l.missions.gold>=90000&&l.missions.gold<=150000);
+ // The militia warm-up raid also completes 首战告捷 and 收容降卒 on this route.
+ assert.ok(l.missions.gold>=90000&&l.missions.gold<=170000);
  assert.ok(r.stock.gold>=50000&&r.stock.gold<=150000);
  // With hall 2 at 8 minutes and free finishes the route takes minutes, so natural output is near zero but never negative.
  assert.ok(l.natural.iron>=0);assert.equal(r.validSave,true);
@@ -17,7 +18,8 @@ test('opening mission income leaves useful gold reserves without the old three-q
 
 test('real resource fields contribute to the unaccelerated opening while reward overcapacity remains supported',()=>{
  const r=run(123,false,'archer',{includeState:true}),l=ledger(r);
- assert.ok(l.natural.wood>1000);assert.ok(l.natural.iron>500);
+ // Tier 2 now carries most of the opening wood, so wood sits above capacity longer and grows less on its own.
+ assert.ok(l.natural.wood>200);assert.ok(l.natural.iron>500);
  assert.ok(r.stock.food>10000);assert.ok(r.stock.stone>30000);
  assert.equal(r.validSave,true);
 });

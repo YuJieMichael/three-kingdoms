@@ -13,10 +13,10 @@ function run(seed=123,accelerate=true,target='archer',options={}){
   queueLog.push({kind,id:q.id,level:q.level,count:q.count,rawSeconds,waitSeconds:(env.now()-began)/1000,finishedMinutes:(env.now()-start)/60000});
  }
  for(let step=0;step<500;step++){
-  collect();const m=guide.model(Game),done=target==='archer'?guide.archerComplete(Game):target==='first-battle'?Game.state.onboarding.firstBattle==='complete':Game.state.buildings.hall===10&&Game.state.onboarding.claims.length===10&&Game.state.onboarding.firstBattle==='complete';if(done||options.stopKind===m.kind)return {seed,speed:1,accelerate,target,hall:Game.state.buildings.hall,gifts:Game.state.onboarding.claims.length,minutes:(env.now()-start)/60000,archers:Game.state.army.archer,victories:Game.state.stats.victories,office:Game.state.honors.office,firstBattle:Game.state.onboarding.firstBattle,guideKind:m.kind,used,spent,log,queueLog,stock:{...Game.state.res},validSave:Game.validSave(Game.state),...(options.includeState?{state:JSON.parse(JSON.stringify(Game.state))}:{})};
+  collect();const m=guide.model(Game),done=target==='archer'?guide.archerComplete(Game):target==='first-battle'?Game.state.onboarding.firstBattle==='complete':Game.state.buildings.hall===10&&Game.state.onboarding.claims.length===10&&Game.state.onboarding.firstBattle==='complete';if(done||options.stopKind===m.kind&&!m.warmup)return {seed,speed:1,accelerate,target,hall:Game.state.buildings.hall,gifts:Game.state.onboarding.claims.length,minutes:(env.now()-start)/60000,archers:Game.state.army.archer,victories:Game.state.stats.victories,office:Game.state.honors.office,firstBattle:Game.state.onboarding.firstBattle,guideKind:m.kind,used,spent,log,queueLog,stock:{...Game.state.res},validSave:Game.validSave(Game.state),...(options.includeState?{state:JSON.parse(JSON.stringify(Game.state))}:{})};
   if(m.kind==='gift'){ok(Game.onboarding.claim(m.id));continue;}
   if(m.kind==='queue'){finish(m.queueKind,m.queue);continue;}
-  if(m.kind==='population'){if(accelerate&&(Game.state.inventory.population||0)>0)use('population');else env.advance(60000);continue;}
+  if(m.kind==='population'){if((accelerate||m.item)&&(Game.state.inventory.population||0)>0)use('population');else env.advance(60000);continue;}
   if(m.kind==='trade'){const count=Math.min(m.amount,Game.tradeQuote(m.id,true).limit);ok(Game.trade(m.id,count,true));spent.gold+=count;log.push({target:m.title,count,minutes:(env.now()-start)/60000});continue;}
   if(m.kind==='scoutMarch'||m.kind==='battleMarch'||m.kind==='battleReturn'){env.advance(Math.max(1,Math.ceil(m.end-env.now())+1));collect();log.push({target:m.title,minutes:(env.now()-start)/60000});continue;}
   if(m.kind==='battleArrival'){ok(Game.selectExpedition(m.id));ok(Game.startBattle());log.push({target:m.title,minutes:(env.now()-start)/60000});continue;}
@@ -34,7 +34,7 @@ function run(seed=123,accelerate=true,target='archer',options={}){
   else if(m.kind==='tech'){ok(Game.research(m.id));finish('research',Game.state.researchQueue);}
   else if(m.kind==='train'){ok(Game.train(m.id,m.count));finish('train',Game.state.trainQueue.at(-1));}
   else if(m.kind==='scout')ok(Game.scout(m.id));
-  else if(m.kind==='dispatch')ok(Game.dispatch(m.id,m.general,{archer:m.count},'raid'));
+  else if(m.kind==='dispatch')ok(Game.dispatch(m.id,m.general,m.army||{archer:m.count},'raid'));
   else throw Error('Unexpected guide target '+JSON.stringify(m));
  }
  throw Error('Guide did not reach archers');

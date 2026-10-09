@@ -13,7 +13,7 @@ function fight(e,count=30,command='advance'){
  return g.state.battle.result;
 }
 test('earned thirty archers continue through real scouting prerequisites and UI opens scout training without altering the save',()=>{
- const e=earned(),g=e.Game;assert.equal(g.state.army.archer,30);assert.equal(g.state.stats.victories,0);assert.equal(g.state.onboarding.firstBattle,'active');
+ const e=earned(),g=e.Game;assert.equal(g.state.army.archer,30);assert.equal(g.state.stats.victories,1,'only the militia warm-up raid');assert.equal(e.guide.landmarkVictory(g.state),false);assert.equal(g.state.onboarding.firstBattle,'active');
  let m=inspect(e);assert.equal(m.phase,'battle');assert.equal(m.kind,'tech');assert.equal(m.id,'scouting');assert.match(m.title,/研究/);assert.equal(g.research(m.id),null);assert.equal(inspect(e).queueKind,'research');e.offline(1);assert.equal(inspect(e).id,'scouting');finish(e,g.state.researchQueue);
  m=inspect(e);assert.equal(m.kind,'train');assert.equal(m.id,'scout');assert.equal(m.count,1);
  e.evaluate(fs.readFileSync(path.join(__dirname,'../onboarding-ui.js'),'utf8'));e.evaluate('let trainOpening=null; function trainModal(id,count){trainOpening={id,count};}');const before=JSON.stringify(g.state);e.evaluate('guideGo()');assert.deepEqual(JSON.parse(e.evaluate('JSON.stringify(trainOpening)')),{id:'scout',count:1});assert.equal(JSON.stringify(g.state),before);
@@ -31,7 +31,7 @@ test('existing hold is preserved until the player changes it, and the first figh
  assert.equal(e.evaluate("HeritageSystem.promote('office')"),null);assert.equal(g.state.jewels.pearl,pearl-1);assert.equal(g.state.honors.office,1);assert.equal(g.completeFirstBattleGuide(),null);assert.equal(inspect(e).phase,'hall');assert.equal(g.validSave(g.state),true);e.offline(1);assert.equal(g.state.onboarding.firstBattle,'complete');assert.equal(inspect(e).phase,'hall');
 });
 test('a failed understrength attack returns survivors and trains only missing archers before retrying',()=>{
- const e=earned('dispatch'),g=e.Game,result=fight(e,1);assert.equal(result.won,false);assert.equal(g.state.stats.victories,0);assert.equal(g.state.jewels.pearl,0);assert.ok(result.lost.archer>0);assert.equal(inspect(e).kind,'battleReturn');finish(e,g.state.expedition);
+ const e=earned('dispatch'),g=e.Game,pearl=e.Game.state.jewels.pearl,result=fight(e,1);assert.equal(result.won,false);assert.equal(g.state.stats.victories,1);assert.equal(e.guide.landmarkVictory(g.state),false);assert.equal(g.state.jewels.pearl,pearl);assert.ok(result.lost.archer>0);assert.equal(inspect(e).kind,'battleReturn');finish(e,g.state.expedition);
  const m=inspect(e);assert.equal(m.kind,'train');assert.equal(m.id,'archer');assert.equal(m.count,result.lost.archer);assert.equal(g.train(m.id,m.count),null);const queued=inspect(e);assert.equal(queued.kind,'queue');assert.equal(queued.queueKind,'train');finish(e,g.state.trainQueue.at(-1));assert.equal(g.state.army.archer,30);assert.equal(inspect(e).kind,'dispatch');assert.equal(g.validSave(g.state),true);
 });
 test('another deployment or city role offers a real recovery path instead of demanding duplicate troops or a busy general',()=>{
@@ -43,5 +43,5 @@ test('old victories skip the tutorial without repaying gifts, battles, gold or j
  const bad=JSON.parse(JSON.stringify(g.state));bad.onboarding.firstBattle='claimed';assert.equal(g.validSave(bad),false);
 });
 test('finishing the tutorial is optional for promotion and is idempotent with no reward duplication',()=>{
- const e=earned('firstBattleComplete'),g=e.Game;assert.equal(g.state.honors.office,0);assert.equal(g.state.army.archer,30);assert.equal(g.state.stats.victories,1);const before={gold:g.state.res.gold,pearl:g.state.jewels.pearl,claims:[...g.state.onboarding.claims],victories:g.state.stats.victories};assert.equal(g.completeFirstBattleGuide(),null);assert.equal(g.completeFirstBattleGuide(),null);assert.deepEqual({gold:g.state.res.gold,pearl:g.state.jewels.pearl,claims:[...g.state.onboarding.claims],victories:g.state.stats.victories},before);assert.equal(g.state.honors.office,0);assert.equal(inspect(e).phase,'hall');
+ const e=earned('firstBattleComplete'),g=e.Game;assert.equal(g.state.honors.office,0);assert.equal(g.state.army.archer,30);assert.equal(g.state.stats.victories,2,'warm-up raid plus the first battle');const before={gold:g.state.res.gold,pearl:g.state.jewels.pearl,claims:[...g.state.onboarding.claims],victories:g.state.stats.victories};assert.equal(g.completeFirstBattleGuide(),null);assert.equal(g.completeFirstBattleGuide(),null);assert.deepEqual({gold:g.state.res.gold,pearl:g.state.jewels.pearl,claims:[...g.state.onboarding.claims],victories:g.state.stats.victories},before);assert.equal(g.state.honors.office,0);assert.equal(inspect(e).phase,'hall');
 });
