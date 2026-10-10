@@ -669,3 +669,21 @@ dialog .web-plot-preview h3{
   .hero-slots {grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
   .hero-slots article {padding:10px;}
 }
+
+/* Campaign cards use full touch targets; rental battles own their controls. */
+.battlefield-map,.battlefield-battle{min-width:0;overflow-wrap:anywhere}
+.battlefield-stock{display:flex;gap:10px 20px;flex-wrap:wrap;padding:12px 0;color:var(--gold,#d9bf79)}
+.battlefield-controls,.battlefield-orders{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.battlefield-controls button,.battlefield-orders button{min-height:44px;min-width:44px;flex:1 1 100px}
+.battlefield-inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin:12px 0}
+.battlefield-inputs label{display:grid;gap:4px}.battlefield-inputs input{width:100%;min-height:44px;min-width:0;box-sizing:border-box}
+.battlefield-map select,.battlefield-battle select{width:100%;min-height:44px;max-width:100%;box-sizing:border-box}
+.battlefield-arcs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.battlefield-arc{min-width:0;border:1px solid #807653;border-radius:8px;padding:12px;background:#30372b}
+.battlefield-arc h3{color:#e6cd8a}.battlefield-arc h4{font-size:13px;color:#c7c5ac;margin:16px 0 8px}
+.battlefield-node{display:grid;gap:7px;text-align:left;width:100%;min-height:88px;min-width:44px;margin:8px 0;padding:14px;background:#484b36;color:#ece4c7;border:1px solid #a39363;border-radius:6px;white-space:normal}
+.battlefield-node strong{font-size:16px}.battlefield-node span,.battlefield-node small{font-size:13px;line-height:1.5}.battlefield-node:disabled{opacity:.6}.battlefield-node.is-complete{border-color:#8fba83}
+.battlefield-unit{padding:12px;border-left:3px solid #8ea683;background:#303b30;margin:8px 0}.battlefield-unit.is-enemy{border-color:#b27255;background:#42372e}
+.battlefield-track{height:10px;background:#1c2119;margin:14px 8px;position:relative;border-radius:8px}.battlefield-track span{position:absolute;top:-3px;width:14px;height:16px;background:#d1bd78;border-radius:3px;transform:translateX(-50%)}
+.battlefield-log{max-height:190px;overflow-y:auto;font-size:13px;line-height:1.5;padding:10px;background:#22281e}.battlefield-log p{margin:6px 0}
+@media(max-width:700px){.battlefield-arcs{grid-template-columns:1fr}.battlefield-arc{padding:10px}.battlefield-map>.panel{padding:12px}dialog:has(.battlefield-battle){width:calc(100% - 16px);max-width:none;max-height:calc(100dvh - 16px);margin:8px auto}.battlefield-battle{font-size:14px}}
