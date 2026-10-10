@@ -1238,7 +1238,7 @@ const Game = (() => {
   const battlefieldView=(campaign='yellow_turban')=>BattlefieldSystem.view(state,battlefieldApi(),campaign);
   const battlefieldQuote=(id,army,campaign='yellow_turban')=>BattlefieldSystem.quote(state,id,army,battlefieldApi(),campaign);
   function battlefieldAction(name,...args){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem[name](state,...args,battlefieldApi());if(!error)save();return error;}
-  const openBattlefieldBox=slot=>battlefieldAction('openBox',slot);
+  function openBattlefieldBox(slot,campaign='yellow_turban'){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem.openBox(state,slot,battlefieldApi(),campaign);if(!error)save();return error;}
   const claimBattlefieldRelic=id=>battlefieldAction('claimRelic',id);
   const attemptBattlefieldInfiltration=(node,answer)=>battlefieldAction('attemptInfiltration',node,answer);
   const discoverBattlefieldRoute=()=>battlefieldAction('discoverRoute');
