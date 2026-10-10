@@ -687,3 +687,24 @@ dialog .web-plot-preview h3{
 .battlefield-track{height:10px;background:#1c2119;margin:14px 8px;position:relative;border-radius:8px}.battlefield-track span{position:absolute;top:-3px;width:14px;height:16px;background:#d1bd78;border-radius:3px;transform:translateX(-50%)}
 .battlefield-log{max-height:190px;overflow-y:auto;font-size:13px;line-height:1.5;padding:10px;background:#22281e}.battlefield-log p{margin:6px 0}
 @media(max-width:700px){.battlefield-arcs{grid-template-columns:1fr}.battlefield-arc{padding:10px}.battlefield-map>.panel{padding:12px}dialog:has(.battlefield-battle){width:calc(100% - 16px);max-width:none;max-height:calc(100dvh - 16px);margin:8px auto}.battlefield-battle{font-size:14px}}
+
+/* Mobile building boards keep art and taps inside a single logical cell. */
+.flat-building-board{border:1px solid #8a805a;border-radius:7px;background:#303a2c;overflow:hidden;margin-bottom:12px}
+.flat-building-heading{display:flex;flex-direction:column;gap:4px;padding:12px 10px;color:#eee0b4}
+.flat-building-heading>strong{font-size:16px}.flat-building-heading>span{font-size:12px;color:#c4c8ad}
+.flat-building-board .flat-building-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;padding:4px;margin:0;min-width:0;width:100%;box-sizing:border-box;background:#9d9e79;position:relative}
+.flat-building-grid .flat-building-cell{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;min-height:82px;padding:5px 1px;border:1px solid #9d8e65;border-radius:3px;background:linear-gradient(#e0d5ac,#c3bc94);color:#3d3a26;overflow:hidden;isolation:isolate;touch-action:pan-y;cursor:pointer;text-align:center;font:inherit;box-sizing:border-box}
+.flat-building-cell>*{pointer-events:none}.flat-building-cell .flat-building-art{display:block;position:relative;width:100%;height:35px;overflow:hidden;flex:none}
+.flat-building-cell .flat-building-art svg,.flat-building-cell .flat-building-art img{position:static!important;display:block!important;width:100%!important;height:100%!important;transform:none!important;object-fit:contain}
+.flat-building-cell>strong{font-size:10px;line-height:1.25;max-width:100%;overflow-wrap:anywhere}.flat-building-cell>small{font-size:10px;line-height:1.2}
+.flat-building-cell.flat-palace .flat-building-art{height:80px}.flat-building-cell.flat-palace>strong{font-size:14px}
+.flat-building-cell.flat-empty{background:#c3c29e;border:1px dashed #8e8d66;color:#626744}.flat-building-cell .flat-empty-mark{font-size:27px;font-weight:400;line-height:35px;color:#7b8057}
+.flat-building-cell.flat-working{border-color:#ac702b;box-shadow:inset 0 0 0 1px #bd8c40}.flat-building-cell.flat-working>small{color:#79511e;font-weight:bold}
+.flat-building-cell .flat-building-time{font-size:9px;line-height:1.2;max-width:100%;overflow:hidden;white-space:nowrap}
+.flat-building-cell .flat-plot-number{position:absolute;top:2px;left:3px;font-size:9px;color:#5e6044;z-index:1}
+.flat-building-grid .flat-building-cell:active{box-shadow:inset 0 0 0 2px #746239;filter:brightness(.93)}
+.flat-building-grid .flat-building-cell:focus-visible{outline:2px solid #fff0aa;outline-offset:-3px}
+.flat-building-expansion{display:flex;flex-direction:column;gap:3px;width:100%;padding:11px;border:0;border-top:1px solid #8a805a;background:#414934;color:#ddd6b5;text-align:left;font:inherit;touch-action:pan-y}
+.flat-building-expansion strong{font-size:13px}.flat-building-expansion span{font-size:11px}.flat-building-note{font-size:11px;color:#cbd0b4;padding:9px 10px;margin:0}
+
+.plot-replacement-options{margin-top:10px;border-top:1px solid #817855;padding-top:8px}.plot-replacement-options>summary{padding:8px 0;cursor:pointer;font-size:13px;color:#cbd0b4}.plot-replacement-options .plot-options{margin-top:8px}
