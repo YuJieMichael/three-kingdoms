@@ -783,3 +783,25 @@ dialog .web-plot-preview h3{
 }
 
 .wild-card-attributes>summary,.wild-rules>summary{cursor:pointer;min-height:36px;display:flex;align-items:center;font-size:12px}.wild-card-attributes{margin:4px 0}.wild-rules{margin:5px 0}
+
+/* Siege decisions stay together at phone widths; full rules remain opt-in. */
+.garrison-status-card{color:#f0e4c1;padding:12px;background:#29352b;border-color:#9b885b}
+.garrison-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.garrison-heading h4{margin:0;font-size:17px;color:#f3e3b1}
+.garrison-goal{margin:7px 0;font-size:12px;color:#ddd4b7}
+.garrison-goal.ready{color:#b5e0a3;font-weight:700}
+.garrison-metrics,.garrison-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.garrison-metrics>div{display:flex;align-items:center;gap:7px;border:1px solid #69715a;border-radius:4px;padding:8px;font-size:11px;color:#d8d7bd;min-width:0}
+.garrison-metrics strong{display:block;font-size:14px;color:#f1dfae;margin-top:3px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.garrison-metrics strong small{display:block;font-size:11px;font-weight:400;color:#d5d7bf}
+.garrison-metrics .urgent strong{color:#ffbd93}
+.garrison-icon{width:20px;height:20px;flex:none;vertical-align:middle}
+.garrison-pressure-hint{font-size:11px;color:#d6d6bd;margin:7px 0 10px}
+.garrison-action-grid>div{min-width:0;text-align:center}
+.garrison-action-grid button{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:44px;font-size:14px}
+.garrison-action-grid small,.garrison-action-grid span{display:block;font-size:11px;line-height:1.5;margin-top:3px;color:#ded4b1;overflow-wrap:anywhere}
+.garrison-action-grid button:disabled{opacity:.7}
+.garrison-status-card .garrison-rules{margin:10px 0 0;border-top:1px solid #69715a;padding-top:7px}
+.garrison-rules summary{font-size:12px;color:#e0d6b5}
+.garrison-status-card .garrison-loyalty{height:20px;margin:10px 0 6px}
+.garrison-status-card .garrison-loyalty span{line-height:20px;text-shadow:0 1px 2px #000;font-size:12px}
