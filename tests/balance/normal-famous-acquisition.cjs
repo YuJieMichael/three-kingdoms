@@ -2,7 +2,7 @@
 // Diagnostic route at 1x from a fresh save. No supplied resources, armies, chapter flags or hero levels.
 // Assumes immediate reward collection and ideal knowledge of weak level-five wild tiles.
 // This is one feasible route, not a speedrun or approved pacing target.
-// Usage: node tests/balance/normal-famous-acquisition.cjs SEED [--first|--chapters]
+// Usage: node tests/balance/normal-famous-acquisition.cjs SEED [--first|--chapters] [--famous] [--siege=baseline|reserve|logistics] [--keep-payroll]
 
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const ROOT=require('node:path').resolve(__dirname,'../..');
@@ -11,16 +11,16 @@ const openingSource=fs.readFileSync(ROOT+'/tests/balance/archer-onboarding.cjs',
 const copy=x=>JSON.parse(JSON.stringify(x)),sum=a=>Object.values(a).reduce((n,x)=>n+x,0);
 function run(seed=1, options={}){
  const e=loadGame(seed),g=e.Game,start=e.now(),H=e.evaluate('HeroSystem'),heritage=e.evaluate('HeritageSystem'),P=g.progression;
- const log=[],battles=[],first={},MAX_HOURS=24*90;let firstState;let commander='lin';
+ const log=[],battles=[],first={},MAX_HOURS=24*90;let firstState;let commander='lin';let siegeDiplomacy=false;const siegeStrategy=options.siegeStrategy||'baseline';assert.ok(['baseline','reserve','logistics'].includes(siegeStrategy));
  const hours=()=>+( (e.now()-start)/3600000).toFixed(3);
  function ok(error){if(error)throw Error(error);}
  function note(kind,id,more={}){log.push({hours:hours(),kind,id,...more});}
  function collect(){if(g.missions.some(m=>g.missionReady(m)))ok(g.claimReadyMissions());g.claimReadyDaily();for(const n of [5,10,15,20])g.claimDailyMilestone(n);}
  function daily(){for(const t of [...g.state.daily.tasks])if(t.status==='available'&&g.state.daily.tasks.filter(t=>t.status==='accepted').length<12)g.acceptDaily(t.uid);collect();}
- const rawAdvance=e.advance;e.advance=(ms)=>{while(ms>0){if(hours()>MAX_HOURS)throw Error('90-day observation horizon reached');const n=Math.min(ms,3600000);rawAdvance(n,false);ms-=n;collect();}};
+ const rawAdvance=e.advance;e.advance=(ms)=>{while(ms>0){if(hours()>MAX_HOURS)throw Error('90-day observation horizon reached');const n=Math.min(ms,3600000);rawAdvance(n,false);ms-=n;collect();if(options.keepPayroll){const salary=g.salaryQuote();if(salary.cost&&!salary.reason){ok(g.payHeroArrears('all',salary.key));note('payArrears','all',{cost:salary.cost});}}if(siegeDiplomacy&&!g.garrisonStatus('named_jiangling').captive){for(const [kind,quote,act]of [['persuade',g.persuadeGarrisonQuote('named_jiangling'),()=>g.persuadeGarrison('named_jiangling')],['sow',g.sowGarrisonQuote('named_jiangling'),()=>g.sowGarrison('named_jiangling')]])if(!quote.reason){ok(act());note(kind,'named_jiangling',{loyalty:g.garrisonStatus('named_jiangling').loyalty,cost:quote.cost||0});}}}};
  function advance(ms){e.advance(Math.max(1,ms));}
  function growOpening(target){const mod={exports:{}};vm.runInNewContext(openingSource,{require:id=>{assert.equal(id,'../helpers/game.cjs');return {loadGame:()=>e};},module:mod,exports:mod.exports,process,console});return mod.exports.run(seed,true,target,{includeState:true});}
- function funding(cost){for(let i=0;!g.canPay(cost);i++){
+ function funding(cost){cost={...cost,gold:(cost.gold||0)+(options.keepPayroll&&commander!=='lin'?50000:0)};for(let i=0;!g.canPay(cost);i++){
   if(i>240)throw Error('10-day funding stall '+JSON.stringify({cost,stock:g.state.res,rates:g.rates()}));
   let moved=false;
   if(g.state.buildings.market){
@@ -39,7 +39,7 @@ function run(seed=1, options={}){
  }
  function research(id,level){while(g.state.tech[id]<level){build('academy',1);prereqs(rules.researchConditions[id]?.[g.state.tech[id]+1]);const cost=g.researchCost(id);funding(cost);ok(g.research(id));note('research',id,{level:g.state.tech[id]+1,cost,waitHours:(g.state.researchQueue.end-e.now())/3600000});finish('research',g.state.researchQueue);}}
  function train(id,count){if(count<=0)return;prereqs([...Object.entries(g.units[id].requires.buildings).map(([id,level])=>({kind:'building',id,level})),...Object.entries(g.units[id].requires.tech).map(([id,level])=>({kind:'tech',id,level}))]);
-  for(let left=count;left>0;){const n=Math.min(100,left),cost=g.trainCost(id,n);funding(cost);for(let i=0;g.freePopulation()<n*(g.units[id].people||1);i++){if(i>48)throw Error('Population stalled for '+id);if(g.state.inventory.population>0)ok(g.useItem('population'));else advance(3600000);}ok(g.train(id,n));note('train',id,{count:n,cost});finish('train',g.state.trainQueue.at(-1));left-=n;}
+  for(let left=count;left>0;){const n=Math.min(100,left),cost=g.trainCost(id,n);funding(cost);for(let i=0;g.freePopulation()<n*(g.units[id].people||1);i++){if(i>48)throw Error('Population stalled for '+id);if(g.state.inventory.population>0)ok(g.useItem('population'));else advance(3600000);}ok(g.train(id,n));note('train',id,{count:n,cost,...(stage.startsWith('siege')||stage.startsWith('jiangling')?{gold:g.state.res.gold,commandOwned:g.state.generals.includes(commander),loyalty:g.state.heroLoyalty[commander],owed:g.state.heroService.owed[commander]||0}:{})});finish('train',g.state.trainQueue.at(-1));left-=n;}
  }
  function fight(id,army,mode='raid',general=commander){
   daily();const n=g.getNode(id),before={gold:g.state.res.gold,food:g.state.res.food,level:g.state.generalLevels[general]};for(const k of Object.keys(army))ok(g.setTactic(k,'advance',''));ok(g.dispatch(id,general,army,mode,true));advance(Math.ceil(g.state.expedition.end-e.now())+1);ok(g.startBattle());for(let i=0;i<40&&!g.state.battle.finished;i++)g.battleRound();assert.equal(g.state.battle.finished,true);const b=g.state.battle,out={id,mode,general,hours:hours(),enemy:sum(n.army),rounds:b.round,won:b.result.won,lost:sum(b.result.lost),army:copy(army),receipt:copy(b.result.wildGeneral||null),before,claimed:b.result.claimed||false};battles.push(out);advance(Math.ceil((g.state.expedition?.end||e.now())-e.now())+1);g.dismissBattle();collect();assert.equal(g.validSave(cloneActiveSave(g.state)),true);return out;
@@ -71,12 +71,29 @@ function run(seed=1, options={}){
   stage='chapter three';const armyTarget={archer:1650,shield:525,spear:750,cavalry:225};
   for(const n of e.Chapter.allNodes().filter(n=>n.chapter<=3)){for(const [id,count]of Object.entries(armyTarget))train(id,Math.max(0,count-g.state.army[id]));const b=fight(n.id,armyTarget,'occupy');if(!b.won)throw Error('Chapter defeat '+n.id);collect();if(g.state.cooldowns[n.id]>e.now())advance(g.state.cooldowns[n.id]-e.now()+1);}note('checkpoint','chapterThree',{gold:g.state.res.gold});if(options.stopAfterChapters)return {seed,stage:'chapter three complete',hours:hours(),first,firstState,battles,log,validSave:g.validSave(cloneActiveSave(g.state)),state:copy(g.state)};
   stage='jiangling army';build('house',10);research('plant',5);build('farm',8);for(let f=0;g.state.plots.filter(p=>p.type==='farm').length<4&&f<4;f++){const site=g.state.plots.findIndex(p=>!p.type);for(let lv=1;lv<=8;lv++){prereqs(rules.buildingConditions.farm?.[lv]);const cost=g.plotCost(site,'farm');funding(cost);ok(g.developPlot(site,'farm'));note('extraFarm',String(site),{level:lv,cost});finish('build',g.state.buildQueue.at(-1));}}for(let h=0;g.maxPop()<22000&&h<9;h++){const site=g.state.cityLayout.indexOf(null);for(let lv=1;lv<=10;lv++){prereqs(rules.buildingConditions.house?.[lv]);const cost=g.buildRecord('house',lv).cost;funding(cost);ok(g.queueBuilding(site,'house'));note('extraHouse',String(site),{level:lv,cost});finish('build',g.state.buildQueue.at(-1));}}build('drill',10);build('barracks',10);build('warehouse',6);for(const id of ['farm','lumber','quarry','mine'])build(id,8);const siege={archer:8000,shield:2500,spear:1500,cavalry:1000,ram:60};for(const [id,count]of Object.entries(siege))train(id,Math.max(0,count-g.state.army[id]));
-  stage='jiangling siege';let assaultCount=0;while(!g.state.conquered.named_jiangling&&assaultCount<12){const st=g.garrisonStatus('named_jiangling');const pq=g.persuadeGarrisonQuote('named_jiangling');if(!pq.reason)ok(g.persuadeGarrison('named_jiangling'));for(const [id,count]of Object.entries(siege))train(id,Math.max(0,count-g.state.army[id]));const b=fight('named_jiangling',siege,'occupy');assaultCount++;note('siege','named_jiangling',{loyaltyBefore:st.loyalty,loyaltyAfter:g.garrisonStatus('named_jiangling').loyalty,won:b.won,lost:b.lost});if(g.state.conquered.named_jiangling)break;advance(Math.max(1,(g.state.cooldowns.named_jiangling||e.now())-e.now()+1));}if(!g.state.conquered.named_jiangling)throw Error('Jiangling siege did not complete');const guan=g.garrisonStatus('named_jiangling');if(!guan.recruited)ok(g.recruitGarrisonGeneral('named_jiangling'));note('checkpoint','guanyu',{id:guan.general.id,linLevel:g.state.generalLevels.lin});stage='normal route complete';
+  note('checkpoint','siegeArmy',{strategy:siegeStrategy,commander:g.general(commander),army:copy(g.state.army),stock:copy(g.state.res),garrison:g.garrisonStatus('named_jiangling')});
+  if(siegeStrategy==='reserve'){stage='siege reserves';for(const [id,count]of Object.entries(siege))train(id,Math.max(0,Math.ceil(count*1.5)-g.state.army[id]));note('checkpoint','reservesReady',{army:copy(g.state.army)});}
+  if(siegeStrategy==='logistics'){
+   stage='siege logistics';ok(heritage.assign(g.state.governor==='su'?'lin':g.state.governor||'lin','','su'));siegeDiplomacy=true;
+   const site=g.getNode('named_jiangling'),near=[];for(let y=site.y-2;y<=site.y+2;y++)for(let x=site.x-2;x<=site.x+2;x++){if(x<0||y<0||x>=64||y>=64)continue;const n=g.getWorldTile(x,y);if(n.wild&&!g.state.conquered[n.id])near.push(n);}
+   near.sort((a,b)=>sum(a.army)-sum(b.army));for(const n of near){if(g.garrisonStatus('named_jiangling').supplyCut>=3)break;const send={archer:Math.min(8000,g.state.army.archer),shield:Math.min(2500,g.state.army.shield)};const result=fight(n.id,send,'occupy');if(!result.won)throw Error('Supply tile defeat '+n.id);note('supplyCut',n.id,{cuts:g.garrisonStatus('named_jiangling').supplyCut});}
+   assert.ok(g.garrisonStatus('named_jiangling').supplyCut>=3,'three real supply tiles captured');
+  }
+  stage='jiangling siege';let assaultCount=0;while(!g.state.conquered.named_jiangling&&assaultCount<12){
+   const refillStart=hours();for(const [id,count]of Object.entries(siege))train(id,Math.max(0,count-g.state.army[id]));
+   const refillHours=+(hours()-refillStart).toFixed(3);const pq=g.persuadeGarrisonQuote('named_jiangling');if(!pq.reason)ok(g.persuadeGarrison('named_jiangling'));
+   const st=g.garrisonStatus('named_jiangling'),beforeArmy=copy(g.state.army);const b=fight('named_jiangling',siege,'occupy');assaultCount++;
+   note('siege','named_jiangling',{refillAndAssaultHours:+(hours()-refillStart).toFixed(3),refillHours,loyaltyBefore:st.loyalty,loyaltyAfter:g.garrisonStatus('named_jiangling').loyalty,supplyCut:st.supplyCut,enemy:st.troops,armyBefore:beforeArmy,won:b.won,lost:b.lost,claimed:b.claimed});
+   if(g.state.conquered.named_jiangling)break;advance(Math.max(1,(g.state.cooldowns.named_jiangling||e.now())-e.now()+1));
+  }
+  if(!g.state.conquered.named_jiangling)throw Error('Jiangling siege did not complete');siegeDiplomacy=false;
+  stage='guanyu recruitment';const guan=g.garrisonStatus('named_jiangling');if(!guan.recruited){const level=g.state.captureLevels[guan.general.id].level;if(heritage.recruitmentQuote(g.state,level).reason){ok(g.buyItem('nobleAdvanced'));ok(g.useItem('nobleAdvanced'));note('temporaryNoble','guanyu',{permanent:g.state.honors.noble,effective:heritage.effectiveNoble(g.state),level,gems:100});}ok(g.recruitGarrisonGeneral('named_jiangling'));}
+  note('checkpoint','guanyu',{heroId:guan.general.id,hero:g.general(guan.general.id),linLevel:g.state.generalLevels.lin});stage='normal route complete';
   return {seed,stage,hours:hours(),first,firstState,stock:copy(g.state.res),battles,log,validSave:g.validSave(cloneActiveSave(g.state)),state:copy(g.state)};
- }catch(error){return {seed,stage,hours:hours(),error:error.message,first,firstState,stock:copy(g.state.res),noble:g.state.honors.noble,army:copy(g.state.army),battles,log,validSave:g.validSave(cloneActiveSave(g.state)),state:copy(g.state)};}
+ }catch(error){return {seed,stage,hours:hours(),error:error.message,first,firstState,stock:copy(g.state.res),noble:g.state.honors.noble,heroStatus:{owned:g.state.generals.includes(commander),loyalty:g.state.heroLoyalty[commander],owed:g.state.heroService.owed[commander],history:g.state.heroService.log},army:copy(g.state.army),battles,log,validSave:g.validSave(cloneActiveSave(g.state)),state:copy(g.state)};}
 }
 if(require.main===module){
- const result=run(Number(process.argv[2]||1),{stopAfterChapters:process.argv.includes('--chapters'),stopAfterFirst:process.argv.includes('--first'),useFamous:process.argv.includes('--famous')});
+ const result=run(Number(process.argv[2]||1),{stopAfterChapters:process.argv.includes('--chapters'),stopAfterFirst:process.argv.includes('--first'),useFamous:process.argv.includes('--famous'),siegeStrategy:process.argv.find(x=>x.startsWith('--siege='))?.slice(8),keepPayroll:process.argv.includes('--keep-payroll')});
  const {state,firstState,...summary}=result;
  process.stdout.write(JSON.stringify(summary,null,2)+'\n');
  if(result.error||!result.validSave)process.exitCode=1;
