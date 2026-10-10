@@ -3594,9 +3594,9 @@ const ManualData = {
       "id": "noble",
       "name": "推恩令",
       "category": "内政",
-      "desc": "爵位暂升最多 2 级，持续 3 天，有爵位上限。",
+      "desc": "招降与城池名额按暂升2爵计算，持续3天，最高五大夫；到期保留已有城池与武将，超额时暂停扩城。",
       "price": 50,
-      "effect": null,
+      "effect": "nobleBoost",
       "seconds": 0,
       "trialPrice": true,
       "source": "https://web.4399.com/rxsg/yxjp_03_22954.html"
@@ -3605,9 +3605,9 @@ const ManualData = {
       "id": "nobleAdvanced",
       "name": "高级推恩令",
       "category": "内政",
-      "desc": "爵位暂升最多 5 级，持续 10 天，有爵位门槛及上限。",
+      "desc": "永久爵位公士起可用：招降与城池名额按暂升5爵计算，持续10天，最高五大夫；不与普通令叠加。",
       "price": 100,
-      "effect": null,
+      "effect": "nobleBoost",
       "seconds": 0,
       "trialPrice": true,
       "source": "https://web.4399.com/rxsg/yxjp_03_22954.html"

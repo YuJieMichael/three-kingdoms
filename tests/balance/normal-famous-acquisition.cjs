@@ -57,6 +57,7 @@ function run(seed=1, options={}){
    const fresh=candidates.map(n=>g.getNode(n.id)).filter(n=>n.level===5&&sum(n.army)<=500&&!(g.state.cooldowns[n.id]>e.now()));if(fresh.length)farmNode=fresh[0];
    if(g.state.cooldowns[farmNode.id]>e.now())advance(g.state.cooldowns[farmNode.id]-e.now()+1);train('archer',Math.max(0,800-g.state.army.archer));const b=fight(farmNode.id,{archer:Math.min(800,g.state.army.archer)});if(!b.won)note('defeat','jewelFarm',{node:farmNode.id,lost:b.lost});
   }
+  stage='temporary recruit rank';ok(g.buyItem('nobleAdvanced'));ok(g.useItem('nobleAdvanced'));note('temporaryNoble','nobleAdvanced',{gems:100,permanent:g.state.honors.noble,effective:heritage.effectiveNoble(g.state),cityLimit:g.cityLimit(),end:g.state.nobleBoost.end});
   stage='first capture';build('tavern',g.state.generals.length+H.wild.heldCaptives(g.state)+1);train('archer',Math.max(0,800-g.state.army.archer));ok(H.wild.discover());const r=g.state.wildGenerals.rumors.find(r=>r.line==='huaman'),quote=H.wild.portraitQuote(g.state,r.line);ok(H.wild.buyPortrait(r.line,quote.key));first.portrait={hours:hours(),gems:quote.price};const capture=fight(r.node,{archer:Math.min(800,g.state.army.archer)});first.capture=capture;first.recruitQuote=copy(H.wild.recruitQuote(g.state,r.id));
   if(capture.receipt?.status!=='captured')throw Error('No capture '+JSON.stringify(capture));
   const rq=H.wild.recruitQuote(g.state,r.id);first.beforeRecruit={hours:hours(),noble:g.state.honors.noble,gold:g.state.res.gold,jewels:copy(g.state.jewels),quote:copy(rq)};

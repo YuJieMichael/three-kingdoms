@@ -31,6 +31,7 @@ function run({seed=11,id='named_xiaopei',army={archer:14000,shield:6000,spear:50
     for(const [k,n] of Object.entries(army))g.state.army[k]=Math.max(g.state.army[k],n);
     e.advance(2*3600000);
   }
+  const captured=g.garrisonStatus(id);if(captured.captive){if(g.state.generals.includes(captured.general.id))throw Error('Captured commander joined automatically');const error=g.recruitGarrisonGeneral(id);if(error)throw Error(error);}
   const st=g.garrisonStatus(id);
   return {id,captured:!!g.state.conquered[id],recruited:st.recruited,general:st.general.name,level:st.recruited?g.general(st.general.id).level:null,generalJoined:g.state.generals.includes(st.general.id),assaults:log.length,log,validSave:g.validSave(g.state),hours:(e.now()-1791194400000)/3600000};
 }
