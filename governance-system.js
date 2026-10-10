@@ -24,7 +24,7 @@ const GovernanceSystem=(()=>{
  function removeHero(s,id,{reason='忠诚耗尽，下野离城',at=Date.now(),busy=false}={}){
   if(!s.generals.includes(id)||protectedHeroes.has(id)||busy)return false;
   s.generals=s.generals.filter(x=>x!==id);
-  for(const k of ['heroLoyalty','heroPoints','heroDrills','heroSkills'])if(s[k])delete s[k][id];
+  for(const k of ['heroLoyalty','heroPoints','heroDrills','heroSkills','famousStarts'])if(s[k])delete s[k][id];
   delete s.heroService.owed[id];s.heroService.pending=s.heroService.pending.filter(x=>x!==id);
   for(const e of s.equipment||[])if(e.hero===id)e.hero='';
   for(const c of scopes(s)){const d=scopeData(s,c);if(d.heroAdministration?.prepared?.hero===id)d.heroAdministration.prepared=null;if(d.governor===id)d.governor=null;for(const role of Object.keys(d.cityRoles||{}))if(d.cityRoles[role]===id)d.cityRoles[role]='';for(const [key,buff]of Object.entries(d.buffs||{}))if(buff.general===id)delete d.buffs[key];}

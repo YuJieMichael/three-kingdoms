@@ -1,0 +1,1277 @@
+{
+  "version": "0.34.62",
+  "base": "a4301215f63af1719947e90f35e31ad099e494f9",
+  "clockMultiplier": 1,
+  "seeds": [
+    1,
+    7,
+    19
+  ],
+  "routeRuns": [
+    {
+      "seed": 1,
+      "stage": "jiangling siege",
+      "error": "90-day observation horizon reached",
+      "hours": 2160.982,
+      "validSave": true,
+      "first": {
+        "hallTen": {
+          "hours": 31.191,
+          "gold": 270449.0559744054
+        },
+        "discoveryGate": [
+          {
+            "line": "huaman",
+            "name": "花鬘",
+            "title": "南中巾帼",
+            "historical": true,
+            "region": "南中故事",
+            "minInn": 2,
+            "fieldLevel": 5,
+            "anchor": {
+              "x": 27,
+              "y": 50
+            },
+            "level": 6,
+            "atk": 87,
+            "def": 78,
+            "pol": 52,
+            "wis": 66,
+            "bonus": "cavalry",
+            "portraitPrice": 70,
+            "noble": 2,
+            "gold": 100000,
+            "jewels": {
+              "coral": 4,
+              "glass": 2
+            },
+            "firstCaptureBox": true,
+            "locked": true,
+            "reason": "需要爵位 上造",
+            "status": "undiscovered",
+            "portraitOwned": false,
+            "node": null,
+            "heroId": null
+          }
+        ],
+        "portrait": {
+          "hours": 33.068,
+          "gems": 70
+        },
+        "capture": {
+          "id": "wild_29_51",
+          "mode": "raid",
+          "general": "lin",
+          "hours": 33.08,
+          "enemy": 217,
+          "rounds": 3,
+          "won": true,
+          "lost": 3,
+          "army": {
+            "archer": 800
+          },
+          "receipt": {
+            "line": "huaman",
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "node": "wild_29_51",
+            "status": "captured",
+            "loyalty": 40,
+            "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+          },
+          "before": {
+            "gold": 1661299.9815491783,
+            "food": 1944580.3877207774,
+            "level": 12
+          },
+          "claimed": false
+        },
+        "recruitQuote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "noble": 2,
+          "nobleName": "上造",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|2|4|4|0"
+        },
+        "beforeRecruit": {
+          "hours": 33.086,
+          "noble": 2,
+          "gold": 1661302.6229752684,
+          "jewels": {
+            "pearl": 1,
+            "coral": 0,
+            "glass": 1,
+            "amber": 0,
+            "agate": 0,
+            "crystal": 0,
+            "jadeite": 0,
+            "jade": 0,
+            "nightPearl": 0
+          },
+          "quote": {
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "method": "gold",
+            "cost": {
+              "gold": 100000,
+              "jewels": {}
+            },
+            "noble": 2,
+            "nobleName": "上造",
+            "loyalty": 40,
+            "reason": "",
+            "key": "local_1000000000000001|gold|2|4|4|0"
+          }
+        },
+        "recruited": {
+          "hours": 33.086,
+          "id": "local_1000000000000001",
+          "goldAfter": 1561302.6229752684,
+          "lin": {
+            "id": "lin",
+            "name": "林朔",
+            "title": "乡勇统领",
+            "type": "枪",
+            "atk": 108,
+            "def": 91,
+            "pol": 48,
+            "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+            "bonus": "spear",
+            "level": 12,
+            "wis": 58,
+            "lead": 120
+          },
+          "hero": {
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "title": "南中巾帼",
+            "type": "将",
+            "level": 6,
+            "atk": 107,
+            "def": 93,
+            "pol": 52,
+            "wis": 66,
+            "lead": 240,
+            "price": 100000,
+            "bonus": "cavalry",
+            "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+            "origin": "wild",
+            "wildLine": "huaman",
+            "sourceNode": "wild_29_51"
+          },
+          "boxes": 1
+        }
+      },
+      "checkpoints": [
+        {
+          "hours": 0.064,
+          "kind": "checkpoint",
+          "id": "firstArchers",
+          "gold": 108791.86089485788
+        },
+        {
+          "hours": 67.913,
+          "kind": "checkpoint",
+          "id": "county",
+          "gold": 3258186.5693988013
+        },
+        {
+          "hours": 130.628,
+          "kind": "checkpoint",
+          "id": "chapterThree",
+          "gold": 6959750.007214029
+        }
+      ],
+      "sieges": [
+        {
+          "hours": 692.813,
+          "kind": "siege",
+          "id": "named_jiangling",
+          "loyaltyBefore": 100,
+          "loyaltyAfter": 79,
+          "won": true,
+          "lost": 4261
+        },
+        {
+          "hours": 961.485,
+          "kind": "siege",
+          "id": "named_jiangling",
+          "loyaltyBefore": 84,
+          "loyaltyAfter": 89,
+          "won": true,
+          "lost": 4261
+        },
+        {
+          "hours": 1264.156,
+          "kind": "siege",
+          "id": "named_jiangling",
+          "loyaltyBefore": 89,
+          "loyaltyAfter": 89,
+          "won": true,
+          "lost": 4161
+        },
+        {
+          "hours": 1644.254,
+          "kind": "siege",
+          "id": "named_jiangling",
+          "loyaltyBefore": 89,
+          "loyaltyAfter": 89,
+          "won": true,
+          "lost": 4161
+        }
+      ],
+      "siegeBattles": [
+        {
+          "id": "named_jiangling",
+          "mode": "occupy",
+          "general": "lin",
+          "hours": 692.801,
+          "enemy": 12500,
+          "rounds": 12,
+          "won": true,
+          "lost": 4261,
+          "army": {
+            "archer": 8000,
+            "shield": 2500,
+            "spear": 1500,
+            "cavalry": 1000,
+            "ram": 60
+          },
+          "receipt": null,
+          "before": {
+            "gold": 718399.2423917586,
+            "food": 1420988.092084021,
+            "level": 19
+          },
+          "claimed": false
+        },
+        {
+          "id": "named_jiangling",
+          "mode": "occupy",
+          "general": "lin",
+          "hours": 961.472,
+          "enemy": 12500,
+          "rounds": 12,
+          "won": true,
+          "lost": 4261,
+          "army": {
+            "archer": 8000,
+            "shield": 2500,
+            "spear": 1500,
+            "cavalry": 1000,
+            "ram": 60
+          },
+          "receipt": null,
+          "before": {
+            "gold": 7477.507416588045,
+            "food": 1279825.227724761,
+            "level": 19
+          },
+          "claimed": false
+        },
+        {
+          "id": "named_jiangling",
+          "mode": "occupy",
+          "general": "lin",
+          "hours": 1264.144,
+          "enemy": 12500,
+          "rounds": 12,
+          "won": true,
+          "lost": 4161,
+          "army": {
+            "archer": 8000,
+            "shield": 2500,
+            "spear": 1500,
+            "cavalry": 1000,
+            "ram": 60
+          },
+          "receipt": null,
+          "before": {
+            "gold": 104577.19243212414,
+            "food": 952553.6683195024,
+            "level": 20
+          },
+          "claimed": false
+        },
+        {
+          "id": "named_jiangling",
+          "mode": "occupy",
+          "general": "lin",
+          "hours": 1644.242,
+          "enemy": 12500,
+          "rounds": 12,
+          "won": true,
+          "lost": 4161,
+          "army": {
+            "archer": 8000,
+            "shield": 2500,
+            "spear": 1500,
+            "cavalry": 1000,
+            "ram": 60
+          },
+          "receipt": null,
+          "before": {
+            "gold": 7640.53459658759,
+            "food": 1883.6442646974551,
+            "level": 20
+          },
+          "claimed": false
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "stage": "chapter three complete",
+      "error": null,
+      "hours": 134.061,
+      "validSave": true,
+      "first": {
+        "hallTen": {
+          "hours": 41.727,
+          "gold": 319453.01208102924
+        },
+        "discoveryGate": [
+          {
+            "line": "huaman",
+            "name": "花鬘",
+            "title": "南中巾帼",
+            "historical": true,
+            "region": "南中故事",
+            "minInn": 2,
+            "fieldLevel": 5,
+            "anchor": {
+              "x": 27,
+              "y": 50
+            },
+            "level": 6,
+            "atk": 87,
+            "def": 78,
+            "pol": 52,
+            "wis": 66,
+            "bonus": "cavalry",
+            "portraitPrice": 70,
+            "noble": 2,
+            "gold": 100000,
+            "jewels": {
+              "coral": 4,
+              "glass": 2
+            },
+            "firstCaptureBox": true,
+            "locked": true,
+            "reason": "需要爵位 上造",
+            "status": "undiscovered",
+            "portraitOwned": false,
+            "node": null,
+            "heroId": null
+          }
+        ],
+        "portrait": {
+          "hours": 43.792,
+          "gems": 70
+        },
+        "capture": {
+          "id": "wild_27_49",
+          "mode": "raid",
+          "general": "lin",
+          "hours": 43.803,
+          "enemy": 376,
+          "rounds": 3,
+          "won": true,
+          "lost": 0,
+          "army": {
+            "archer": 800
+          },
+          "receipt": {
+            "line": "huaman",
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "node": "wild_27_49",
+            "status": "captured",
+            "loyalty": 40,
+            "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+          },
+          "before": {
+            "gold": 1641195.6198686447,
+            "food": 1865769.678958275,
+            "level": 12
+          },
+          "claimed": false
+        },
+        "recruitQuote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "noble": 2,
+          "nobleName": "上造",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|2|4|4|0"
+        },
+        "beforeRecruit": {
+          "hours": 43.809,
+          "noble": 2,
+          "gold": 1861198.3320504727,
+          "jewels": {
+            "pearl": 1,
+            "coral": 0,
+            "glass": 0,
+            "amber": 0,
+            "agate": 0,
+            "crystal": 0,
+            "jadeite": 0,
+            "jade": 0,
+            "nightPearl": 0
+          },
+          "quote": {
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "method": "gold",
+            "cost": {
+              "gold": 100000,
+              "jewels": {}
+            },
+            "noble": 2,
+            "nobleName": "上造",
+            "loyalty": 40,
+            "reason": "",
+            "key": "local_1000000000000001|gold|2|4|4|0"
+          }
+        },
+        "recruited": {
+          "hours": 43.809,
+          "id": "local_1000000000000001",
+          "goldAfter": 1761198.3320504727,
+          "lin": {
+            "id": "lin",
+            "name": "林朔",
+            "title": "乡勇统领",
+            "type": "枪",
+            "atk": 108,
+            "def": 91,
+            "pol": 48,
+            "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+            "bonus": "spear",
+            "level": 12,
+            "wis": 58,
+            "lead": 120
+          },
+          "hero": {
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "title": "南中巾帼",
+            "type": "将",
+            "level": 6,
+            "atk": 107,
+            "def": 93,
+            "pol": 52,
+            "wis": 66,
+            "lead": 240,
+            "price": 100000,
+            "bonus": "cavalry",
+            "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+            "origin": "wild",
+            "wildLine": "huaman",
+            "sourceNode": "wild_27_49"
+          },
+          "boxes": 1
+        }
+      },
+      "checkpoints": [
+        {
+          "hours": 0.065,
+          "kind": "checkpoint",
+          "id": "firstArchers",
+          "gold": 138791.9002150075
+        },
+        {
+          "hours": 72.43,
+          "kind": "checkpoint",
+          "id": "county",
+          "gold": 3031357.5099769044
+        },
+        {
+          "hours": 134.061,
+          "kind": "checkpoint",
+          "id": "chapterThree",
+          "gold": 6838734.916328948
+        }
+      ],
+      "sieges": [],
+      "siegeBattles": []
+    },
+    {
+      "seed": 19,
+      "stage": "chapter three complete",
+      "error": null,
+      "hours": 125.804,
+      "validSave": true,
+      "first": {
+        "hallTen": {
+          "hours": 41.193,
+          "gold": 270244.1120022608
+        },
+        "discoveryGate": [
+          {
+            "line": "huaman",
+            "name": "花鬘",
+            "title": "南中巾帼",
+            "historical": true,
+            "region": "南中故事",
+            "minInn": 2,
+            "fieldLevel": 5,
+            "anchor": {
+              "x": 27,
+              "y": 50
+            },
+            "level": 6,
+            "atk": 87,
+            "def": 78,
+            "pol": 52,
+            "wis": 66,
+            "bonus": "cavalry",
+            "portraitPrice": 70,
+            "noble": 2,
+            "gold": 100000,
+            "jewels": {
+              "coral": 4,
+              "glass": 2
+            },
+            "firstCaptureBox": true,
+            "locked": true,
+            "reason": "需要爵位 上造",
+            "status": "undiscovered",
+            "portraitOwned": false,
+            "node": null,
+            "heroId": null
+          }
+        ],
+        "portrait": {
+          "hours": 43.166,
+          "gems": 70
+        },
+        "capture": {
+          "id": "wild_29_49",
+          "mode": "raid",
+          "general": "lin",
+          "hours": 43.178,
+          "enemy": 132,
+          "rounds": 4,
+          "won": true,
+          "lost": 4,
+          "army": {
+            "archer": 800
+          },
+          "receipt": {
+            "line": "huaman",
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "node": "wild_29_49",
+            "status": "captured",
+            "loyalty": 40,
+            "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+          },
+          "before": {
+            "gold": 2137207.5852188603,
+            "food": 2371926.8247501063,
+            "level": 13
+          },
+          "claimed": false
+        },
+        "recruitQuote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "noble": 2,
+          "nobleName": "上造",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|2|4|4|0"
+        },
+        "beforeRecruit": {
+          "hours": 43.183,
+          "noble": 2,
+          "gold": 2137210.41996623,
+          "jewels": {
+            "pearl": 1,
+            "coral": 0,
+            "glass": 0,
+            "amber": 0,
+            "agate": 0,
+            "crystal": 0,
+            "jadeite": 0,
+            "jade": 0,
+            "nightPearl": 0
+          },
+          "quote": {
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "method": "gold",
+            "cost": {
+              "gold": 100000,
+              "jewels": {}
+            },
+            "noble": 2,
+            "nobleName": "上造",
+            "loyalty": 40,
+            "reason": "",
+            "key": "local_1000000000000001|gold|2|4|4|0"
+          }
+        },
+        "recruited": {
+          "hours": 43.183,
+          "id": "local_1000000000000001",
+          "goldAfter": 2037210.4199662302,
+          "lin": {
+            "id": "lin",
+            "name": "林朔",
+            "title": "乡勇统领",
+            "type": "枪",
+            "atk": 112,
+            "def": 94,
+            "pol": 48,
+            "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+            "bonus": "spear",
+            "level": 13,
+            "wis": 58,
+            "lead": 130
+          },
+          "hero": {
+            "id": "local_1000000000000001",
+            "name": "花鬘",
+            "title": "南中巾帼",
+            "type": "将",
+            "level": 6,
+            "atk": 107,
+            "def": 93,
+            "pol": 52,
+            "wis": 66,
+            "lead": 240,
+            "price": 100000,
+            "bonus": "cavalry",
+            "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+            "origin": "wild",
+            "wildLine": "huaman",
+            "sourceNode": "wild_29_49"
+          },
+          "boxes": 1
+        }
+      },
+      "checkpoints": [
+        {
+          "hours": 0.066,
+          "kind": "checkpoint",
+          "id": "firstArchers",
+          "gold": 108798.93952300437
+        },
+        {
+          "hours": 63.379,
+          "kind": "checkpoint",
+          "id": "county",
+          "gold": 3458128.0318488074
+        },
+        {
+          "hours": 125.804,
+          "kind": "checkpoint",
+          "id": "chapterThree",
+          "gold": 7094859.706808695
+        }
+      ],
+      "sieges": [],
+      "siegeBattles": []
+    }
+  ],
+  "comparisons": [
+    {
+      "seed": 1,
+      "method": "earned first-recruit checkpoint; legal daily drills bring Huaman to ordinary general level; no supplied soldiers, resources, points or equipment; clone same earned checkpoint for each battle",
+      "level": 12,
+      "drills": 51,
+      "drillGold": 451000,
+      "cultivationDays": 15.079742824074074,
+      "stats": {
+        "ordinary": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 108,
+          "def": 91,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 12,
+          "wis": 58,
+          "lead": 120
+        },
+        "huaman": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 12,
+          "atk": 131,
+          "def": 111,
+          "pol": 52,
+          "wis": 66,
+          "lead": 300,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_29_51"
+        }
+      },
+      "battles": [
+        {
+          "node": "wild_31_10",
+          "level": 5,
+          "enemy": 548,
+          "enemyArmy": {
+            "militia": 548
+          },
+          "general": "ordinary",
+          "lead": 120,
+          "atk": 108,
+          "def": 91,
+          "won": true,
+          "rounds": 1,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_31_10",
+          "level": 5,
+          "enemy": 548,
+          "enemyArmy": {
+            "militia": 548
+          },
+          "general": "huaman",
+          "lead": 300,
+          "atk": 131,
+          "def": 111,
+          "won": true,
+          "rounds": 1,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_18_29",
+          "level": 6,
+          "enemy": 897,
+          "enemyArmy": {
+            "militia": 705,
+            "spear": 128,
+            "shield": 25,
+            "archer": 39
+          },
+          "general": "ordinary",
+          "lead": 120,
+          "atk": 108,
+          "def": 91,
+          "won": true,
+          "rounds": 4,
+          "lost": 8,
+          "sent": 790
+        },
+        {
+          "node": "wild_18_29",
+          "level": 6,
+          "enemy": 897,
+          "enemyArmy": {
+            "militia": 705,
+            "spear": 128,
+            "shield": 25,
+            "archer": 39
+          },
+          "general": "huaman",
+          "lead": 300,
+          "atk": 131,
+          "def": 111,
+          "won": true,
+          "rounds": 4,
+          "lost": 8,
+          "sent": 790
+        },
+        {
+          "node": "wild_60_63",
+          "level": 7,
+          "enemy": 1051,
+          "enemyArmy": {
+            "militia": 304,
+            "spear": 591,
+            "shield": 101,
+            "archer": 55
+          },
+          "general": "ordinary",
+          "lead": 120,
+          "atk": 108,
+          "def": 91,
+          "won": true,
+          "rounds": 4,
+          "lost": 13,
+          "sent": 790
+        },
+        {
+          "node": "wild_60_63",
+          "level": 7,
+          "enemy": 1051,
+          "enemyArmy": {
+            "militia": 304,
+            "spear": 591,
+            "shield": 101,
+            "archer": 55
+          },
+          "general": "huaman",
+          "lead": 300,
+          "atk": 131,
+          "def": 111,
+          "won": true,
+          "rounds": 4,
+          "lost": 11,
+          "sent": 790
+        },
+        {
+          "node": "wild_44_18",
+          "level": 8,
+          "enemy": 1204,
+          "enemyArmy": {
+            "militia": 387,
+            "spear": 190,
+            "shield": 419,
+            "archer": 208
+          },
+          "general": "ordinary",
+          "lead": 120,
+          "atk": 108,
+          "def": 91,
+          "won": true,
+          "rounds": 5,
+          "lost": 183,
+          "sent": 790
+        },
+        {
+          "node": "wild_44_18",
+          "level": 8,
+          "enemy": 1204,
+          "enemyArmy": {
+            "militia": 387,
+            "spear": 190,
+            "shield": 419,
+            "archer": 208
+          },
+          "general": "huaman",
+          "lead": 300,
+          "atk": 131,
+          "def": 111,
+          "won": true,
+          "rounds": 5,
+          "lost": 129,
+          "sent": 790
+        }
+      ],
+      "validSave": true
+    },
+    {
+      "seed": 7,
+      "method": "earned first-recruit checkpoint; legal daily drills bring Huaman to ordinary general level; no supplied soldiers, resources, points or equipment; clone same earned checkpoint for each battle",
+      "level": 12,
+      "drills": 51,
+      "drillGold": 451000,
+      "cultivationDays": 15.632966319444444,
+      "stats": {
+        "ordinary": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 108,
+          "def": 91,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 12,
+          "wis": 58,
+          "lead": 120
+        },
+        "huaman": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 12,
+          "atk": 131,
+          "def": 111,
+          "pol": 52,
+          "wis": 66,
+          "lead": 300,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_27_49"
+        }
+      },
+      "battles": [
+        {
+          "node": "wild_19_28",
+          "level": 5,
+          "enemy": 548,
+          "enemyArmy": {
+            "militia": 548
+          },
+          "general": "ordinary",
+          "lead": 120,
+          "atk": 108,
+          "def": 91,
+          "won": true,
+          "rounds": 1,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_19_28",
+          "level": 5,
+          "enemy": 548,
+          "enemyArmy": {
+            "militia": 548
+          },
+          "general": "huaman",
+          "lead": 300,
+          "atk": 131,
+          "def": 111,
+          "won": true,
+          "rounds": 1,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_20_21",
+          "level": 6,
+          "enemy": 899,
+          "enemyArmy": {
+            "militia": 664,
+            "spear": 228,
+            "shield": 3,
+            "archer": 3,
+            "cavalry": 1
+          },
+          "general": "ordinary",
+          "lead": 120,
+          "atk": 108,
+          "def": 91,
+          "won": true,
+          "rounds": 4,
+          "lost": 8,
+          "sent": 790
+        },
+        {
+          "node": "wild_20_21",
+          "level": 6,
+          "enemy": 899,
+          "enemyArmy": {
+            "militia": 664,
+            "spear": 228,
+            "shield": 3,
+            "archer": 3,
+            "cavalry": 1
+          },
+          "general": "huaman",
+          "lead": 300,
+          "atk": 131,
+          "def": 111,
+          "won": true,
+          "rounds": 4,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_12_6",
+          "level": 7,
+          "enemy": 1052,
+          "enemyArmy": {
+            "militia": 166,
+            "spear": 886
+          },
+          "general": "ordinary",
+          "lead": 120,
+          "atk": 108,
+          "def": 91,
+          "won": true,
+          "rounds": 4,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_12_6",
+          "level": 7,
+          "enemy": 1052,
+          "enemyArmy": {
+            "militia": 166,
+            "spear": 886
+          },
+          "general": "huaman",
+          "lead": 300,
+          "atk": 131,
+          "def": 111,
+          "won": true,
+          "rounds": 4,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_47_18",
+          "level": 8,
+          "enemy": 1215,
+          "enemyArmy": {
+            "militia": 332,
+            "spear": 76,
+            "shield": 317,
+            "archer": 478,
+            "cavalry": 12
+          },
+          "general": "ordinary",
+          "lead": 120,
+          "atk": 108,
+          "def": 91,
+          "won": true,
+          "rounds": 6,
+          "lost": 266,
+          "sent": 790
+        },
+        {
+          "node": "wild_47_18",
+          "level": 8,
+          "enemy": 1215,
+          "enemyArmy": {
+            "militia": 332,
+            "spear": 76,
+            "shield": 317,
+            "archer": 478,
+            "cavalry": 12
+          },
+          "general": "huaman",
+          "lead": 300,
+          "atk": 131,
+          "def": 111,
+          "won": true,
+          "rounds": 5,
+          "lost": 235,
+          "sent": 790
+        }
+      ],
+      "validSave": true
+    },
+    {
+      "seed": 19,
+      "method": "earned first-recruit checkpoint; legal daily drills bring Huaman to ordinary general level; no supplied soldiers, resources, points or equipment; clone same earned checkpoint for each battle",
+      "level": 13,
+      "drills": 63,
+      "drillGold": 595000,
+      "cultivationDays": 19.659031006944446,
+      "stats": {
+        "ordinary": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 112,
+          "def": 94,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 13,
+          "wis": 58,
+          "lead": 130
+        },
+        "huaman": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 13,
+          "atk": 135,
+          "def": 114,
+          "pol": 52,
+          "wis": 66,
+          "lead": 310,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_29_49"
+        }
+      },
+      "battles": [
+        {
+          "node": "wild_16_15",
+          "level": 5,
+          "enemy": 548,
+          "enemyArmy": {
+            "militia": 548
+          },
+          "general": "ordinary",
+          "lead": 130,
+          "atk": 112,
+          "def": 94,
+          "won": true,
+          "rounds": 1,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_16_15",
+          "level": 5,
+          "enemy": 548,
+          "enemyArmy": {
+            "militia": 548
+          },
+          "general": "huaman",
+          "lead": 310,
+          "atk": 135,
+          "def": 114,
+          "won": true,
+          "rounds": 1,
+          "lost": 0,
+          "sent": 790
+        },
+        {
+          "node": "wild_53_19",
+          "level": 6,
+          "enemy": 899,
+          "enemyArmy": {
+            "militia": 761,
+            "spear": 42,
+            "shield": 92,
+            "archer": 3,
+            "cavalry": 1
+          },
+          "general": "ordinary",
+          "lead": 130,
+          "atk": 112,
+          "def": 94,
+          "won": true,
+          "rounds": 4,
+          "lost": 23,
+          "sent": 790
+        },
+        {
+          "node": "wild_53_19",
+          "level": 6,
+          "enemy": 899,
+          "enemyArmy": {
+            "militia": 761,
+            "spear": 42,
+            "shield": 92,
+            "archer": 3,
+            "cavalry": 1
+          },
+          "general": "huaman",
+          "lead": 310,
+          "atk": 135,
+          "def": 114,
+          "won": true,
+          "rounds": 4,
+          "lost": 15,
+          "sent": 790
+        },
+        {
+          "node": "wild_54_41",
+          "level": 7,
+          "enemy": 1051,
+          "enemyArmy": {
+            "militia": 691,
+            "shield": 190,
+            "archer": 128,
+            "cavalry": 42
+          },
+          "general": "ordinary",
+          "lead": 130,
+          "atk": 112,
+          "def": 94,
+          "won": true,
+          "rounds": 4,
+          "lost": 43,
+          "sent": 790
+        },
+        {
+          "node": "wild_54_41",
+          "level": 7,
+          "enemy": 1051,
+          "enemyArmy": {
+            "militia": 691,
+            "shield": 190,
+            "archer": 128,
+            "cavalry": 42
+          },
+          "general": "huaman",
+          "lead": 310,
+          "atk": 135,
+          "def": 114,
+          "won": true,
+          "rounds": 4,
+          "lost": 34,
+          "sent": 790
+        },
+        {
+          "node": "wild_4_57",
+          "level": 8,
+          "enemy": 1179,
+          "enemyArmy": {
+            "militia": 166,
+            "spear": 57,
+            "shield": 584,
+            "archer": 330,
+            "cavalry": 42
+          },
+          "general": "ordinary",
+          "lead": 130,
+          "atk": 112,
+          "def": 94,
+          "won": false,
+          "rounds": 7,
+          "lost": 672,
+          "sent": 790
+        },
+        {
+          "node": "wild_4_57",
+          "level": 8,
+          "enemy": 1179,
+          "enemyArmy": {
+            "militia": 166,
+            "spear": 57,
+            "shield": 584,
+            "archer": 330,
+            "cavalry": 42
+          },
+          "general": "huaman",
+          "lead": 310,
+          "atk": 135,
+          "def": 114,
+          "won": false,
+          "rounds": 7,
+          "lost": 672,
+          "sent": 790
+        }
+      ],
+      "validSave": true
+    }
+  ]
+}
