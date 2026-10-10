@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="357ca10707e453d9e7d33900d856c27dbd013d609e5d8225ba8886f52b9a7711";
+export const runtimeHash="30a1482009ece43515a950de460e03555148c8d882e36212a8e08f7647ef64ed";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -16203,7 +16203,7 @@ const Game = (() => {
   }
   function validSave(d,cityScopeOnly=false){
     if(d===state&&!cityScopeOnly)CitySystem.capture(state);
-    if(!cityScopeOnly&&(!WebEdition.valid(d)||!BattlefieldSystem.valid(d,battlefieldApi(d))))return false;
+    if(!cityScopeOnly&&!WebEdition.valid(d))return false;
     const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
     const finite=n=>Number.isFinite(n)&&n>=0&&n<=Number.MAX_SAFE_INTEGER;
     const integer=n=>finite(n)&&Number.isInteger(n);
@@ -16269,6 +16269,7 @@ const Game = (() => {
       const n=c.capital?null:getNode(c.node,d);if(!c.capital&&(!n||!d.conquered[c.node]||n.x!==c.x||n.y!==c.y||!(isCity(n)||n.wild&&n.type==='plain')))return false;
       return validSave({...d,...scope,realm:{...d.realm,activeCity:c.id}},true)&&validSave({...d,...c.data,realm:{...d.realm,activeCity:c.id}},true);
     }))return false;
+    if(!cityScopeOnly&&!BattlefieldSystem.valid(d,battlefieldApi(d)))return false;
     return true;
   }
   function init(){
@@ -17154,6 +17155,7 @@ const Game = (() => {
   const buyReinforcementToken=()=>battlefieldAction('buyToken');
   const startBattlefield=(id,army,key)=>battlefieldAction('start',id,army,key);
   function enterBattlefieldNode(id,choice='normal'){
+    if(!tacticsAvailable())return '剧本战场仅在单机模式开放';
     if(lessonSession||state.battle&&!state.battle.finished||CitySystem.list(state).some(c=>CitySystem.scope(state,c).cityDefense.battle))return '请先结束当前战斗或演练';
     const error=BattlefieldSystem.enter(state,id,choice,battlefieldApi());if(error)return error;
     const r=state.battlefields.run;if(r.selectedNode){r.battle=createBattlefieldBattle(r,BattlefieldSystem.nodeForRun(r,id));battlefieldScreenActive=true;}save();return null;
@@ -17168,8 +17170,8 @@ const Game = (() => {
     const b={kind:'battlefield',runId:r.id,completedBefore:[...r.completed],rules:3,length,node:n.id,general:r.general,sourceCity:r.sourceCity,generalSnapshot:frozen.general,skillProfile:frozen.skill,mountProfile:frozen.mount,legendProcChance:frozen.proc,mode:'raid',siege:false,gate:null,militia:0,round:0,machineGateAttacks:0,currentRoundSummary:{round:0,events:[]},player,enemy,orders:orders(player),enemyOrders:orders(enemy),enemyGeneralSnapshot:{id:'enemy_'+n.id,name:n.name,wildLine:'',atk:0,def:0,pol:0,wis:0,lead:0},log:[n.intro],auto:false,finished:false,result:null};
     b.stratagem=BattleStratagems.create(b,{player:b.generalSnapshot,enemy:b.enemyGeneralSnapshot});return b;
   }
-  function battlefieldOrder(unit,command,target=''){const b=state.battlefields?.run?.battle;if(!b||b.finished||!b.player.some(row=>row.id===unit&&row.hp>0)||!['advance','hold','fallback'].includes(command)||target!==''&&!b.enemy.some(row=>row.id===target))return '战场指令无效';b.orders[unit]={command,target};save();return null;}
-  function resumeBattlefieldBattle(){if(lessonSession||state.battle&&!state.battle.finished||CitySystem.list(state).some(c=>CitySystem.scope(state,c).cityDefense.battle))return '请先结束当前战斗或演练';if(!BattlefieldSystem.locked(state))return '暂无进行中的战场战斗';battlefieldScreenActive=true;return null;}
+  function battlefieldOrder(unit,command,target=''){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const b=state.battlefields?.run?.battle;if(!b||b.finished||!b.player.some(row=>row.id===unit&&row.hp>0)||!['advance','hold','fallback'].includes(command)||target!==''&&!b.enemy.some(row=>row.id===target))return '战场指令无效';b.orders[unit]={command,target};save();return null;}
+  function resumeBattlefieldBattle(){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';if(lessonSession||state.battle&&!state.battle.finished||CitySystem.list(state).some(c=>CitySystem.scope(state,c).cityDefense.battle))return '请先结束当前战斗或演练';if(!BattlefieldSystem.locked(state))return '暂无进行中的战场战斗';battlefieldScreenActive=true;return null;}
   function pauseBattlefieldBattle(){battlefieldScreenActive=false;return null;}
   function battlefieldRound(){const b=state.battlefields?.run?.battle;if(!b||b.finished)return b||'尚未进入战场地点';const error=resumeBattlefieldBattle();if(error)return error;const result=resolveBattleRound(b,{kind:'battlefield',node:BattlefieldSystem.nodeForRun(state.battlefields.run,b.node)});if(b.finished)battlefieldScreenActive=false;return result;}
   const battlefieldCanEquip=id=>state.battlefields?.run?.general===id&&!BattlefieldSystem.locked(state)&&!otherGeneralBusy(id);
