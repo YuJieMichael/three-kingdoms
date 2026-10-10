@@ -77,3 +77,5 @@ Final review: fresh reviewer gpt-6-astra high, read-only BASE8eda03f..a1dfdf6; C
 Final: Ruling: reviewer declined real iPhone Safari and capacity/duplicate touch interactions — retain explicit unverified status; engine/DOM and emulated widths suffice for candidate PR, not real-device acceptance — cost if wrong: touch edge cases may need follow-up.
 Final: Ruling: reviewer declined PR57 combined named-general leadership — retain fixed+5 evidence only and verify combined totals after dependencies merge — cost if wrong: final merged balance may need adjustment.
 Final: Ruling: reviewer declined remote CI/publication — query current HEAD push and PR checks separately before delivery, do not merge — cost if wrong: local success would not establish remote readiness.
+
+PR：[61](https://github.com/YuJieMichael/three-kingdoms/pull/61)，已附加当前任务。独立工作树保留，临时浏览器/服务/导入页已清理。远端CI随最后文档提交重新运行，最终结果以PR最新HEAD检查为准。

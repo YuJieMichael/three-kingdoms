@@ -144,3 +144,5 @@ System接口新增/改造：`quote(s,general,army,api,campaign='yellow_turban')`
 Task6模拟、四种尺寸与实际15节点通关已完成，693项全量测试通过。七日循环开两副本箱并穿蛮族全套；名将总值仅分析本批固定统帅+5，前置PR57的合并组合待发布依赖验证。容量满/重复部位边界由真实引擎/DOM回归覆盖，未把它们全部声称为浏览器点击；真机Safari未测。上方两项保持未勾，避免将部分边界验证误记为完全按原计划执行。独立整批审查与PR/CI结果待收尾补入。初值经正常模拟可通过，未调整敌军表。
 
 最终整批独立审查通过，未发现Critical/Important/Minor问题；693/693与正常模拟由审查者独立复现。审查未判断真机Safari、PR57合并组合及远端CI，裁定和边界已归档QA。
+
+已推送并创建[PR61](https://github.com/YuJieMichael/three-kingdoms/pull/61)、原生附加任务；远端push/PR CI已启动。交付前另核对最终HEAD，保持不合并。
