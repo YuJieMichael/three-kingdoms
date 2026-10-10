@@ -1,3 +1,4 @@
+const {loadCompactUI}=require('./helpers/compact-ui.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {loadGame}=require('./helpers/game.cjs');
 function ui(){const e=loadGame();e.evaluate(`
@@ -7,7 +8,7 @@ function ui(){const e=loadGame();e.evaluate(`
  function cityHeroHome(id){return Game.heroCity(id);}function activeCityMeta(){return Game.cityMeta(Game.currentCityId());}function cityName(){return '青溪城';}function heroSalaryHTML(){return '';}
  const modalBody={querySelectorAll:()=>[],querySelector:()=>null};let modalHTML='',modalTitle='';function showModal(title,body,footer){modalTitle=title;modalHTML=body+(footer||'');}
  const modal={close(){}};let page='heroes';function render(){}function toast(){}function actResult(error){return !error;}function btn(text,action,id='',style='',disabled=false){return '<button data-action="'+action+'" data-id="'+id+'"'+(disabled?' disabled':'')+'>'+text+'</button>';}
- `);e.evaluate(fs.readFileSync(path.join(__dirname,'../hero-ui.js'),'utf8'));return e;}
+ `);loadCompactUI(e);e.evaluate(fs.readFileSync(path.join(__dirname,'../hero-ui.js'),'utf8'));return e;}
 function click(e,action,id=''){e.evaluate(`heroListeners[0]({target:{closest:()=>({dataset:{action:${JSON.stringify(action)},id:${JSON.stringify(id)}},disabled:false})}})`);}
 test('hero detail exposes all eight exclusive slots and old accessories retain their attributes',()=>{
  const e=ui(),G=e.Game,H=e.evaluate('HeroSystem');H.gift();H.equip(G.state.equipment.find(x=>x.slot==='accessory').id,'lin');e.evaluate("heroDetailModal('lin')");const html=e.evaluate('modalHTML');
