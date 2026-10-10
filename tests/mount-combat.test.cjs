@@ -41,3 +41,21 @@ test('mounted return and early recall keep the dispatched return duration after 
   else{e.advance(G.state.expedition.end-e.now()+1);G.startBattle();for(const row of G.state.battle.enemy)row.hp=0;G.battleRound();assert.equal(G.state.expedition.end-G.state.expedition.start,frozen*1000);}
  }
 });
+
+test('idle horses never speed up an unassigned quote or legacy garrison recall',()=>{
+ const e=prepare(),G=e.Game,H=e.evaluate('HeroSystem'),id='wild_31_32',army=Object.fromEntries(Object.keys(G.units).map(k=>[k,k==='archer'?20:0])),base=G.marchQuote(id,army).returnSeconds;
+ H.addEquipment(G.state,'mount',1);assert.equal(H.mountProfile(G.state,'').speed,0);assert.equal(G.marchQuote(id,army).returnSeconds,base);
+ G.state.conquered[id]=true;G.state.landClaims[id]={at:e.now(),level:G.getNode(id).level};G.state.garrisons[id]={general:'lin',army,phase:'stationed',start:e.now(),end:null};
+ assert.equal(G.recallGarrison(id),null);assert.equal(G.state.garrisons[id].end-G.state.garrisons[id].start,base*1000);assert.equal(G.validSave(G.state),true);
+});
+test('positive mounted expedition and garrison profiles require a valid return duration',()=>{
+ const e=prepare(true),G=e.Game;G.dispatch('field','lin',{archer:1,cavalry:20});assert.equal(G.validSave(G.state),true);
+ for(const value of [undefined,NaN,0,Infinity]){const bad=cloneActiveSave(G.state);bad.expedition.returnSeconds=value;assert.equal(G.validSave(bad),false);}
+ const saved=cloneActiveSave(G.state),trip=saved.expedition,id='wild_31_32';saved.expedition=null;saved.conquered[id]=true;saved.landClaims[id]={at:e.now(),level:G.getNode(id).level};saved.garrisons[id]={general:'lin',army:trip.army,phase:'stationed',start:e.now(),end:null,mountProfile:trip.mountProfile,returnSeconds:trip.returnSeconds};
+ const active=cloneActiveSave(saved);assert.equal(G.validSave(active),true);delete active.garrisons[id].returnSeconds;assert.equal(G.validSave(active),false);
+});
+test('legacy battle returns do not inherit a horse equipped after departure',()=>{
+ const e=prepare(),G=e.Game;G.dispatch('wild_0_0','lin',{archer:1,cavalry:20});delete G.state.expedition.mountProfile;
+ const expected=G.marchQuote('wild_0_0',{archer:1,cavalry:20}).returnSeconds;e.evaluate("HeroSystem.addEquipment(Game.state,'mount',1).hero='lin'");
+ e.advance(G.state.expedition.end-e.now()+1);G.startBattle();for(const row of G.state.battle.enemy)row.hp=0;G.battleRound();assert.equal(G.state.expedition.end-G.state.expedition.start,expected*1000);
+});

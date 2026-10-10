@@ -141,7 +141,7 @@ const NPCDefense=(()=>{
     const nearest=(rows,pos)=>[...rows].sort((a,c)=>Math.abs(a.pos-pos)-Math.abs(c.pos-pos))[0];
     if(b.doctrine.mode==='field')for(const r of living(b.player)){
       const order=b.doctrine.orders[r.id],enemies=living(b.enemy),preferred=enemies.find(e=>e.id===order.target),aim=preferred||nearest(enemies,r.pos);if(!aim)break;
-      const old=r.pos,movement=Math.floor(Math.min(400,Math.max(50,r.stats.speed*.5))*(typeof HeroSystem!=='undefined'?HeroSystem.movementSpeed(r.stats)/r.stats.speed:1));
+      const old=r.pos,baseMovement=Math.min(400,Math.max(50,r.stats.speed*.5)),boost=typeof HeroSystem!=='undefined'&&r.stats.speed>0?HeroSystem.movementSpeed(r.stats)/r.stats.speed:1,movement=boost===1?baseMovement:Math.floor(baseMovement*boost);
       if(order.command==='advance')r.pos=Math.min(C.distance,r.pos+Math.min(movement,Math.max(0,aim.pos-r.pos)));
       if(order.command==='fallback')r.pos=Math.max(0,r.pos-movement);
       if(old!==r.pos)log(b,api.units[r.id].name+(order.command==='fallback'?'后退':'前进')+' '+Math.round(Math.abs(old-r.pos))+'，距城门 '+Math.round(r.pos)+'。');

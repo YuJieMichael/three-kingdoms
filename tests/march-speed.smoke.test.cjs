@@ -34,3 +34,12 @@ test('battle return and stationed recall use the actual returning army and curre
   s.state.conquered[id]=true;s.state.landClaims[id]={at:stationed.now(),level:s.getNode(id).level};s.state.garrisons[id]={general:'lin',army,phase:'stationed',start:stationed.now(),end:null};s.state.tech.riding=5;s.setSpeed(10);
   const expected=s.marchQuote(id,army).returnSeconds;assert.equal(s.recallGarrison(id),null);assert.ok(Math.abs(s.state.garrisons[id].end-s.state.garrisons[id].start-expected*1000)<.001);assert.equal(s.validSave(s.state),true);
 });
+
+test('selected mounted general preview matches dispatch and updates when the selection changes',()=>{
+ const e=prepare({archer:20}),G=e.Game;e.evaluate("HeroSystem.addEquipment(Game.state,'mount',1).hero='lin'");
+ e.evaluate(`function duration(n){return n+' 秒';}function esc(n){return String(n);}function num(n){return String(n);}function dispatchArmy(){return {archer:20};}globalThis.preview={innerHTML:''};globalThis.selectedGeneral={value:'lin'};document.getElementById=id=>id==='campaign-march-preview'?preview:id==='dispatch-mode'?{dataset:{node:'wild_0_0'}}:id==='dispatch-general'?selectedGeneral:null;`);
+ e.evaluate(fs.readFileSync(path.join(__dirname,'../campaign-ui.js'),'utf8'));e.evaluate('updateCampaignMarchPreview()');
+ const quote=G.marchQuote('wild_0_0',{archer:20},'lin');assert.match(e.evaluate('preview.innerHTML'),new RegExp('预计去程 '+quote.seconds+' 秒'));assert.match(e.evaluate('preview.innerHTML'),/坐骑.*出发时/);
+ assert.equal(G.dispatch('wild_0_0','lin',{archer:20}),null);assert.equal(G.state.expedition.end-G.state.expedition.start,quote.seconds*1000);
+ e.evaluate("selectedGeneral.value='su';updateCampaignMarchPreview()");assert.match(e.evaluate('preview.innerHTML'),new RegExp('预计去程 '+G.marchQuote('wild_0_0',{archer:20},'su').seconds+' 秒'));assert.match(e.evaluate('preview.innerHTML'),/返程按届时/);
+});

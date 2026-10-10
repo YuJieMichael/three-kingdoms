@@ -28,3 +28,8 @@ test('busy or read-only mount actions cannot change equipment or money',()=>{
  G.setExternalGeneralBusy([id]);assert.match(H.unequip(horse.id),/返城/);assert.equal(horse.hero,id);
  G.setExternalGeneralBusy([]);G.releaseSaveSession();const before=JSON.stringify(G.state);assert.ok(H.buyMount());assert.equal(JSON.stringify(G.state),before);
 });
+test('direct read-only mount equip and unequip reject before changing the saved equipment',()=>{
+ const e=loadGame(),G=e.Game,H=e.evaluate('HeroSystem'),horse=H.addEquipment(G.state,'mount',1);G.releaseSaveSession();const before=JSON.stringify(G.state);
+ assert.ok(H.equip(horse.id,'lin'));assert.equal(JSON.stringify(G.state),before);
+ horse.hero='lin';const worn=JSON.stringify(G.state);assert.ok(H.unequip(horse.id));assert.equal(JSON.stringify(G.state),worn);
+});

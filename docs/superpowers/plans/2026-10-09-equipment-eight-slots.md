@@ -64,12 +64,12 @@
 - Consumes：`HeroSystem.init(s)`、`valid(s)`、`stats(e)`、`setTier(s,id)`、`gift()`、`forgeQuote(slot,tier)`、`LegendQuest.forgeQuote(s,slot)`。
 - Produces：`HeroSystem.slots`八部位；`legacySlots: string[]`固定weapon/armor/helmet/accessory；`forgeSlots: string[]`旧四部位+cloak/bracer/boots；`mountSpeed(e): number`；`stats(e)`坐骑返回空五属性对象，不向bonus加入speed。
 
-- [ ] 写失败测试：用真实loadGame和HeroSystem，断言slots恰好8键且单槽替换，不允许同将领同槽重复；旧tier3四件stats与SET_BONUS不变；追加cloak/boots/mount后setTier仍3；换下旧accessory则旧setTier为0。
-- [ ] 写失败测试：真实gift仍只增加8件旧四部位；满库空间不足不发奖不扣物品；forgeQuote('mount',1)与未知部位返回null，legendQuote对新槽位明确拒绝，旧神兵/旧refine重载数值完全相等。
-- [ ] 运行`node --test tests/equipment-eight-slots.test.cjs`。Expected: FAIL，因为新slots和限定清单尚不存在。
-- [ ] 实现清单分离和新衣物基础值；gift/drops/legend遍历显式旧清单，普通forge遍历forgeSlots。旧装备字段保持原状；本批不新增relic字段。mount只允许tier1–4、enhance0–10且无named/refine，valid拒绝未知slot和重复槽。
-- [ ] 运行上述目标测试及`node --test tests/hero-points.test.cjs tests/legendary-weapon.test.cjs tests/hero-administration.test.cjs`。Expected: 全部PASS。执行`node --check hero-system.js`和`git diff --check`，Expected: exit0。
-- [ ] 提交`feat: add eight equipment slots with legacy set compatibility`。
+- [x] 写失败测试：用真实loadGame和HeroSystem，断言slots恰好8键且单槽替换，不允许同将领同槽重复；旧tier3四件stats与SET_BONUS不变；追加cloak/boots/mount后setTier仍3；换下旧accessory则旧setTier为0。
+- [x] 写失败测试：真实gift仍只增加8件旧四部位；满库空间不足不发奖不扣物品；forgeQuote('mount',1)与未知部位返回null，legendQuote对新槽位明确拒绝，旧神兵/旧refine重载数值完全相等。
+- [x] 运行`node --test tests/equipment-eight-slots.test.cjs`。Expected: FAIL，因为新slots和限定清单尚不存在。
+- [x] 实现清单分离和新衣物基础值；gift/drops/legend遍历显式旧清单，普通forge遍历forgeSlots。旧装备字段保持原状；本批不新增relic字段。mount只允许tier1–4、enhance0–10且无named/refine，valid拒绝未知slot和重复槽。
+- [x] 运行上述目标测试及`node --test tests/hero-points.test.cjs tests/legendary-weapon.test.cjs tests/hero-administration.test.cjs`。Expected: 全部PASS。执行`node --check hero-system.js`和`git diff --check`，Expected: exit0。
+- [x] 提交`feat: add eight equipment slots with legacy set compatibility`。
 
 ### Task 2：坐骑可购置与只读速度档案
 
@@ -79,9 +79,9 @@
 - Consumes Task1的mountSpeed/slots及原equip/unequip/enhance/salvage、Game会话写入保护。
 - Produces `HeroSystem.mountProfile(s,id): {version:1,speed:number,march:number,initiative:number,cavalry:number}`（纯读取）；`validMountProfile(p): boolean`（严格5键，speed整数0–27，倍率必须匹配公式）；`mountQuote(): {gold:5000,tier:1,slot:'mount',reason:string}`；`buyMount(): string|null`（错误字符串或保存后null）。
 
-- [ ] 写失败测试：普通mount enhance0速度6、enhance10速度9；tier4 enhance10速度27，各倍率受上限约束；无坐骑返回speed0和倍率1；mountProfile生成前后存档序列化相等。
-- [ ] 写失败测试：报价只读，真实buyMount恰好扣5000黄金并增加1普通坐骑；余额4999/库满/只读会话拒绝且前后状态相同；装备转交/卸下按现有忙碌规则拒绝；正常保存重载速度一致；NaN/Infinity/负值/不匹配倍率档案拒绝。
-- [ ] 测试使用真实装备对象和生产函数，核心固定值断言如下；并覆盖上一步的合法/非法输入：
+- [x] 写失败测试：普通mount enhance0速度6、enhance10速度9；tier4 enhance10速度27，各倍率受上限约束；无坐骑返回speed0和倍率1；mountProfile生成前后存档序列化相等。
+- [x] 写失败测试：报价只读，真实buyMount恰好扣5000黄金并增加1普通坐骑；余额4999/库满/只读会话拒绝且前后状态相同；装备转交/卸下按现有忙碌规则拒绝；正常保存重载速度一致；NaN/Infinity/负值/不匹配倍率档案拒绝。
+- [x] 测试使用真实装备对象和生产函数，核心固定值断言如下；并覆盖上一步的合法/非法输入：
 
 ```js
 const e=loadGame(), H=e.evaluate('HeroSystem');
@@ -92,10 +92,10 @@ assert.equal(H.validMountProfile({version:1,speed:6,march:1.06,initiative:1.03,c
 assert.equal(H.validMountProfile({version:1,speed:6,march:2,initiative:1.03,cavalry:1.06}),false);
 ```
 
-- [ ] 运行`node --test tests/mount-equipment.test.cjs`。Expected: FAIL于新接口不存在。
-- [ ] 实现上述接口。坐骑沿用装备容量和穿戴等级，不增加自由速度加点、不添加坐骑refine、不改旧强化数值；坐骑强化文案和stats另有速度值，普通属性bonus数值不变。
-- [ ] 运行`node --test tests/mount-equipment.test.cjs tests/equipment-eight-slots.test.cjs tests/save-session.test.cjs`。Expected: 全部PASS；`node --check hero-system.js`和`git diff --check`exit0。
-- [ ] 提交`feat: add purchasable mounts and bounded speed profiles`。
+- [x] 运行`node --test tests/mount-equipment.test.cjs`。Expected: FAIL于新接口不存在。
+- [x] 实现上述接口。坐骑沿用装备容量和穿戴等级，不增加自由速度加点、不添加坐骑refine、不改旧强化数值；坐骑强化文案和stats另有速度值，普通属性bonus数值不变。
+- [x] 运行`node --test tests/mount-equipment.test.cjs tests/equipment-eight-slots.test.cjs tests/save-session.test.cjs`。Expected: 全部PASS；`node --check hero-system.js`和`git diff --check`exit0。
+- [x] 提交`feat: add purchasable mounts and bounded speed profiles`。
 
 ### Task 3：实际行军、正规战和骑兵移动
 
@@ -106,15 +106,15 @@ assert.equal(H.validMountProfile({version:1,speed:6,march:2,initiative:1.03,cava
 - Produces 新expedition/battle可选`mountProfile`冻结档案；新己方battle row.stats可选`initiative`和`moveSpeed`成对出现，敌方不继承玩家档案。旧行无字段时分别回退stats.speed。
 - `HeroSystem.actionSpeed(stats): number`返回stats.initiative或旧speed；`HeroSystem.movementSpeed(stats): number`返回stats.moveSpeed或旧speed。均纯读取，由hero-system.js导出，供计谋、正规战与NPC共用。movementSpeed返回冻结原始速度；各移动路径以movementSpeed(stats)/stats.speed取得倍率，乘在旧距离上限计算之后，避免被旧上限吞掉或再乘第二遍。
 
-- [ ] 写失败集成测试：同seed/军队/主将下无马报价、回合日志和结果与基线完全相同；普通马行军为ceil(原时间/1.06)，返程同倍率；混编仍以最慢兵種决定；无主将侦察/运输不借马。
-- [ ] 写失败测试：dispatch时保存mountProfile，途中穿戴变化不改变end/returnSeconds/战斗快照；读取第二城与正常重载不改变档案；旧在途无档案不得补当前马，旧战斗仍用旧speed。
-- [ ] 写失败战斗测试：同speed骑兵装马后先行动，未装马仍守方优先；只cavalry/heavy的移动增加，archer/spear/器械距离不变；推进/撤退/计谋强制移动只乘一次；预备射击顺序使用initiative，骑兵移动使用moveSpeed；敌军不继承我军马。保存后篡改成负值或和mountProfile不匹配的快照被validSave拒绝。
-- [ ] 运行`node --test tests/mount-combat.test.cjs tests/march-speed.smoke.test.cjs`。Expected: FAIL于马未影响真实行军/排序/移动。
-- [ ] 在marchQuote套用主将速度档案，dispatch只计算一次报价并冻结。startBattle使用出征档案；新己方stats.speed保留基础数值，initiative按全兵种倍率，moveSpeed仅骑兵倍率；战场长度与基础射程不被改动。
-- [ ] 正规战排序改用actionSpeed，骑兵移动先保留旧上限再乘倍率；计谋反应排序/移动复用同一冻结值，不再次读装备。不修改教学固定配置的无马结果；新NPC野战仅应用骑兵移动并冻结档案，保留原城防阶段顺序。
-- [ ] 完善frozen/rows及NPC快照校验：缺字段兼容，出现新档案必须合法、成对字段匹配；不要迁移旧战斗stats.speed为新档案。运行目标测试及`node --test tests/battle-stratagems.smoke.test.cjs tests/hero-actions.smoke.test.cjs tests/defense-doctrine.test.cjs tests/city-defense.test.cjs tests/online-runtime.test.cjs`。Expected: 全部PASS。
-- [ ] 写并运行`node tests/balance/mount-speed.cjs`：同一真实开局经济经礼包/建设/操练/购置流程取得普通马；不得填测试资源替代正常获取。至少包含无马/普通马/最高合法速度三组、混编与纯骑兵、5次固定种子；验收无马差异0、最高行军时间不低于原80%、initiative倍率不超过1.15、骑兵移动不超过1.25、普通非骑兵移动差异0、额外lead差异0。Expected: 断言通过并输出耗时/黄金/先手/移动报告。
-- [ ] `node --check`上述修改JS、`git diff --check`exit0；提交`feat: apply frozen mount speed to marches and battles`。
+- [x] 写失败集成测试：同seed/军队/主将下无马报价、回合日志和结果与基线完全相同；普通马行军为ceil(原时间/1.06)，返程同倍率；混编仍以最慢兵種决定；无主将侦察/运输不借马。
+- [x] 写失败测试：dispatch时保存mountProfile，途中穿戴变化不改变end/returnSeconds/战斗快照；读取第二城与正常重载不改变档案；旧在途无档案不得补当前马，旧战斗仍用旧speed。
+- [x] 写失败战斗测试：同speed骑兵装马后先行动，未装马仍守方优先；只cavalry/heavy的移动增加，archer/spear/器械距离不变；推进/撤退/计谋强制移动只乘一次；预备射击顺序使用initiative，骑兵移动使用moveSpeed；敌军不继承我军马。保存后篡改成负值或和mountProfile不匹配的快照被validSave拒绝。
+- [x] 运行`node --test tests/mount-combat.test.cjs tests/march-speed.smoke.test.cjs`。Expected: FAIL于马未影响真实行军/排序/移动。
+- [x] 在marchQuote套用主将速度档案，dispatch只计算一次报价并冻结。startBattle使用出征档案；新己方stats.speed保留基础数值，initiative按全兵种倍率，moveSpeed仅骑兵倍率；战场长度与基础射程不被改动。
+- [x] 正规战排序改用actionSpeed，骑兵移动先保留旧上限再乘倍率；计谋反应排序/移动复用同一冻结值，不再次读装备。不修改教学固定配置的无马结果；新NPC野战仅应用骑兵移动并冻结档案，保留原城防阶段顺序。
+- [x] 完善frozen/rows及NPC快照校验：缺字段兼容，出现新档案必须合法、成对字段匹配；不要迁移旧战斗stats.speed为新档案。运行目标测试及`node --test tests/battle-stratagems.smoke.test.cjs tests/hero-actions.smoke.test.cjs tests/defense-doctrine.test.cjs tests/city-defense.test.cjs tests/online-runtime.test.cjs`。Expected: 全部PASS。
+- [x] 写并运行`node tests/balance/mount-speed.cjs`：同一真实开局经济经礼包/建设/操练/购置流程取得普通马；不得填测试资源替代正常获取。至少包含无马/普通马/最高合法速度三组、混编与纯骑兵、5次固定种子；验收无马差异0、最高行军时间不低于原80%、initiative倍率不超过1.15、骑兵移动不超过1.25、普通非骑兵移动差异0、额外lead差异0。Expected: 断言通过并输出耗时/黄金/先手/移动报告。
+- [x] `node --check`上述修改JS、`git diff --check`exit0；提交`feat: apply frozen mount speed to marches and battles`。
 
 ### Task 4：手机八栏与发布准备
 
@@ -136,4 +136,4 @@ assert.equal(H.validMountProfile({version:1,speed:6,march:2,initiative:1.03,cava
 
 五项Review Focus分别由Task1旧套装/奖品测试、Task2失败原子性、Task3旧档/多城/计谋冻结测试覆盖；Task4浏览器验证补实际交互。无生产新脚本，不漏新增清单；运行时生成在Task4。
 
-计划已自检：任务接口一致；试玩值明确且有上限；各新部位有真实来源（新衣物打造，普通马购置），剧情奇物后续才发。旧神器遍历限制在Task1与UI Task4一致。待负责人审阅本计划；沿用本人逐项执行的方法，不自动发布。
+计划已自检：任务接口一致；试玩值明确且有上限；各新部位有真实来源（新衣物打造，普通马购置），剧情奇物后续才发。旧神器遍历限制在Task1与UI Task4一致。负责人已确认，装备前置批次已实施；逐项验证记录见QA及执行台账。黄巾实施计划保留，尚未实施。本批只创建待审PR，不自动发布。
