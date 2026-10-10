@@ -1,0 +1,2297 @@
+{
+  "version": 2,
+  "manualSchema": 1,
+  "last": 1791194400000,
+  "speed": 1,
+  "autoUpgrade": false,
+  "autoResearch": false,
+  "starterGiftClaimed": false,
+  "starterGiftVersion": 0,
+  "missionSchema": 2,
+  "missionClaims": [],
+  "res": {
+    "food": 5000,
+    "wood": 5000,
+    "stone": 5000,
+    "iron": 5000,
+    "gold": 5000
+  },
+  "buildings": {
+    "house": 0,
+    "academy": 0,
+    "inn": 0,
+    "market": 0,
+    "warehouse": 0,
+    "drill": 1,
+    "barracks": 4,
+    "tavern": 0,
+    "embassy": 0,
+    "smith": 0,
+    "workshop": 0,
+    "stable": 0,
+    "post": 0,
+    "beacon": 0,
+    "hall": 3,
+    "wall": 0
+  },
+  "cityLayout": [
+    "drill",
+    "barracks",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "hall",
+    "reserved",
+    null,
+    null,
+    null,
+    null,
+    "reserved",
+    "reserved",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "cityLevels": [
+    1,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "tactics": {
+    "worker": {
+      "command": "advance",
+      "target": ""
+    },
+    "militia": {
+      "command": "advance",
+      "target": ""
+    },
+    "scout": {
+      "command": "advance",
+      "target": ""
+    },
+    "spear": {
+      "command": "advance",
+      "target": ""
+    },
+    "shield": {
+      "command": "advance",
+      "target": ""
+    },
+    "archer": {
+      "command": "advance",
+      "target": ""
+    },
+    "cavalry": {
+      "command": "advance",
+      "target": ""
+    },
+    "heavy": {
+      "command": "advance",
+      "target": ""
+    },
+    "wagon": {
+      "command": "advance",
+      "target": ""
+    },
+    "ballista": {
+      "command": "hold",
+      "target": ""
+    },
+    "ram": {
+      "command": "advance",
+      "target": ""
+    },
+    "catapult": {
+      "command": "hold",
+      "target": ""
+    }
+  },
+  "plots": [
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    },
+    {
+      "type": null,
+      "level": 0
+    }
+  ],
+  "plotTemplate": {
+    "id": null,
+    "active": false,
+    "mode": "fill"
+  },
+  "army": {
+    "worker": 0,
+    "militia": 0,
+    "scout": 0,
+    "spear": 0,
+    "shield": 0,
+    "archer": 0,
+    "cavalry": 0,
+    "heavy": 0,
+    "wagon": 0,
+    "ballista": 0,
+    "ram": 0,
+    "catapult": 0
+  },
+  "captives": {
+    "worker": 0,
+    "militia": 0,
+    "scout": 0,
+    "spear": 0,
+    "shield": 0,
+    "archer": 0,
+    "cavalry": 0,
+    "heavy": 0,
+    "wagon": 0,
+    "ballista": 0,
+    "ram": 0,
+    "catapult": 0
+  },
+  "buildQueue": [],
+  "trainQueue": [],
+  "researchQueue": null,
+  "tech": {
+    "plant": 0,
+    "logging": 0,
+    "mining": 0,
+    "smelting": 0,
+    "manufacture": 0,
+    "leadership": 0,
+    "scouting": 0,
+    "training": 0,
+    "combat": 0,
+    "protection": 0,
+    "load": 0,
+    "march": 0,
+    "riding": 0,
+    "shooting": 0,
+    "storage": 0,
+    "supply": 0,
+    "construction": 0,
+    "fortification": 0,
+    "repair": 0,
+    "plunder": 0,
+    "researching": 0
+  },
+  "generals": [
+    "lin",
+    "su"
+  ],
+  "generalLevels": {
+    "lin": 5,
+    "su": 1
+  },
+  "generalXp": {
+    "lin": 0,
+    "su": 0
+  },
+  "customGenerals": [],
+  "innCandidates": [],
+  "governor": "su",
+  "population": 0,
+  "morale": 80,
+  "unrest": 0,
+  "tax": 20,
+  "storageAllocation": {
+    "food": 25,
+    "wood": 25,
+    "stone": 25,
+    "iron": 25
+  },
+  "gems": 1000,
+  "inventory": {
+    "labor": 1,
+    "reinforcementToken": 1
+  },
+  "buffs": {},
+  "itemCooldowns": {},
+  "civicCooldowns": {
+    "comfort": 0,
+    "levy": 0
+  },
+  "trialGiftAt": 0,
+  "ruler": "青溪城主",
+  "banner": "青",
+  "scouted": {},
+  "defenses": {
+    "trap": 0,
+    "abatis": 0,
+    "tower": 0,
+    "logs": 0,
+    "rocks": 0
+  },
+  "defenseQueue": [],
+  "landClaims": {},
+  "conquered": {},
+  "raided": {},
+  "garrisons": {},
+  "towns": {
+    "fort": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 400
+    },
+    "yellow_qingshi": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 200
+    },
+    "yellow_baisha": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 300
+    },
+    "yellow_chigang": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 400
+    },
+    "yellow_liulin": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 200
+    },
+    "yellow_heishan": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 300
+    },
+    "yellow_yuntai": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 500
+    },
+    "yellow_tieling": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 500
+    },
+    "yellow_huangsha": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 600
+    },
+    "named_hanchuan": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 500
+    },
+    "named_luoshui": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 600
+    },
+    "named_baishi": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 600
+    },
+    "named_beiyuan": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 1000
+    },
+    "named_heluo": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 1000
+    },
+    "named_zhongyuan": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 1500
+    },
+    "named_luoyang": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 2000
+    },
+    "named_xiaopei": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 1500
+    },
+    "named_wancheng": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 1500
+    },
+    "named_xiapi": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 3000
+    },
+    "named_beihai": {
+      "morale": 100,
+      "unrest": 0,
+      "population": 2500
+    }
+  },
+  "yellowGold": {},
+  "openCitySites": {
+    "yellow_qingshi": {
+      "x": 26,
+      "y": 31
+    },
+    "yellow_baisha": {
+      "x": 41,
+      "y": 38
+    },
+    "yellow_chigang": {
+      "x": 21,
+      "y": 20
+    },
+    "yellow_liulin": {
+      "x": 37,
+      "y": 40
+    },
+    "yellow_heishan": {
+      "x": 24,
+      "y": 40
+    },
+    "yellow_yuntai": {
+      "x": 44,
+      "y": 24
+    },
+    "yellow_tieling": {
+      "x": 48,
+      "y": 42
+    },
+    "yellow_huangsha": {
+      "x": 14,
+      "y": 28
+    },
+    "named_hanchuan": {
+      "x": 28,
+      "y": 20
+    },
+    "named_luoshui": {
+      "x": 46,
+      "y": 22
+    },
+    "named_baishi": {
+      "x": 51,
+      "y": 20
+    },
+    "named_beiyuan": {
+      "x": 29,
+      "y": 10
+    },
+    "named_heluo": {
+      "x": 49,
+      "y": 26
+    },
+    "named_zhongyuan": {
+      "x": 39,
+      "y": 16
+    },
+    "named_luoyang": {
+      "x": 58,
+      "y": 18
+    },
+    "named_xiaopei": {
+      "x": 42,
+      "y": 45
+    },
+    "named_wancheng": {
+      "x": 20,
+      "y": 46
+    },
+    "named_xiapi": {
+      "x": 50,
+      "y": 50
+    },
+    "named_beihai": {
+      "x": 57,
+      "y": 37
+    }
+  },
+  "cooldowns": {},
+  "expedition": null,
+  "expeditions": [],
+  "battle": null,
+  "reports": [],
+  "mission": 0,
+  "stats": {
+    "trained": 0,
+    "victories": 0
+  },
+  "seen": [],
+  "tutorial": false,
+  "activityMetrics": {
+    "build": 0,
+    "field_build": 0,
+    "train": 0,
+    "train_archer": 0,
+    "train_cavalry": 0,
+    "research": 0,
+    "victory": 0,
+    "kill": 0,
+    "occupy": 0,
+    "raid_food": 0,
+    "raid_wood": 0,
+    "raid_stone": 0,
+    "raid_iron": 0,
+    "raid_gold": 0,
+    "scout": 0,
+    "civic": 0,
+    "comfort": 0,
+    "levy": 0,
+    "item": 0,
+    "defense": 0,
+    "trade": 0,
+    "capture": 0,
+    "captive_recruit": 0,
+    "train_worker": 0,
+    "train_militia": 0,
+    "train_scout": 0,
+    "train_spear": 0,
+    "train_shield": 0,
+    "train_heavy": 0,
+    "train_wagon": 0,
+    "train_ballista": 0,
+    "train_ram": 0,
+    "train_catapult": 0,
+    "city_build": 0,
+    "research_production": 0,
+    "research_military": 0,
+    "wild_victory": 0,
+    "siege_victory": 0,
+    "win_level_3": 0,
+    "win_level_5": 0,
+    "win_level_8": 0,
+    "trade_buy": 0,
+    "trade_sell": 0
+  },
+  "jewelPity": 0,
+  "prestige": 0,
+  "copper": 0,
+  "jewels": {
+    "pearl": 0,
+    "coral": 0,
+    "glass": 0,
+    "amber": 0,
+    "agate": 0,
+    "crystal": 0,
+    "jadeite": 0,
+    "jade": 0,
+    "nightPearl": 0
+  },
+  "epic": {
+    "kills": 0,
+    "killRewards": 0,
+    "resources": {
+      "food": 0,
+      "wood": 0,
+      "stone": 0,
+      "iron": 0,
+      "gold": 0
+    },
+    "troops": 0,
+    "treasures": 0,
+    "legacyAccess": false
+  },
+  "progressionSchema": 1,
+  "daily": {
+    "start": 1791147600000,
+    "refillAt": 1791190800000,
+    "serial": 24,
+    "tasks": [
+      {
+        "uid": "1791147600000_0",
+        "template": "donate_iron",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_1",
+        "template": "item",
+        "target": 1,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_2",
+        "template": "donate_stone",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_3",
+        "template": "comfort",
+        "target": 1,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_4",
+        "template": "levy",
+        "target": 1,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_5",
+        "template": "donate_wood",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_6",
+        "template": "build",
+        "target": 2,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_7",
+        "template": "cityBuild",
+        "target": 2,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_8",
+        "template": "donate_gold",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_9",
+        "template": "civic",
+        "target": 1,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_10",
+        "template": "donate_food",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_11",
+        "template": "fields",
+        "target": 2,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_12",
+        "template": "donate_iron",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_13",
+        "template": "civic",
+        "target": 1,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_14",
+        "template": "fields",
+        "target": 2,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_15",
+        "template": "donate_food",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_16",
+        "template": "levy",
+        "target": 1,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_17",
+        "template": "donate_stone",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_18",
+        "template": "build",
+        "target": 2,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_19",
+        "template": "donate_gold",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_20",
+        "template": "item",
+        "target": 1,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_21",
+        "template": "comfort",
+        "target": 1,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_22",
+        "template": "donate_wood",
+        "target": 2000,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      },
+      {
+        "uid": "1791147600000_23",
+        "template": "cityBuild",
+        "target": 2,
+        "progress": 0,
+        "status": "available",
+        "acceptedAt": 0,
+        "tier": 1
+      }
+    ],
+    "claimed": 0,
+    "exchangeClaims": [],
+    "milestoneClaims": [],
+    "brickPurchases": {
+      "goldBrick": 0,
+      "goldBrickLarge": 0
+    },
+    "rulesVersion": 3
+  },
+  "heroPoints": {
+    "lin": {
+      "atk": 0,
+      "def": 0,
+      "pol": 0,
+      "wis": 0,
+      "lead": 0
+    },
+    "su": {
+      "atk": 0,
+      "def": 0,
+      "pol": 0,
+      "wis": 0,
+      "lead": 0
+    }
+  },
+  "heroDrills": {},
+  "equipment": [],
+  "equipmentCapacity": 50,
+  "equipmentSeq": 0,
+  "heroGiftClaimed": false,
+  "wildGenerals": {
+    "version": 1,
+    "seq": 0,
+    "rumors": [],
+    "captives": [],
+    "recruited": [],
+    "portraits": []
+  },
+  "heroLoyalty": {
+    "lin": 80,
+    "su": 80
+  },
+  "cityRoles": {
+    "commander": "",
+    "counsellor": ""
+  },
+  "honors": {
+    "office": 0,
+    "noble": 0,
+    "salaryClaims": {
+      "office": 0,
+      "noble": 0
+    }
+  },
+  "gatherings": {},
+  "heritageHistory": [],
+  "cityDefense": {
+    "autoEnabled": false,
+    "nextAt": 0,
+    "wave": 0,
+    "wins": 0,
+    "incoming": null,
+    "battle": null,
+    "reports": []
+  },
+  "warCare": {
+    "version": 1,
+    "defense": {
+      "mode": "field",
+      "autoResolve": true,
+      "orders": {
+        "worker": {
+          "command": "hold",
+          "target": ""
+        },
+        "militia": {
+          "command": "hold",
+          "target": ""
+        },
+        "scout": {
+          "command": "hold",
+          "target": ""
+        },
+        "spear": {
+          "command": "hold",
+          "target": ""
+        },
+        "shield": {
+          "command": "hold",
+          "target": ""
+        },
+        "archer": {
+          "command": "hold",
+          "target": ""
+        },
+        "cavalry": {
+          "command": "hold",
+          "target": ""
+        },
+        "heavy": {
+          "command": "hold",
+          "target": ""
+        },
+        "wagon": {
+          "command": "hold",
+          "target": ""
+        },
+        "ballista": {
+          "command": "hold",
+          "target": ""
+        },
+        "ram": {
+          "command": "hold",
+          "target": ""
+        },
+        "catapult": {
+          "command": "hold",
+          "target": ""
+        }
+      }
+    },
+    "autoHeal": false,
+    "wounded": {
+      "worker": 0,
+      "militia": 0,
+      "scout": 0,
+      "spear": 0,
+      "shield": 0,
+      "archer": 0,
+      "cavalry": 0,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 0,
+      "catapult": 0
+    },
+    "admitted": {
+      "worker": 0,
+      "militia": 0,
+      "scout": 0,
+      "spear": 0,
+      "shield": 0,
+      "archer": 0,
+      "cavalry": 0,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 0,
+      "catapult": 0
+    },
+    "treated": {
+      "worker": 0,
+      "militia": 0,
+      "scout": 0,
+      "spear": 0,
+      "shield": 0,
+      "archer": 0,
+      "cavalry": 0,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 0,
+      "catapult": 0
+    },
+    "receipts": {},
+    "archived": {
+      "counts": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 0,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "through": {}
+    }
+  },
+  "governance": {
+    "version": 1,
+    "last": 1791194400000,
+    "crisisSince": 0,
+    "starvedSince": 0,
+    "eventsEnabled": false,
+    "autoRelief": false,
+    "nextEvent": 0,
+    "eventSeq": 0,
+    "wardUntil": 0,
+    "blessingUntil": 0,
+    "log": []
+  },
+  "heroService": {
+    "version": 1,
+    "lastPay": 1791194400000,
+    "owed": {},
+    "pending": [],
+    "captives": [],
+    "seq": 0,
+    "log": []
+  },
+  "automation": {
+    "researchFocus": "balanced",
+    "researchPriority": "",
+    "reserve": {
+      "food": 0,
+      "wood": 0,
+      "stone": 0,
+      "iron": 0,
+      "gold": 0
+    },
+    "notify": true,
+    "notices": [],
+    "nextId": 1
+  },
+  "onboarding": {
+    "schema": 1,
+    "claims": [],
+    "hidden": false,
+    "lastOpen": null,
+    "firstBattle": "active",
+    "jewelClaims": []
+  },
+  "warOrders": {
+    "schema": 1,
+    "merit": 0,
+    "earned": 0,
+    "spent": 0,
+    "cleared": {
+      "field": 0,
+      "siege": 0,
+      "elite": 0
+    },
+    "wins": {
+      "field": 0,
+      "siege": 0,
+      "elite": 0
+    },
+    "nextAt": {
+      "field": 0,
+      "siege": 0,
+      "elite": 0
+    },
+    "last": null,
+    "challenges": {
+      "schema": 1,
+      "completed": {},
+      "earned": 0,
+      "lastAttempts": {}
+    }
+  },
+  "heroSkills": {},
+  "scoutQueue": [],
+  "scoutIntel": {},
+  "regionalFront": {
+    "version": 1,
+    "seq": 0,
+    "run": null,
+    "nextAt": 0,
+    "wins": {
+      "1": [
+        0,
+        0,
+        0
+      ],
+      "2": [
+        0,
+        0,
+        0
+      ],
+      "3": [
+        0,
+        0,
+        0
+      ]
+    },
+    "earnedMerit": 0,
+    "last": null
+  },
+  "heroAdministration": {
+    "schema": 1,
+    "seq": 0,
+    "prepared": null
+  },
+  "realm": {
+    "version": 1,
+    "activeCity": "capital",
+    "capital": "capital",
+    "cities": {
+      "capital": {
+        "id": "capital",
+        "name": "青溪城",
+        "node": "home",
+        "x": 32,
+        "y": 32,
+        "capital": true,
+        "createdAt": 1791194400000,
+        "data": {
+          "last": 1791194400000,
+          "res": {
+            "food": 5000,
+            "wood": 5000,
+            "stone": 5000,
+            "iron": 5000,
+            "gold": 5000
+          },
+          "buildings": {
+            "house": 0,
+            "academy": 0,
+            "inn": 0,
+            "market": 0,
+            "warehouse": 0,
+            "drill": 1,
+            "barracks": 4,
+            "tavern": 0,
+            "embassy": 0,
+            "smith": 0,
+            "workshop": 0,
+            "stable": 0,
+            "post": 0,
+            "beacon": 0,
+            "hall": 3,
+            "wall": 0
+          },
+          "cityLayout": [
+            "drill",
+            "barracks",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "hall",
+            "reserved",
+            null,
+            null,
+            null,
+            null,
+            "reserved",
+            "reserved",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "cityLevels": [
+            1,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "tactics": {
+            "worker": {
+              "command": "advance",
+              "target": ""
+            },
+            "militia": {
+              "command": "advance",
+              "target": ""
+            },
+            "scout": {
+              "command": "advance",
+              "target": ""
+            },
+            "spear": {
+              "command": "advance",
+              "target": ""
+            },
+            "shield": {
+              "command": "advance",
+              "target": ""
+            },
+            "archer": {
+              "command": "advance",
+              "target": ""
+            },
+            "cavalry": {
+              "command": "advance",
+              "target": ""
+            },
+            "heavy": {
+              "command": "advance",
+              "target": ""
+            },
+            "wagon": {
+              "command": "advance",
+              "target": ""
+            },
+            "ballista": {
+              "command": "hold",
+              "target": ""
+            },
+            "ram": {
+              "command": "advance",
+              "target": ""
+            },
+            "catapult": {
+              "command": "hold",
+              "target": ""
+            }
+          },
+          "plots": [
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            },
+            {
+              "type": null,
+              "level": 0
+            }
+          ],
+          "plotTemplate": {
+            "id": null,
+            "active": false,
+            "mode": "fill"
+          },
+          "army": {
+            "worker": 0,
+            "militia": 0,
+            "scout": 0,
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 0,
+            "heavy": 0,
+            "wagon": 0,
+            "ballista": 0,
+            "ram": 0,
+            "catapult": 0
+          },
+          "captives": {
+            "worker": 0,
+            "militia": 0,
+            "scout": 0,
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 0,
+            "heavy": 0,
+            "wagon": 0,
+            "ballista": 0,
+            "ram": 0,
+            "catapult": 0
+          },
+          "buildQueue": [],
+          "trainQueue": [],
+          "researchQueue": null,
+          "tech": {
+            "plant": 0,
+            "logging": 0,
+            "mining": 0,
+            "smelting": 0,
+            "manufacture": 0,
+            "leadership": 0,
+            "scouting": 0,
+            "training": 0,
+            "combat": 0,
+            "protection": 0,
+            "load": 0,
+            "march": 0,
+            "riding": 0,
+            "shooting": 0,
+            "storage": 0,
+            "supply": 0,
+            "construction": 0,
+            "fortification": 0,
+            "repair": 0,
+            "plunder": 0,
+            "researching": 0
+          },
+          "innCandidates": [],
+          "governor": "su",
+          "population": 0,
+          "morale": 80,
+          "unrest": 0,
+          "tax": 20,
+          "storageAllocation": {
+            "food": 25,
+            "wood": 25,
+            "stone": 25,
+            "iron": 25
+          },
+          "civicCooldowns": {
+            "comfort": 0,
+            "levy": 0
+          },
+          "defenses": {
+            "trap": 0,
+            "abatis": 0,
+            "tower": 0,
+            "logs": 0,
+            "rocks": 0
+          },
+          "defenseQueue": [],
+          "garrisons": {},
+          "expedition": null,
+          "expeditions": [],
+          "battle": null,
+          "autoUpgrade": false,
+          "autoResearch": false,
+          "automation": {
+            "researchFocus": "balanced",
+            "researchPriority": "",
+            "reserve": {
+              "food": 0,
+              "wood": 0,
+              "stone": 0,
+              "iron": 0,
+              "gold": 0
+            },
+            "notify": true,
+            "notices": [],
+            "nextId": 1
+          },
+          "cityRoles": {
+            "commander": "",
+            "counsellor": ""
+          },
+          "gatherings": {},
+          "cityDefense": {
+            "autoEnabled": false,
+            "nextAt": 0,
+            "wave": 0,
+            "wins": 0,
+            "incoming": null,
+            "battle": null,
+            "reports": []
+          },
+          "scoutQueue": [],
+          "scoutIntel": {},
+          "regionalFront": {
+            "version": 1,
+            "seq": 0,
+            "run": null,
+            "nextAt": 0,
+            "wins": {
+              "1": [
+                0,
+                0,
+                0
+              ],
+              "2": [
+                0,
+                0,
+                0
+              ],
+              "3": [
+                0,
+                0,
+                0
+              ]
+            },
+            "earnedMerit": 0,
+            "last": null
+          },
+          "heroAdministration": {
+            "schema": 1,
+            "seq": 0,
+            "prepared": null
+          },
+          "warCare": {
+            "version": 1,
+            "defense": {
+              "mode": "field",
+              "autoResolve": true,
+              "orders": {
+                "worker": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "militia": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "scout": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "spear": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "shield": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "archer": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "cavalry": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "heavy": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "wagon": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "ballista": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "ram": {
+                  "command": "hold",
+                  "target": ""
+                },
+                "catapult": {
+                  "command": "hold",
+                  "target": ""
+                }
+              }
+            },
+            "autoHeal": false,
+            "wounded": {
+              "worker": 0,
+              "militia": 0,
+              "scout": 0,
+              "spear": 0,
+              "shield": 0,
+              "archer": 0,
+              "cavalry": 0,
+              "heavy": 0,
+              "wagon": 0,
+              "ballista": 0,
+              "ram": 0,
+              "catapult": 0
+            },
+            "admitted": {
+              "worker": 0,
+              "militia": 0,
+              "scout": 0,
+              "spear": 0,
+              "shield": 0,
+              "archer": 0,
+              "cavalry": 0,
+              "heavy": 0,
+              "wagon": 0,
+              "ballista": 0,
+              "ram": 0,
+              "catapult": 0
+            },
+            "treated": {
+              "worker": 0,
+              "militia": 0,
+              "scout": 0,
+              "spear": 0,
+              "shield": 0,
+              "archer": 0,
+              "cavalry": 0,
+              "heavy": 0,
+              "wagon": 0,
+              "ballista": 0,
+              "ram": 0,
+              "catapult": 0
+            },
+            "receipts": {},
+            "archived": {
+              "counts": {
+                "worker": 0,
+                "militia": 0,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "through": {}
+            }
+          },
+          "governance": {
+            "version": 1,
+            "last": 1791194400000,
+            "crisisSince": 0,
+            "starvedSince": 0,
+            "eventsEnabled": false,
+            "autoRelief": false,
+            "nextEvent": 0,
+            "eventSeq": 0,
+            "wardUntil": 0,
+            "blessingUntil": 0,
+            "log": []
+          }
+        }
+      }
+    },
+    "heroLocations": {
+      "lin": "capital",
+      "su": "capital"
+    },
+    "wildOwners": {},
+    "logistics": [],
+    "logisticsSeq": 0,
+    "logisticsReports": [],
+    "namedCities": {
+      "version": 1,
+      "developed": [],
+      "garrisons": {
+        "named_xiaopei": {
+          "loyalty": 100,
+          "updatedAt": 1791194400000,
+          "pressureAt": 0,
+          "army": {
+            "shield": 3000,
+            "spear": 4500,
+            "archer": 3500,
+            "cavalry": 1500
+          },
+          "armyAt": 1791194400000,
+          "captive": false,
+          "recruited": false,
+          "persuadeDay": -1,
+          "sowAt": 0
+        },
+        "named_wancheng": {
+          "loyalty": 100,
+          "updatedAt": 1791194400000,
+          "pressureAt": 0,
+          "army": {
+            "shield": 4500,
+            "spear": 3000,
+            "archer": 3000,
+            "cavalry": 1000,
+            "ballista": 60
+          },
+          "armyAt": 1791194400000,
+          "captive": false,
+          "recruited": false,
+          "persuadeDay": -1,
+          "sowAt": 0
+        },
+        "named_xiapi": {
+          "loyalty": 100,
+          "updatedAt": 1791194400000,
+          "pressureAt": 0,
+          "army": {
+            "shield": 7000,
+            "spear": 7000,
+            "archer": 8000,
+            "cavalry": 6000,
+            "heavy": 1500,
+            "ballista": 150,
+            "catapult": 40
+          },
+          "armyAt": 1791194400000,
+          "captive": false,
+          "recruited": false,
+          "persuadeDay": -1,
+          "sowAt": 0
+        },
+        "named_beihai": {
+          "loyalty": 100,
+          "updatedAt": 1791194400000,
+          "pressureAt": 0,
+          "army": {
+            "shield": 6000,
+            "spear": 6000,
+            "archer": 9000,
+            "cavalry": 3000,
+            "ballista": 200
+          },
+          "armyAt": 1791194400000,
+          "captive": false,
+          "recruited": false,
+          "persuadeDay": -1,
+          "sowAt": 0
+        }
+      }
+    },
+    "specialties": {},
+    "supplyLines": {
+      "version": 1,
+      "nextId": 1,
+      "lines": []
+    }
+  },
+  "battlefields": {
+    "version": 1,
+    "seq": 1,
+    "starterClaimed": false,
+    "run": {
+      "id": "yellow:1",
+      "campaign": "yellow_turban",
+      "configVersion": 1,
+      "sourceCity": "capital",
+      "general": "lin",
+      "startedAt": 1791194400000,
+      "completed": [
+        "m1"
+      ],
+      "selectedNode": null,
+      "army": {
+        "worker": 0,
+        "militia": 783,
+        "scout": 0,
+        "spear": 0,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "pool": 2210,
+      "wounded": {
+        "worker": 0,
+        "militia": 7,
+        "scout": 0,
+        "spear": 0,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "medicalQuota": 0,
+      "battle": {
+        "kind": "battlefield",
+        "runId": "yellow:1",
+        "completedBefore": [],
+        "rules": 3,
+        "length": 220,
+        "node": "m1",
+        "general": "lin",
+        "sourceCity": "capital",
+        "generalSnapshot": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 80,
+          "def": 70,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 5,
+          "wis": 58,
+          "lead": 50
+        },
+        "skillProfile": {
+          "route": "",
+          "level": 0,
+          "attackByUnit": {},
+          "marchFactor": 1,
+          "gateFactor": 1
+        },
+        "mountProfile": {
+          "version": 1,
+          "speed": 0,
+          "march": 1,
+          "initiative": 1,
+          "cavalry": 1
+        },
+        "legendProcChance": 0,
+        "mode": "raid",
+        "siege": false,
+        "gate": null,
+        "militia": 0,
+        "round": 1,
+        "machineGateAttacks": 0,
+        "currentRoundSummary": {
+          "round": 1,
+          "events": [
+            {
+              "type": "move",
+              "side": "enemy",
+              "unit": "militia",
+              "target": "",
+              "from": 220,
+              "to": 20,
+              "damage": 0,
+              "killed": 0,
+              "counter": false,
+              "ranged": false
+            },
+            {
+              "type": "strike",
+              "side": "enemy",
+              "unit": "militia",
+              "target": "militia",
+              "from": 20,
+              "to": 0,
+              "damage": 3568,
+              "killed": 17,
+              "counter": false,
+              "ranged": false
+            },
+            {
+              "type": "recoil",
+              "side": "player",
+              "unit": "militia",
+              "target": "militia",
+              "from": 0,
+              "to": 0,
+              "damage": 3568,
+              "killed": 17,
+              "counter": false,
+              "ranged": false
+            },
+            {
+              "type": "strike",
+              "side": "player",
+              "unit": "militia",
+              "target": "militia",
+              "from": 0,
+              "to": 20,
+              "damage": 20000,
+              "killed": 100,
+              "counter": true,
+              "ranged": false
+            },
+            {
+              "type": "recoil",
+              "side": "enemy",
+              "unit": "militia",
+              "target": "militia",
+              "from": 20,
+              "to": 20,
+              "damage": 20000,
+              "killed": 100,
+              "counter": true,
+              "ranged": false
+            }
+          ]
+        },
+        "player": [
+          {
+            "id": "militia",
+            "initial": 800,
+            "stats": {
+              "hp": 200,
+              "atk": 50,
+              "def": 50,
+              "range": 20,
+              "speed": 200,
+              "initiative": 200,
+              "moveSpeed": 200
+            },
+            "hp": 156432,
+            "maxHp": 160000,
+            "pos": 0,
+            "defending": false
+          }
+        ],
+        "enemy": [
+          {
+            "id": "militia",
+            "initial": 100,
+            "stats": {
+              "hp": 200,
+              "atk": 50,
+              "def": 50,
+              "range": 20,
+              "speed": 200
+            },
+            "hp": 0,
+            "maxHp": 20000,
+            "pos": 20,
+            "defending": false
+          }
+        ],
+        "orders": {
+          "militia": {
+            "command": "advance",
+            "target": ""
+          }
+        },
+        "enemyOrders": {
+          "militia": {
+            "command": "advance",
+            "target": ""
+          }
+        },
+        "enemyGeneralSnapshot": {
+          "id": "enemy_m1",
+          "name": "村落解围",
+          "wildLine": "",
+          "atk": 0,
+          "def": 0,
+          "pol": 0,
+          "wis": 0,
+          "lead": 0
+        },
+        "log": [
+          "乡民困在村口，义军已封住退路。",
+          "—— 第 1 回合 ——",
+          "敌军义兵向前200，位置 220 → 20",
+          "敌军义兵攻击义兵，距离 20，伤害 3568，击倒 17 人",
+          "我军义兵反击义兵，距离 20，伤害 20000，击倒 100 人"
+        ],
+        "auto": false,
+        "finished": true,
+        "result": {
+          "won": true,
+          "back": {
+            "worker": 0,
+            "militia": 783,
+            "scout": 0,
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 0,
+            "heavy": 0,
+            "wagon": 0,
+            "ballista": 0,
+            "ram": 0,
+            "catapult": 0
+          },
+          "lost": {
+            "worker": 0,
+            "militia": 17,
+            "scout": 0,
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 0,
+            "heavy": 0,
+            "wagon": 0,
+            "ballista": 0,
+            "ram": 0,
+            "catapult": 0
+          },
+          "recovered": {
+            "worker": 0,
+            "militia": 10,
+            "scout": 0,
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 0,
+            "heavy": 0,
+            "wagon": 0,
+            "ballista": 0,
+            "ram": 0,
+            "catapult": 0
+          },
+          "round": 1
+        },
+        "stratagem": {
+          "version": 2,
+          "round": 2,
+          "phase": "planning",
+          "leaders": {
+            "player": {
+              "id": "lin",
+              "wildLine": ""
+            },
+            "enemy": {
+              "id": "enemy_m1",
+              "wildLine": ""
+            }
+          },
+          "identities": {
+            "player": "",
+            "enemy": ""
+          },
+          "points": {
+            "player": 3,
+            "enemy": 3
+          },
+          "submitted": {
+            "player": 0,
+            "enemy": 0
+          },
+          "identityUsed": {
+            "player": false,
+            "enemy": false
+          },
+          "seq": 0,
+          "plans": [],
+          "reservations": [],
+          "spent": [],
+          "orders": null,
+          "events": []
+        }
+      },
+      "techSnapshot": {
+        "plant": 0,
+        "logging": 0,
+        "mining": 0,
+        "smelting": 0,
+        "manufacture": 0,
+        "leadership": 0,
+        "scouting": 0,
+        "training": 0,
+        "combat": 0,
+        "protection": 0,
+        "load": 0,
+        "march": 0,
+        "riding": 0,
+        "shooting": 0,
+        "storage": 0,
+        "supply": 0,
+        "construction": 0,
+        "fortification": 0,
+        "repair": 0,
+        "plunder": 0,
+        "researching": 0
+      },
+      "troopBuffs": {
+        "drum": false,
+        "formation": false
+      },
+      "unitSnapshot": {
+        "militia": {
+          "hp": 200,
+          "atk": 50,
+          "def": 50,
+          "range": 20,
+          "speed": 200
+        },
+        "spear": {
+          "hp": 300,
+          "atk": 150,
+          "def": 150,
+          "range": 50,
+          "speed": 300
+        },
+        "shield": {
+          "hp": 350,
+          "atk": 100,
+          "def": 250,
+          "range": 30,
+          "speed": 275
+        },
+        "archer": {
+          "hp": 250,
+          "atk": 120,
+          "def": 50,
+          "range": 1200,
+          "speed": 250
+        },
+        "cavalry": {
+          "hp": 500,
+          "atk": 250,
+          "def": 180,
+          "range": 80,
+          "speed": 1000
+        }
+      },
+      "unlocked": [
+        "militia"
+      ],
+      "routeDiscovered": false
+    },
+    "daily": {},
+    "firstClears": {},
+    "relics": {},
+    "lastReceipt": null
+  },
+  "wildRefresh": {
+    "version": 1,
+    "seed": 1015568748,
+    "generation": 995108,
+    "at": 1791194400000,
+    "pins": {}
+  },
+  "conquestSupply": {
+    "version": 1,
+    "enabled": false,
+    "records": {}
+  }
+}

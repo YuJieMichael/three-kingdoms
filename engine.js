@@ -1235,15 +1235,15 @@ const Game = (() => {
     const home=id=>s.realm.heroLocations[id]||'';
     return {units,addXp:(id,xp)=>HeroSystem.addXp(state,id,xp),now:Date.now(),enabled:tacticsAvailable(),currentCity:s.realm?.activeCity,city:scope,heroCity:id=>s===state?heroCity(id):home(id),otherBusy,generalBusy:id=>s===state?generalBusy(id):otherBusy(id),role:id=>CitySystem.list(s).some(c=>{const d=scope(c.id);return d.governor===id||Object.values(d.cityRoles||{}).includes(id);}),unlocked:unitUnlocked,freeze:source=>withCityScope(source,()=>({tech:{...state.tech},buffs:{drum:!!activeBuff('drum'),formation:!!activeBuff('formation')},unlocked:BattlefieldSystem.RENT_UNITS.filter(unitUnlocked),units:Object.fromEntries(BattlefieldSystem.RENT_UNITS.map(id=>[id,{...unitStats(id)}]))}))};
   }
-  const battlefieldView=()=>BattlefieldSystem.view(state,battlefieldApi());
-  const battlefieldQuote=(id,army)=>BattlefieldSystem.quote(state,id,army,battlefieldApi());
+  const battlefieldView=(campaign='yellow_turban')=>BattlefieldSystem.view(state,battlefieldApi(),campaign);
+  const battlefieldQuote=(id,army,campaign='yellow_turban')=>BattlefieldSystem.quote(state,id,army,battlefieldApi(),campaign);
   function battlefieldAction(name,...args){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem[name](state,...args,battlefieldApi());if(!error)save();return error;}
   const openBattlefieldBox=slot=>battlefieldAction('openBox',slot);
   const claimBattlefieldRelic=id=>battlefieldAction('claimRelic',id);
   const discoverBattlefieldRoute=()=>battlefieldAction('discoverRoute');
   const claimStarterReinforcementToken=()=>battlefieldAction('claimStarterToken');
   const buyReinforcementToken=()=>battlefieldAction('buyToken');
-  const startBattlefield=(id,army,key)=>battlefieldAction('start',id,army,key);
+  function startBattlefield(id,army,key,campaign='yellow_turban'){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem.start(state,id,army,key,battlefieldApi(),campaign);if(!error)save();return error;}
   function enterBattlefieldNode(id,choice='normal'){
     if(!tacticsAvailable())return '剧本战场仅在单机模式开放';
     if(lessonSession||state.battle&&!state.battle.finished||CitySystem.list(state).some(c=>CitySystem.scope(state,c).cityDefense.battle))return '请先结束当前战斗或演练';
@@ -1257,7 +1257,7 @@ const Game = (() => {
     const rows=(army,enemy)=>Object.entries(army).filter(([,count])=>count>0).map(([id,count])=>{let stats=enemy?unitStats(id,false):{...r.unitSnapshot[id],atk:r.unitSnapshot[id].atk*(r.completed.includes('s3')?1.08:1)};if(!enemy)stats=HeroSystem.speedStats(stats,id,frozen.mount);return {id,initial:count,stats,hp:count*stats.hp,maxHp:count*stats.hp,pos:0,defending:false};});
     const player=rows(r.army,false),enemy=rows(n.army,true),length=battleLength([...player,...enemy]);for(const row of enemy)row.pos=length;
     const orders=rows=>Object.fromEntries(rows.map(row=>[row.id,{command:'advance',target:''}]));
-    const b={kind:'battlefield',runId:r.id,completedBefore:[...r.completed],rules:3,length,node:n.id,general:r.general,sourceCity:r.sourceCity,generalSnapshot:frozen.general,skillProfile:frozen.skill,mountProfile:frozen.mount,legendProcChance:frozen.proc,mode:'raid',siege:false,gate:null,militia:0,round:0,machineGateAttacks:0,currentRoundSummary:{round:0,events:[]},player,enemy,orders:orders(player),enemyOrders:orders(enemy),enemyGeneralSnapshot:{id:'enemy_'+n.id,name:n.name,wildLine:'',atk:0,def:0,pol:0,wis:0,lead:0},log:[n.intro],auto:false,finished:false,result:null};
+    const b={kind:'battlefield',route:'normal',runId:r.id,completedBefore:[...r.completed],rules:3,length,node:n.id,general:r.general,sourceCity:r.sourceCity,generalSnapshot:frozen.general,skillProfile:frozen.skill,mountProfile:frozen.mount,legendProcChance:frozen.proc,mode:'raid',siege:false,gate:null,militia:0,round:0,machineGateAttacks:0,currentRoundSummary:{round:0,events:[]},player,enemy,orders:orders(player),enemyOrders:orders(enemy),enemyGeneralSnapshot:{id:'enemy_'+n.id,name:n.name,wildLine:'',atk:0,def:0,pol:0,wis:0,lead:0},log:[n.intro],auto:false,finished:false,result:null};
     b.stratagem=BattleStratagems.create(b,{player:b.generalSnapshot,enemy:b.enemyGeneralSnapshot});return b;
   }
   function battlefieldOrder(unit,command,target=''){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const b=state.battlefields?.run?.battle;if(!b||b.finished||!b.player.some(row=>row.id===unit&&row.hp>0)||!['advance','hold','fallback'].includes(command)||target!==''&&!b.enemy.some(row=>row.id===target))return '战场指令无效';b.orders[unit]={command,target};save();return null;}
