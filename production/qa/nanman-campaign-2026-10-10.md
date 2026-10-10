@@ -26,4 +26,54 @@
 
 ## 最终交付状态
 
-最终全量测试、整批独立审查及当前HEAD CI结果在完成后补入。未验证真机Safari；发布需负责人明确指令。PR叠加于黄巾PR60，先完成前置依赖再合并。
+最终提交前全量测试693/693通过（2026-10-10，约34秒），git diff --check通过。整批独立审查通过：Critical0/Important0/Minor0；审查者独立693/693与正常种子1/7/19、七日循环、五组对照通过，额外黄巾s6潜入保存重载通过。当前HEAD远端CI在PR创建后另查。未验证真机Safari；发布需负责人明确指令。PR叠加于黄巾PR60，先完成前置依赖再合并。
+
+## 执行裁定与审查记录归档
+
+# SDD ledger — plan: docs/superpowers/plans/2026-10-10-nanman-campaign.md
+
+Base: 8eda03fd41729e9aac99766b9e37cbf2a81c1952
+Execution: Native, six tasks; final whole-branch review.
+Pre-flight: Task1→2/3/4/5 campaign config signatures agree; Task2→3 route migration agrees; Task3→5 attempt then enter agrees; Task4→5 box/relic keys agree; Task2/3/4→6 normal APIs agree.
+Task 1: pending
+Task 2: pending
+Task 3: pending
+Task 4: pending
+Task 5: pending
+Task 6: pending
+
+Ruling: skill helper scripts lack executable permission in this installation; keep the same task briefs/BASE/test results manually in this ledger rather than modify global skill permissions — process metadata only; helper automation not exercised.
+Task1 BASE: 8eda03f. RED: three nanman-data cases fail for missing campaign behavior. GREEN: 6/6 data tests.
+
+Task 1: complete — 6/6 data tests, integrated suite678/678; Task1+2 interface integration before commits after setup dependency resolved.
+Task 2: complete — 9/9 state tests RED→GREEN, suite678/678; fixed old battle fixture preserved.
+Baseline: PR60 independently verified672/672. First new-worktree attempts lacked pglite; npm ci failed because project has no lock; npm install --package-lock=false restored dependency. A concurrent source edit invalidated a runtime-freshness check; final678/678 was run on stable inputs with rebuilt runtime.
+Ruling: Task3 requires valid mask identity/claim to exercise the actual equipped relic; move mask identity/claim subset fromTask4 toTask3 under the failing combat tests — avoids fabricated save bypass; rewards and set remainTask4.
+Task3 RED: five combat cases fail on missing nanman resolver, mask API, hidden route.
+
+Task 3: complete — 12/12 combat tests RED→GREEN; suite683/683. Mask identity/claim prerequisite moved as ruled.
+Task4 RED: actual nanman settlement dereferences yellow reward; box ignores campaign.
+
+Task 4: complete — 12/12 rewards/equipment tests RED→GREEN, suite687/687.
+Task5 RED: three UI cases fail for missing two campaign cards, pending invalidation and duplicate part confirmation.
+
+Task5 main RED→GREEN:21/21 UI/touch tests, suite690/690. Extra mask description test RED: generic text gave no use; fix+suite pending.
+Task6 simulator initial failures: consumed leftover same-day drill quota, then gold depleted by repeated high-cost drills. Corrected normal strategy to one affordable drill/day plus full-branch yellow daily XP and paid tokens; research actual combat/protection for mixed rentals. No resource/level injection. Three seeds now passed without changing enemy table.
+
+Task 5: complete — 22/22 UI/touch tests, suite691/691. Long wall-clock runtime happened during host activity; exit0 all passed.
+Task6 started: normal seeds1/7/19 main49rounds2279loss, full65rounds2738loss, mixed40rounds488loss; normal growth to10 another8.036days, 8 drills, no enemy adjustments. QA origin8138 server; tab13.
+
+Task6 implementation verification complete:693/693; normal main/full/mixed, seven-day dual reward cycle, five matched probes, yellow/chapters/long-run/realm regression exit0; screenshots360/390/440/1280; actual UI15nodes clear1800/320/box1, pause/reload, mask equip, mount box, understrength loss/abandon.
+Browser found entry only Yellow and active campaign lost after settle following reload; two UI regressions RED→GREEN; fixed before review.
+Ruling: screenshot bytes are JPEG and viewport changes can capture previous size within one call; recapture each after a separate observation and use .jpg extensions — avoids mislabeled/cropped evidence; additional UI artifact passes only.
+Final review: pending.
+
+Task6 Ruling: capacity-full and duplicate-slot scenarios use actual engine/DOM unit regressions rather than claiming every scenario was clicked in browser — browser verified full run, mask, mount, retry, reload and four widths; cost: modal touch behavior in those edge cases remains unverified on real Safari.
+Task6 Ruling: named-general combined leadership estimate is limited to fixed set bonus+5 and excludes pending PR57 values — avoids treating a separate dependency as implemented; cost: final merged named-general gear totals need verification after dependencies land.
+Task6 Ruling: initial Task1/2 commits followed their shared interface integration and stable full suite after dependency setup — focused RED/GREEN was observed per task; cost: commit isolation is less strict than the original per-task sequence.
+Final browser reloaded candidate .58 and confirmed “战场 · 黄巾 / 南蛮”; refreshed440 screenshot. Temporary QA files/tab13/server8138 removed, viewport reset; user8137 untouched.
+
+Final review: fresh reviewer gpt-6-astra high, read-only BASE8eda03f..a1dfdf6; Critical0/Important0/Minor0. Independently693/693 and normal seeds1/7/19, seven-day cycle and five probes passed; additional Yellow s6 infiltration reload passed. No fix pass needed.
+Final: Ruling: reviewer declined real iPhone Safari and capacity/duplicate touch interactions — retain explicit unverified status; engine/DOM and emulated widths suffice for candidate PR, not real-device acceptance — cost if wrong: touch edge cases may need follow-up.
+Final: Ruling: reviewer declined PR57 combined named-general leadership — retain fixed+5 evidence only and verify combined totals after dependencies merge — cost if wrong: final merged balance may need adjustment.
+Final: Ruling: reviewer declined remote CI/publication — query current HEAD push and PR checks separately before delivery, do not merge — cost if wrong: local success would not establish remote readiness.

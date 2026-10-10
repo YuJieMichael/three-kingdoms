@@ -123,17 +123,24 @@ System接口新增/改造：`quote(s,general,army,api,campaign='yellow_turban')`
 **Files:** Create `tests/balance/nanman-campaign.cjs`, `design/balance/nanman-campaign-2026-10-10.md`, `production/qa/nanman-campaign-2026-10-10.md`, `production/qa/evidence/nanman-campaign-v0.34.58/`; Modify `index.html`, `package.json`, `README.md`, `supabase/functions/_shared/game-runtime.mjs`, 两份设计/计划与交接记录。
 **Interfaces:** 复用 `tests/balance/yellow-campaign.cjs` 的 `normal(seed)` 和 `clear(e,sides)`；通过真实黄巾首通和日限操练升10级，实际购令、领取箱和装备；不直接写将领等级、资源或通关标记作为正常数值证据。
 
-- [ ] 写模拟断言，种子1/7/19：仅主线、全支线和可用枪/盾/弓混编均能通关；每次读取/导出/正常重载valid，主线有限3000额度、全支线4000额度不耗尽；记录真实培养时间、购令费用、每战损失/回合。
-- [ ] 首次运行模拟，保存实际结果；按结果修正Task1敌军初值，优先调敌军人数而不改变已批准租兵/奖励规则。每次调整复跑受影响路线测试与模拟，不能将失败写成通过。
+- [x] 写模拟断言，种子1/7/19：仅主线、全支线和可用枪/盾/弓混编均能通关；每次读取/导出/正常重载valid，主线有限3000额度、全支线4000额度不耗尽；记录真实培养时间、购令费用、每战损失/回合。
+- [x] 首次运行模拟，保存实际结果；按结果修正Task1敌军初值，优先调敌军人数而不改变已批准租兵/奖励规则。每次调整复跑受影响路线测试与模拟，不能将失败写成通过。
 - [ ] 同将领装备与补满编队，比较hidden/normal和正确/错误潜入、每个首领有无解除障碍，记录实际损失；七日双副本首箱开齐两套、交错同日重打校验箱数与费用。估算关羽等名将装备后的统帅，证明没有三倍膨胀。
 - [ ] 手机360/390/440与桌面1280实际点击：开始、补租、口令、路线胜利/失败、暂停刷新、开箱满库/重复部位确认、装备面具。保存截图和战报，测页面/对话框无横向溢出；真实iPhone Safari未测时明确注明。
-- [ ] 跑 `node tests/balance/yellow-campaign.cjs`、`node tests/balance/chapter-progression.cjs`、`node tests/balance/chapter-four.cjs`、`node tests/balance/long-run-soak.cjs`、`node tests/balance/realm-soak.cjs`，报告每项结果；出现回归先定位修复，不靠改期望绕过。
-- [ ] 对齐候选0.34.58的全部index缓存版本、package版本、README标题和说明；运行 `node scripts/build-online-runtime.cjs`，然后 `npm test` 全部通过，`git diff --check` 无错误。
-- [ ] 按 executing-plans/requesting-code-review 要求只派一次新鲜整批reviewer，检查PR60基线到新HEAD；发现重要问题先失败回归再修复，修复后全量测试。记录每条审查裁定，不二次派复审。
+- [x] 跑 `node tests/balance/yellow-campaign.cjs`、`node tests/balance/chapter-progression.cjs`、`node tests/balance/chapter-four.cjs`、`node tests/balance/long-run-soak.cjs`、`node tests/balance/realm-soak.cjs`，报告每项结果；出现回归先定位修复，不靠改期望绕过。
+- [x] 对齐候选0.34.58的全部index缓存版本、package版本、README标题和说明；运行 `node scripts/build-online-runtime.cjs`，然后 `npm test` 全部通过，`git diff --check` 无错误。
+- [x] 按 executing-plans/requesting-code-review 要求只派一次新鲜整批reviewer，检查PR60基线到新HEAD；发现重要问题先失败回归再修复，修复后全量测试。记录每条审查裁定，不二次派复审。
 - [ ] 提交、推送分支，创建base=`feat/yellow-campaign`的叠加PR并原生附加任务；检查当前HEAD的push和PR CI均成功。保留工作树、版本依赖、截图、正常模拟和交接记录；等待明确发布/合并。
+
 
 ## 执行与计划自查
 
 执行方式沿用此前本人逐项实施，完成后一次独立整批审查。先用 using-git-worktrees 检查已附加工作树并创建/复用隔离的南蛮分支；把已批准规格与本计划复制进去，禁止覆盖根目录旧产品代码。
 
 规格覆盖已逐项对照：入口/路线Task1/2/5，奇物与实效Task3/4/5，奖励与七件套Task4，旧档/源城/忙碌Task2/3，正常成长/截图/版本/CI交付Task6。接口在后续任务使用相同名称；所有五类Review Focus均有指定测试。敌军表为待正常模拟收敛的初值，尚无通过证据；本文待负责人审阅后实施。
+
+## 执行状态补注（2026-10-10）
+
+Task6模拟、四种尺寸与实际15节点通关已完成，693项全量测试通过。七日循环开两副本箱并穿蛮族全套；名将总值仅分析本批固定统帅+5，前置PR57的合并组合待发布依赖验证。容量满/重复部位边界由真实引擎/DOM回归覆盖，未把它们全部声称为浏览器点击；真机Safari未测。上方两项保持未勾，避免将部分边界验证误记为完全按原计划执行。独立整批审查与PR/CI结果待收尾补入。初值经正常模拟可通过，未调整敌军表。
+
+最终整批独立审查通过，未发现Critical/Important/Minor问题；693/693与正常模拟由审查者独立复现。审查未判断真机Safari、PR57合并组合及远端CI，裁定和边界已归档QA。
