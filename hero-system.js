@@ -139,6 +139,13 @@ const HeroSystem=(()=>{
   function validMountProfile(p){return !!p&&typeof p==='object'&&!Array.isArray(p)&&Object.keys(p).length===5&&Number.isInteger(p.speed)&&p.speed>=0&&p.speed<=27&&Object.entries(profileForSpeed(p.speed)).every(([k,v])=>p[k]===v);}
   function mountQuote(){const s=Game.state;return {gold:5000,tier:1,slot:'mount',reason:Game.saveBlockReason()||((s.equipment||[]).length>=s.equipmentCapacity?'装备库已满':s.res.gold<5000?'黄金不足':'')};}
   function buyMount(){const blocked=Game.saveBlockReason();if(blocked)return blocked;const s=live(),q=mountQuote();if(q.reason)return q.reason;s.res.gold-=q.gold;addEquipment(s,'mount',1);return Game.save()?null:Game.saveBlockReason()||'保存失败';}
+  const actionSpeed=stats=>stats.initiative??stats.speed;
+  const movementSpeed=stats=>stats.moveSpeed??stats.speed;
+  const speedStats=(stats,id,p)=>p?{...stats,initiative:stats.speed*p.initiative,moveSpeed:stats.speed*(['cavalry','heavy'].includes(id)?p.cavalry:1)}:stats;
+  function validSpeedStats(stats,id,p,player=true){
+    if(!p||!player)return stats.initiative===undefined&&stats.moveSpeed===undefined;
+    return validMountProfile(p)&&stats.initiative===stats.speed*p.initiative&&stats.moveSpeed===stats.speed*(['cavalry','heavy'].includes(id)?p.cavalry:1);
+  }
   function stats(e){if(e.slot==='mount')return {};const out=Object.fromEntries(Object.entries(bases[e.slot]).map(([id,n])=>[id,Math.round(n*[0,1,2,4,8,12][e.tier]*(1+e.enhance*.15))]));if(e.refine)out[e.refine.stat]=(out[e.refine.stat]||0)+e.refine.value;return out;}
   function setTier(s,id){const worn=(s.equipment||[]).filter(e=>e.hero===id&&legacySlots.includes(e.slot));if(worn.length!==4)return 0;const tier=Math.min(...worn.map(e=>e.tier));return tier>=2&&worn.every(e=>e.tier>=tier)?tier:0;}
   function bonus(s,id){const out={...zero(),...(s.heroPoints?.[id]||{})};for(const e of s.equipment||[])if(e.hero===id)for(const [k,n] of Object.entries(stats(e)))out[k]+=n;for(const [k,n] of Object.entries(SET_BONUS[setTier(s,id)]||{}))out[k]+=n;for(const [k,n] of Object.entries(typeof HeroBonds!=='undefined'?HeroBonds.statBonus(s,id):{}))out[k]=(out[k]||0)+n;return out;}
@@ -187,5 +194,5 @@ const HeroSystem=(()=>{
   function refine(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.slot==='mount')return '坐骑不能炼化属性';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
+  return {attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();
