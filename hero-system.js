@@ -7,23 +7,36 @@ const HeroSystem=(()=>{
   const startingLevels=Object.freeze({huaman:60,baosanniang:60,zhurong:65,tadun:65,menghuo:65,guanyu:70,zhangfei:70,dianwei:65,taishici:65,lvbu:70});
   function startingLevel(s,id){
     const key=HeroIdentity.key(s,id),raw=s.customGenerals?.find(g=>g.id===id);
+    if(raw?.origin==='battle'&&key&&raw.famousSource)return s.captureLevels?.[id]?.level||0;
     if(raw?.origin==='wild'&&!wild.activeDefinitions().some(d=>d.line===raw.wildLine))return 0;
     return Object.hasOwn(startingLevels,key)?startingLevels[key]:0;
+  }
+  function captureLevel(s,id,original){
+    if(!s.captureLevels)s.captureLevels={};
+    if(!Object.hasOwn(s.captureLevels,id)){const loss=1+Math.floor(Math.random()*3);s.captureLevels[id]={original,loss,level:Math.max(1,original-loss)};}
+    return s.captureLevels[id].level;
+  }
+  function validCaptureLevels(s){const rows=s.captureLevels;if(!rows||typeof rows!=='object'||Array.isArray(rows)||Object.keys(rows).length>300)return false;
+    if(!(s.wildGenerals?.captives||[]).every(c=>Object.hasOwn(rows,c.id))||!(s.heroService?.captives||[]).every(c=>Object.hasOwn(rows,c.id))||!Object.entries(s.realm?.namedCities?.garrisons||{}).every(([id,r])=>!r.captive||Object.hasOwn(rows,NamedGarrison.generals[id]?.id)))return false;
+    return Object.entries(rows).every(([id,r])=>{const raw=s.customGenerals?.find(g=>g.id===id),wildRow=s.wildGenerals?.rumors?.find(c=>c.id===id),held=s.heroService?.captives?.find(c=>c.id===id),city=Object.values(NamedGarrison.generals).find(g=>g.id===id),expected=wildRow?wild.recruitmentLevel(wild.definitions.find(d=>d.line===wildRow.line)):city?startingLevels[city.name==='关羽'?'guanyu':city.name==='张飞'?'zhangfei':city.name==='典韦'?'dianwei':city.name==='吕布'?'lvbu':'taishici']:null;
+      return (raw||wildRow||held||city)&&r&&typeof r==='object'&&!Array.isArray(r)&&Object.keys(r).length===3&&Number.isSafeInteger(r.original)&&r.original>=1&&r.original<=10000&&Number.isInteger(r.loss)&&r.loss>=0&&r.loss<=3&&r.level===Math.max(1,r.original-r.loss)&&(!expected||r.original===expected)&&(!held||held.level===r.level)&&(!raw?.famousSource||raw.famousSource.commandCredit<=10*Math.max(0,r.level-raw.level))&&(!s.generals.includes(id)||s.generalLevels[id]>=r.level);
+    });
   }
   // Called only by save migration or recruitment, never by a read/view initializer.
   function enrollStartingLevel(s,id){
     if(!s.famousStarts||typeof s.famousStarts!=='object'||Array.isArray(s.famousStarts)||s.famousStarts[id]!==undefined)return;
-    const level=startingLevel(s,id),raw=s.customGenerals?.find(g=>g.id===id),old=s.generalLevels?.[id];
+    if(!startingLevel(s,id))return;
+    const level=s.captureLevels?.[id]?.level||startingLevel(s,id),raw=s.customGenerals?.find(g=>g.id===id),old=s.generalLevels?.[id];
     if(!level||!Number.isInteger(old)||old<1||old>10000||!Number.isInteger(raw?.level))return;
-    s.famousStarts[id]={level,leadGrowth:10*Math.max(0,Math.min(old,level)-raw.level)};
+    s.famousStarts[id]={level,leadGrowth:raw.famousSource?.commandCredit??10*Math.max(0,Math.min(old,level)-raw.level)};
     s.generalLevels[id]=Math.max(old,level);
   }
   function migrateStartingLevels(s){for(const id of s.generals||[])enrollStartingLevel(s,id);}
   function validStartingLevels(s){
     const rows=s.famousStarts;if(!rows||typeof rows!=='object'||Array.isArray(rows))return false;
     return (s.generals||[]).every(id=>!startingLevel(s,id)||Object.hasOwn(rows,id))&&Object.entries(rows).every(([id,r])=>{
-      const target=startingLevel(s,id),raw=s.customGenerals?.find(g=>g.id===id);
-      return target&&r&&typeof r==='object'&&!Array.isArray(r)&&Object.keys(r).length===2&&r.level===target&&Number.isInteger(r.leadGrowth)&&r.leadGrowth>=0&&r.leadGrowth%10===0&&r.leadGrowth<=10*Math.max(0,target-raw.level)&&s.generalLevels[id]>=target;
+      const target=s.captureLevels?.[id]?.level||startingLevel(s,id),raw=s.customGenerals?.find(g=>g.id===id);
+      return startingLevel(s,id)&&target&&r&&typeof r==='object'&&!Array.isArray(r)&&Object.keys(r).length===2&&r.level===target&&Number.isInteger(r.leadGrowth)&&r.leadGrowth>=0&&r.leadGrowth%10===0&&r.leadGrowth<=10*Math.max(0,target-raw.level)&&s.generalLevels[id]>=target&&(!raw.famousSource||r.leadGrowth===raw.famousSource.commandCredit);
     });
   }
   function baseLeadership(raw,currentLevel,start){
@@ -116,7 +129,7 @@ const HeroSystem=(()=>{
         if(previous&&previous.status==='active'&&s.conquered[previous.node]){const next=location(s,d);if(next){previous.node=next.id;previous.at=Date.now();changed=true;}continue;}
         if(previous&&previous.status!=='released')continue;const n=location(s,d);if(!n)continue;
         const used=new Set([...s.generals,...s.innCandidates.map(g=>g.id),...w.rumors.map(r=>r.id)]);let id;while(w.seq<MAX_SEQ){const next='local_'+(ID_BASE+(++w.seq));if(!used.has(next)){id=next;break;}}if(!id)return changed?(persist()||'线索序号已达上限'):'线索序号已达上限';
-        const r={line:d.line,id,node:n.id,at:Date.now(),status:'active'};if(previous)w.rumors.splice(w.rumors.indexOf(previous),1,r);else w.rumors.push(r);changed=true;
+        const r={line:d.line,id,node:n.id,at:Date.now(),status:'active'};if(previous&&!s.customGenerals.some(g=>g.id===previous.id))delete s.captureLevels[previous.id];if(previous)w.rumors.splice(w.rumors.indexOf(previous),1,r);else w.rumors.push(r);changed=true;
       }
       return changed?persist():w.rumors.length?null:'暂时没有可用野地，请先整理领地';
     }
@@ -135,7 +148,7 @@ const HeroSystem=(()=>{
       if(!portraitOwned(s,r.line))return {line:r.line,id:r.id,name:d.name,node:n.id,status:'portrait_required',loyalty:0,reason:'尚未拥有 '+d.name+' 画像，请先在客栈购买后再出征俘获'};
       const reason=ownsDefinition(s,d)?'这名将领已在帐下':roomUsed(s)>=roomCapacity(s)?'招贤馆位置已满':s.customGenerals.length+w.captives.length>=100?'将领总量已达上限':'';
       if(reason){r.status='released';return {line:r.line,id:r.id,name:d.name,node:n.id,status:'released',loyalty:0,reason};}
-      r.status='captive';w.captives.push({id:r.id,line:r.line,node:n.id,at,loyalty:40,hero:hero(d,r.id,n.id)});
+      captureLevel(s,r.id,recruitmentLevel(d));r.status='captive';w.captives.push({id:r.id,line:r.line,node:n.id,at,loyalty:40,hero:hero(d,r.id,n.id)});
       const first=d.firstCaptureBox&&!w.firstCaptureRewards.includes(d.line);
       if(first){w.firstCaptureRewards.push(d.line);s.inventory.barbarianEquipmentBox=(s.inventory.barbarianEquipmentBox||0)+1;}
       return {line:r.line,id:r.id,name:d.name,node:n.id,status:'captured',loyalty:40,reason:first?'等待手动招降 · 首次俘获蛮族箱已入背包':'等待手动招降'};
@@ -144,13 +157,13 @@ const HeroSystem=(()=>{
     function fundsReason(s,cost){if(s.res.gold<cost.gold)return '黄金不足';for(const [id,n]of Object.entries(cost.jewels))if((s.jewels[id]||0)<n)return Progression.jewels[id].name+'不足';return '';}
     function recruitQuote(s,id,method='gold'){
       const c=s.wildGenerals?.captives.find(c=>c.id===id),d=c&&definition(c.line),cost=d&&payment(d,method);if(!c||!cost)return null;
-      const reason=(s.honors.noble<d.noble?'需要爵位 '+HeritageData.nobles[d.noble].name:'')||(roomUsed(s)>roomCapacity(s)?'招贤馆名额不足，请扩建或释放俘将':'')||(s.customGenerals.length>=100?'将领总量已达上限':'')||fundsReason(s,cost);
-      return {id,name:c.hero.name,method,cost,noble:d.noble,nobleName:HeritageData.nobles[d.noble].name,loyalty:c.loyalty,reason,key:[id,method,s.honors.noble,roomUsed(s),roomCapacity(s),s.customGenerals.length].join('|')};
+      const level=s.captureLevels?.[id]?.level||recruitmentLevel(d),rank=HeritageSystem.recruitmentQuote(s,level);const reason=rank.reason||(roomUsed(s)>roomCapacity(s)?'招贤馆名额不足，请扩建或释放俘将':'')||(s.customGenerals.length>=100?'将领总量已达上限':'')||fundsReason(s,cost);
+      return {id,name:c.hero.name,method,cost,level,noble:rank.noble,nobleName:rank.nobleName,loyalty:c.loyalty,reason,key:[id,method,rank.rank,level,roomUsed(s),roomCapacity(s),s.customGenerals.length].join('|')};
     }
     function recruit(id,method,key){
       const live=liveWild();if(live.error)return live.error;const s=live.s,q=recruitQuote(s,id,method);if(!q||typeof key!=='string'||q.key!==key)return '招降条件已变化，请重新查看俘将';if(q.reason)return q.reason;
       const w=s.wildGenerals,c=w.captives.find(c=>c.id===id);s.res.gold-=q.cost.gold;for(const [j,n]of Object.entries(q.cost.jewels))s.jewels[j]-=n;
-      s.customGenerals.push({...c.hero});s.generals.push(id);s.generalLevels[id]=c.hero.level;s.generalXp[id]=0;s.heroLoyalty[id]=c.loyalty;w.captives=w.captives.filter(c=>c.id!==id);w.rumors.find(r=>r.id===id).status='recruited';w.recruited.push(id);init(s);enrollStartingLevel(s,id);return persist();
+      s.customGenerals.push({...c.hero});s.generals.push(id);s.generalLevels[id]=c.hero.level;s.generalXp[id]=0;s.heroLoyalty[id]=c.loyalty;w.captives=w.captives.filter(c=>c.id!==id);w.rumors.find(r=>r.id===id).status='recruited';w.recruited.push(id);init(s);if(startingLevel(s,id))enrollStartingLevel(s,id);else s.generalLevels[id]=s.captureLevels?.[id]?.level||c.hero.level;return persist();
     }
     function rewardQuote(s,id,method='gold'){
       if(!s.generals.includes(id)||!['gold','jewels'].includes(method))return null;const current=loyalty(s,id),raise=Math.min(10,100-current),cost=method==='gold'?{gold:2000,jewels:{}}:{gold:0,jewels:{pearl:1}};
@@ -165,7 +178,7 @@ const HeroSystem=(()=>{
   function init(s){
     if(!s||!Array.isArray(s.generals))return;
     if(s.heroPoints===undefined)s.heroPoints={};
-    if(s.famousStarts===undefined)s.famousStarts={};
+    if(s.famousStarts===undefined)s.famousStarts={};if(s.captureLevels===undefined)s.captureLevels={};
     if(s.heroDrills===undefined)s.heroDrills={};
     if(s.equipment===undefined)s.equipment=[];
     if(s.equipmentCapacity===undefined)s.equipmentCapacity=50;
@@ -200,7 +213,8 @@ const HeroSystem=(()=>{
   function validEquipment(e,s){if(e?.setId!==undefined&&(!['yellow_turban','nanman'].includes(e.setId)||!['weapon','helmet','armor','cloak','bracer','boots','mount'].includes(e.slot)||e.tier!==(e.setId==='nanman'?3:2)||e.named!==undefined||e.relic!==undefined))return false;if(e?.relic!==undefined&&(!['compass','mask'].includes(e.relic)||e.slot!=='accessory'||e.tier!==1||e.enhance!==0||e.refine!==undefined||e.named!==undefined||e.setId!==undefined))return false;return !!e&&typeof e==='object'&&!Array.isArray(e)&&Number.isSafeInteger(e.id)&&e.id>0&&e.id<=s.equipmentSeq&&Object.hasOwn(slots,e.slot)&&(e.slot==='mount'?[1,2,3,4].includes(e.tier)&&e.named===undefined&&e.refine===undefined:[1,2,3,4,5].includes(e.tier))&&(e.tier===5?e.slot==='weapon'&&typeof e.named==='string'&&(typeof LegendaryWeapons==='undefined'||Object.hasOwn(LegendaryWeapons.weapons,e.named)):e.named===undefined)&&Number.isInteger(e.enhance)&&e.enhance>=0&&e.enhance<=10&&(e.refine===undefined||e.tier>=3&&!!e.refine&&typeof e.refine==='object'&&Object.keys(e.refine).length===2&&REFINE_STATS.includes(e.refine.stat)&&Number.isInteger(e.refine.value)&&e.refine.value>=3&&e.refine.value<=8)&&(e.hero===''||s.generals.includes(e.hero)&&s.generalLevels[e.hero]>=requiredLevel(e));}
   function valid(s){
     const obj=x=>x&&typeof x==='object'&&!Array.isArray(x),int=n=>Number.isSafeInteger(n)&&n>=0;
-    if(!wild.valid(s)||!validStartingLevels(s))return false;
+    if(!s.customGenerals.every(g=>!g.famousSource||!!HeroIdentity.transferKey(g)))return false;
+    if(!wild.valid(s)||!validStartingLevels(s)||!validCaptureLevels(s))return false;
     if(!obj(s.heroPoints)||!obj(s.heroDrills)||!Array.isArray(s.equipment)||!int(s.equipmentSeq)||!Number.isInteger(s.equipmentCapacity)||s.equipmentCapacity<50||s.equipmentCapacity>500||s.equipment.length>s.equipmentCapacity||typeof s.heroGiftClaimed!=='boolean')return false;
     if(!Object.keys(s.heroPoints).every(id=>s.generals.includes(id))||!s.generals.every(id=>obj(s.heroPoints[id])&&Object.keys(s.heroPoints[id]).length===5&&Object.keys(attrs).every(k=>int(s.heroPoints[id][k]))&&remaining(s,id)>=0))return false;
     if(!Object.entries(s.heroDrills).every(([id,d])=>s.generals.includes(id)&&obj(d)&&int(d.day)&&int(d.count)&&d.count<=3))return false;
@@ -244,5 +258,5 @@ const HeroSystem=(()=>{
   function refine(eid){const blocked=Game.saveBlockReason();if(blocked)return blocked;const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.relic)return '剧情奇物不能强化、炼化或分解';if(e.slot==='mount')return '坐骑不能炼化属性';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {initialLeadership,startingLevel,enrollStartingLevel,migrateStartingLevels,baseLeadership,battlefieldSetBonus,attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
+  return {initialLeadership,startingLevel,captureLevel,enrollStartingLevel,migrateStartingLevels,baseLeadership,battlefieldSetBonus,attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();

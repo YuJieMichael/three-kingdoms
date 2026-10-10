@@ -14,15 +14,15 @@ const GovernanceSystem=(()=>{
  }
  function validCity(s){const c=s.governance;return object(c)&&c.version===1&&['last','crisisSince','starvedSince','nextEvent','wardUntil','blessingUntil'].every(k=>time(c[k]))&&int(c.eventSeq)&&typeof c.eventsEnabled==='boolean'&&typeof c.autoRelief==='boolean'&&Array.isArray(c.log)&&c.log.length<=40&&c.log.every(r=>object(r)&&time(r.at)&&typeof r.text==='string'&&r.text.length<=500);}
  function valid(s){
-  const h=s.heroService;return validCity(s)&&object(h)&&h.version===1&&time(h.lastPay)&&int(h.seq)&&h.seq<=1000000&&object(h.owed)&&Object.entries(h.owed).every(([id,n])=>s.generals.includes(id)&&int(n))&&Array.isArray(h.pending)&&new Set(h.pending).size===h.pending.length&&h.pending.every(id=>s.generals.includes(id)&&s.heroLoyalty[id]===0)&&Array.isArray(h.captives)&&h.captives.length<=100&&new Set(h.captives.map(c=>c.id)).size===h.captives.length&&h.captives.every(c=>object(c)&&/^local_\d+$/.test(c.id)&&!s.generals.includes(c.id)&&object(c.hero)&&c.hero.id===c.id&&typeof c.hero.name==='string'&&c.hero.name.length<=20&&['atk','def','pol','wis','lead','level','price'].every(k=>Number.isFinite(c.hero[k])&&c.hero[k]>=0)&&int(c.level)&&c.level>=1&&c.level<=10000&&Number.isFinite(c.xp)&&c.xp>=0&&time(c.at)&&typeof c.previousOwner==='string'&&typeof c.originCity==='string')&&Array.isArray(h.log)&&h.log.length<=40&&h.log.every(r=>object(r)&&time(r.at)&&typeof r.text==='string'&&r.text.length<=500);
+  const h=s.heroService;return validCity(s)&&object(h)&&h.version===1&&time(h.lastPay)&&int(h.seq)&&h.seq<=1000000&&object(h.owed)&&Object.entries(h.owed).every(([id,n])=>s.generals.includes(id)&&int(n))&&Array.isArray(h.pending)&&new Set(h.pending).size===h.pending.length&&h.pending.every(id=>s.generals.includes(id)&&s.heroLoyalty[id]===0)&&Array.isArray(h.captives)&&h.captives.length<=100&&new Set(h.captives.map(c=>c.id)).size===h.captives.length&&h.captives.every(c=>object(c)&&/^local_\d+$/.test(c.id)&&!s.generals.includes(c.id)&&object(c.hero)&&c.hero.id===c.id&&(!c.hero.famousSource||!!HeroIdentity.transferKey(c.hero)&&c.hero.famousSource.commandCredit<=10*Math.max(0,c.level-c.hero.level))&&typeof c.hero.name==='string'&&c.hero.name.length<=20&&['atk','def','pol','wis','lead','level','price'].every(k=>Number.isFinite(c.hero[k])&&c.hero[k]>=0)&&int(c.level)&&c.level>=1&&c.level<=10000&&Number.isFinite(c.xp)&&c.xp>=0&&time(c.at)&&typeof c.previousOwner==='string'&&typeof c.originCity==='string')&&Array.isArray(h.log)&&h.log.length<=40&&h.log.every(r=>object(r)&&time(r.at)&&typeof r.text==='string'&&r.text.length<=500);
  }
  const moraleTarget=s=>Math.min(100,Math.max(0,100-s.tax-s.unrest+(typeof ChapterData!=='undefined'&&ChapterData.hasSeal(s)?5:0)));
  const wage=(s,id)=>20*(s.generalLevels[id]||1);
  const scopes=s=>Object.values(s.realm?.cities||{});
  const scopeData=(s,c)=>c.id===s.realm.activeCity?s:c.data;
  const heroBase=(s,id)=>s.customGenerals.find(g=>g.id===id)||Game.generals.find(g=>g.id===id);
- function removeHero(s,id,{reason='忠诚耗尽，下野离城',at=Date.now(),busy=false}={}){
-  if(!s.generals.includes(id)||protectedHeroes.has(id)||busy)return false;
+ function removeHero(s,id,{reason='忠诚耗尽，下野离城',at=Date.now(),busy=false,allowProtected=false}={}){
+  if(!s.generals.includes(id)||s.generals.length<=1||protectedHeroes.has(id)&&!allowProtected||busy)return false;
   s.generals=s.generals.filter(x=>x!==id);
   for(const k of ['heroLoyalty','heroPoints','heroDrills','heroSkills','famousStarts'])if(s[k])delete s[k][id];
   delete s.heroService.owed[id];s.heroService.pending=s.heroService.pending.filter(x=>x!==id);
@@ -40,7 +40,7 @@ const GovernanceSystem=(()=>{
    if(d.res.gold>=due){d.res.gold-=due;delete h.owed[id];record(h,{at,id,text:(heroBase(s,id)?.name||id)+'领取薪俸 '+due+' 黄金'});}
    else{h.owed[id]=due;s.heroLoyalty[id]=Math.max(protectedHeroes.has(id)?20:0,s.heroLoyalty[id]-5);record(h,{at,id,text:(heroBase(s,id)?.name||id)+'欠饷 '+due+' 黄金，忠诚降至 '+s.heroLoyalty[id]});}
   }}h.lastPay=from+steps*HOUR;}
-  for(const c of [...h.captives])if(now-c.at>=DAY){h.captives=h.captives.filter(x=>x.id!==c.id);record(h,{at:now,id:c.id,text:c.hero.name+'未在24小时内招降，已逃离俘将营'});}
+  for(const c of [...h.captives])if(now-c.at>=DAY){h.captives=h.captives.filter(x=>x.id!==c.id);delete s.captureLevels[c.id];record(h,{at:now,id:c.id,text:c.hero.name+'未在24小时内招降，已逃离俘将营'});}
   for(const c of [...s.wildGenerals.captives])if(now-c.at>=DAY){s.wildGenerals.captives=s.wildGenerals.captives.filter(x=>x.id!==c.id);const r=s.wildGenerals.rumors.find(r=>r.id===c.id);if(r)r.status='released';record(h,{at:now,id:c.id,text:c.hero.name+'未在24小时内招降，已逃离俘将营'});}
   for(const id of [...s.generals])if(!protectedHeroes.has(id)&&s.heroLoyalty[id]===0){if(api.busy?.(id)){if(!h.pending.includes(id))h.pending.push(id);}else removeHero(s,id,{at:now});}
   h.pending=h.pending.filter(id=>s.generals.includes(id)&&s.heroLoyalty[id]===0);
@@ -52,24 +52,25 @@ const GovernanceSystem=(()=>{
  function payArrears(s,id,key,now){const q=salaryQuote(s,id);if(q.key!==key)return '欠饷已变化，请重新查看';if(q.reason)return q.reason;s.res.gold-=q.cost;for(const r of q.rows){delete s.heroService.owed[r.id];s.heroLoyalty[r.id]=Math.min(100,s.heroLoyalty[r.id]+10);}s.heroService.pending=s.heroService.pending.filter(id=>s.heroLoyalty[id]===0);record(s.heroService,{at:now,text:'补发 '+q.cost+' 黄金薪俸，相关将领忠诚 +10'});return null;}
  function captureDefeated(loser,winner,id,now,{busyIds=[]}={}){
   init(loser,now);init(winner,now);const base=heroBase(loser,id),loyalty=loser.heroLoyalty[id]??80;
-  if(!base||!loser.generals.includes(id)||protectedHeroes.has(id)||busyIds.includes(id)||loyalty>=50)return {id,name:base?.name||id,status:'returned',loyalty};
+  if(!base||!loser.generals.includes(id)||loser.generals.length<=1||protectedHeroes.has(id)||busyIds.includes(id)||loyalty>=50)return {id,name:base?.name||id,status:'returned',loyalty};
   const used=winner.generals.length+winner.wildGenerals.captives.length+winner.heroService.captives.length,room=Game.heroCapacity?.(winner)??winner.buildings.tavern;
   const status=used<room&&winner.customGenerals.length+winner.heroService.captives.length<100&&winner.heroService.seq<1000000?'captured':'released';
-  const level=loser.generalLevels[id],xp=loser.generalXp[id],line=base.wildLine||'',originCity=loser.realm.heroLocations[id]||'capital';
+  const sourceKey=HeroIdentity.key(loser,id),sourceStart=loser.famousStarts[id],sourceGrowth=sourceStart?sourceStart.leadGrowth+10*Math.max(0,loser.generalLevels[id]-sourceStart.level):10*Math.max(0,loser.generalLevels[id]-base.level),source=base.famousSource?{kind:base.famousSource.kind,line:base.famousSource.line}:base.origin==='wild'?{kind:'wild',line:base.wildLine}:{kind:'city',line:Object.keys(NamedGarrison.generals).find(node=>NamedGarrison.generals[node].id===id)};
+  const original=loser.generalLevels[id],xp=0,line=base.wildLine||'',originCity=loser.realm.heroLocations[id]||'capital';
   if(!removeHero(loser,id,{reason:status==='captured'?'城破被俘':'城破，下野离城',at:now}))return {id,name:base.name,status:'returned',loyalty};
   let captiveId=null;if(status==='captured'){
    do{captiveId='local_'+(2000000000000000+(++winner.heroService.seq));}while(winner.customGenerals.some(g=>g.id===captiveId)||winner.innCandidates.some(g=>g.id===captiveId)||winner.heroService.captives.some(c=>c.id===captiveId));
-   const hero={...clone(base),wis:base.wis??base.def,lead:base.lead??level*10,id:captiveId,level,price:level*6000,origin:'battle',sourceHero:id};
+   const level=HeroSystem.captureLevel(winner,captiveId,original);const hero={...clone(base),wis:base.wis??base.def,lead:base.lead??level*10,id:captiveId,level:sourceKey?base.level:level,price:sourceKey?base.price:level*6000,origin:'battle',sourceHero:id,...(sourceKey?{famousSource:{...source,commandCredit:Math.max(0,sourceGrowth-10*(original-level))}}:{})};
    winner.heroService.captives.push({id:captiveId,hero,level,xp,at:now,previousOwner:loser.ruler,originCity});record(winner.heroService,{at:now,id:captiveId,text:'城破俘获 '+base.name+'，24小时内可招降'});
   }
   return {id,captiveId,name:base.name,line,status,loyalty};
  }
  function captiveQuote(s,id,method='gold'){
-  const c=s.heroService.captives.find(c=>c.id===id);if(!c||!['gold','jewels'].includes(method))return null;const noble=Math.min(21,Math.floor((c.level-1)/3)),cost=method==='gold'?{gold:c.level*6000,jewels:{}}:{gold:0,jewels:{pearl:Math.ceil(c.level/2)}};
-  const reason=s.honors.noble<noble?'需要爵位 '+HeritageData.nobles[noble].name:s.generals.length+s.wildGenerals.captives.length+s.heroService.captives.length>(Game.heroCapacity?.(s)??s.buildings.tavern)?'招贤馆名额不足':s.customGenerals.length>=100?'将领档案已满':s.res.gold<cost.gold||Object.entries(cost.jewels).some(([k,n])=>(s.jewels[k]||0)<n)?'黄金或珍宝不足':'';
-  return {id,name:c.hero.name,cost,noble,reason,key:[id,c.at,method,s.honors.noble].join('|'),expiresAt:c.at+DAY};
+  const c=s.heroService.captives.find(c=>c.id===id);if(!c||!['gold','jewels'].includes(method))return null;const rank=HeritageSystem.recruitmentQuote(s,c.level),noble=rank.noble,cost=method==='gold'?{gold:c.level*6000,jewels:{}}:{gold:0,jewels:{pearl:Math.ceil(c.level/2)}};
+  const reason=rank.reason||(s.generals.length+s.wildGenerals.captives.length+s.heroService.captives.length>(Game.heroCapacity?.(s)??s.buildings.tavern)?'招贤馆名额不足':s.customGenerals.length>=100?'将领档案已满':s.res.gold<cost.gold||Object.entries(cost.jewels).some(([k,n])=>(s.jewels[k]||0)<n)?'黄金或珍宝不足':'');
+  return {id,name:c.hero.name,cost,noble,reason,key:[id,c.at,method,rank.rank].join('|'),expiresAt:c.at+DAY};
  }
- function recruitCaptive(s,id,method,key,now){const q=captiveQuote(s,id,method);if(!q||q.key!==key)return '俘将条件已变化';if(q.reason)return q.reason;const c=s.heroService.captives.find(c=>c.id===id);if(now-c.at>=DAY)return '俘将已逃离';s.res.gold-=q.cost.gold;for(const [k,n]of Object.entries(q.cost.jewels))s.jewels[k]-=n;s.customGenerals.push(clone(c.hero));s.generals.push(id);s.generalLevels[id]=c.level;s.generalXp[id]=c.xp;s.heroLoyalty[id]=40;s.realm.heroLocations[id]=s.realm.activeCity;s.heroService.captives=s.heroService.captives.filter(c=>c.id!==id);HeroSystem.init(s);record(s.heroService,{at:now,id,text:c.hero.name+'已归顺，忠诚40'});return null;}
+ function recruitCaptive(s,id,method,key,now){const q=captiveQuote(s,id,method);if(!q||q.key!==key)return '俘将条件已变化';if(q.reason)return q.reason;const c=s.heroService.captives.find(c=>c.id===id);if(now-c.at>=DAY)return '俘将已逃离';s.res.gold-=q.cost.gold;for(const [k,n]of Object.entries(q.cost.jewels))s.jewels[k]-=n;s.customGenerals.push(clone(c.hero));s.generals.push(id);s.generalLevels[id]=c.level;s.generalXp[id]=c.xp;s.heroLoyalty[id]=40;s.realm.heroLocations[id]=s.realm.activeCity;s.heroService.captives=s.heroService.captives.filter(c=>c.id!==id);HeroSystem.init(s);HeroSystem.enrollStartingLevel(s,id);record(s.heroService,{at:now,id,text:c.hero.name+'已归顺，忠诚40'});return null;}
  function nextEvent(s){return events[s.governance.eventSeq%events.length];}
  function setPolicy(s,kind,enabled,now){if(!['eventsEnabled','autoRelief'].includes(kind)||typeof enabled!=='boolean')return '请选择内政策略';s.governance[kind]=enabled;if(kind==='eventsEnabled')s.governance.nextEvent=enabled?now+4*HOUR:0;return null;}
  function sacrificeQuote(s,now){const population=Math.max(100,Math.ceil(s.population)),cost={food:population,gold:population},reason=s.civicCooldowns.comfort>now?'安抚冷却中':s.res.food<cost.food||s.res.gold<cost.gold?'祭天所需粮食或黄金不足':'';return {id:'sacrifice',name:'祭天',kind:'comfort',cost,reward:{},effects:{morale:0,unrest:0,population:0},cooldownEnd:s.civicCooldowns.comfort,reason,enabled:!reason};}

@@ -46,7 +46,7 @@ const NamedGarrison=(()=>{
     if(o.won||before!==r.loyalty)r.pressureAt=now;
     // The general falls back into the inner city with a core of his troops after a lost siege.
     if(o.won){for(const k of Object.keys(full))r.army[k]=Math.ceil(full[k]*C.floorAfterWin);}else r.army=Object.fromEntries(Object.keys(full).map(k=>[k,Math.min(full[k],Math.max(0,Math.round(o.enemyArmyLeft?.[k]??r.army[k])))]));
-    r.armyAt=now;if(capturable)r.captive=true;
+    r.armyAt=now;if(capturable){r.captive=true;const g=generals[id];HeroSystem.captureLevel(s,g.id,id==='named_wancheng'||id==='named_beihai'?65:70);}
     return {before,after:r.loyalty,capturable};}
   function persuadeQuote(s,id,now,api){const r=project(s,id,now,api),day=Math.floor(now/DAY);if(!r)return {reason:'这座城没有镇守名将'};if(done(r))return {reason:'名将已被俘'};return {cost:C.persuadeGold,loss:C.persuadeLoss,reason:r.persuadeDay===day?'今天已经送过劝降书':s.res.gold<C.persuadeGold?'黄金不足':''};}
   function persuade(s,id,now,api){const q=persuadeQuote(s,id,now,api);if(q.reason)return q.reason;const r=settleTime(s,id,now,api);s.res.gold-=q.cost;r.loyalty=Math.max(0,r.loyalty-q.loss);r.persuadeDay=Math.floor(now/DAY);r.pressureAt=now;return null;}

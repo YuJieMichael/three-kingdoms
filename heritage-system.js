@@ -2,9 +2,17 @@
 const HeritageSystem=(()=>{
  const roles={governor:'城守',commander:'主将',counsellor:'军师'},HOUR=3600000;
  const zeroRoles=()=>({commander:'',counsellor:''});
- function init(s){if(!s||!Array.isArray(s.generals))return;if(s.cityRoles===undefined)s.cityRoles=zeroRoles();if(s.honors===undefined)s.honors={office:0,noble:0,salaryClaims:{office:0,noble:0}};if(s.gatherings===undefined)s.gatherings={};if(s.heritageHistory===undefined)s.heritageHistory=[];}
+ function init(s){if(!s||!Array.isArray(s.generals))return;if(s.cityRoles===undefined)s.cityRoles=zeroRoles();if(s.honors===undefined)s.honors={office:0,noble:0,salaryClaims:{office:0,noble:0}};if(s.gatherings===undefined)s.gatherings={};if(s.heritageHistory===undefined)s.heritageHistory=[];if(s.nobleBoost===undefined)s.nobleBoost=null;}
  const office=s=>HeritageData.offices[s.honors.office];
  const noble=s=>HeritageData.nobles[s.honors.noble];
+ const boostRules={noble:{ranks:2,days:3,min:0},nobleAdvanced:{ranks:5,days:10,min:1}};
+ function effectiveNoble(s,now=Date.now()){const b=s.nobleBoost,r=b&&boostRules[b.kind];return r&&b.end>now?Math.max(s.honors.noble,Math.min(9,s.honors.noble+r.ranks)):s.honors.noble;}
+ const recruitmentCap=rank=>Math.min(100,rank<=5?(rank+1)*10:60+(rank-5)*5);
+ function recruitmentQuote(s,level,now=Date.now()){const rank=effectiveNoble(s,now),cap=recruitmentCap(rank),required=HeritageData.nobles.find(n=>recruitmentCap(n.id)>=level);return {rank,cap,noble:required?.id??21,nobleName:required?.name||'最高爵位',reason:level>cap?'需要爵位 '+(required?.name||'最高爵位')+'（当前可招 '+cap+' 级）':''};}
+ function boostQuote(s,kind,now=Date.now()){const r=boostRules[kind],b=s.nobleBoost,active=b&&b.end>now;const reason=!r?'请选择推恩令':s.honors.noble<r.min?'高级推恩令需要永久爵位公士及以上':s.honors.noble>=9?'永久爵位已达推恩令上限':active&&boostRules[b.kind].ranks>r.ranks?'已有更高等级推恩令生效':'';return {reason,rank:r?Math.min(9,s.honors.noble+r.ranks):s.honors.noble,end:r?(active&&b.kind===kind?b.end:now)+r.days*86400000:now};}
+ function useBoost(s,kind,now=Date.now()){const q=boostQuote(s,kind,now);if(q.reason)return q.reason;if(!Number.isSafeInteger(q.end)||q.end>8640000000000000)return '持续时间已达上限';s.nobleBoost={kind,end:q.end};return null;}
+ function validBoost(s){const b=s.nobleBoost;return b===null||!!b&&typeof b==='object'&&!Array.isArray(b)&&Object.keys(b).length===2&&Object.hasOwn(boostRules,b.kind)&&Number.isSafeInteger(b.end)&&b.end>0&&b.end<=8640000000000000&&s.honors.noble>=boostRules[b.kind].min;}
+
  const roleHero=(s,role)=>role==='governor'?s.governor:s.cityRoles[role];
  const roleOf=(s,id)=>Object.keys(roles).find(role=>roleHero(s,role)===id)||'';
  function effectiveHero(s,kind){const order=kind==='research'?['counsellor','commander','governor']:kind==='train'?['commander','governor','counsellor']:['governor'];return order.map(role=>roleHero(s,role)).find(Boolean)||'';}
@@ -48,6 +56,7 @@ const HeritageSystem=(()=>{
  }
  function cancelGather(id){const s=live();if(!s.gatherings[id])return '这里没有进行采集';delete s.gatherings[id];return save();}
  function valid(s){const obj=x=>x&&typeof x==='object'&&!Array.isArray(x),int=n=>Number.isSafeInteger(n)&&n>=0;
+  if(!validBoost(s))return false;
   if(!obj(s.cityRoles)||Object.keys(s.cityRoles).length!==2||!['commander','counsellor'].every(k=>s.cityRoles[k]===''||s.generals.includes(s.cityRoles[k])))return false;
   const staff=[s.governor,...Object.values(s.cityRoles)].filter(Boolean),deployed=[...(s.expedition?[s.expedition]:[]),...s.expeditions,...Object.values(s.garrisons)];if(new Set(staff).size!==staff.length||deployed.some(e=>staff.includes(e.general)))return false;
   const h=s.honors;if(!obj(h)||!Number.isInteger(h.office)||h.office<0||h.office>=HeritageData.offices.length||!Number.isInteger(h.noble)||h.noble<0||h.noble>=HeritageData.nobles.length||!obj(h.salaryClaims)||!['office','noble'].every(k=>int(h.salaryClaims[k])&&(h.salaryClaims[k]===0||Progression.period(h.salaryClaims[k])===h.salaryClaims[k])))return false;
@@ -55,5 +64,5 @@ const HeritageSystem=(()=>{
   if(!Array.isArray(s.heritageHistory)||s.heritageHistory.length>10)return false;
   return s.heritageHistory.every(r=>obj(r)&&int(r.at)&&['salary','gather'].includes(r.kind)&&typeof r.name==='string'&&r.name.length<=100&&obj(r.loot)&&Object.entries(r.loot).every(([k,n])=>['food','wood','stone','iron','gold'].includes(k)&&int(n))&&obj(r.jewels)&&Object.entries(r.jewels).every(([k,n])=>Object.hasOwn(Progression.jewels,k)&&int(n)&&n<=24)&&int(r.xp)&&(r.kind==='salary'||Game.getNode(r.node,s)?.wild&&int(r.discarded)&&(r.overCapacity===undefined||int(r.overCapacity)&&r.overCapacity<=Object.values(r.loot).reduce((sum,n)=>sum+n,0))));
  }
- return {roles,HOUR,init,office,noble,roleHero,roleOf,effectiveHero,assign,ownedCounties,jewelPayment,promotionQuote,promote,salaryQuote,salary,gatherReason,startGather,gatherQuote,collectGather,cancelGather,valid};
+ return {roles,HOUR,init,office,noble,effectiveNoble,recruitmentCap,recruitmentQuote,boostQuote,useBoost,roleHero,roleOf,effectiveHero,assign,ownedCounties,jewelPayment,promotionQuote,promote,salaryQuote,salary,gatherReason,startGather,gatherQuote,collectGather,cancelGather,valid};
 })();

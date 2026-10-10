@@ -4,9 +4,22 @@ const HeroIdentity=(()=>{
   const aliases=Object.freeze({warrior:'weiyan',strategist:'xushu'});
   const garrisonKeys=Object.freeze({named_jiangling:'guanyu',named_xiaopei:'zhangfei',named_wancheng:'dianwei',named_xiapi:'lvbu',named_beihai:'taishici'});
   const matches=(hero,fields)=>Object.entries(fields).every(([k,v])=>hero[k]===v);
+  function transferKey(g){
+    const p=g?.famousSource;if(g?.origin!=='battle'||!p||typeof p!=='object'||Array.isArray(p)||Object.keys(p).length!==3||!Number.isSafeInteger(p.commandCredit)||p.commandCredit<0||p.commandCredit%10||p.commandCredit>100000)return '';
+    if(p.kind==='wild'){
+      const d=HeroSystem.wild.definitions.find(d=>d.line===p.line);if(!d?.historical||!matches(g,{name:d.name,title:d.title,type:'将',level:d.level,atk:d.atk,def:d.def,pol:d.pol,wis:d.wis,lead:d.level*10,price:d.gold,bonus:d.bonus}))return '';
+      return aliases[d.line]||d.line;
+    }
+    if(p.kind==='city'&&Object.hasOwn(garrisonKeys,p.line)){
+      const expected={...NamedGarrison.hero(p.line)};delete expected.id;
+      return matches(g,expected)?garrisonKeys[p.line]:'';
+    }
+    return '';
+  }
   function key(s,id){
     if(!s||!Array.isArray(s.generals)||!s.generals.includes(id)||!Array.isArray(s.customGenerals))return '';
     const g=s.customGenerals.find(g=>g?.id===id);if(!g)return '';
+    if(g.origin==='battle'){const seq=Number(id.slice(6))-2000000000000000;return Number.isSafeInteger(seq)&&seq>=1&&seq<=(s.heroService?.seq||0)?transferKey(g):'';}
     if(g.origin==='wild'){
       const w=s.wildGenerals,d=HeroSystem.wild.definitions.find(d=>d.line===g.wildLine);
       if(!d?.historical||!Array.isArray(w?.recruited)||!w.recruited.includes(id)||!Array.isArray(w.rumors))return '';
@@ -24,5 +37,5 @@ const HeroIdentity=(()=>{
     }
     return '';
   }
-  return {key};
+  return {key,transferKey};
 })();
