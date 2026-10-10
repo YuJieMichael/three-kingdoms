@@ -68,7 +68,7 @@ const sceneFlatMedia=typeof window!=='undefined'&&typeof window.matchMedia==='fu
 let sceneFlatMode=!!sceneFlatMedia?.matches;
 function sceneUseFlatGrid(){return !!sceneFlatMedia?.matches;}
 if(sceneFlatMedia){
-  const update=()=>{const next=sceneUseFlatGrid();if(next===sceneFlatMode)return;sceneFlatMode=next;if(typeof render==='function')render();};
+  const update=()=>{const next=sceneUseFlatGrid();if(next===sceneFlatMode)return;sceneFlatMode=next;if(next)document.body.classList.remove('scene-focus');if(typeof render==='function')render();};
   if(sceneFlatMedia.addEventListener)sceneFlatMedia.addEventListener('change',update);
   else if(sceneFlatMedia.addListener)sceneFlatMedia.addListener(update);
 }

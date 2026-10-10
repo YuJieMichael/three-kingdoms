@@ -8,7 +8,7 @@ function sceneEnv(width=390){
  var sceneConstructionMark=()=>'<span>施工</span>',sceneObservePlotCapacity=()=>null,sceneShowEmpty=()=>true;
  var sceneFieldStyle='heritage',SceneStyles={heritage:{description:'田庄'}};
  var sceneFieldLandscape=()=>'',sceneFieldRoads=()=>'',sceneEmptyPlotMarker=()=>'',sceneEmptyPlotControls=()=>'',sceneStyleChooser=()=>'';
- document.body={classList:{contains:()=>false}};
+ var bodyClasses=new Set();document.body={classList:{contains:name=>bodyClasses.has(name),add:name=>bodyClasses.add(name),remove:name=>bodyClasses.delete(name)}};
  var mediaCallbacks=[],testMedia={matches:${width<=760},addEventListener:(type,fn)=>mediaCallbacks.push(fn)};
  var window={matchMedia:()=>testMedia};var renderCount=0,render=()=>{renderCount++;};`);
  e.evaluate(fs.readFileSync(path.join(__dirname,'../scene-ui.js'),'utf8'));return e;
@@ -66,4 +66,10 @@ test('empty fields still offer all four industries directly and construction ret
  const e=fieldDetailEnv();e.evaluate('plotModal(0)');let view=e.evaluate('modalCapture');assert.doesNotMatch(view.body,/<details/);
  assert.deepEqual(buttons(view.body).map(b=>b.id),['0:farm','0:lumber','0:quarry','0:mine']);
  assert.equal(e.Game.developPlot(0,'farm'),null);e.evaluate('plotModal(0)');view=e.evaluate('modalCapture');assert.match(view.title,/施工中/);assert.match(view.footer,/data-id="plot:0"/);
+});
+
+test('entering the phone breakpoint exits the desktop focus mode before redrawing navigation',()=>{
+ const e=sceneEnv(1000);e.evaluate("document.body.classList.add('scene-focus');");assert.match(e.evaluate('webCityScene()'),/返回常规/);
+ e.evaluate('testMedia.matches=true;mediaCallbacks.forEach(fn=>fn());');assert.equal(e.evaluate("document.body.classList.contains('scene-focus')"),false);assert.equal(e.evaluate('renderCount'),1);assert.match(e.evaluate('webCityScene()'),/flat-building-grid/);
+ e.evaluate('testMedia.matches=false;mediaCallbacks.forEach(fn=>fn());');assert.match(e.evaluate('webCityScene()'),/全景/);assert.equal(e.evaluate("document.body.classList.contains('scene-focus')"),false);
 });
