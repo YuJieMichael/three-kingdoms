@@ -3554,6 +3554,8 @@ const ManualData = {
       "trialPrice": true,
       "source": "https://web.4399.com/rxsg/yxjp_03_22954.html"
     },
+    {"id":"reinforcementToken","name":"战场援军令","category":"战场","desc":"一枚租借一轮黄巾战役的独立军队。前往战场使用；不带回城内。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
+    {"id":"yellowEquipmentBox","name":"黄巾装备箱","category":"战场","desc":"黄巾每日首次完整通关获得；在战场中选择七个部位之一开启。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
     {
       "id": "reinforce",
       "name": "援军令",
