@@ -1,3 +1,4 @@
+const {seedLegacyWild}=require('./helpers/legacy-wild.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {loadGame,city,cloneActiveSave}=require('./helpers/game.cjs');
 
@@ -164,7 +165,7 @@ test('the real round resolver orders prepared shots and immediate counters witho
 // Expected Result: stable identities survive old marching saves and completed reports.
 // Pass Criteria: three real owned heroes retain their correct identity and each completed battle is valid.
 test('actually recruited heroes keep their identity through old missing-line marches and finished battle reloads',()=>{
- const e=loadGame(925),g=e.Game,wild=e.evaluate('HeroSystem.wild');city(g,{hall:6,inn:2,tavern:6,drill:2});g.state.honors.noble=2;g.state.army.archer=5000;for(const id of Object.keys(g.resources))g.state.res[id]=1000000;e.evaluate('Math.random=()=>.999999');assert.equal(wild.discover(),null);
+ const e=loadGame(925),g=e.Game,wild=e.evaluate('HeroSystem.wild');city(g,{hall:6,inn:2,tavern:6,drill:2});g.state.honors.noble=2;g.state.army.archer=5000;for(const id of Object.keys(g.resources))g.state.res[id]=1000000;e.evaluate('Math.random=()=>.999999');seedLegacyWild(e);assert.equal(wild.discover(),null);
  const lines=['huangzhong','warrior','strategist'],owned=[];
  const arrive=()=>{e.advance(Math.ceil(g.state.expedition.end-e.now())+1);assert.equal(g.startBattle(),null);};
  const finish=()=>{for(let n=0;n<30&&!g.state.battle.finished;n++)g.battleRound();assert.equal(g.state.battle.finished,true);assert.equal(g.state.battle.result.won,true);assert.equal(g.validSave(g.state),true);};
