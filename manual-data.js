@@ -3555,8 +3555,8 @@ const ManualData = {
       "source": "https://web.4399.com/rxsg/yxjp_03_22954.html"
     },
     {"id":"reinforcementToken","name":"战场援军令","category":"战场","desc":"一枚租借一轮黄巾战役的独立军队。前往战场使用；不带回城内。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
-    {"id":"barbarianEquipmentBox","name":"蛮族装备箱","category":"战场","desc":"南蛮每日首次完整通关获得；选择七个部位之一，获得珍稀蛮族套装。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
-    {"id":"yellowEquipmentBox","name":"黄巾装备箱","category":"战场","desc":"黄巾每日首次完整通关获得；在战场中选择七个部位之一开启。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
+    {"id":"barbarianEquipmentBox","name":"蛮族装备箱","category":"战场","desc":"南蛮每日首次完整通关获得；随机获得七部位中的一件珍稀蛮族装备，可重复。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
+    {"id":"yellowEquipmentBox","name":"黄巾装备箱","category":"战场","desc":"黄巾每日首次完整通关获得；随机获得七部位中的一件黄巾装备，可重复。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
     {
       "id": "reinforce",
       "name": "援军令",

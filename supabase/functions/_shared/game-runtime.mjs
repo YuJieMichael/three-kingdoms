@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="f8022e1c4c00c810e611bcbd89771ab9821f7941e57d66cbf7dc11100baf8667";
+export const runtimeHash="c141353293b24d6b3b7fcddc46a88d00ea03fe8fbf0c499a8326ffc8b770e00a";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -3568,8 +3568,8 @@ const ManualData = {
       "source": "https://web.4399.com/rxsg/yxjp_03_22954.html"
     },
     {"id":"reinforcementToken","name":"战场援军令","category":"战场","desc":"一枚租借一轮黄巾战役的独立军队。前往战场使用；不带回城内。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
-    {"id":"barbarianEquipmentBox","name":"蛮族装备箱","category":"战场","desc":"南蛮每日首次完整通关获得；选择七个部位之一，获得珍稀蛮族套装。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
-    {"id":"yellowEquipmentBox","name":"黄巾装备箱","category":"战场","desc":"黄巾每日首次完整通关获得；在战场中选择七个部位之一开启。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
+    {"id":"barbarianEquipmentBox","name":"蛮族装备箱","category":"战场","desc":"南蛮每日首次完整通关获得；随机获得七部位中的一件珍稀蛮族装备，可重复。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
+    {"id":"yellowEquipmentBox","name":"黄巾装备箱","category":"战场","desc":"黄巾每日首次完整通关获得；随机获得七部位中的一件黄巾装备，可重复。","price":0,"effect":null,"seconds":0,"rewardOnly":true},
     {
       "id": "reinforce",
       "name": "援军令",
@@ -15882,7 +15882,7 @@ const BattlefieldSystem=(()=>{
     return {enabled:api.enabled,campaign:c,entryReason:reason,run:r?clone(r):null,nodes:c?[...c.mainIds,...c.sideIds].map(id=>({...BattlefieldData.get(id,c.id),completed:completed.includes(id),available:available.includes(id),reason:completed.includes(id)?'已完成':available.includes(id)?'':'先完成前置主线'})):[],reward:c?BattlefieldData.reward(completed,c.id):{prestige:0,xp:0},tokens:s.inventory.reinforcementToken||0,boxes:c?(s.inventory[c.boxItem]||0):0,starterClaimed:bf.starterClaimed,relics:clone(bf.relics),lastReceipt:bf.lastReceipt?clone(bf.lastReceipt):null};
   }
   const BOX_SLOTS=['weapon','helmet','armor','cloak','bracer','boots','mount'];
-  function openBox(s,slot,api,campaign='yellow_turban'){const c=BattlefieldData.config(campaign);if(!c)return '未知剧本装备箱';if(!BOX_SLOTS.includes(slot))return '请选择装备箱的七个部位之一';if(!(s.inventory[c.boxItem]>0))return '没有对应装备箱';if(s.equipment.length>=s.equipmentCapacity)return '装备库已满，箱子保留在背包';const e=HeroSystem.addEquipment(s,slot,c.tier);e.setId=c.setId;s.inventory[c.boxItem]--;return null;}
+  function openBox(s,api,campaign='yellow_turban'){const c=BattlefieldData.config(campaign);if(!c)return '未知剧本装备箱';if(!(s.inventory[c.boxItem]>0))return '没有对应装备箱';if(s.equipment.length>=s.equipmentCapacity)return '装备库已满，箱子保留在背包';const slot=BOX_SLOTS[Math.floor(Math.random()*BOX_SLOTS.length)],e=HeroSystem.addEquipment(s,slot,c.tier);e.setId=c.setId;s.inventory[c.boxItem]--;return null;}
   function claimRelic(s,id,api){if(!['compass','mask'].includes(id)||!s.battlefields.relics[id]?.unlocked)return '尚未取得奇物线索';if(s.battlefields.relics[id].claimed)return '此奇物已领取';if(s.equipment.length>=s.equipmentCapacity)return '装备库已满，领取资格保留';const e=HeroSystem.addEquipment(s,'accessory',1);e.relic=id;s.battlefields.relics[id].claimed=true;return null;}
   function discoverRoute(s,api){const r=active(s);if(!r)return '请先开始本轮战役';const c=BattlefieldData.config(r.campaign);if(locked(s))return '请先结束当前战斗';if(r.routeDiscovered)return '本轮已探明隐藏入口';if(r.completed.includes(c.discover))return '探索支线已完成';if(!s.equipment.some(e=>e.relic==='compass'&&e.hero===r.general))return '请为本轮主将穿戴寻踪罗盘';r.routeDiscovered=true;return null;}
   const dayKey=now=>new Date(now+8*3600000).toISOString().slice(0,10);
@@ -17188,7 +17188,7 @@ const Game = (() => {
   const battlefieldView=(campaign='yellow_turban')=>BattlefieldSystem.view(state,battlefieldApi(),campaign);
   const battlefieldQuote=(id,army,campaign='yellow_turban')=>BattlefieldSystem.quote(state,id,army,battlefieldApi(),campaign);
   function battlefieldAction(name,...args){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem[name](state,...args,battlefieldApi());if(!error)save();return error;}
-  function openBattlefieldBox(slot,campaign='yellow_turban'){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem.openBox(state,slot,battlefieldApi(),campaign);if(!error)save();return error;}
+  function openBattlefieldBox(campaign='yellow_turban'){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem.openBox(state,battlefieldApi(),campaign);if(!error)save();return error;}
   const claimBattlefieldRelic=id=>battlefieldAction('claimRelic',id);
   const attemptBattlefieldInfiltration=(node,answer)=>battlefieldAction('attemptInfiltration',node,answer);
   const discoverBattlefieldRoute=()=>battlefieldAction('discoverRoute');

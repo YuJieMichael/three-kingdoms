@@ -30,7 +30,7 @@ function bagDetailHTML(entry){
   body=`<p class="hint">可用于爵位晋升，也可进献给黄巾史诗。进献与晋升共用当前数量。</p><p class="hint">获取：战斗奖励、野地采集${entry.id==='pearl'?'、铜钱黑市':''}。进献每次需要 10 枚，兑换声望 ${num(entry.jewel.prestige)} 与史诗凭证 ${entry.jewel.points}。</p><div class="bag-detail-actions">${btn('查看晋爵条件','taskTab','honors','secondary block')}${btn('史诗进献','taskTab','epic','block')}</div>`;
  }else if(entry.kind==='equipment'){
   const e=entry.equipment;
-  body=`<p class="hint">${HeroSystem.qualities[e.tier]} · ${HeroSystem.slots[e.slot]} · 需要将领 Lv.${HeroSystem.requiredLevel(e)}</p><p class="notice">${heroStatsHTML(HeroSystem.stats(e))}</p><p class="hint">${e.hero?'穿戴者：'+esc(Game.general(e.hero).name):'未穿戴'} · 强化 +${e.enhance}/10</p><div class="bag-detail-actions">${btn('穿戴 / 强化 / 分解','heroEquipment',String(e.id),'block')}${btn('打开装备库','heroTab','equipment','secondary block')}</div>`;
+  body=`<p class="hint">${HeroSystem.qualities[e.tier]} · ${HeroSystem.slots[e.slot]} · 需要将领 Lv.${HeroSystem.requiredLevel(e)}</p><p class="notice">${heroStatsHTML(HeroSystem.stats(e))}</p><p class="hint">${e.hero?'穿戴者：'+esc(Game.general(e.hero).name):'未穿戴'} · 强化 +${e.enhance}/10</p><div class="bag-detail-actions">${btn('装备管理','heroEquipment',String(e.id),'block')}${btn('打开装备库','heroTab','equipment','secondary block')}</div>`;
  }else{
   const x=entry.item,usable=!!x.effect&&entry.count>0;
   const label=['jewelBox','equipmentBox'].includes(x.effect)?'开启盒子':x.effect==='speedup'?'选择加速任务':x.effect==='equipmentMaterial'?'用于装备强化':x.effect==='gold'?'兑换黄金':'使用道具';
