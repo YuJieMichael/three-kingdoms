@@ -32,7 +32,7 @@ function run({seed=11,id='named_xiaopei',army={archer:14000,shield:6000,spear:50
     e.advance(2*3600000);
   }
   const st=g.garrisonStatus(id);
-  return {id,captured:!!g.state.conquered[id],recruited:st.recruited,general:st.general.name,generalJoined:g.state.generals.includes(st.general.id),assaults:log.length,log,validSave:g.validSave(g.state),hours:(e.now()-1791194400000)/3600000};
+  return {id,captured:!!g.state.conquered[id],recruited:st.recruited,general:st.general.name,level:st.recruited?g.general(st.general.id).level:null,generalJoined:g.state.generals.includes(st.general.id),assaults:log.length,log,validSave:g.validSave(g.state),hours:(e.now()-1791194400000)/3600000};
 }
 if(require.main===module)process.stdout.write(JSON.stringify(run(),null,2)+'\n');
 module.exports={run};

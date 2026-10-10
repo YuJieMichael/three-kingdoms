@@ -24,7 +24,7 @@ test('青龙偃月刀: scroll halves from hard wins, a hidden 72-hour site, smel
   for(let d=0;d<4;d++){for(let i=0;i<5;i++)assert.equal(g.refineLegendary(),null);assert.match(g.refineLegendary(),/今日|精金已够/);e.advance(86400000);}
   assert.equal(g.legendaryStatus().refined,20);g.seekLegendary();assert.equal(g.smeltLegendary(),null);assert.equal(g.legendaryStatus().stage,'awaken');assert.equal(s.inventory.qinglongScrollUpper,0);
   const site2=g.getNode(g.legendaryStatus().site);s.army.archer=25000;assert.match(g.dispatch(site2.id,'lin',{archer:100},'raid'),/只认关羽/);
-  city(g,{tavern:10});s.realm.namedCities.garrisons.named_jiangling.captive=true;assert.equal(g.recruitGarrisonGeneral('named_jiangling'),null);const guan=g.garrisonStatus('named_jiangling').general.id;s.generalLevels[guan]=30;
+  city(g,{tavern:10});s.realm.namedCities.garrisons.named_jiangling.captive=true;assert.equal(g.recruitGarrisonGeneral('named_jiangling'),null);const guan=g.garrisonStatus('named_jiangling').general.id;assert.equal(s.generalLevels[guan],70);
   assert.match(g.dispatch(site2.id,guan,{archer:25000},'raid'),/最多带 20000/);
   const r=fight(e,site2.id,{archer:9000,shield:4000,spear:4000,cavalry:3000},guan);assert.equal(r.won,true,'关羽 with 20k can wake the blade');
   assert.equal(g.legendaryStatus().stage,'done');const blade=s.equipment.find(x=>x.named==='qinglong');assert.ok(blade);assert.equal(blade.tier,5);

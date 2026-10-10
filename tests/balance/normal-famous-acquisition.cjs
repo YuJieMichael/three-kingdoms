@@ -11,7 +11,7 @@ const openingSource=fs.readFileSync(ROOT+'/tests/balance/archer-onboarding.cjs',
 const copy=x=>JSON.parse(JSON.stringify(x)),sum=a=>Object.values(a).reduce((n,x)=>n+x,0);
 function run(seed=1, options={}){
  const e=loadGame(seed),g=e.Game,start=e.now(),H=e.evaluate('HeroSystem'),heritage=e.evaluate('HeritageSystem'),P=g.progression;
- const log=[],battles=[],first={},MAX_HOURS=24*90;let firstState;
+ const log=[],battles=[],first={},MAX_HOURS=24*90;let firstState;let commander='lin';
  const hours=()=>+( (e.now()-start)/3600000).toFixed(3);
  function ok(error){if(error)throw Error(error);}
  function note(kind,id,more={}){log.push({hours:hours(),kind,id,...more});}
@@ -41,7 +41,7 @@ function run(seed=1, options={}){
  function train(id,count){if(count<=0)return;prereqs([...Object.entries(g.units[id].requires.buildings).map(([id,level])=>({kind:'building',id,level})),...Object.entries(g.units[id].requires.tech).map(([id,level])=>({kind:'tech',id,level}))]);
   for(let left=count;left>0;){const n=Math.min(100,left),cost=g.trainCost(id,n);funding(cost);for(let i=0;g.freePopulation()<n*(g.units[id].people||1);i++){if(i>48)throw Error('Population stalled for '+id);if(g.state.inventory.population>0)ok(g.useItem('population'));else advance(3600000);}ok(g.train(id,n));note('train',id,{count:n,cost});finish('train',g.state.trainQueue.at(-1));left-=n;}
  }
- function fight(id,army,mode='raid',general='lin'){
+ function fight(id,army,mode='raid',general=commander){
   daily();const n=g.getNode(id),before={gold:g.state.res.gold,food:g.state.res.food,level:g.state.generalLevels[general]};for(const k of Object.keys(army))ok(g.setTactic(k,'advance',''));ok(g.dispatch(id,general,army,mode,true));advance(Math.ceil(g.state.expedition.end-e.now())+1);ok(g.startBattle());for(let i=0;i<40&&!g.state.battle.finished;i++)g.battleRound();assert.equal(g.state.battle.finished,true);const b=g.state.battle,out={id,mode,general,hours:hours(),enemy:sum(n.army),rounds:b.round,won:b.result.won,lost:sum(b.result.lost),army:copy(army),receipt:copy(b.result.wildGeneral||null),before,claimed:b.result.claimed||false};battles.push(out);advance(Math.ceil((g.state.expedition?.end||e.now())-e.now())+1);g.dismissBattle();collect();assert.equal(g.validSave(cloneActiveSave(g.state)),true);return out;
  }
  let stage='opening';try{
@@ -60,7 +60,7 @@ function run(seed=1, options={}){
   stage='first capture';build('tavern',g.state.generals.length+H.wild.heldCaptives(g.state)+1);train('archer',Math.max(0,800-g.state.army.archer));ok(H.wild.discover());const r=g.state.wildGenerals.rumors.find(r=>r.line==='huaman'),quote=H.wild.portraitQuote(g.state,r.line);ok(H.wild.buyPortrait(r.line,quote.key));first.portrait={hours:hours(),gems:quote.price};const capture=fight(r.node,{archer:Math.min(800,g.state.army.archer)});first.capture=capture;first.recruitQuote=copy(H.wild.recruitQuote(g.state,r.id));
   if(capture.receipt?.status!=='captured')throw Error('No capture '+JSON.stringify(capture));
   const rq=H.wild.recruitQuote(g.state,r.id);first.beforeRecruit={hours:hours(),noble:g.state.honors.noble,gold:g.state.res.gold,jewels:copy(g.state.jewels),quote:copy(rq)};
-  funding({gold:100000});const rq2=H.wild.recruitQuote(g.state,r.id);ok(H.wild.recruit(r.id,'gold',rq2.key));first.recruited={hours:hours(),id:r.id,goldAfter:g.state.res.gold,lin:g.general('lin'),hero:g.general(r.id),boxes:g.state.inventory.barbarianEquipmentBox};stage='first hero complete';firstState=copy(g.state);if(options.stopAfterFirst)return {seed,stage,hours:hours(),first,firstState,battles,log,validSave:g.validSave(cloneActiveSave(g.state)),state:copy(g.state)};
+  funding({gold:100000});const rq2=H.wild.recruitQuote(g.state,r.id);ok(H.wild.recruit(r.id,'gold',rq2.key));first.recruited={hours:hours(),id:r.id,goldAfter:g.state.res.gold,lin:g.general('lin'),hero:g.general(r.id),boxes:g.state.inventory.barbarianEquipmentBox};stage='first hero complete';firstState=copy(g.state);if(options.useFamous)commander=r.id;if(options.stopAfterFirst)return {seed,stage,hours:hours(),first,firstState,battles,log,validSave:g.validSave(cloneActiveSave(g.state)),state:copy(g.state)};
   stage='county preparation';build('tavern',6);build('house',7);build('drill',5);research('shooting',5);research('combat',5);research('protection',5);
   function farmJewels(target){for(let attempt=0;g.state.jewels.pearl<target;attempt++){if(attempt>160)throw Error('Jewel route exceeded observation budget');const fresh=candidates.map(n=>g.getNode(n.id)).filter(n=>n.level===5&&sum(n.army)<=500&&!(g.state.cooldowns[n.id]>e.now()));farmNode=fresh[0]||farmNode;train('archer',Math.max(0,800-g.state.army.archer));if(g.state.cooldowns[farmNode.id]>e.now())advance(g.state.cooldowns[farmNode.id]-e.now()+1);fight(farmNode.id,{archer:Math.min(800,g.state.army.archer)});}}
   farmJewels(20);while(g.state.epic.treasures<2)ok(g.donateEpic('jewel','pearl'));train('archer',Math.max(0,1800-g.state.army.archer));ok(g.donateEpic('troop','archer'));for(const id of Object.keys(g.resources)){funding({[id]:100000});ok(g.donateEpic('resource',id));}while(g.state.epic.kills<1500)farmJewels(g.state.jewels.pearl+1);assert.equal(g.countyUnlocked(),true);
@@ -75,7 +75,7 @@ function run(seed=1, options={}){
  }catch(error){return {seed,stage,hours:hours(),error:error.message,first,firstState,stock:copy(g.state.res),noble:g.state.honors.noble,army:copy(g.state.army),battles,log,validSave:g.validSave(cloneActiveSave(g.state)),state:copy(g.state)};}
 }
 if(require.main===module){
- const result=run(Number(process.argv[2]||1),{stopAfterChapters:process.argv.includes('--chapters'),stopAfterFirst:process.argv.includes('--first')});
+ const result=run(Number(process.argv[2]||1),{stopAfterChapters:process.argv.includes('--chapters'),stopAfterFirst:process.argv.includes('--first'),useFamous:process.argv.includes('--famous')});
  const {state,firstState,...summary}=result;
  process.stdout.write(JSON.stringify(summary,null,2)+'\n');
  if(result.error||!result.validSave)process.exitCode=1;

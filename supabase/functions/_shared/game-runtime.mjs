@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="be45e53005ea7e5111f7a313a2b5c246828f09b858572124c5a27cc7015114b9";
+export const runtimeHash="8f9eca3da4c06fbef3a30c9dbc22671c6056ea7b66640d76d03d4abe1ca689e6";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -12091,7 +12091,7 @@ const GovernanceSystem=(()=>{
  function removeHero(s,id,{reason='忠诚耗尽，下野离城',at=Date.now(),busy=false}={}){
   if(!s.generals.includes(id)||protectedHeroes.has(id)||busy)return false;
   s.generals=s.generals.filter(x=>x!==id);
-  for(const k of ['heroLoyalty','heroPoints','heroDrills','heroSkills'])if(s[k])delete s[k][id];
+  for(const k of ['heroLoyalty','heroPoints','heroDrills','heroSkills','famousStarts'])if(s[k])delete s[k][id];
   delete s.heroService.owed[id];s.heroService.pending=s.heroService.pending.filter(x=>x!==id);
   for(const e of s.equipment||[])if(e.hero===id)e.hero='';
   for(const c of scopes(s)){const d=scopeData(s,c);if(d.heroAdministration?.prepared?.hero===id)d.heroAdministration.prepared=null;if(d.governor===id)d.governor=null;for(const role of Object.keys(d.cityRoles||{}))if(d.cityRoles[role]===id)d.cityRoles[role]='';for(const [key,buff]of Object.entries(d.buffs||{}))if(buff.general===id)delete d.buffs[key];}
@@ -12162,10 +12162,32 @@ const HeroSystem=(()=>{
   // This game's initial command values, not an original-game or historical table.
   const initialLeadershipValues=Object.freeze({menghuo:22,zhurong:20,tadun:23,huaman:18,baosanniang:19,weiyan:20,xushu:18,zhaoyun:23,huangzhong:20,ganning:21,zhangliao:28,machao:23,xunyu:16,pangtong:23,zhouyu:30,guanyu:25,zhangfei:20,dianwei:15,lvbu:24,taishici:20,liubei:25,sunjian:25,gaoshun:24,chengong:20,lejin:20,yujin:24,zhanghe:25,xuhuang:25,zhugeliang:30,sunce:28,xuchu:15});
   const initialLeadership=key=>Object.hasOwn(initialLeadershipValues,key)?initialLeadershipValues[key]:0;
-  function baseLeadership(raw,currentLevel){
+  const startingLevels=Object.freeze({huaman:60,baosanniang:60,zhurong:65,tadun:65,menghuo:65,guanyu:70,zhangfei:70,dianwei:65,taishici:65,lvbu:70});
+  function startingLevel(s,id){
+    const key=HeroIdentity.key(s,id),raw=s.customGenerals?.find(g=>g.id===id);
+    if(raw?.origin==='wild'&&!wild.activeDefinitions().some(d=>d.line===raw.wildLine))return 0;
+    return Object.hasOwn(startingLevels,key)?startingLevels[key]:0;
+  }
+  // Called only by save migration or recruitment, never by a read/view initializer.
+  function enrollStartingLevel(s,id){
+    if(!s.famousStarts||typeof s.famousStarts!=='object'||Array.isArray(s.famousStarts)||s.famousStarts[id]!==undefined)return;
+    const level=startingLevel(s,id),raw=s.customGenerals?.find(g=>g.id===id),old=s.generalLevels?.[id];
+    if(!level||!Number.isInteger(old)||old<1||old>10000||!Number.isInteger(raw?.level))return;
+    s.famousStarts[id]={level,leadGrowth:10*Math.max(0,Math.min(old,level)-raw.level)};
+    s.generalLevels[id]=Math.max(old,level);
+  }
+  function migrateStartingLevels(s){for(const id of s.generals||[])enrollStartingLevel(s,id);}
+  function validStartingLevels(s){
+    const rows=s.famousStarts;if(!rows||typeof rows!=='object'||Array.isArray(rows))return false;
+    return (s.generals||[]).every(id=>!startingLevel(s,id)||Object.hasOwn(rows,id))&&Object.entries(rows).every(([id,r])=>{
+      const target=startingLevel(s,id),raw=s.customGenerals?.find(g=>g.id===id);
+      return target&&r&&typeof r==='object'&&!Array.isArray(r)&&Object.keys(r).length===2&&r.level===target&&Number.isInteger(r.leadGrowth)&&r.leadGrowth>=0&&r.leadGrowth%10===0&&r.leadGrowth<=10*Math.max(0,target-raw.level)&&s.generalLevels[id]>=target;
+    });
+  }
+  function baseLeadership(raw,currentLevel,start){
     if(!raw.lead)return currentLevel*10;
     const recruitedLevel=Number.isFinite(raw.level)?raw.level:currentLevel;
-    return raw.lead+10*Math.max(0,currentLevel-recruitedLevel);
+    return raw.lead+(start&&currentLevel>=start.level?start.leadGrowth+10*Math.max(0,currentLevel-start.level):10*Math.max(0,currentLevel-recruitedLevel));
   }
   const attrs={atk:'勇武',def:'统御',pol:'内政',wis:'智谋',lead:'统率'};
   // Free points only raise these three; 统御 and 统率 grow from level and equipment.
@@ -12222,6 +12244,7 @@ const HeroSystem=(()=>{
     function codex(s){return activeDefinitions().map(d=>{const r=s.wildGenerals?.rumors?.find(r=>r.line===d.line),reason=unlockReason(s,d);return {...d,region:d.region||'近郊',locked:!!reason,reason,status:r?.status||'undiscovered',portraitOwned:portraitOwned(s,d.line),node:r?.node||null,heroId:r?.id||null};});}
     const loyalty=(s,id)=>s.heroLoyalty?.[id]??s.wildGenerals?.captives?.find(c=>c.id===id)?.loyalty??80;
     const portraitOwned=(s,line)=>!!s.wildGenerals?.portraits?.includes(line);
+    const recruitmentLevel=d=>d.retired?d.level:startingLevels[d.line]||d.level;
     const hero=(d,id,node)=>({id,name:d.name,title:d.title,type:'将',level:d.level,atk:d.atk,def:d.def,pol:d.pol,wis:d.wis,lead:d.level*10,price:d.gold,bonus:d.bonus,desc:d.firstCaptureBox?'在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。':d.historical?'在野历史将领，数值与招降条件为本作试玩设定。':'山林中的游侠，清剿其驻守野地后可手动招降。',origin:'wild',wildLine:d.line,sourceNode:node});
     function validId(id,s){const seq=s.wildGenerals?.seq;if(!integer(seq)||typeof id!=='string'||!/^local_\d+$/.test(id))return false;const n=Number(id.slice(6));return Number.isSafeInteger(n)&&n>ID_BASE&&n<=ID_BASE+seq;}
     function nodeValid(id,s){const m=/^wild_(\d{1,2})_(\d{1,2})$/.exec(id||'');return !!m&&Number(m[1])<64&&Number(m[2])<64&&id==='wild_'+Number(m[1])+'_'+Number(m[2])&&!!Game.getNode(id,s)?.wild;}
@@ -12285,7 +12308,7 @@ const HeroSystem=(()=>{
     function recruit(id,method,key){
       const live=liveWild();if(live.error)return live.error;const s=live.s,q=recruitQuote(s,id,method);if(!q||typeof key!=='string'||q.key!==key)return '招降条件已变化，请重新查看俘将';if(q.reason)return q.reason;
       const w=s.wildGenerals,c=w.captives.find(c=>c.id===id);s.res.gold-=q.cost.gold;for(const [j,n]of Object.entries(q.cost.jewels))s.jewels[j]-=n;
-      s.customGenerals.push({...c.hero});s.generals.push(id);s.generalLevels[id]=c.hero.level;s.generalXp[id]=0;s.heroLoyalty[id]=c.loyalty;w.captives=w.captives.filter(c=>c.id!==id);w.rumors.find(r=>r.id===id).status='recruited';w.recruited.push(id);init(s);return persist();
+      s.customGenerals.push({...c.hero});s.generals.push(id);s.generalLevels[id]=c.hero.level;s.generalXp[id]=0;s.heroLoyalty[id]=c.loyalty;w.captives=w.captives.filter(c=>c.id!==id);w.rumors.find(r=>r.id===id).status='recruited';w.recruited.push(id);init(s);enrollStartingLevel(s,id);return persist();
     }
     function rewardQuote(s,id,method='gold'){
       if(!s.generals.includes(id)||!['gold','jewels'].includes(method))return null;const current=loyalty(s,id),raise=Math.min(10,100-current),cost=method==='gold'?{gold:2000,jewels:{}}:{gold:0,jewels:{pearl:1}};
@@ -12295,11 +12318,12 @@ const HeroSystem=(()=>{
     function reward(id,method,key){const live=liveWild();if(live.error)return live.error;const s=live.s,q=rewardQuote(s,id,method);if(!q||typeof key!=='string'||q.key!==key)return '奖励条件已变化，请重新查看将领';if(q.reason)return q.reason;s.res.gold-=q.cost.gold;for(const [j,n]of Object.entries(q.cost.jewels))s.jewels[j]-=n;s.heroLoyalty[id]=q.next;return persist();}
     function releaseQuote(s,id){const c=s.wildGenerals?.captives.find(c=>c.id===id);return c?{id,name:c.hero.name,key:[id,c.line,c.at].join('|')}:null;}
     function release(id,key){const live=liveWild();if(live.error)return live.error;const s=live.s,q=releaseQuote(s,id);if(!q||typeof key!=='string'||q.key!==key)return '俘将状态已变化，请重新查看';s.wildGenerals.captives=s.wildGenerals.captives.filter(c=>c.id!==id);s.wildGenerals.rumors.find(r=>r.id===id).status='released';return persist();}
-    return {definitions,activeDefinitions,visibleDefinitions,init:initWild,valid:validWild,validReceipt,heldCaptives,roomUsed,roomCapacity,unlockReason,codex,loyalty,portraitOwned,portraitQuote,buyPortrait,discover,settle,recruitQuote,recruit,rewardQuote,reward,releaseQuote,release};
+    return {definitions,recruitmentLevel,activeDefinitions,visibleDefinitions,init:initWild,valid:validWild,validReceipt,heldCaptives,roomUsed,roomCapacity,unlockReason,codex,loyalty,portraitOwned,portraitQuote,buyPortrait,discover,settle,recruitQuote,recruit,rewardQuote,reward,releaseQuote,release};
   })();
   function init(s){
     if(!s||!Array.isArray(s.generals))return;
     if(s.heroPoints===undefined)s.heroPoints={};
+    if(s.famousStarts===undefined)s.famousStarts={};
     if(s.heroDrills===undefined)s.heroDrills={};
     if(s.equipment===undefined)s.equipment=[];
     if(s.equipmentCapacity===undefined)s.equipmentCapacity=50;
@@ -12334,7 +12358,7 @@ const HeroSystem=(()=>{
   function validEquipment(e,s){if(e?.setId!==undefined&&(!['yellow_turban','nanman'].includes(e.setId)||!['weapon','helmet','armor','cloak','bracer','boots','mount'].includes(e.slot)||e.tier!==(e.setId==='nanman'?3:2)||e.named!==undefined||e.relic!==undefined))return false;if(e?.relic!==undefined&&(!['compass','mask'].includes(e.relic)||e.slot!=='accessory'||e.tier!==1||e.enhance!==0||e.refine!==undefined||e.named!==undefined||e.setId!==undefined))return false;return !!e&&typeof e==='object'&&!Array.isArray(e)&&Number.isSafeInteger(e.id)&&e.id>0&&e.id<=s.equipmentSeq&&Object.hasOwn(slots,e.slot)&&(e.slot==='mount'?[1,2,3,4].includes(e.tier)&&e.named===undefined&&e.refine===undefined:[1,2,3,4,5].includes(e.tier))&&(e.tier===5?e.slot==='weapon'&&typeof e.named==='string'&&(typeof LegendaryWeapons==='undefined'||Object.hasOwn(LegendaryWeapons.weapons,e.named)):e.named===undefined)&&Number.isInteger(e.enhance)&&e.enhance>=0&&e.enhance<=10&&(e.refine===undefined||e.tier>=3&&!!e.refine&&typeof e.refine==='object'&&Object.keys(e.refine).length===2&&REFINE_STATS.includes(e.refine.stat)&&Number.isInteger(e.refine.value)&&e.refine.value>=3&&e.refine.value<=8)&&(e.hero===''||s.generals.includes(e.hero)&&s.generalLevels[e.hero]>=requiredLevel(e));}
   function valid(s){
     const obj=x=>x&&typeof x==='object'&&!Array.isArray(x),int=n=>Number.isSafeInteger(n)&&n>=0;
-    if(!wild.valid(s))return false;
+    if(!wild.valid(s)||!validStartingLevels(s))return false;
     if(!obj(s.heroPoints)||!obj(s.heroDrills)||!Array.isArray(s.equipment)||!int(s.equipmentSeq)||!Number.isInteger(s.equipmentCapacity)||s.equipmentCapacity<50||s.equipmentCapacity>500||s.equipment.length>s.equipmentCapacity||typeof s.heroGiftClaimed!=='boolean')return false;
     if(!Object.keys(s.heroPoints).every(id=>s.generals.includes(id))||!s.generals.every(id=>obj(s.heroPoints[id])&&Object.keys(s.heroPoints[id]).length===5&&Object.keys(attrs).every(k=>int(s.heroPoints[id][k]))&&remaining(s,id)>=0))return false;
     if(!Object.entries(s.heroDrills).every(([id,d])=>s.generals.includes(id)&&obj(d)&&int(d.day)&&int(d.count)&&d.count<=3))return false;
@@ -12378,7 +12402,7 @@ const HeroSystem=(()=>{
   function refine(eid){const blocked=Game.saveBlockReason();if(blocked)return blocked;const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.relic)return '剧情奇物不能强化、炼化或分解';if(e.slot==='mount')return '坐骑不能炼化属性';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {initialLeadership,baseLeadership,battlefieldSetBonus,attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
+  return {initialLeadership,startingLevel,enrollStartingLevel,migrateStartingLevels,baseLeadership,battlefieldSetBonus,attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();
 
 
@@ -16086,11 +16110,11 @@ const Game = (() => {
   function garrisonApi(context=state){return {site:id=>{const n=nodes.find(x=>x.id===id);return n?{...n,...nodeSite(n,context)}:null;},general:id=>general(id)};}
   // Famous-general garrisons: actions and recruitment (named-garrison.js).
   // Recruit at once when the tavern has room; otherwise the general waits as a captive in the garrison record.
-  function recruitGarrisonGeneralNow(id){const r=NamedGarrison.record(state,id);if(!r?.captive)return false;if(HeroSystem.wild.roomUsed(state)>=heroCapacity()||state.customGenerals.length+HeroSystem.wild.heldCaptives(state)>=100)return false;const hero=NamedGarrison.hero(id);state.customGenerals.push(hero);state.generals.push(hero.id);state.generalLevels[hero.id]=hero.level;state.generalXp[hero.id]=0;state.realm.heroLocations[hero.id]=currentCityId();r.captive=false;r.recruited=true;HeroSystem.init(state);if(state.heroLoyalty)state.heroLoyalty[hero.id]=40;return true;}
+  function recruitGarrisonGeneralNow(id){const r=NamedGarrison.record(state,id);if(!r?.captive)return false;if(HeroSystem.wild.roomUsed(state)>=heroCapacity()||state.customGenerals.length+HeroSystem.wild.heldCaptives(state)>=100)return false;const hero=NamedGarrison.hero(id);state.customGenerals.push(hero);state.generals.push(hero.id);state.generalLevels[hero.id]=hero.level;state.generalXp[hero.id]=0;state.realm.heroLocations[hero.id]=currentCityId();r.captive=false;r.recruited=true;HeroSystem.init(state);HeroSystem.enrollStartingLevel(state,hero.id);if(state.heroLoyalty)state.heroLoyalty[hero.id]=40;return true;}
   function garrisonStatus(id){return NamedGarrison.has(id)?NamedGarrison.status(state,id,Date.now(),garrisonApi()):null;}
   function persuadeGarrison(id){tick();const error=NamedGarrison.persuade(state,id,Date.now(),garrisonApi());if(!error)save();return error;}
   function sowGarrison(id){tick();const error=NamedGarrison.sow(state,id,Date.now(),garrisonApi());if(!error)save();return error;}
-  function recruitGarrisonGeneral(id){tick();const r=NamedGarrison.record(state,id);if(!r?.captive||r.recruited)return '没有可招降的俘虏';if(HeroSystem.wild.roomUsed(state)>=heroCapacity())return '招贤馆没有空闲房间（包含被俘将领）';if(state.customGenerals.length+HeroSystem.wild.heldCaptives(state)>=100)return '将领总量已达上限';const hero=NamedGarrison.hero(id);state.customGenerals.push(hero);state.generals.push(hero.id);state.generalLevels[hero.id]=hero.level;state.generalXp[hero.id]=0;state.realm.heroLocations[hero.id]=currentCityId();r.captive=false;r.recruited=true;HeroSystem.init(state);if(state.heroLoyalty)state.heroLoyalty[hero.id]=40;save();return null;}
+  function recruitGarrisonGeneral(id){tick();const r=NamedGarrison.record(state,id);if(!r?.captive||r.recruited)return '没有可招降的俘虏';if(HeroSystem.wild.roomUsed(state)>=heroCapacity())return '招贤馆没有空闲房间（包含被俘将领）';if(state.customGenerals.length+HeroSystem.wild.heldCaptives(state)>=100)return '将领总量已达上限';const hero=NamedGarrison.hero(id);state.customGenerals.push(hero);state.generals.push(hero.id);state.generalLevels[hero.id]=hero.level;state.generalXp[hero.id]=0;state.realm.heroLocations[hero.id]=currentCityId();r.captive=false;r.recruited=true;HeroSystem.init(state);HeroSystem.enrollStartingLevel(state,hero.id);if(state.heroLoyalty)state.heroLoyalty[hero.id]=40;save();return null;}
   function getNode(id,context=state){
     const order=WarOrders.getNode(id);if(order)return order;
     const named=nodes.find(n=>n.id===id);if(named)return {...named,...nodeSite(named,context),wild:false,...(NamedGarrison.has(id)&&context?.realm?.namedCities?.garrisons?{army:NamedGarrison.army(context,id,Date.now(),garrisonApi(context)),commander:NamedGarrison.commander(id)}:{})};
@@ -16155,7 +16179,7 @@ const Game = (() => {
   const newState=()=>{const fresh=({version:2,manualSchema:1,last:Date.now(),speed:1,autoUpgrade:false,autoResearch:false,starterGiftClaimed:false,starterGiftVersion:0,missionSchema:2,missionClaims:[],res:{food:5000,wood:5000,stone:5000,iron:5000,gold:5000},buildings:Object.fromEntries(cityIds.map(id=>[id,id==='hall'?1:0])),cityLayout:defaultCityLayout(),cityLevels:Array.from({length:36},(_,i)=>i===14?1:0),tactics:Object.fromEntries(Object.keys(units).map(id=>[id,{command:id==='archer'?'advance':defaultOrder(id),target:''}])),plots:newPlots(),plotTemplate:newPlotTemplate(),army:blankArmy(),captives:blankArmy(),buildQueue:[],trainQueue:[],researchQueue:null,tech:Object.fromEntries(Object.keys(ManualData.technology).map(id=>[id,0])),generals:['lin','su'],generalLevels:{lin:1,su:1},generalXp:{lin:0,su:0},customGenerals:[],innCandidates:[],governor:'su',population:0,morale:80,unrest:0,tax:20,storageAllocation:{food:25,wood:25,stone:25,iron:25},gems:1000,inventory:{labor:1},buffs:{},itemCooldowns:{},civicCooldowns:{comfort:0,levy:0},trialGiftAt:0,ruler:'青溪城主',banner:'青',scouted:{},defenses:Object.fromEntries(Object.keys(ManualData.defenses).map(id=>[id,0])),defenseQueue:[],landClaims:{},conquered:{},raided:{},garrisons:{},towns:initialTowns(),yellowGold:{},openCitySites:YellowCityData.createSites(null,fixedSites),cooldowns:{},expedition:null,expeditions:[],battle:null,reports:[],mission:0,stats:{trained:0,victories:0},seen:[],tutorial:false});Progression.init(fresh);HeroSystem.init(fresh);HeritageSystem.init(fresh);NPCDefense.init(fresh);WarCare.init(fresh);GovernanceSystem.init(fresh);AutomationSystem.init(fresh);OnboardingSystem.init(fresh);WarOrders.init(fresh);GeneralGrowth.init(fresh);ScoutSystem.init(fresh);RegionalFront.init(fresh);HeroAdministration.init(fresh);CitySystem.init(fresh);NamedCitySystem.init(fresh);CitySpecialty.init(fresh);SupplyLines.init(fresh);fresh.prestige=0;BattlefieldSystem.init(fresh);return fresh;};
   function migrateSave(data){
     if(!data||![1,2].includes(data.version))return data;
-    const migrationNow=Date.now(),old=JSON.parse(JSON.stringify(data));
+    const migrationNow=Date.now(),old=JSON.parse(JSON.stringify(data)),legacyFamousStarts=old.famousStarts===undefined;
     if(old.version===1){old.plots=newPlots();Object.keys(plotTypes).forEach((type,index)=>{old.plots[index]={type,level:old.buildings[type]||1};delete old.buildings[type];});old.buildQueue=old.buildQueue.map(q=>Object.hasOwn(plotTypes,q.id)?{...q,plot:Object.keys(plotTypes).indexOf(q.id),kind:'upgrade'}:q);}
     old.version=2;if(old.expeditions===undefined)old.expeditions=[];if(old.autoUpgrade===undefined)old.autoUpgrade=false;if(old.autoResearch===undefined)old.autoResearch=false;if(old.starterGiftClaimed===undefined)old.starterGiftClaimed=false;
     if(!old.manualSchema){
@@ -16196,7 +16220,7 @@ const Game = (() => {
     for(const c of CitySystem.list(old)){GeneralGrowth.init(old);ScoutSystem.init(c.data);RegionalFront.init(c.data);HeroAdministration.init(c.data);WarCare.init(c.data);GovernanceSystem.initCity(c.data,migrationNow);}NamedCitySystem.init(old);CitySpecialty.init(old);SupplyLines.init(old);
     if(old.openCitySites&&typeof old.openCitySites==='object'&&!Array.isArray(old.openCitySites)&&['yellow_qingshi','yellow_baisha','yellow_chigang'].every(id=>Object.hasOwn(old.openCitySites,id))&&Object.keys(old.openCitySites).every(id=>YellowCityData.allNodes().some(n=>n.id===id))&&YellowCityData.allNodes().some(n=>!Object.hasOwn(old.openCitySites,n.id)))old.openCitySites=YellowCityData.createSites(old,fixedSites,old.openCitySites);
     if(old.yellowGold===undefined)old.yellowGold={};
-    BattlefieldSystem.init(old);return old;
+    BattlefieldSystem.init(old);if(legacyFamousStarts)HeroSystem.migrateStartingLevels(old);return old;
   }
   // Hold one origin-wide exclusive Web Lock throughout a browser writer's lifetime.
   const SESSION_KEY=KEY+'-writer',BACKUP_KEY=KEY+'-backup',REQUEST_KEY=KEY+'-handoff',LEASE_MS=15000;
@@ -16671,7 +16695,7 @@ const Game = (() => {
   function trainSeconds(id,count){const u=units[id],tech=u.kind==='machine'?state.tech.manufacture:state.tech.training;return Math.max(1,count*u.time/(1+tech*.1+general(HeritageSystem.effectiveHero(state,'train')).atk/100)/state.speed);}
   function train(id,count){tick();count=Math.floor(count);if(!units[id]||count<1||count>100000)return '请选择训练数量';const needed=unitRequirements(id);if(needed)return '需要 '+needed;if(state.trainQueue.length>=trainingLimit())return '军营训练队列已满';if(count*(units[id].people||1)>freePopulation())return '空闲人口不足，每名'+units[id].name+'需要 '+(units[id].people||1)+' 人口';const cost=trainCost(id,count);if(!canPay(cost))return '训练资源不足';pay(cost);state.population-=count*(units[id].people||1);const start=Math.max(Date.now(),...state.trainQueue.map(q=>q.end));state.trainQueue.push({id,count,start,end:start+trainSeconds(id,count)*1000});save();return null;}
   function dismissTroops(id,count){tick();count=Math.floor(count);if(!units[id]||count<1||count>state.army[id])return '数量不足';state.army[id]-=count;state.population=Math.min(maxPop(),state.population+count*(units[id].people||1));save();return null;}
-  function general(id,legacyLeadership=false){const g=[...generals,...state.customGenerals].find(g=>g.id===id),lv=state.generalLevels[id]||1;if(!g)return {id,name:id?'未知将领':'尚未任命',level:1,atk:0,def:0,pol:0,wis:0,lead:0};const baseExtra=HeroSystem.bonus(state,id),skillExtra=GeneralGrowth.statBonus(state,id),extra=Object.fromEntries(Object.keys(baseExtra).map(k=>[k,baseExtra[k]+(skillExtra[k]||0)]));return {...g,level:lv,atk:(g.atk+(lv-1)*4+extra.atk)*(activeBuff('valor',id)?1.25:1),def:g.def+(lv-1)*3+extra.def,pol:(g.pol+extra.pol)*(activeBuff('politics',id)?1.25:1),wis:((g.wis||g.def)+extra.wis)*(activeBuff('wisdom',id)?1.25:1),lead:((legacyLeadership?(g.lead||lv*10):HeroSystem.baseLeadership(g,lv)+HeroSystem.initialLeadership(HeroIdentity.key(state,id))*10)+extra.lead)*(1+state.tech.leadership*.1)*(activeBuff('tiger',id)?1.5:1)};}
+  function general(id,legacyLeadership=false){const g=[...generals,...state.customGenerals].find(g=>g.id===id),lv=state.generalLevels[id]||1;if(!g)return {id,name:id?'未知将领':'尚未任命',level:1,atk:0,def:0,pol:0,wis:0,lead:0};const baseExtra=HeroSystem.bonus(state,id),skillExtra=GeneralGrowth.statBonus(state,id),extra=Object.fromEntries(Object.keys(baseExtra).map(k=>[k,baseExtra[k]+(skillExtra[k]||0)]));return {...g,level:lv,atk:(g.atk+(lv-1)*4+extra.atk)*(activeBuff('valor',id)?1.25:1),def:g.def+(lv-1)*3+extra.def,pol:(g.pol+extra.pol)*(activeBuff('politics',id)?1.25:1),wis:((g.wis||g.def)+extra.wis)*(activeBuff('wisdom',id)?1.25:1),lead:((legacyLeadership?(g.lead||lv*10):HeroSystem.baseLeadership(g,lv,state.famousStarts?.[id])+HeroSystem.initialLeadership(HeroIdentity.key(state,id))*10)+extra.lead)*(1+state.tech.leadership*.1)*(activeBuff('tiger',id)?1.5:1)};}
   function setGovernor(id){tick(Date.now(),false);if(!state.generals.includes(id))return '尚未招募该武将';if(generalBusy(id))return '该武将正在出征或驻守';for(const role of ['commander','counsellor'])if(state.cityRoles[role]===id)state.cityRoles[role]='';state.governor=id;save();return null;}
   function setTax(value){tick();state.tax=Math.max(0,Math.min(100,Math.round(Number(value)||0)));save();}
   function civicOrderPreview(id){

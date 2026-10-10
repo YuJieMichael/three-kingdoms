@@ -1,11 +1,11 @@
 'use strict';
-// Prepared mechanism comparisons, not a normal-economy acquisition route.
+// Prepared legacy-level mechanism comparisons, not current recruitment tiers or a normal-economy acquisition route.
 const assert=require('node:assert/strict');
 const {city,cloneActiveSave}=require('../helpers/game.cjs');
 const {prepared,recruitWild,recruitGarrison}=require('../helpers/hero-fixtures.cjs');
 const SOURCES=['ordinary','named_wancheng','guanyu','zhouyu'];
 function hero(e,source){if(source==='named_wancheng')return recruitGarrison(e,source);if(source!=='ordinary')return recruitWild(e,source);const g=e.Game;assert.equal(g.refreshInn(),null);const c=g.state.innCandidates[0];c.level=5;c.lead=50;assert.equal(g.recruit(c.id),null);return c.id;}
-function setup(seed,source){const e=prepared(seed),g=e.Game,id=hero(e,source),s=g.state;city(g,{hall:10,house:10,drill:10,barracks:10,academy:10});s.generalLevels[id]=20;s.governor=null;for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes])s.conquered[n.id]=true;s.conquered.fort=true;s.conquered.camp=true;s.conquered.c4_sishui=true;s.conquered.c4_hulao=true;for(const k of Object.keys(g.resources))s.res[k]=9000000;
+function setup(seed,source){const e=prepared(seed),g=e.Game,id=hero(e,source),s=g.state;city(g,{hall:10,house:10,drill:10,barracks:10,academy:10});delete s.famousStarts[id];s.generalLevels[id]=20;s.governor=null;for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes])s.conquered[n.id]=true;s.conquered.fort=true;s.conquered.camp=true;s.conquered.c4_sishui=true;s.conquered.c4_hulao=true;for(const k of Object.keys(g.resources))s.res[k]=9000000;
  // Both sides of every comparison get the same flag: level-10 drill permits 125000.
  s.buffs.flag={effect:'flag',general:null,end:e.now()+86400000};return {e,g,id};}
 function fight(seed,source,count,legacy){const {e,g,id}=setup(seed,source),s=g.state,army={archer:count*.4,shield:count*.2,spear:count*.2,cavalry:count*.2};Object.assign(s.army,army);for(const k of Object.keys(army))g.setTactic(k,'advance','');assert.equal(g.dispatch('c4_xingyang',id,army,'occupy'),null);if(legacy)s.expedition.generalSnapshot={...g.general(id,true)};const frozen={...s.expedition.generalSnapshot};e.advance(Math.ceil(s.expedition.end-e.now())+1);assert.equal(g.startBattle(),null);for(let i=0;i<30&&!s.battle.finished;i++)g.battleRound();assert.equal(s.battle.finished,true);assert.equal(g.validSave(cloneActiveSave(s)),true);return {seed,source,count,rules:legacy?'old':'new',lead:frozen.lead,coverage:Math.min(1,frozen.lead*100/count),atk:frozen.atk,def:frozen.def,won:s.battle.result.won,rounds:s.battle.round,lost:Object.values(s.battle.result.lost).reduce((a,b)=>a+b,0)};}
