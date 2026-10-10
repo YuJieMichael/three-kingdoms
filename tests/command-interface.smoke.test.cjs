@@ -42,9 +42,9 @@ function pressGuard(e,action){
 test('scene switch and command dock keep city areas and reports/shop one tap away while More holds the remaining tools',()=>{
  const e=ui(),navOf=(source,label)=>source.match(new RegExp('<nav class="[^"]*" aria-label="'+label+'"[^>]*>([\\s\\S]*?)</nav>'))[1];
  // Shop is always present; the starting decree also exposes inventory immediately.
- const fresh=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...fresh.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','宝物','商城','更多']);
+ const fresh=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...fresh.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','宝物','商城','营造','更多']);
  delete e.g.state.inventory.labor;
- const emptyInventory=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...emptyInventory.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','商城','更多']);
+ const emptyInventory=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...emptyInventory.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','商城','营造','更多']);
  city(e.g,{hall:3});e.g.state.stats.victories=1;e.g.state.inventory.speed_build_15m=1;
  const before=JSON.stringify(e.g.state),html=e.evaluate('classicShell()'),nav=label=>navOf(html,label);
  const buttons=part=>[...part.matchAll(/<button data-action="([^"]*)" data-id="([^"]*)"[^>]*aria-label="([^"]+)"/g)].map(([,action,id,label])=>[label,action,id]);

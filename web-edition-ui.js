@@ -258,7 +258,7 @@ document.addEventListener('keydown',event=>{
   const active=document.activeElement,board=active?.closest('.city-grid,.plot-grid');if(!board||active.tagName!=='BUTTON')return;
   const cells=[...board.querySelectorAll('button')],index=cells.indexOf(active),grid=board.classList.contains('scene-stage')?6:getComputedStyle(board).gridTemplateColumns.split(' ').length,step=({ArrowLeft:-1,ArrowRight:1,ArrowUp:-grid,ArrowDown:grid}[event.key]);
   let target=cells[index+step];
-  if(board.classList.contains('scene-stage')){
+  if(board.classList.contains('scene-stage')||board.classList.contains('flat-building-grid')){
     const logical=Number(active.dataset.id.replace('site:','')),bySite=new Map(cells.map(c=>[Number(c.dataset.id.replace('site:','')),c]));
     target=null;
     for(let site=logical+step;site>=0&&site<(board.classList.contains('city-grid')?36:Game.unlockedPlots());site+=step){
