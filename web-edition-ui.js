@@ -48,7 +48,7 @@ function webPlotBenefitsHTML(index,type,level){
   return `<section class="web-plot-preview"><h3>完工后的城池收益</h3><table><thead><tr><th>资源 / 时</th><th>当前净产</th><th>预计净产</th></tr></thead><tbody>${Object.entries(projected).map(([id,value])=>`<tr><th>${Game.resources[id].name}</th><td>${num(current[id]*60)}</td><td>${num(current[id]*60-beforeFields[id]+value)}</td></tr>`).join('')}</tbody></table><p>劳动人口：${num(Game.workers())} → ${num(projectedWorkers)} · 当前人口 ${num(S().population)}</p><p>这块地：${num(Game.plotYield(old)*60)} → ${num(gain)} / 时</p>${projectedWorkers>S().population?'<p class="notice">人口不足，所有资源田将一起降低劳动效率；可建设民房或安抚招徕人口。</p>':''}<p class="hint">按当前科技、民心、领地加成和驻军耗粮估算；完工时这些条件可能变化。仓储容量不会因建设资源田增加。</p></section>`;
 }
 function webBattleArmiesHTML(b,context){
-  return `<div class="web-army-rosters">${['player','enemy'].map(side=>`<section class="web-army-roster ${side}"><h4>${side==='player'?'我军 · 逐队指挥':'敌军 · 守军阵容'}</h4><div>${b[side].map(r=>`<${side==='player'?'button':'article'} ${side==='player'?`data-action="${context.practice?'tacticalLessonSelect':'formationSelect'}" data-id="${r.id}"`:''} class="web-army-card ${r.hp<=0?'is-defeated':''}">${troopPortrait(r.id)}<strong>${Game.units[r.id].name}</strong><span>${num(Math.ceil(r.hp/r.stats.hp))} / ${num(r.initial)} 人</span><progress max="${r.maxHp}" value="${r.hp}" aria-label="${side==='player'?'我军':'敌军'}${Game.units[r.id].name}兵力"></progress><small>射程 ${r.stats.range} · 速度 ${r.stats.speed}</small></${side==='player'?'button':'article'}>`).join('')}</div></section>`).join('')}</div>`;
+  return `<div class="web-army-rosters">${['player','enemy'].map(side=>`<section class="web-army-roster ${side}"><h4>${side==='player'?'我军 · 逐队指挥':'敌军 · 守军阵容'}</h4><div>${b[side].map(r=>`<${side==='player'?'button':'article'} ${side==='player'?`data-action="${context.practice?'tacticalLessonSelect':'formationSelect'}" data-id="${r.id}"`:''} class="web-army-card ${r.hp<=0?'is-defeated':''} ${side==='player'&&r.id===selectedFormation?'is-selected':''}" ${side==='player'?`aria-pressed="${r.id===selectedFormation}"`:''}>${troopPortrait(r.id)}<strong>${Game.units[r.id].name}</strong><span>${num(Math.ceil(r.hp/r.stats.hp))} / ${num(r.initial)} 人</span><progress max="${r.maxHp}" value="${r.hp}" aria-label="${side==='player'?'我军':'敌军'}${Game.units[r.id].name}兵力"></progress><small>射程 ${r.stats.range} · 速度 ${r.stats.speed}</small></${side==='player'?'button':'article'}>`).join('')}</div></section>`).join('')}</div>`;
 }
 function webConquestReceiptHTML(b){
   if(!b.finished||WebEdition.shared())return '';
@@ -165,7 +165,7 @@ function webObserveCombat(b){
   // Keep the command bar under the dialog title; on phones show the new round's result after a tapped 下一回合, since it sits below the fold.
   const top=modal.querySelector('.modal-top'),bar=modalBody.querySelector('.battle-command-bar');
   modal.style.setProperty('--web-battle-top',(top?.offsetHeight||0)+'px');modal.style.setProperty('--web-battle-bar',(bar?.offsetHeight||0)+'px');
-  if(old!==undefined&&b.round>old&&webScrollToRound&&window.matchMedia('(max-width:760px)').matches)modalBody.querySelector('.combat-round-summary')?.scrollIntoView({block:'start'});
+  // Compact phone controls stay in place; round results update without moving the viewport.
   if(old!==undefined&&b.round>old)webScrollToRound=false;
 }
 let webScrollToRound=false;
