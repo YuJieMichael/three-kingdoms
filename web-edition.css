@@ -687,3 +687,5 @@ dialog .web-plot-preview h3{
 .battlefield-track{height:10px;background:#1c2119;margin:14px 8px;position:relative;border-radius:8px}.battlefield-track span{position:absolute;top:-3px;width:14px;height:16px;background:#d1bd78;border-radius:3px;transform:translateX(-50%)}
 .battlefield-log{max-height:190px;overflow-y:auto;font-size:13px;line-height:1.5;padding:10px;background:#22281e}.battlefield-log p{margin:6px 0}
 @media(max-width:700px){.battlefield-arcs{grid-template-columns:1fr}.battlefield-arc{padding:10px}.battlefield-map>.panel{padding:12px}dialog:has(.battlefield-battle){width:calc(100% - 16px);max-width:none;max-height:calc(100dvh - 16px);margin:8px auto}.battlefield-battle{font-size:14px}}
+
+.battlefield-catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}.battlefield-campaign{display:grid;gap:5px;text-align:left;min-height:88px;padding:12px;white-space:normal}.battlefield-campaign span,.battlefield-campaign small{font-size:12px}.battlefield-campaign.is-selected{outline:2px solid #d6b86b;outline-offset:-2px}.battlefield-controls button{white-space:normal;min-height:44px}
