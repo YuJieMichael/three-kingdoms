@@ -1,0 +1,218 @@
+[
+  {
+    "seed": 1,
+    "prepared": true,
+    "reports": [
+      {
+        "name": "孟获",
+        "fieldLevel": 7,
+        "enemy": 1560,
+        "archers": 3000,
+        "marchMinutes": 1,
+        "rounds": 3,
+        "lost": 4,
+        "portraitGems": 100,
+        "recruitGold": 180000,
+        "level20Lead": 420,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "祝融夫人",
+        "fieldLevel": 6,
+        "enemy": 1157,
+        "archers": 3000,
+        "marchMinutes": 0.8666666666666667,
+        "rounds": 3,
+        "lost": 1,
+        "portraitGems": 85,
+        "recruitGold": 140000,
+        "level20Lead": 400,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "蹋顿",
+        "fieldLevel": 8,
+        "enemy": 3862,
+        "archers": 3000,
+        "marchMinutes": 1.2333333333333334,
+        "rounds": 4,
+        "lost": 2,
+        "portraitGems": 120,
+        "recruitGold": 240000,
+        "level20Lead": 430,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "花鬘",
+        "fieldLevel": 5,
+        "enemy": 498,
+        "archers": 3000,
+        "marchMinutes": 0.75,
+        "rounds": 3,
+        "lost": 0,
+        "portraitGems": 70,
+        "recruitGold": 100000,
+        "level20Lead": 380,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "鲍三娘",
+        "fieldLevel": 5,
+        "enemy": 205,
+        "archers": 3000,
+        "marchMinutes": 0.85,
+        "rounds": 3,
+        "lost": 4,
+        "portraitGems": 70,
+        "recruitGold": 100000,
+        "level20Lead": 390,
+        "ordinaryLevel20Lead": 200
+      }
+    ],
+    "boxes": 5
+  },
+  {
+    "seed": 7,
+    "prepared": true,
+    "reports": [
+      {
+        "name": "孟获",
+        "fieldLevel": 7,
+        "enemy": 2246,
+        "archers": 3000,
+        "marchMinutes": 0.9833333333333333,
+        "rounds": 3,
+        "lost": 10,
+        "portraitGems": 100,
+        "recruitGold": 180000,
+        "level20Lead": 420,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "祝融夫人",
+        "fieldLevel": 6,
+        "enemy": 1063,
+        "archers": 3000,
+        "marchMinutes": 0.9333333333333333,
+        "rounds": 4,
+        "lost": 0,
+        "portraitGems": 85,
+        "recruitGold": 140000,
+        "level20Lead": 400,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "蹋顿",
+        "fieldLevel": 8,
+        "enemy": 3859,
+        "archers": 3000,
+        "marchMinutes": 1.3,
+        "rounds": 4,
+        "lost": 0,
+        "portraitGems": 120,
+        "recruitGold": 240000,
+        "level20Lead": 430,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "花鬘",
+        "fieldLevel": 5,
+        "enemy": 278,
+        "archers": 3000,
+        "marchMinutes": 0.7,
+        "rounds": 3,
+        "lost": 2,
+        "portraitGems": 70,
+        "recruitGold": 100000,
+        "level20Lead": 380,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "鲍三娘",
+        "fieldLevel": 5,
+        "enemy": 454,
+        "archers": 3000,
+        "marchMinutes": 0.8,
+        "rounds": 4,
+        "lost": 1,
+        "portraitGems": 70,
+        "recruitGold": 100000,
+        "level20Lead": 390,
+        "ordinaryLevel20Lead": 200
+      }
+    ],
+    "boxes": 5
+  },
+  {
+    "seed": 19,
+    "prepared": true,
+    "reports": [
+      {
+        "name": "孟获",
+        "fieldLevel": 7,
+        "enemy": 1085,
+        "archers": 3000,
+        "marchMinutes": 1.0166666666666666,
+        "rounds": 4,
+        "lost": 49,
+        "portraitGems": 100,
+        "recruitGold": 180000,
+        "level20Lead": 420,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "祝融夫人",
+        "fieldLevel": 6,
+        "enemy": 802,
+        "archers": 3000,
+        "marchMinutes": 0.9,
+        "rounds": 3,
+        "lost": 2,
+        "portraitGems": 85,
+        "recruitGold": 140000,
+        "level20Lead": 400,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "蹋顿",
+        "fieldLevel": 8,
+        "enemy": 2411,
+        "archers": 3000,
+        "marchMinutes": 1.2666666666666666,
+        "rounds": 4,
+        "lost": 39,
+        "portraitGems": 120,
+        "recruitGold": 240000,
+        "level20Lead": 430,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "花鬘",
+        "fieldLevel": 5,
+        "enemy": 506,
+        "archers": 3000,
+        "marchMinutes": 0.6666666666666666,
+        "rounds": 3,
+        "lost": 0,
+        "portraitGems": 70,
+        "recruitGold": 100000,
+        "level20Lead": 380,
+        "ordinaryLevel20Lead": 200
+      },
+      {
+        "name": "鲍三娘",
+        "fieldLevel": 5,
+        "enemy": 201,
+        "archers": 3000,
+        "marchMinutes": 0.85,
+        "rounds": 4,
+        "lost": 2,
+        "portraitGems": 70,
+        "recruitGold": 100000,
+        "level20Lead": 390,
+        "ordinaryLevel20Lead": 200
+      }
+    ],
+    "boxes": 5
+  }
+]

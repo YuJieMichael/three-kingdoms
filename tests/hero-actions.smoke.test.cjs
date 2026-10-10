@@ -1,3 +1,4 @@
+const {seedLegacyWild}=require('./helpers/legacy-wild.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {loadGame,city,cloneActiveSave}=require('./helpers/game.cjs');
 const copy=x=>JSON.parse(JSON.stringify(x));
@@ -106,7 +107,7 @@ test('both new lessons exercise the real round resolver and keep official game s
 });
 
 test('portrait, real capture and recruitment bind both identities to owned heroes, including an old active rules3 save',()=>{
- const e=loadGame(933),g=e.Game,wild=e.evaluate('HeroSystem.wild');city(g,{hall:10,inn:3,tavern:10,drill:2});g.state.honors.noble=4;g.state.army.archer=7000;for(const id of Object.keys(g.resources))g.state.res[id]=3000000;e.evaluate('Math.random=()=>.999999');assert.equal(wild.discover(),null);
+ const e=loadGame(933),g=e.Game,wild=e.evaluate('HeroSystem.wild');city(g,{hall:10,inn:3,tavern:10,drill:2});g.state.honors.noble=4;g.state.army.archer=7000;for(const id of Object.keys(g.resources))g.state.res[id]=3000000;e.evaluate('Math.random=()=>.999999');seedLegacyWild(e);assert.equal(wild.discover(),null);
  const owned=[],arrive=()=>{e.advance(Math.ceil(g.state.expedition.end-e.now())+1);assert.equal(g.startBattle(),null);},finish=()=>{for(let n=0;n<30&&!g.state.battle.finished;n++)g.battleRound();assert.equal(g.state.battle.finished,true);assert.equal(g.state.battle.result.won,true);assert.equal(g.validSave(g.state),true);},returned=()=>e.advance(Math.ceil(Math.max(g.state.expedition?.end||e.now(),...Object.values(g.state.cooldowns))-e.now())+1);
  for(const line of ['zhaoyun','machao']){
   const rumor=g.state.wildGenerals.rumors.find(r=>r.line===line);assert.ok(rumor);const portrait=wild.portraitQuote(g.state,line);assert.equal(wild.buyPortrait(line,portrait.key),null);g.setTactic('archer','advance');assert.equal(g.dispatch(rumor.node,'lin',{archer:2500},'raid'),null);arrive();assert.equal(g.battleTacticsView().identities.enemy.id,line);finish();assert.equal(g.state.battle.result.wildGeneral.status,'captured');returned();const recruit=wild.recruitQuote(g.state,rumor.id,'gold');assert.equal(recruit.reason,'');assert.equal(wild.recruit(rumor.id,'gold',recruit.key),null);owned.push({line,id:rumor.id});

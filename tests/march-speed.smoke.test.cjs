@@ -1,3 +1,4 @@
+const {seedLegacyWild}=require('./helpers/legacy-wild.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {loadGame,city}=require('./helpers/game.cjs');
 function prepare(army){const e=loadGame(123),g=e.Game;city(g,{drill:1});g.state.res.food=100000;Object.assign(g.state.army,army);return e;}
@@ -6,7 +7,7 @@ test('pure cavalry is faster than archers; mixed armies use the slowest nonzero 
   assert.ok(rider.seconds<archer.seconds);assert.equal(archer.seconds,g.getNode('field').time);assert.equal(mixed.seconds,archer.seconds);assert.equal(mixed.slowest,'archer');assert.equal(zero.seconds,rider.seconds);assert.equal(zero.slowest,'cavalry');assert.equal(JSON.stringify(g.state),before);
   e.evaluate('function S(){return Game.state;} function duration(n){return n+" 秒";} function esc(s){return String(s);} function num(n){return String(n);}');e.evaluate(fs.readFileSync(path.join(__dirname,'../campaign-ui.js'),'utf8'));
   const html=e.evaluate('campaignMarchHTML("field",{archer:1,cavalry:20})');assert.match(html,/预计去程/);assert.match(html,/最慢兵种：弓箭兵/);assert.match(html,/纯骑兵可快奔袭/);
-  city(g,{inn:1});assert.equal(e.evaluate('HeroSystem.wild.discover()'),null);Object.assign(g.state.army,{archer:100,cavalry:45,spear:10});
+  city(g,{inn:1});seedLegacyWild(e);assert.equal(e.evaluate('HeroSystem.wild.discover()'),null);Object.assign(g.state.army,{archer:100,cavalry:45,spear:10});
   const wanderer=g.state.wildGenerals.rumors.find(r=>r.line==='wanderer'),warrior=g.state.wildGenerals.rumors.find(r=>r.line==='warrior');
   const defaults=()=>JSON.parse(e.evaluate('JSON.stringify(campaignDispatchDefaults('+JSON.stringify(wanderer.node)+'))'));
   let initial=defaults();assert.equal(initial.cavalry,30);assert.equal(Object.entries(initial).filter(([id])=>id!=='cavalry').reduce((n,[,count])=>n+count,0),0);

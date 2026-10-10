@@ -8,6 +8,7 @@ const NamedGarrison=(()=>{
     floorAfterWin:.3,refillPerHour:.1,regroupMs:12*HOUR,prefectureFactor:.5,supplyCutPerTile:3,supplyCutMaxTiles:5,supplyCutRadius:2,persuadeLoss:10,persuadeGold:30000,sowBase:4,sowCooldown:DAY});
   // Generals are original stat blocks for historical figures; ids follow the custom-general pattern.
   const generals=Object.freeze({
+    named_jiangling:{id:'local_7100000000000005',name:'关羽',title:'江陵守将',type:'骑',level:20,atk:105,def:100,pol:66,wis:74,bonus:'cavalry',attack:1.25,defense:1.2,desc:'河东关云长，镇守江陵，长刀与铁骑护卫城池。'},
     named_xiaopei:{id:'local_7100000000000001',name:'张飞',title:'小沛守将',type:'枪',level:20,atk:96,def:72,pol:28,wis:38,bonus:'spear',attack:1.25,defense:1.2,desc:'燕人张翼德，据小沛厉兵秣马，长枪阵势如山。'},
     named_wancheng:{id:'local_7100000000000002',name:'典韦',title:'宛城守将',type:'盾',level:20,atk:90,def:94,pol:20,wis:34,bonus:'shield',attack:1.2,defense:1.3,desc:'古之恶来，持双戟守宛城，刀盾兵难以撼动。'},
     named_xiapi:{id:'local_7100000000000003',name:'吕布',title:'下邳守将',type:'骑',level:25,atk:100,def:86,pol:24,wis:40,bonus:'cavalry',attack:1.4,defense:1.25,desc:'人中吕布，坐镇下邳，铁骑冲阵无人能挡。'},

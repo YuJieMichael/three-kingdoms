@@ -1,10 +1,11 @@
+const {seedLegacyWild}=require('./helpers/legacy-wild.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {loadGame,city,cloneActiveSave}=require('./helpers/game.cjs');
 const copy=x=>JSON.parse(JSON.stringify(x));
 let recruitedTemplate;
 function actualHeroes(){
  const e=loadGame(942),g=e.Game;city(g,{hall:10,inn:4,tavern:10,drill:5,wall:3,market:2});g.state.honors.noble=5;g.state.army.archer=10000;g.state.army.wagon=30;for(const id of Object.keys(g.resources))g.state.res[id]=3000000;
- const wild=e.evaluate('HeroSystem.wild');e.evaluate('Math.random=()=>.999999');assert.equal(wild.discover(),null);
+ const wild=e.evaluate('HeroSystem.wild');e.evaluate('Math.random=()=>.999999');seedLegacyWild(e);assert.equal(wild.discover(),null);
  for(const line of ['xunyu','pangtong']){
   const r=g.state.wildGenerals.rumors.find(r=>r.line===line);assert.ok(r);const portrait=wild.portraitQuote(g.state,line);assert.equal(wild.buyPortrait(line,portrait.key),null);g.setTactic('archer','advance');assert.equal(g.dispatch(r.node,'lin',{archer:4000},'raid'),null);e.advance(Math.ceil(g.state.expedition.end-e.now())+1);assert.equal(g.startBattle(),null);for(let n=0;n<30&&!g.state.battle.finished;n++)g.battleRound();assert.equal(g.state.battle.result.won,true);assert.equal(g.state.battle.result.wildGeneral.status,'captured');e.advance(Math.ceil(Math.max(g.state.expedition?.end||e.now(),...Object.values(g.state.cooldowns))-e.now())+1);const q=wild.recruitQuote(g.state,r.id,'gold');assert.equal(q.reason,'');assert.equal(wild.recruit(r.id,'gold',q.key),null);
  }
