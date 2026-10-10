@@ -2,7 +2,7 @@
 // Identity is derived from recruitment provenance, never from the displayed name.
 const HeroIdentity=(()=>{
   const aliases=Object.freeze({warrior:'weiyan',strategist:'xushu'});
-  const garrisonKeys=Object.freeze({named_xiaopei:'zhangfei',named_wancheng:'dianwei',named_xiapi:'lvbu',named_beihai:'taishici'});
+  const garrisonKeys=Object.freeze({named_jiangling:'guanyu',named_xiaopei:'zhangfei',named_wancheng:'dianwei',named_xiapi:'lvbu',named_beihai:'taishici'});
   const matches=(hero,fields)=>Object.entries(fields).every(([k,v])=>hero[k]===v);
   function key(s,id){
     if(!s||!Array.isArray(s.generals)||!s.generals.includes(id)||!Array.isArray(s.customGenerals))return '';

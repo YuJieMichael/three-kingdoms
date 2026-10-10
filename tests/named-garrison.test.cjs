@@ -14,7 +14,7 @@ test('without rams or catapults the engine wall stands and the city cannot be ta
 });
 test('a famous-general prefecture needs a third of the named cities first',()=>{
   const r=run({id:'named_xiapi',army:{archer:30000,shield:12000,spear:10000,cavalry:8000,ram:60,catapult:40},maxAssaults:1});
-  assert.match(r.log[0].error,/三分之一的名城（0 \/ 5）/);
+  assert.match(r.log[0].error,/三分之一的名城（0 \/ 6）/);
 });
 test('viewing a garrisoned city does not change the save, and 72 hours without pressure restores the garrison',()=>{
   const e=loadGame(),g=e.Game,id='named_wancheng';const before=JSON.stringify(g.state);g.getNode(id);g.garrisonStatus(id);assert.equal(JSON.stringify(g.state),before);

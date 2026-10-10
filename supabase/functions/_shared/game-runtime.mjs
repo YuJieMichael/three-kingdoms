@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="ba24264743fe025f2d8c8c7f293eb06c537ad3a3af8261a4f9170cf5f67b22c6";
+export const runtimeHash="be45e53005ea7e5111f7a313a2b5c246828f09b858572124c5a27cc7015114b9";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -12244,11 +12244,10 @@ const HeroSystem=(()=>{
     }
     function liveWild(){const error=Game.saveBlockReason();if(error)return {error};Game.tick(Date.now(),false);init(Game.state);return {s:Game.state};}
     const persist=()=>Game.save()?null:Game.saveBlockReason()||'保存失败，请保留当前页面';
-    const questLead=(s,d)=>d.line==='guanyu'&&s.legendary?.qinglong?.stage==='awaken';
     const ownsDefinition=(s,d)=>s.customGenerals.some(g=>s.generals.includes(g.id)&&g.origin==='wild'&&g.wildLine===d.line&&s.wildGenerals.recruited.includes(g.id)&&s.wildGenerals.rumors.some(r=>r.id===g.id&&r.line===d.line&&r.status==='recruited'));
     function discover(){
       const live=liveWild();if(live.error)return live.error;const s=live.s,w=s.wildGenerals;if(s.buildings.inn<1)return '请先建造 1 级客栈';
-      let changed=false;for(const d of definitions){const previous=w.rumors.find(r=>r.line===d.line);if(d.retired&&!questLead(s,d)&&(!previous||previous.status==='released'))continue;if(unlockReason(s,d))continue;if(ownsDefinition(s,d))continue;
+      let changed=false;for(const d of definitions){const previous=w.rumors.find(r=>r.line===d.line);if(d.retired&&(!previous||previous.status==='released'))continue;if(unlockReason(s,d))continue;if(ownsDefinition(s,d))continue;
         if(previous&&previous.status==='active'&&s.conquered[previous.node]){const next=location(s,d);if(next){previous.node=next.id;previous.at=Date.now();changed=true;}continue;}
         if(previous&&previous.status!=='released')continue;const n=location(s,d);if(!n)continue;
         const used=new Set([...s.generals,...s.innCandidates.map(g=>g.id),...w.rumors.map(r=>r.id)]);let id;while(w.seq<MAX_SEQ){const next='local_'+(ID_BASE+(++w.seq));if(!used.has(next)){id=next;break;}}if(!id)return changed?(persist()||'线索序号已达上限'):'线索序号已达上限';
@@ -12388,7 +12387,7 @@ const HeroSystem=(()=>{
 // Identity is derived from recruitment provenance, never from the displayed name.
 const HeroIdentity=(()=>{
   const aliases=Object.freeze({warrior:'weiyan',strategist:'xushu'});
-  const garrisonKeys=Object.freeze({named_xiaopei:'zhangfei',named_wancheng:'dianwei',named_xiapi:'lvbu',named_beihai:'taishici'});
+  const garrisonKeys=Object.freeze({named_jiangling:'guanyu',named_xiaopei:'zhangfei',named_wancheng:'dianwei',named_xiapi:'lvbu',named_beihai:'taishici'});
   const matches=(hero,fields)=>Object.entries(fields).every(([k,v])=>hero[k]===v);
   function key(s,id){
     if(!s||!Array.isArray(s.generals)||!s.generals.includes(id)||!Array.isArray(s.customGenerals))return '';
@@ -12517,11 +12516,11 @@ const LegendaryWeapons=(()=>{
   // The awakening battle happens at the hidden site; getNode replaces the wild tile there.
   function siteNode(s,id,base,now){const w=weapons.qinglong;if(!siteActive(s,id,now))return null;return {...base,name:w.siteName,level:10,army:{...w.army},commander:{...w.spirit},rule:{...w.rule},legendSite:'qinglong',desc:'荒草间一座古冢，刀鸣隐隐，青光时现。熔炼好刀胚后，由关羽亲自为主将、带不超过 '+w.rule.total+' 名士兵前来唤醒神兵；青龙刀灵每 '+w.rule.every+' 回合斩我军前排 '+Math.round(w.rule.share*100)+'%。每天只能挑战一次。'};}
   // Owner decision: only 关羽 leading the army can wake the blade.
-  function awakenBlocked(s,now,general){const r=get(s);if(r.stage!=='awaken')return '先熔炼好刀胚';if(general!==undefined&&(s.customGenerals||[]).find(g=>g.id===general)?.wildLine!==weapons.qinglong.owner)return '青龙刀灵只认关羽：请让关羽担任主将';if(now-r.lastTry<C.retryMs)return '刀魂已沉睡，明日再来';return '';}
+  function awakenBlocked(s,now,general){const r=get(s);if(r.stage!=='awaken')return '先熔炼好刀胚';if(general!==undefined&&HeroIdentity.key(s,general)!==weapons.qinglong.owner)return '青龙刀灵只认关羽：请让关羽担任主将';if(now-r.lastTry<C.retryMs)return '刀魂已沉睡，明日再来';return '';}
   function onDispatch(s,now){ensure(s).lastTry=now;}
   function onBattle(s,n,o,now,addEquipment){if(!n.legendSite||!o.won)return false;const r=ensure(s);if(r.stage!=='awaken')return false;addEquipment(s,'weapon',5,'qinglong');r.stage='done';r.obtainedAt=now;r.site='';r.siteUntil=0;return true;}
   // Battle proc for the army led by `general` (the wearer).
-  function procChance(s,general){const e=(s.equipment||[]).find(x=>x.hero===general&&x.named==='qinglong');if(!e)return 0;const g=(s.customGenerals||[]).find(x=>x.id===general);const w=weapons.qinglong;return g?.wildLine===w.owner?w.proc.ownerChance:w.proc.chance;}
+  function procChance(s,general){const e=(s.equipment||[]).find(x=>x.hero===general&&x.named==='qinglong');if(!e)return 0;const w=weapons.qinglong;return HeroIdentity.key(s,general)===w.owner?w.proc.ownerChance:w.proc.chance;}
   function status(s,now){const r=get(s),w=weapons.qinglong;return {...r,weapon:w,open:open(s),scrolls:w.scrolls.map(id=>(s.inventory?.[id]||0)>0),siteActive:!!r.site&&r.siteUntil>now&&r.stage!=='done'};}
   return {C,weapons,valid,rollScrolls,seek,siteActive,siteNode,onGather,refineQuote,refine,smeltQuote,smelt,awakenBlocked,onDispatch,onBattle,procChance,status,hasScrolls:s=>hasScrolls(s,weapons.qinglong)};
 })();
@@ -13940,6 +13939,7 @@ const NamedCityData=(()=>{
     {id:'named_zhongyuan',name:'中原州城',tier:'province',district:'中原州',parent:'named_luoyang',strategy:'balanced',children:['named_beiyuan','named_heluo']},
     {id:'named_luoyang',name:'洛阳都城',tier:'capital',district:'京畿 · 洛阳',parent:null,strategy:'balanced',children:['named_zhongyuan'],requiresChapter:3},
     // Garrisoned by famous generals (named-garrison.js); found once chapter 3 is complete (chapter 4 opens).
+    {id:'named_jiangling',name:'江陵',tier:'county',district:'荆州 · 南郡 · 江陵',parent:null,strategy:'pass',children:[],discoverChapter:3,garrison:true},
     {id:'named_xiaopei',name:'小沛',tier:'county',district:'徐州 · 沛国 · 小沛',parent:null,strategy:'pass',children:[],discoverChapter:3,garrison:true},
     {id:'named_wancheng',name:'宛城',tier:'county',district:'荆州 · 南阳郡 · 宛县',parent:null,strategy:'mine',children:[],discoverChapter:3,garrison:true},
     {id:'named_xiapi',name:'下邳',tier:'prefecture',district:'徐州 · 下邳国',parent:null,strategy:'granary',children:[],discoverChapter:3,garrison:true},
@@ -13959,6 +13959,7 @@ const NamedCityData=(()=>{
     node('named_zhongyuan',39,16,9,1500,{shield:420,spear:380,archer:450,cavalry:130,heavy:40,ballista:35},{food:9000,wood:9000,stone:9000,iron:9000,gold:7000},74,{name:'中原州重墙',hp:42000,protection:1.6,tower:900,range:1300}),
     node('named_luoyang',58,18,10,2000,{shield:600,spear:500,archer:650,cavalry:200,heavy:70,ballista:50,catapult:12},{food:14000,wood:14000,stone:14000,iron:14000,gold:10000},90,{name:'洛阳都城门墙',hp:60000,protection:1.75,tower:1200,range:1400}),
     // Famous-general garrisons: armies near the original game's scale; walls need rams and catapults.
+    garrisoned(node('named_jiangling',30,48,8,1500,{shield:3500,spear:4000,archer:3500,cavalry:1500},{food:20000,wood:16000,stone:16000,iron:16000,gold:12000},60,{name:'江陵城门',hp:120000,protection:1.6,tower:2000,range:1300,engineWall:true}),'关羽'),
     garrisoned(node('named_xiaopei',42,45,8,1500,{shield:3000,spear:4500,archer:3500,cavalry:1500},{food:20000,wood:16000,stone:16000,iron:16000,gold:12000},60,{name:'小沛城门',hp:120000,protection:1.6,tower:2000,range:1300,engineWall:true}),'张飞'),
     garrisoned(node('named_wancheng',20,46,8,1500,{shield:4500,spear:3000,archer:3000,cavalry:1000,ballista:60},{food:16000,wood:16000,stone:22000,iron:20000,gold:12000},62,{name:'宛城城门',hp:140000,protection:1.7,tower:1800,range:1300,engineWall:true}),'典韦'),
     garrisoned(node('named_xiapi',50,50,10,3000,{shield:7000,spear:7000,archer:8000,cavalry:6000,heavy:1500,ballista:150,catapult:40},{food:40000,wood:32000,stone:32000,iron:32000,gold:30000},80,{name:'下邳城门墙',hp:300000,protection:1.9,tower:3600,range:1400,engineWall:true}),'吕布'),
@@ -13979,6 +13980,7 @@ const NamedGarrison=(()=>{
     floorAfterWin:.3,refillPerHour:.1,regroupMs:12*HOUR,prefectureFactor:.5,supplyCutPerTile:3,supplyCutMaxTiles:5,supplyCutRadius:2,persuadeLoss:10,persuadeGold:30000,sowBase:4,sowCooldown:DAY});
   // Generals are original stat blocks for historical figures; ids follow the custom-general pattern.
   const generals=Object.freeze({
+    named_jiangling:{id:'local_7100000000000005',name:'关羽',title:'江陵守将',type:'骑',level:20,atk:105,def:100,pol:66,wis:74,bonus:'cavalry',attack:1.25,defense:1.2,desc:'河东关云长，镇守江陵，长刀与铁骑护卫城池。'},
     named_xiaopei:{id:'local_7100000000000001',name:'张飞',title:'小沛守将',type:'枪',level:20,atk:96,def:72,pol:28,wis:38,bonus:'spear',attack:1.25,defense:1.2,desc:'燕人张翼德，据小沛厉兵秣马，长枪阵势如山。'},
     named_wancheng:{id:'local_7100000000000002',name:'典韦',title:'宛城守将',type:'盾',level:20,atk:90,def:94,pol:20,wis:34,bonus:'shield',attack:1.2,defense:1.3,desc:'古之恶来，持双戟守宛城，刀盾兵难以撼动。'},
     named_xiapi:{id:'local_7100000000000003',name:'吕布',title:'下邳守将',type:'骑',level:25,atk:100,def:86,pol:24,wis:40,bonus:'cavalry',attack:1.4,defense:1.25,desc:'人中吕布，坐镇下邳，铁骑冲阵无人能挡。'},

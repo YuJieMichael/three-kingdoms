@@ -86,11 +86,10 @@ const HeroSystem=(()=>{
     }
     function liveWild(){const error=Game.saveBlockReason();if(error)return {error};Game.tick(Date.now(),false);init(Game.state);return {s:Game.state};}
     const persist=()=>Game.save()?null:Game.saveBlockReason()||'保存失败，请保留当前页面';
-    const questLead=(s,d)=>d.line==='guanyu'&&s.legendary?.qinglong?.stage==='awaken';
     const ownsDefinition=(s,d)=>s.customGenerals.some(g=>s.generals.includes(g.id)&&g.origin==='wild'&&g.wildLine===d.line&&s.wildGenerals.recruited.includes(g.id)&&s.wildGenerals.rumors.some(r=>r.id===g.id&&r.line===d.line&&r.status==='recruited'));
     function discover(){
       const live=liveWild();if(live.error)return live.error;const s=live.s,w=s.wildGenerals;if(s.buildings.inn<1)return '请先建造 1 级客栈';
-      let changed=false;for(const d of definitions){const previous=w.rumors.find(r=>r.line===d.line);if(d.retired&&!questLead(s,d)&&(!previous||previous.status==='released'))continue;if(unlockReason(s,d))continue;if(ownsDefinition(s,d))continue;
+      let changed=false;for(const d of definitions){const previous=w.rumors.find(r=>r.line===d.line);if(d.retired&&(!previous||previous.status==='released'))continue;if(unlockReason(s,d))continue;if(ownsDefinition(s,d))continue;
         if(previous&&previous.status==='active'&&s.conquered[previous.node]){const next=location(s,d);if(next){previous.node=next.id;previous.at=Date.now();changed=true;}continue;}
         if(previous&&previous.status!=='released')continue;const n=location(s,d);if(!n)continue;
         const used=new Set([...s.generals,...s.innCandidates.map(g=>g.id),...w.rumors.map(r=>r.id)]);let id;while(w.seq<MAX_SEQ){const next='local_'+(ID_BASE+(++w.seq));if(!used.has(next)){id=next;break;}}if(!id)return changed?(persist()||'线索序号已达上限'):'线索序号已达上限';

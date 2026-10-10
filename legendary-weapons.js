@@ -44,11 +44,11 @@ const LegendaryWeapons=(()=>{
   // The awakening battle happens at the hidden site; getNode replaces the wild tile there.
   function siteNode(s,id,base,now){const w=weapons.qinglong;if(!siteActive(s,id,now))return null;return {...base,name:w.siteName,level:10,army:{...w.army},commander:{...w.spirit},rule:{...w.rule},legendSite:'qinglong',desc:'荒草间一座古冢，刀鸣隐隐，青光时现。熔炼好刀胚后，由关羽亲自为主将、带不超过 '+w.rule.total+' 名士兵前来唤醒神兵；青龙刀灵每 '+w.rule.every+' 回合斩我军前排 '+Math.round(w.rule.share*100)+'%。每天只能挑战一次。'};}
   // Owner decision: only 关羽 leading the army can wake the blade.
-  function awakenBlocked(s,now,general){const r=get(s);if(r.stage!=='awaken')return '先熔炼好刀胚';if(general!==undefined&&(s.customGenerals||[]).find(g=>g.id===general)?.wildLine!==weapons.qinglong.owner)return '青龙刀灵只认关羽：请让关羽担任主将';if(now-r.lastTry<C.retryMs)return '刀魂已沉睡，明日再来';return '';}
+  function awakenBlocked(s,now,general){const r=get(s);if(r.stage!=='awaken')return '先熔炼好刀胚';if(general!==undefined&&HeroIdentity.key(s,general)!==weapons.qinglong.owner)return '青龙刀灵只认关羽：请让关羽担任主将';if(now-r.lastTry<C.retryMs)return '刀魂已沉睡，明日再来';return '';}
   function onDispatch(s,now){ensure(s).lastTry=now;}
   function onBattle(s,n,o,now,addEquipment){if(!n.legendSite||!o.won)return false;const r=ensure(s);if(r.stage!=='awaken')return false;addEquipment(s,'weapon',5,'qinglong');r.stage='done';r.obtainedAt=now;r.site='';r.siteUntil=0;return true;}
   // Battle proc for the army led by `general` (the wearer).
-  function procChance(s,general){const e=(s.equipment||[]).find(x=>x.hero===general&&x.named==='qinglong');if(!e)return 0;const g=(s.customGenerals||[]).find(x=>x.id===general);const w=weapons.qinglong;return g?.wildLine===w.owner?w.proc.ownerChance:w.proc.chance;}
+  function procChance(s,general){const e=(s.equipment||[]).find(x=>x.hero===general&&x.named==='qinglong');if(!e)return 0;const w=weapons.qinglong;return HeroIdentity.key(s,general)===w.owner?w.proc.ownerChance:w.proc.chance;}
   function status(s,now){const r=get(s),w=weapons.qinglong;return {...r,weapon:w,open:open(s),scrolls:w.scrolls.map(id=>(s.inventory?.[id]||0)>0),siteActive:!!r.site&&r.siteUntil>now&&r.stage!=='done'};}
   return {C,weapons,valid,rollScrolls,seek,siteActive,siteNode,onGather,refineQuote,refine,smeltQuote,smelt,awakenBlocked,onDispatch,onBattle,procChance,status,hasScrolls:s=>hasScrolls(s,weapons.qinglong)};
 })();
