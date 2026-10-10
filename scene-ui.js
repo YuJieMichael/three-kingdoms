@@ -63,7 +63,38 @@ function sceneCaption(point,name,level,stageHeight=660,yieldText='',options={}){
   return `<span class="scene-name-tag ${options.city?'scene-city-caption':''} ${options.hall?'scene-hall-caption':''}" aria-hidden="true" style="left:${point.x/11}%;top:${(point.y+12)*100/stageHeight}%">${esc(name)}<em>${level}</em>${options.queue?`<span class="scene-caption-queue"> · ${clock(options.queue.end)}</span>`:''}${yieldText?`<small>${esc(yieldText)}</small>`:''}</span>`;
 }
 function sceneFocusButton(){return btn(document.body.classList.contains('scene-focus')?'返回常规':'全景','sceneFocus','','small secondary');}
+// Phones use non-overlapping, full-cell buttons; logical site ids remain unchanged.
+const sceneFlatMedia=typeof window!=='undefined'&&typeof window.matchMedia==='function'?window.matchMedia('(max-width:760px)'):null;
+let sceneFlatMode=!!sceneFlatMedia?.matches;
+function sceneUseFlatGrid(){return !!sceneFlatMedia?.matches;}
+if(sceneFlatMedia){
+  const update=()=>{const next=sceneUseFlatGrid();if(next===sceneFlatMode)return;sceneFlatMode=next;if(next)document.body.classList.remove('scene-focus');if(typeof render==='function')render();};
+  if(sceneFlatMedia.addEventListener)sceneFlatMedia.addEventListener('change',update);
+  else if(sceneFlatMedia.addListener)sceneFlatMedia.addListener(update);
+}
+function sceneFlatCityHTML(){
+  const s=S(),hall=s.cityLayout.indexOf('hall');
+  const cells=s.cityLayout.map((id,index)=>{
+    if(id==='reserved')return '';
+    const b=id?Game.buildings[id]:null,level=s.cityLevels[index],job=s.buildQueue.find(q=>q.site===index),isHall=index===hall;
+    const column=index%6+1,row=Math.floor(index/6)+1;
+    const area=`grid-column:${column}${isHall?' / span 2':''};grid-row:${row}${isHall?' / span 2':''}`;
+    const name=b?b.name:job?Game.buildings[job.id].name:'空地';
+    return `<button type="button" class="flat-building-cell ${b?'flat-built':'flat-empty'} ${isHall?'flat-palace':''} ${job?'flat-working':''}" style="${area}" data-action="${b?'building':'citySlot'}" data-id="${b?'site:'+index:index}" aria-label="城内 ${row}行${column}列 ${esc(name)}${b?' '+level+'级':''}${job?'，施工中':''}"><span class="flat-building-art" aria-hidden="true">${b?webCityBuildingArt(id,level):job?buildingIcon(job.id):'<span class="flat-empty-mark">＋</span>'}</span><strong>${esc(name)}</strong><small>${job?'施工中':b?level+'级':'建设'}</small>${job?`<span class="flat-building-time">${clock(job.end)}</span>`:''}</button>`;
+  }).join('');
+  return `<section class="flat-building-board"><div class="flat-building-heading"><strong>${esc(activeCityMeta().name)} · 城内</strong><span>点建筑办城务 · 点空地建设</span></div><div class="city-grid flat-building-grid">${cells}</div><p class="flat-building-note">官府占四格 · 每格都可直接点击</p></section>`;
+}
+function sceneFlatOutskirtsHTML(){
+  const s=S(),unlocked=Game.unlockedPlots();
+  const cells=s.plots.slice(0,unlocked).map((p,index)=>{
+    const job=Game.plotJob(index),id=p.type||job?.id,name=id?Game.buildings[id].name:'空地';
+    return `<button type="button" class="flat-building-cell ${p.type?'flat-built '+p.type:'flat-empty'} ${job?'flat-working':''}" data-action="plot" data-id="${index}" aria-label="${index+1}号地块 ${esc(name)}${p.type?' '+p.level+'级':''}${job?'，施工中':''}"><span class="flat-plot-number" aria-hidden="true">${index+1}</span><span class="flat-building-art" aria-hidden="true">${id?sceneResourceArt(id):'<span class="flat-empty-mark">＋</span>'}</span><strong>${esc(name)}</strong><small>${job?'施工中':p.type?p.level+'级':'建设'}</small>${job?`<span class="flat-building-time">${clock(job.end)}</span>`:''}</button>`;
+  }).join('');
+  const expansion=unlocked<Game.PLOT_COUNT?`<button type="button" class="flat-building-expansion" data-action="plot" data-id="${unlocked}"><strong>待开垦区域</strong><span>官府 ${Math.floor((unlocked-12)/3)+2} 级开放下一批地块 ›</span></button>`:'';
+  return `<section class="flat-building-board"><div class="flat-building-heading"><strong>${esc(activeCityMeta().name)} · 城外</strong><span>已开放 ${unlocked} 块 · 点格子查看或建设</span></div><div class="plot-grid flat-building-grid">${cells}</div>${expansion}<p class="flat-building-note">粮／木／石／铁自由搭配 · 上下滑动查看</p></section>`;
+}
 function webCityScene(){
+  if(sceneUseFlatGrid())return sceneFlatCityHTML();
   const s=S(),hallPoints=s.cityLayout.map((id,i)=>(id==='hall'||id==='reserved')?{column:i%6,row:Math.floor(i/6)}:null).filter(Boolean);
   const wallSite=s.cityLayout.indexOf('wall'),wallLevel=wallSite<0?0:s.cityLevels[wallSite];
   const hallCenter=hallPoints.length?sceneCityPoint(hallPoints.reduce((n,p)=>n+p.column,0)/hallPoints.length,hallPoints.reduce((n,p)=>n+p.row,0)/hallPoints.length):null;
@@ -80,6 +111,7 @@ function webCityScene(){
 }
 function sceneFieldPoint(index,rows){const p=scenePoint(index%6,Math.floor(index/6));return {x:p.x+(rows-6)*41,y:p.y+50};}
 function webOutskirtsScene(){
+  if(sceneUseFlatGrid())return sceneFlatOutskirtsHTML();
   const s=S(),unlocked=Game.unlockedPlots(),rows=Math.max(3,Math.ceil(unlocked/6)),stageHeight=390+rows*43,template=s.plotTemplate?.id?Game.plotTemplateQuote(s.plotTemplate.id,s.plotTemplate.mode):null;
   const fresh=sceneObservePlotCapacity(Game.currentCityId(),unlocked),emptyCount=s.plots.slice(0,unlocked).filter((p,index)=>!p.type&&!Game.plotJob(index)).length;
   const sites=s.plots.slice(0,unlocked).map((p,index)=>{
