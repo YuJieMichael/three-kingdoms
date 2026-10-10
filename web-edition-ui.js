@@ -94,7 +94,7 @@ function webBundleDetailHTML(entry){
 }
 function manualShopPage(){
   const items=Game.manual.shop.filter(x=>!x.rewardOnly&&(x.effect||PlaytestConfig.unavailableShopItems)&&(shopCategory==='全部'||x.category===shopCategory));
-  return `<div class="page-head"><div><h2>珍宝商城</h2><p class="sub">选择宝物查看效果、持有数量与购买总价。</p></div><span class="badge">元宝 ${num(S().gems)}</span></div><div class="shop-tools">${btn('铜钱黑市','copperMarket','','secondary')}${btn('创新军需','webSupplies','','secondary',WebEdition.shared())}${btn('行囊','manualInventory','','secondary')}${btn('领取每日试玩元宝','manualGems','','secondary',Date.now()-S().trialGiftAt<86400000)}</div><div class="shop-tabs" role="group" aria-label="商城分类">${['全部',...new Set(Game.manual.shop.filter(x=>!x.rewardOnly&&(x.effect||PlaytestConfig.unavailableShopItems)).map(x=>x.category))].map(c=>btn(c,'manualShopCategory',c,`small secondary ${shopCategory===c?'active-order':''}`)).join('')}</div><div class="web-shop-shelves">${items.map(item=>`<button class="web-shop-item ${item.effect?'':'unavailable'}" data-action="manualShopInfo" data-id="${item.id}">${itemIcon(item)}<strong>${esc(item.name)}</strong><span>${item.price} 元宝</span><small>持有 ${num(S().inventory[item.id]||0)}${item.effect==='gold'?' · 今日可购 '+Game.brickPurchaseRemaining(item.id):''}</small></button>`).join('')}</div><p class="hint">售价为试玩数值；未接入系统的宝物可查看，暂不出售。战斗胜利有机会缴获已支持的道具。</p>`;
+  return `<div class="page-head"><div><h2>珍宝商城</h2><p class="sub">选择宝物查看效果、持有数量与购买总价。</p></div><span class="badge">元宝 ${num(S().gems)}</span></div><div class="shop-tools">${btn('铜钱黑市','copperMarket','','secondary')}${btn('创新军需','webSupplies','','secondary',WebEdition.shared())}${btn('行囊','manualInventory','','secondary')}${btn('领元宝','manualGems','','secondary',Date.now()-S().trialGiftAt<86400000)}</div><div class="shop-tabs" role="group" aria-label="商城分类">${['全部',...new Set(Game.manual.shop.filter(x=>!x.rewardOnly&&(x.effect||PlaytestConfig.unavailableShopItems)).map(x=>x.category))].map(c=>btn(c,'manualShopCategory',c,`small secondary ${shopCategory===c?'active-order':''}`)).join('')}</div><div class="web-shop-shelves">${items.map(item=>`<button class="web-shop-item ${item.effect?'':'unavailable'}" data-action="manualShopInfo" data-id="${item.id}">${itemIcon(item)}<strong>${esc(item.name)}</strong><span>${item.price} 元宝</span><small>持有 ${num(S().inventory[item.id]||0)}${item.effect==='gold'?' · 今日可购 '+Game.brickPurchaseRemaining(item.id):''}</small></button>`).join('')}</div><p class="hint">售价为试玩数值；未接入系统的宝物可查看，暂不出售。战斗胜利有机会缴获已支持的道具。</p>`;
 }
 let webPurchaseId='';
 function webShopInfoModal(id){
@@ -172,7 +172,7 @@ let webScrollToRound=false;
 document.addEventListener('click',event=>{if(event.target.closest('[data-action="battleRound"],[data-action="tacticalLessonRound"]'))webScrollToRound=true;},true);
 function webPresentBattle(){
   const battle=S().battle;if(!battle){webBattleWindowOpen=false;if(modalBody.querySelector('[data-web-battle]'))modal.close();return;}
-  showModal('战场指挥',`<div data-web-battle>${webFullBattlePage(battle)}</div>`,btn('关闭战场 · 继续城务','webBattleClose','','secondary'));
+  showModal('战场指挥',`<div data-web-battle>${webFullBattlePage(battle)}</div>`,btn('返回城务','webBattleClose','','secondary'));
   webBattleWindowOpen=true;modal.classList.add('web-battle-dialog');startCombatFeedback();webObserveCombat(battle);
 }
 const webOriginalToast=toast;
@@ -210,7 +210,7 @@ document.addEventListener('click',event=>{
   const action=el.dataset.action,id=el.dataset.id;
   if(action==='webBattleWindow'){webClosedBattle=null;webBattleWindowOpen=true;webRenderedRounds.delete(S().battle);webScrollToRound=false;render();}
   if(action==='webBattleClose'){webBattleWindowOpen=false;webClosedBattle=S().battle;modal.close();render();}
-  if(action==='webEditionHub')showModal('征战与成长',`<div class="settings-row">${btn('开场战斗 / 教学','webOpening','','block',WebEdition.shared())}${btn('工程与军需','webSupplies','','block',WebEdition.shared())}${btn('晋升材料筹备','webGrowth','','block',WebEdition.shared())}${btn('征战补给模式','webConquest','','block',WebEdition.shared())}${btn('战后整备','webReplenish','','secondary block')}</div><p class="hint">本机扩展用于自己的征战进度。共享世界的资源与行动由原在线服务处理。</p>`,btn('关闭','close','','secondary'));
+  if(action==='webEditionHub')showModal('征战与成长',`<div class="settings-row">${btn('首战教学','webOpening','','block',WebEdition.shared())}${btn('工程与军需','webSupplies','','block',WebEdition.shared())}${btn('晋升材料筹备','webGrowth','','block',WebEdition.shared())}${btn('征战补给模式','webConquest','','block',WebEdition.shared())}${btn('战后整备','webReplenish','','secondary block')}</div><p class="hint">本机扩展用于自己的征战进度。共享世界的资源与行动由原在线服务处理。</p>`,btn('关闭','close','','secondary'));
   if(action==='webMessages')showModal('消息记录',webMessages.length?webMessages.map(m=>`<article><small>${new Date(m.at).toLocaleTimeString('zh-CN')}</small><p>${esc(m.text)}</p></article>`).join(''):'<p>暂无消息。</p>',btn('关闭','close','','secondary'));
   if(['importConfirm','resetFinal','onlineResume','onlineCreateShared','onlinePrivateImport','onlineLogout'].includes(action))webMessages.length=0;
   if(action==='webRaids')webRaidModal();

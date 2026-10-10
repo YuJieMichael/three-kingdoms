@@ -1,3 +1,4 @@
+const {loadCompactUI}=require('./helpers/compact-ui.cjs');
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -195,7 +196,7 @@ function uiStubs(e){
 function clickChapter(e,action,id,disabled=false){e.evaluate(`chapterClick({target:{closest(){return {disabled:${disabled},dataset:{action:${JSON.stringify(action)},id:${JSON.stringify(id)}}};}}});`);}
 
 test('chapter modal hides third-stage cards and rejects stale chapter buttons until the second campaign is complete',()=>{
- const e=setup(),g=e.Game;own(e,e.Chapter.nodes.slice(0,-1));uiStubs(e);
+ const e=setup(),g=e.Game;own(e,e.Chapter.nodes.slice(0,-1));uiStubs(e);loadCompactUI(e);
  e.evaluate(`globalThis.worldView={...Game.home};document.addEventListener=(type,handler)=>{if(type==='click')globalThis.chapterClick=handler;};`);
  e.evaluate(fs.readFileSync(path.join(__dirname,'..','chapter-ui.js'),'utf8'));
  e.evaluate('chapterMissionModal()');
@@ -247,7 +248,7 @@ test('chapter modal hides third-stage cards and rejects stale chapter buttons un
 });
 
 test('world shortcuts reveal only explored and current stations while chapter unlock protects scouting',()=>{
- const e=setup(),g=e.Game;own(e,e.Chapter.nodes.slice(0,-1));uiStubs(e);
+ const e=setup(),g=e.Game;own(e,e.Chapter.nodes.slice(0,-1));uiStubs(e);loadCompactUI(e);
  e.evaluate(`
   globalThis.selectedNode='field';
   globalThis.window={matchMedia:()=>({matches:false})};

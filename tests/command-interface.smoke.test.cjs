@@ -1,3 +1,4 @@
+const {loadCompactUI}=require('./helpers/compact-ui.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {loadGame,city,battle}=require('./helpers/game.cjs');
 const root=path.join(__dirname,'..'),read=name=>fs.readFileSync(path.join(root,name),'utf8');
@@ -15,7 +16,7 @@ function ui(){
   globalThis.window={matchMedia:()=>({matches:false,addEventListener(){}})};
   globalThis.OnlineClient={shared:()=>false,status:()=>({busy:false}),pending:()=>false};
  `);
- const app=read('app.js');e.evaluate(app.slice(0,app.indexOf('// Original SVG')));
+ loadCompactUI(e);const app=read('app.js');e.evaluate(app.slice(0,app.indexOf('// Original SVG')));
  e.evaluate(`
   globalThis.cityArea='inner';globalThis.manualModalContext=null;
   function cityPage(){return '<section data-city-page></section>';}function heroesPage(){return '';}function reportsPage(){return '';}function manualShopPage(){return '';}
@@ -67,7 +68,7 @@ test('all ten real gift claims hide the persistent shortcut but remain inspectab
  e.evaluate('classicMoreModal()');assert.match(e.evaluate("document.getElementById('modal-body').innerHTML"),/data-action="onboardingGifts"[^>]*>新手补给 · 10\/10</);assert.equal(JSON.stringify(g.state),before);
 });
 test('tier-five pearls and coral show in the gift preview, the tier card and the objective; pre-v0.34.19 claims say they were not paid',()=>{
- const e=ui(),g=e.g,body=()=>e.evaluate("document.getElementById('modal-body').innerHTML"),card=(html,n)=>html.slice(html.indexOf('第 '+n+' 阶 · '),html.indexOf('第 '+(n+1)+' 阶 · '));city(g,{hall:6});
+ const e=ui(),g=e.g,body=()=>e.evaluate("document.getElementById('modal-body').innerHTML"),card=(html,n)=>html.match(new RegExp('<article data-gift-level="'+n+'"[\\s\\S]*?</article>'))?.[0]||'';city(g,{hall:6});
  e.evaluate('onboardingGiftsModal()');let html=body();const preview=html.slice(html.indexOf('一键领取预览'),html.indexOf('gift-stages'));
  for(const part of [preview,card(html,5)]){assert.match(part,/珍珠 ×10/);assert.match(part,/珊瑚 ×5/);}for(const n of [4,6])assert.doesNotMatch(card(html,n),/珍珠|珊瑚/);
  for(let n=1;n<=4;n++)assert.equal(g.onboarding.claim(n),null);for(const x of g.missions)if(g.missionReady(x))assert.equal(g.claimMission(x.id),null);
@@ -142,7 +143,7 @@ test('compact troop rows retain every available count and expose complete stats/
  for(const id of Object.keys(g.units)){assert.match(html,new RegExp('data-action="troopDetail" data-id="'+id+'"'));assert.match(html,new RegExp('data-action="trainModal" data-id="'+id+'"'));}
  e.evaluate("troopDetailModal('archer')");const detail=e.evaluate("document.getElementById('modal-body').innerHTML"),u=g.units.archer;
  for(const [label,key] of [['生命','hp'],['攻击','atk'],['防御','def'],['速度','speed'],['射程','range'],['负重','carry']])assert.ok(detail.includes(label+' '+u[key]));
- for(const [id,n] of Object.entries(u.cost))assert.ok(detail.includes(g.resources[id].name+' '+n.toLocaleString('zh-CN')));assert.match(detail,/data-action="trainModal" data-id="archer"/);assert.equal(JSON.stringify(g.state),before);
+ for(const [id,n] of Object.entries(u.cost))assert.ok(detail.replace(/<[^>]*>/g,'').includes(g.resources[id].name+' '+n.toLocaleString('zh-CN')));assert.match(detail,/data-action="trainModal" data-id="archer"/);assert.equal(JSON.stringify(g.state),before);
 });
 test('map disclosures retain target access while excluding future task landmarks',()=>{
  const e=ui(),g=e.g;e.evaluate(`function cityViewNode(n){return n;}function expeditionStrip(){return '';}function wildGeneralNodeHTML(){return '';}function cityMapActionsHTML(){return '';}function enemyIntelHTML(){return '';}function chapterWorldBanner(){return '';}function epicWorldBanner(){return '';}classicTargetActions=()=>'';`);e.evaluate(read('grid-world.js'));

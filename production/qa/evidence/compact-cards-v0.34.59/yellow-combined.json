@@ -1,0 +1,800 @@
+[
+  {
+    "seed": 1,
+    "openingMinutes": 3.8179833333333333,
+    "openMinutes": 4440.671983333334,
+    "drills": 10,
+    "entryGold": 142055.3069629473,
+    "purchaseCost": 15000,
+    "sevenDailyBoxes": true,
+    "randomSlots": [
+      "armor",
+      "cloak",
+      "bracer",
+      "weapon",
+      "armor",
+      "boots",
+      "cloak"
+    ],
+    "probes": [
+      {
+        "id": "m3",
+        "baseline": 154,
+        "withSide": 147
+      },
+      {
+        "id": "m9",
+        "baseline": 569,
+        "withSide": 557
+      }
+    ],
+    "setBonus": {
+      "atk": 3,
+      "def": 5,
+      "pol": 0,
+      "wis": 0,
+      "lead": 0
+    },
+    "reports": [
+      {
+        "sides": false,
+        "refills": 8,
+        "rounds": 42,
+        "losses": 1718,
+        "battles": [
+          {
+            "id": "m1",
+            "rounds": 1,
+            "lost": 17,
+            "recovered": 10,
+            "pool": 2210
+          },
+          {
+            "id": "m2",
+            "rounds": 1,
+            "lost": 20,
+            "recovered": 12,
+            "pool": 2205
+          },
+          {
+            "id": "m3",
+            "rounds": 7,
+            "lost": 154,
+            "recovered": 92,
+            "pool": 2277
+          },
+          {
+            "id": "m4",
+            "rounds": 6,
+            "lost": 174,
+            "recovered": 104,
+            "pool": 2227
+          },
+          {
+            "id": "m5",
+            "rounds": 2,
+            "lost": 108,
+            "recovered": 64,
+            "pool": 2117
+          },
+          {
+            "id": "m6",
+            "rounds": 6,
+            "lost": 239,
+            "recovered": 143,
+            "pool": 2152
+          },
+          {
+            "id": "m7",
+            "rounds": 7,
+            "lost": 292,
+            "recovered": 175,
+            "pool": 2088
+          },
+          {
+            "id": "m8",
+            "rounds": 2,
+            "lost": 145,
+            "recovered": 87,
+            "pool": 1883
+          },
+          {
+            "id": "m9",
+            "rounds": 10,
+            "lost": 569,
+            "recovered": 341,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "yellow:1",
+          "campaign": "yellow_turban",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-08",
+          "at": 1791460840319,
+          "completed": [
+            "m1",
+            "m2",
+            "m3",
+            "m4",
+            "m5",
+            "m6",
+            "m7",
+            "m8",
+            "m9"
+          ],
+          "prestige": 1000,
+          "xp": 160,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "refills": 13,
+        "rounds": 62,
+        "losses": 2100,
+        "battles": [
+          {
+            "id": "s1",
+            "rounds": 1,
+            "lost": 13,
+            "recovered": 7,
+            "pool": 2707
+          },
+          {
+            "id": "s2",
+            "rounds": 7,
+            "lost": 87,
+            "recovered": 52,
+            "pool": 2746
+          },
+          {
+            "id": "m1",
+            "rounds": 1,
+            "lost": 17,
+            "recovered": 10,
+            "pool": 2669
+          },
+          {
+            "id": "m2",
+            "rounds": 1,
+            "lost": 20,
+            "recovered": 12,
+            "pool": 2664
+          },
+          {
+            "id": "m3",
+            "rounds": 7,
+            "lost": 147,
+            "recovered": 88,
+            "pool": 2732
+          },
+          {
+            "id": "s3",
+            "rounds": 6,
+            "lost": 109,
+            "recovered": 65,
+            "pool": 2650
+          },
+          {
+            "id": "m4",
+            "rounds": 6,
+            "lost": 171,
+            "recovered": 102,
+            "pool": 2643
+          },
+          {
+            "id": "m5",
+            "rounds": 1,
+            "lost": 103,
+            "recovered": 61,
+            "pool": 2533
+          },
+          {
+            "id": "m6",
+            "rounds": 6,
+            "lost": 236,
+            "recovered": 141,
+            "pool": 2571
+          },
+          {
+            "id": "s5",
+            "rounds": 1,
+            "lost": 86,
+            "recovered": 51,
+            "pool": 2886
+          },
+          {
+            "id": "s6",
+            "rounds": 6,
+            "lost": 138,
+            "recovered": 82,
+            "pool": 2882
+          },
+          {
+            "id": "m7",
+            "rounds": 7,
+            "lost": 283,
+            "recovered": 169,
+            "pool": 2913
+          },
+          {
+            "id": "m8",
+            "rounds": 2,
+            "lost": 143,
+            "recovered": 85,
+            "pool": 2715
+          },
+          {
+            "id": "m9",
+            "rounds": 10,
+            "lost": 547,
+            "recovered": 328,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "yellow:1",
+          "campaign": "yellow_turban",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-08",
+          "at": 1791460840319,
+          "completed": [
+            "s1",
+            "s2",
+            "m1",
+            "m2",
+            "m3",
+            "s3",
+            "s4",
+            "m4",
+            "m5",
+            "m6",
+            "s5",
+            "s6",
+            "m7",
+            "m8",
+            "m9"
+          ],
+          "prestige": 1600,
+          "xp": 256,
+          "box": 1
+        }
+      }
+    ]
+  },
+  {
+    "seed": 7,
+    "openingMinutes": 3.8804833333333333,
+    "openMinutes": 4440.734483333334,
+    "drills": 10,
+    "entryGold": 172055.40511880425,
+    "purchaseCost": 15000,
+    "sevenDailyBoxes": true,
+    "randomSlots": [
+      "mount",
+      "bracer",
+      "mount",
+      "weapon",
+      "boots",
+      "armor",
+      "weapon"
+    ],
+    "probes": [
+      {
+        "id": "m3",
+        "baseline": 154,
+        "withSide": 147
+      },
+      {
+        "id": "m9",
+        "baseline": 569,
+        "withSide": 557
+      }
+    ],
+    "setBonus": {
+      "atk": 3,
+      "def": 5,
+      "pol": 0,
+      "wis": 0,
+      "lead": 0
+    },
+    "reports": [
+      {
+        "sides": false,
+        "refills": 8,
+        "rounds": 42,
+        "losses": 1718,
+        "battles": [
+          {
+            "id": "m1",
+            "rounds": 1,
+            "lost": 17,
+            "recovered": 10,
+            "pool": 2210
+          },
+          {
+            "id": "m2",
+            "rounds": 1,
+            "lost": 20,
+            "recovered": 12,
+            "pool": 2205
+          },
+          {
+            "id": "m3",
+            "rounds": 7,
+            "lost": 154,
+            "recovered": 92,
+            "pool": 2277
+          },
+          {
+            "id": "m4",
+            "rounds": 6,
+            "lost": 174,
+            "recovered": 104,
+            "pool": 2227
+          },
+          {
+            "id": "m5",
+            "rounds": 2,
+            "lost": 108,
+            "recovered": 64,
+            "pool": 2117
+          },
+          {
+            "id": "m6",
+            "rounds": 6,
+            "lost": 239,
+            "recovered": 143,
+            "pool": 2152
+          },
+          {
+            "id": "m7",
+            "rounds": 7,
+            "lost": 292,
+            "recovered": 175,
+            "pool": 2088
+          },
+          {
+            "id": "m8",
+            "rounds": 2,
+            "lost": 145,
+            "recovered": 87,
+            "pool": 1883
+          },
+          {
+            "id": "m9",
+            "rounds": 10,
+            "lost": 569,
+            "recovered": 341,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "yellow:1",
+          "campaign": "yellow_turban",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-08",
+          "at": 1791460844069,
+          "completed": [
+            "m1",
+            "m2",
+            "m3",
+            "m4",
+            "m5",
+            "m6",
+            "m7",
+            "m8",
+            "m9"
+          ],
+          "prestige": 1000,
+          "xp": 160,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "refills": 13,
+        "rounds": 62,
+        "losses": 2100,
+        "battles": [
+          {
+            "id": "s1",
+            "rounds": 1,
+            "lost": 13,
+            "recovered": 7,
+            "pool": 2707
+          },
+          {
+            "id": "s2",
+            "rounds": 7,
+            "lost": 87,
+            "recovered": 52,
+            "pool": 2746
+          },
+          {
+            "id": "m1",
+            "rounds": 1,
+            "lost": 17,
+            "recovered": 10,
+            "pool": 2669
+          },
+          {
+            "id": "m2",
+            "rounds": 1,
+            "lost": 20,
+            "recovered": 12,
+            "pool": 2664
+          },
+          {
+            "id": "m3",
+            "rounds": 7,
+            "lost": 147,
+            "recovered": 88,
+            "pool": 2732
+          },
+          {
+            "id": "s3",
+            "rounds": 6,
+            "lost": 109,
+            "recovered": 65,
+            "pool": 2650
+          },
+          {
+            "id": "m4",
+            "rounds": 6,
+            "lost": 171,
+            "recovered": 102,
+            "pool": 2643
+          },
+          {
+            "id": "m5",
+            "rounds": 1,
+            "lost": 103,
+            "recovered": 61,
+            "pool": 2533
+          },
+          {
+            "id": "m6",
+            "rounds": 6,
+            "lost": 236,
+            "recovered": 141,
+            "pool": 2571
+          },
+          {
+            "id": "s5",
+            "rounds": 1,
+            "lost": 86,
+            "recovered": 51,
+            "pool": 2886
+          },
+          {
+            "id": "s6",
+            "rounds": 6,
+            "lost": 138,
+            "recovered": 82,
+            "pool": 2882
+          },
+          {
+            "id": "m7",
+            "rounds": 7,
+            "lost": 283,
+            "recovered": 169,
+            "pool": 2913
+          },
+          {
+            "id": "m8",
+            "rounds": 2,
+            "lost": 143,
+            "recovered": 85,
+            "pool": 2715
+          },
+          {
+            "id": "m9",
+            "rounds": 10,
+            "lost": 547,
+            "recovered": 328,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "yellow:1",
+          "campaign": "yellow_turban",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-08",
+          "at": 1791460844069,
+          "completed": [
+            "s1",
+            "s2",
+            "m1",
+            "m2",
+            "m3",
+            "s3",
+            "s4",
+            "m4",
+            "m5",
+            "m6",
+            "s5",
+            "s6",
+            "m7",
+            "m8",
+            "m9"
+          ],
+          "prestige": 1600,
+          "xp": 256,
+          "box": 1
+        }
+      }
+    ]
+  },
+  {
+    "seed": 19,
+    "openingMinutes": 3.9429833333333333,
+    "openMinutes": 4440.796983333334,
+    "drills": 10,
+    "entryGold": 142062.50320782085,
+    "purchaseCost": 15000,
+    "sevenDailyBoxes": true,
+    "randomSlots": [
+      "weapon",
+      "boots",
+      "armor",
+      "weapon",
+      "boots",
+      "cloak",
+      "weapon"
+    ],
+    "probes": [
+      {
+        "id": "m3",
+        "baseline": 154,
+        "withSide": 147
+      },
+      {
+        "id": "m9",
+        "baseline": 569,
+        "withSide": 557
+      }
+    ],
+    "setBonus": {
+      "atk": 3,
+      "def": 5,
+      "pol": 0,
+      "wis": 0,
+      "lead": 0
+    },
+    "reports": [
+      {
+        "sides": false,
+        "refills": 8,
+        "rounds": 42,
+        "losses": 1718,
+        "battles": [
+          {
+            "id": "m1",
+            "rounds": 1,
+            "lost": 17,
+            "recovered": 10,
+            "pool": 2210
+          },
+          {
+            "id": "m2",
+            "rounds": 1,
+            "lost": 20,
+            "recovered": 12,
+            "pool": 2205
+          },
+          {
+            "id": "m3",
+            "rounds": 7,
+            "lost": 154,
+            "recovered": 92,
+            "pool": 2277
+          },
+          {
+            "id": "m4",
+            "rounds": 6,
+            "lost": 174,
+            "recovered": 104,
+            "pool": 2227
+          },
+          {
+            "id": "m5",
+            "rounds": 2,
+            "lost": 108,
+            "recovered": 64,
+            "pool": 2117
+          },
+          {
+            "id": "m6",
+            "rounds": 6,
+            "lost": 239,
+            "recovered": 143,
+            "pool": 2152
+          },
+          {
+            "id": "m7",
+            "rounds": 7,
+            "lost": 292,
+            "recovered": 175,
+            "pool": 2088
+          },
+          {
+            "id": "m8",
+            "rounds": 2,
+            "lost": 145,
+            "recovered": 87,
+            "pool": 1883
+          },
+          {
+            "id": "m9",
+            "rounds": 10,
+            "lost": 569,
+            "recovered": 341,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "yellow:1",
+          "campaign": "yellow_turban",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-08",
+          "at": 1791460847819,
+          "completed": [
+            "m1",
+            "m2",
+            "m3",
+            "m4",
+            "m5",
+            "m6",
+            "m7",
+            "m8",
+            "m9"
+          ],
+          "prestige": 1000,
+          "xp": 160,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "refills": 13,
+        "rounds": 62,
+        "losses": 2100,
+        "battles": [
+          {
+            "id": "s1",
+            "rounds": 1,
+            "lost": 13,
+            "recovered": 7,
+            "pool": 2707
+          },
+          {
+            "id": "s2",
+            "rounds": 7,
+            "lost": 87,
+            "recovered": 52,
+            "pool": 2746
+          },
+          {
+            "id": "m1",
+            "rounds": 1,
+            "lost": 17,
+            "recovered": 10,
+            "pool": 2669
+          },
+          {
+            "id": "m2",
+            "rounds": 1,
+            "lost": 20,
+            "recovered": 12,
+            "pool": 2664
+          },
+          {
+            "id": "m3",
+            "rounds": 7,
+            "lost": 147,
+            "recovered": 88,
+            "pool": 2732
+          },
+          {
+            "id": "s3",
+            "rounds": 6,
+            "lost": 109,
+            "recovered": 65,
+            "pool": 2650
+          },
+          {
+            "id": "m4",
+            "rounds": 6,
+            "lost": 171,
+            "recovered": 102,
+            "pool": 2643
+          },
+          {
+            "id": "m5",
+            "rounds": 1,
+            "lost": 103,
+            "recovered": 61,
+            "pool": 2533
+          },
+          {
+            "id": "m6",
+            "rounds": 6,
+            "lost": 236,
+            "recovered": 141,
+            "pool": 2571
+          },
+          {
+            "id": "s5",
+            "rounds": 1,
+            "lost": 86,
+            "recovered": 51,
+            "pool": 2886
+          },
+          {
+            "id": "s6",
+            "rounds": 6,
+            "lost": 138,
+            "recovered": 82,
+            "pool": 2882
+          },
+          {
+            "id": "m7",
+            "rounds": 7,
+            "lost": 283,
+            "recovered": 169,
+            "pool": 2913
+          },
+          {
+            "id": "m8",
+            "rounds": 2,
+            "lost": 143,
+            "recovered": 85,
+            "pool": 2715
+          },
+          {
+            "id": "m9",
+            "rounds": 10,
+            "lost": 547,
+            "recovered": 328,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "yellow:1",
+          "campaign": "yellow_turban",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-08",
+          "at": 1791460847819,
+          "completed": [
+            "s1",
+            "s2",
+            "m1",
+            "m2",
+            "m3",
+            "s3",
+            "s4",
+            "m4",
+            "m5",
+            "m6",
+            "s5",
+            "s6",
+            "m7",
+            "m8",
+            "m9"
+          ],
+          "prestige": 1600,
+          "xp": 256,
+          "box": 1
+        }
+      }
+    ]
+  }
+]

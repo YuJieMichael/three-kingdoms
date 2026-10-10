@@ -1,0 +1,1106 @@
+{
+  "seed": 123,
+  "clockSpeed": 60,
+  "chapterOneCheckpoint": "fort ownership only",
+  "spent": {
+    "food": 2414450,
+    "wood": 2872420,
+    "stone": 324105,
+    "iron": 1927590,
+    "gold": 2849009
+  },
+  "trades": [
+    {
+      "resource": "wood",
+      "count": 17494,
+      "hours": 0.5384682637532552
+    },
+    {
+      "resource": "wood",
+      "count": 49542,
+      "hours": 0.5601699304199219
+    },
+    {
+      "resource": "wood",
+      "count": 49942,
+      "hours": 0.5818715970865885
+    },
+    {
+      "resource": "wood",
+      "count": 27442,
+      "hours": 0.6035732637532553
+    },
+    {
+      "resource": "wood",
+      "count": 10303,
+      "hours": 0.6155093054199219
+    },
+    {
+      "resource": "wood",
+      "count": 21492,
+      "hours": 0.6314531953260634
+    },
+    {
+      "resource": "wood",
+      "count": 4186,
+      "hours": 0.6569554498291016
+    },
+    {
+      "resource": "wood",
+      "count": 413,
+      "hours": 0.6614683160400391
+    },
+    {
+      "resource": "wood",
+      "count": 7353,
+      "hours": 0.6845241493733724
+    },
+    {
+      "resource": "wood",
+      "count": 834,
+      "hours": 0.69408279168023
+    },
+    {
+      "resource": "wood",
+      "count": 670,
+      "hours": 0.742694180569119
+    },
+    {
+      "resource": "wood",
+      "count": 34645,
+      "hours": 0.7554722361246745
+    },
+    {
+      "resource": "wood",
+      "count": 10497,
+      "hours": 0.7940527608235677
+    },
+    {
+      "resource": "wood",
+      "count": 34896,
+      "hours": 0.832633285522461
+    },
+    {
+      "resource": "wood",
+      "count": 29793,
+      "hours": 0.9097943349202474
+    },
+    {
+      "resource": "wood",
+      "count": 34896,
+      "hours": 0.9483748596191406
+    },
+    {
+      "resource": "iron",
+      "count": 26321,
+      "hours": 0.9483748596191406
+    },
+    {
+      "resource": "food",
+      "count": 14557,
+      "hours": 0.9869553843180339
+    },
+    {
+      "resource": "wood",
+      "count": 34897,
+      "hours": 0.9869553843180339
+    },
+    {
+      "resource": "iron",
+      "count": 29896,
+      "hours": 0.9869553843180339
+    },
+    {
+      "resource": "food",
+      "count": 29949,
+      "hours": 1.0255359090169271
+    },
+    {
+      "resource": "wood",
+      "count": 34896,
+      "hours": 1.0255359090169271
+    },
+    {
+      "resource": "iron",
+      "count": 29896,
+      "hours": 1.0255359090169271
+    },
+    {
+      "resource": "food",
+      "count": 29954,
+      "hours": 1.0641164337158202
+    },
+    {
+      "resource": "wood",
+      "count": 34896,
+      "hours": 1.0641164337158202
+    },
+    {
+      "resource": "iron",
+      "count": 29897,
+      "hours": 1.0641164337158202
+    },
+    {
+      "resource": "food",
+      "count": 2957,
+      "hours": 1.1026969584147135
+    },
+    {
+      "resource": "wood",
+      "count": 3397,
+      "hours": 1.1026969584147135
+    },
+    {
+      "resource": "iron",
+      "count": 2896,
+      "hours": 1.1026969584147135
+    },
+    {
+      "resource": "food",
+      "count": 13981,
+      "hours": 1.1065552608913845
+    },
+    {
+      "resource": "wood",
+      "count": 20664,
+      "hours": 1.1065552608913845
+    },
+    {
+      "resource": "iron",
+      "count": 17390,
+      "hours": 1.1065552608913845
+    },
+    {
+      "resource": "wood",
+      "count": 2982,
+      "hours": 1.1395481520589192
+    },
+    {
+      "resource": "wood",
+      "count": 20138,
+      "hours": 1.8975650066460503
+    },
+    {
+      "resource": "wood",
+      "count": 34892,
+      "hours": 1.9344384407552084
+    },
+    {
+      "resource": "wood",
+      "count": 34891,
+      "hours": 1.9713118748643663
+    },
+    {
+      "resource": "wood",
+      "count": 34891,
+      "hours": 2.008185308973524
+    },
+    {
+      "resource": "wood",
+      "count": 34892,
+      "hours": 2.045058743082682
+    },
+    {
+      "resource": "wood",
+      "count": 34891,
+      "hours": 2.0819321771918404
+    },
+    {
+      "resource": "wood",
+      "count": 34891,
+      "hours": 2.1188056113009983
+    },
+    {
+      "resource": "wood",
+      "count": 28941,
+      "hours": 2.155679045410156
+    },
+    {
+      "resource": "food",
+      "count": 94452,
+      "hours": 2.18628404296875
+    },
+    {
+      "resource": "wood",
+      "count": 59910,
+      "hours": 2.18628404296875
+    },
+    {
+      "resource": "iron",
+      "count": 41977,
+      "hours": 2.18628404296875
+    },
+    {
+      "resource": "food",
+      "count": 100000,
+      "hours": 2.2477395812988283
+    },
+    {
+      "resource": "wood",
+      "count": 59819,
+      "hours": 2.2477395812988283
+    },
+    {
+      "resource": "iron",
+      "count": 49819,
+      "hours": 2.2477395812988283
+    },
+    {
+      "resource": "food",
+      "count": 25000,
+      "hours": 2.3091951196289062
+    },
+    {
+      "resource": "wood",
+      "count": 14819,
+      "hours": 2.3091951196289062
+    },
+    {
+      "resource": "iron",
+      "count": 12319,
+      "hours": 2.3091951196289062
+    },
+    {
+      "resource": "food",
+      "count": 3900,
+      "hours": 2.3245592125786674
+    },
+    {
+      "resource": "wood",
+      "count": 80,
+      "hours": 2.349837545912001
+    },
+    {
+      "resource": "wood",
+      "count": 29946,
+      "hours": 2.368274401855469
+    },
+    {
+      "resource": "food",
+      "count": 74252,
+      "hours": 2.3793366265190974
+    },
+    {
+      "resource": "wood",
+      "count": 59967,
+      "hours": 2.3793366265190974
+    },
+    {
+      "resource": "iron",
+      "count": 17493,
+      "hours": 2.3793366265190974
+    },
+    {
+      "resource": "food",
+      "count": 100000,
+      "hours": 2.4407921648491753
+    },
+    {
+      "resource": "wood",
+      "count": 59819,
+      "hours": 2.4407921648491753
+    },
+    {
+      "resource": "iron",
+      "count": 49819,
+      "hours": 2.4407921648491753
+    },
+    {
+      "resource": "food",
+      "count": 25000,
+      "hours": 2.5022477031792536
+    },
+    {
+      "resource": "wood",
+      "count": 14819,
+      "hours": 2.5022477031792536
+    },
+    {
+      "resource": "iron",
+      "count": 12319,
+      "hours": 2.5022477031792536
+    },
+    {
+      "resource": "food",
+      "count": 3918,
+      "hours": 2.5176117961290148
+    },
+    {
+      "resource": "food",
+      "count": 45633,
+      "hours": 2.543804814792209
+    },
+    {
+      "resource": "iron",
+      "count": 277,
+      "hours": 2.543804814792209
+    },
+    {
+      "resource": "food",
+      "count": 100000,
+      "hours": 2.6052603531222873
+    },
+    {
+      "resource": "wood",
+      "count": 59429,
+      "hours": 2.6052603531222873
+    },
+    {
+      "resource": "iron",
+      "count": 49819,
+      "hours": 2.6052603531222873
+    },
+    {
+      "resource": "food",
+      "count": 25000,
+      "hours": 2.6667158914523656
+    },
+    {
+      "resource": "wood",
+      "count": 14819,
+      "hours": 2.6667158914523656
+    },
+    {
+      "resource": "iron",
+      "count": 12319,
+      "hours": 2.6667158914523656
+    },
+    {
+      "resource": "food",
+      "count": 3929,
+      "hours": 2.682079984402127
+    },
+    {
+      "resource": "food",
+      "count": 46898,
+      "hours": 2.7168864076741537
+    },
+    {
+      "resource": "wood",
+      "count": 24852,
+      "hours": 2.7168864076741537
+    },
+    {
+      "resource": "food",
+      "count": 25000,
+      "hours": 2.83979748433431
+    },
+    {
+      "resource": "food",
+      "count": 3941,
+      "hours": 2.855161577284071
+    },
+    {
+      "resource": "wood",
+      "count": 6551,
+      "hours": 2.902878538953993
+    },
+    {
+      "resource": "wood",
+      "count": 49946,
+      "hours": 2.921315394897461
+    },
+    {
+      "resource": "wood",
+      "count": 24446,
+      "hours": 2.939752250840929
+    },
+    {
+      "resource": "food",
+      "count": 76798,
+      "hours": 2.9487864518907334
+    },
+    {
+      "resource": "wood",
+      "count": 59973,
+      "hours": 2.9487864518907334
+    },
+    {
+      "resource": "food",
+      "count": 100000,
+      "hours": 3.0102419902208117
+    },
+    {
+      "resource": "wood",
+      "count": 59819,
+      "hours": 3.0102419902208117
+    },
+    {
+      "resource": "iron",
+      "count": 23887,
+      "hours": 3.0102419902208117
+    },
+    {
+      "resource": "food",
+      "count": 25000,
+      "hours": 3.0716975285508896
+    },
+    {
+      "resource": "wood",
+      "count": 14819,
+      "hours": 3.0716975285508896
+    },
+    {
+      "resource": "iron",
+      "count": 12319,
+      "hours": 3.0716975285508896
+    },
+    {
+      "resource": "food",
+      "count": 3957,
+      "hours": 3.087061621500651
+    }
+  ],
+  "log": [
+    {
+      "stage": "normal preparation",
+      "hours": 1.4048138661024305,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 455,
+        "shield": 325,
+        "archer": 910,
+        "cavalry": 130,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "spent": {
+        "food": 689950,
+        "wood": 1116520,
+        "stone": 324105,
+        "iron": 723390,
+        "gold": 811704
+      },
+      "stock": {
+        "food": 42505.79000480539,
+        "wood": 54878.53665024086,
+        "stone": 558405.0874102071,
+        "iron": 100952.12421190541,
+        "gold": 537582.5838195877
+      }
+    },
+    {
+      "stage": "north_road",
+      "won": true,
+      "rounds": 3,
+      "hours": 1.405091921657986,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 455,
+        "shield": 325,
+        "archer": 910,
+        "cavalry": 130,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 0,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 38,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 0,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 20,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 2256,
+      "resourcesBefore": {
+        "food": 42505.79000480539,
+        "wood": 54878.53665024086,
+        "stone": 558405.0874102071,
+        "iron": 100952.12421190541,
+        "gold": 537582.5838195877
+      }
+    },
+    {
+      "stage": "north_granary",
+      "won": true,
+      "rounds": 3,
+      "hours": 1.4303702549913195,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 455,
+        "shield": 325,
+        "archer": 910,
+        "cavalry": 72,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 59,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 47,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 31,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 25,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 2195,
+      "resourcesBefore": {
+        "food": 172078.68778615538,
+        "wood": 189622.4494205742,
+        "stone": 688405.0874102071,
+        "iron": 231720.03698223876,
+        "gold": 905208.0643795878
+      }
+    },
+    {
+      "stage": "north_ford",
+      "won": true,
+      "rounds": 3,
+      "hours": 1.4556485883246528,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 365,
+        "shield": 325,
+        "archer": 910,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 79,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 42,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 2008,
+      "resourcesBefore": {
+        "food": 189113.91334241093,
+        "wood": 206896.90376359082,
+        "stone": 705105.0874102071,
+        "iron": 247720.7840062943,
+        "gold": 957233.5449395878
+      }
+    },
+    {
+      "stage": "north_camp",
+      "won": true,
+      "rounds": 3,
+      "hours": 1.4809269216579861,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 244,
+        "shield": 325,
+        "archer": 910,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 32,
+        "shield": 12,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 16,
+        "shield": 5,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 1871,
+      "resourcesBefore": {
+        "food": 237837.07781172203,
+        "wood": 252771.4308626241,
+        "stone": 753605.0874102071,
+        "iron": 295820.7840062943,
+        "gold": 1109659.0254995879
+      }
+    },
+    {
+      "stage": "north_pass",
+      "won": true,
+      "rounds": 5,
+      "hours": 1.5062052549913194,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 196,
+        "shield": 308,
+        "archer": 910,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 128,
+        "shield": 10,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 68,
+        "shield": 4,
+        "archer": 0,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 1805,
+      "resourcesBefore": {
+        "food": 262566.07781172206,
+        "wood": 283639.4308626241,
+        "stone": 777605.0874102071,
+        "iron": 321820.7840062943,
+        "gold": 1187684.5060595877
+      }
+    },
+    {
+      "stage": "north_keep",
+      "won": true,
+      "rounds": 6,
+      "hours": 1.5314835883246527,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 0,
+        "shield": 294,
+        "archer": 910,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 0,
+        "shield": 192,
+        "archer": 158,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 0,
+        "shield": 102,
+        "archer": 85,
+        "cavalry": 0,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 1565,
+      "resourcesBefore": {
+        "food": 323761.07781172206,
+        "wood": 343639.4308626241,
+        "stone": 840205.0874102071,
+        "iron": 392506.7840062943,
+        "gold": 1369613.9866195875
+      }
+    },
+    {
+      "stage": "luo_outpost",
+      "won": true,
+      "rounds": 4,
+      "hours": 2.3248372681342233,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 750,
+        "shield": 525,
+        "archer": 1650,
+        "cavalry": 225,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 104,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 147,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 56,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 78,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 3900,
+      "resourcesBefore": {
+        "food": 3900,
+        "wood": 45.994408644452335,
+        "stone": 1034771.0874102071,
+        "iron": 45.67394387714768,
+        "gold": 1220817.1261194907
+      }
+    },
+    {
+      "stage": "luo_gate",
+      "won": true,
+      "rounds": 7,
+      "hours": 2.518066796129015,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 750,
+        "shield": 525,
+        "archer": 1650,
+        "cavalry": 225,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 5,
+        "catapult": 0
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 3,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 147,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 1,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 78,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 3918,
+      "resourcesBefore": {
+        "food": 3918,
+        "wood": 46.1636186225881,
+        "stone": 1080571.0874102071,
+        "iron": 45.84315385527617,
+        "gold": 947078.7489570423
+      }
+    },
+    {
+      "stage": "luo_cavalry",
+      "won": true,
+      "rounds": 4,
+      "hours": 2.682851928846571,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 750,
+        "shield": 525,
+        "archer": 1650,
+        "cavalry": 225,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 5,
+        "catapult": 2
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 32,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 147,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 17,
+        "shield": 0,
+        "archer": 0,
+        "cavalry": 78,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 3929,
+      "resourcesBefore": {
+        "food": 3929,
+        "wood": 46.05859938066743,
+        "stone": 1134071.0874102071,
+        "iron": 45.73813461334822,
+        "gold": 824018.7449778419
+      }
+    },
+    {
+      "stage": "luo_wall",
+      "won": true,
+      "rounds": 9,
+      "hours": 2.8559996328396267,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 750,
+        "shield": 525,
+        "archer": 1650,
+        "cavalry": 225,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 5,
+        "catapult": 2
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 227,
+        "shield": 10,
+        "archer": 0,
+        "cavalry": 147,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 122,
+        "shield": 4,
+        "archer": 0,
+        "cavalry": 78,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 3941,
+      "resourcesBefore": {
+        "food": 3941,
+        "wood": 25408.34813641076,
+        "stone": 1289071.0874102071,
+        "iron": 42156.02767164343,
+        "gold": 1172501.3665568
+      }
+    },
+    {
+      "stage": "luo_citadel",
+      "won": true,
+      "rounds": 13,
+      "hours": 3.08798801038954,
+      "army": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 750,
+        "shield": 525,
+        "archer": 1650,
+        "cavalry": 225,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 5,
+        "catapult": 2
+      },
+      "loss": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 488,
+        "shield": 201,
+        "archer": 109,
+        "cavalry": 147,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "wounded": {
+        "worker": 0,
+        "militia": 0,
+        "scout": 0,
+        "spear": 262,
+        "shield": 107,
+        "archer": 58,
+        "cavalry": 78,
+        "heavy": 0,
+        "wagon": 0,
+        "ballista": 0,
+        "ram": 0,
+        "catapult": 0
+      },
+      "foodSupply": 3957,
+      "resourcesBefore": {
+        "food": 3957,
+        "wood": 46.049760772737784,
+        "stone": 1366571.0874102071,
+        "iron": 45.72929600542585,
+        "gold": 1017216.9203893732
+      }
+    }
+  ],
+  "totalHours": 3.1129882881673177,
+  "validSave": true
+}
