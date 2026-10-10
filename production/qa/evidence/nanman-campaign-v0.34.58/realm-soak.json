@@ -1,0 +1,467 @@
+[
+  {
+    "seed": 723,
+    "hours": 72,
+    "generals": 4,
+    "cities": [
+      "city_yellow_qingshi",
+      "city_yellow_liulin",
+      "city_yellow_baisha",
+      "city_yellow_heishan",
+      "city_yellow_chigang"
+    ],
+    "raids": {
+      "done": 48,
+      "won": 48
+    },
+    "blueprints": {
+      "wild": 6,
+      "defense": 4
+    },
+    "blueprintsPerDay": 3.33,
+    "inventoryGain": 10,
+    "deserted": {
+      "city_yellow_qingshi": 0,
+      "city_yellow_liulin": 0,
+      "city_yellow_baisha": 0,
+      "city_yellow_heishan": 0,
+      "city_yellow_chigang": 0
+    },
+    "starving": {
+      "city_yellow_qingshi": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_liulin": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_baisha": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_heishan": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_chigang": {
+        "hours": 0,
+        "lastHour": null
+      }
+    },
+    "minFood": {
+      "capital": 10000,
+      "city_yellow_qingshi": 59557,
+      "city_yellow_liulin": 59554,
+      "city_yellow_baisha": 59563,
+      "city_yellow_heishan": 40882,
+      "city_yellow_chigang": 34757
+    },
+    "end": {
+      "capital": {
+        "food": 524279,
+        "rate": 11109,
+        "army": 7583
+      },
+      "city_yellow_qingshi": {
+        "food": 59558,
+        "rate": -1590,
+        "army": 1674
+      },
+      "city_yellow_liulin": {
+        "food": 59554,
+        "rate": -1602,
+        "army": 1672
+      },
+      "city_yellow_baisha": {
+        "food": 59563,
+        "rate": -1571,
+        "army": 1641
+      },
+      "city_yellow_heishan": {
+        "food": 59567,
+        "rate": -1559,
+        "army": 1629
+      },
+      "city_yellow_chigang": {
+        "food": 59579,
+        "rate": -1513,
+        "army": 1583
+      }
+    },
+    "validSave": true,
+    "wallSeconds": 29.827
+  },
+  {
+    "seed": 1,
+    "hours": 72,
+    "generals": 4,
+    "cities": [
+      "city_yellow_qingshi",
+      "city_yellow_liulin",
+      "city_yellow_baisha",
+      "city_yellow_heishan",
+      "city_yellow_chigang"
+    ],
+    "raids": {
+      "done": 48,
+      "won": 48
+    },
+    "blueprints": {
+      "wild": 7,
+      "defense": 5
+    },
+    "blueprintsPerDay": 4,
+    "inventoryGain": 12,
+    "deserted": {
+      "city_yellow_qingshi": 0,
+      "city_yellow_liulin": 0,
+      "city_yellow_baisha": 0,
+      "city_yellow_heishan": 0,
+      "city_yellow_chigang": 0
+    },
+    "starving": {
+      "city_yellow_qingshi": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_liulin": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_baisha": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_heishan": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_chigang": {
+        "hours": 0,
+        "lastHour": null
+      }
+    },
+    "minFood": {
+      "capital": 10000,
+      "city_yellow_qingshi": 59557,
+      "city_yellow_liulin": 59554,
+      "city_yellow_baisha": 59563,
+      "city_yellow_heishan": 42923,
+      "city_yellow_chigang": 35135
+    },
+    "end": {
+      "capital": {
+        "food": 499124,
+        "rate": 11118,
+        "army": 7586
+      },
+      "city_yellow_qingshi": {
+        "food": 59559,
+        "rate": -1590,
+        "army": 1674
+      },
+      "city_yellow_liulin": {
+        "food": 59555,
+        "rate": -1602,
+        "army": 1672
+      },
+      "city_yellow_baisha": {
+        "food": 59564,
+        "rate": -1571,
+        "army": 1641
+      },
+      "city_yellow_heishan": {
+        "food": 59568,
+        "rate": -1559,
+        "army": 1629
+      },
+      "city_yellow_chigang": {
+        "food": 59580,
+        "rate": -1513,
+        "army": 1583
+      }
+    },
+    "validSave": true,
+    "wallSeconds": 27.25
+  },
+  {
+    "seed": 2,
+    "hours": 72,
+    "generals": 4,
+    "cities": [
+      "city_yellow_qingshi",
+      "city_yellow_liulin",
+      "city_yellow_baisha",
+      "city_yellow_heishan",
+      "city_yellow_chigang"
+    ],
+    "raids": {
+      "done": 48,
+      "won": 48
+    },
+    "blueprints": {
+      "wild": 3,
+      "defense": 5
+    },
+    "blueprintsPerDay": 2.67,
+    "inventoryGain": 8,
+    "deserted": {
+      "city_yellow_qingshi": 0,
+      "city_yellow_liulin": 0,
+      "city_yellow_baisha": 0,
+      "city_yellow_heishan": 0,
+      "city_yellow_chigang": 0
+    },
+    "starving": {
+      "city_yellow_qingshi": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_liulin": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_baisha": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_heishan": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_chigang": {
+        "hours": 0,
+        "lastHour": null
+      }
+    },
+    "minFood": {
+      "capital": 10000,
+      "city_yellow_qingshi": 59558,
+      "city_yellow_liulin": 59554,
+      "city_yellow_baisha": 59563,
+      "city_yellow_heishan": 41009,
+      "city_yellow_chigang": 34757
+    },
+    "end": {
+      "capital": {
+        "food": 557187,
+        "rate": 11135,
+        "army": 7535
+      },
+      "city_yellow_qingshi": {
+        "food": 59559,
+        "rate": -1590,
+        "army": 1674
+      },
+      "city_yellow_liulin": {
+        "food": 59556,
+        "rate": -1602,
+        "army": 1672
+      },
+      "city_yellow_baisha": {
+        "food": 59564,
+        "rate": -1571,
+        "army": 1641
+      },
+      "city_yellow_heishan": {
+        "food": 59567,
+        "rate": -1559,
+        "army": 1629
+      },
+      "city_yellow_chigang": {
+        "food": 59580,
+        "rate": -1513,
+        "army": 1583
+      }
+    },
+    "validSave": true,
+    "wallSeconds": 28.691
+  },
+  {
+    "seed": 3,
+    "hours": 72,
+    "generals": 4,
+    "cities": [
+      "city_yellow_qingshi",
+      "city_yellow_liulin",
+      "city_yellow_baisha",
+      "city_yellow_heishan",
+      "city_yellow_chigang"
+    ],
+    "raids": {
+      "done": 48,
+      "won": 48
+    },
+    "blueprints": {
+      "wild": 6,
+      "defense": 8
+    },
+    "blueprintsPerDay": 4.67,
+    "inventoryGain": 14,
+    "deserted": {
+      "city_yellow_qingshi": 0,
+      "city_yellow_liulin": 0,
+      "city_yellow_baisha": 0,
+      "city_yellow_heishan": 0,
+      "city_yellow_chigang": 0
+    },
+    "starving": {
+      "city_yellow_qingshi": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_liulin": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_baisha": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_heishan": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_chigang": {
+        "hours": 0,
+        "lastHour": null
+      }
+    },
+    "minFood": {
+      "capital": 10000,
+      "city_yellow_qingshi": 59558,
+      "city_yellow_liulin": 59554,
+      "city_yellow_baisha": 59563,
+      "city_yellow_heishan": 42372,
+      "city_yellow_chigang": 35037
+    },
+    "end": {
+      "capital": {
+        "food": 575919,
+        "rate": 11120,
+        "army": 7570
+      },
+      "city_yellow_qingshi": {
+        "food": 59558,
+        "rate": -1590,
+        "army": 1674
+      },
+      "city_yellow_liulin": {
+        "food": 59554,
+        "rate": -1602,
+        "army": 1672
+      },
+      "city_yellow_baisha": {
+        "food": 59564,
+        "rate": -1571,
+        "army": 1641
+      },
+      "city_yellow_heishan": {
+        "food": 59567,
+        "rate": -1559,
+        "army": 1629
+      },
+      "city_yellow_chigang": {
+        "food": 59580,
+        "rate": -1513,
+        "army": 1583
+      }
+    },
+    "validSave": true,
+    "wallSeconds": 28.744
+  },
+  {
+    "seed": 4,
+    "hours": 72,
+    "generals": 4,
+    "cities": [
+      "city_yellow_qingshi",
+      "city_yellow_liulin",
+      "city_yellow_baisha",
+      "city_yellow_heishan",
+      "city_yellow_chigang"
+    ],
+    "raids": {
+      "done": 48,
+      "won": 48
+    },
+    "blueprints": {
+      "wild": 5,
+      "defense": 3
+    },
+    "blueprintsPerDay": 2.67,
+    "inventoryGain": 8,
+    "deserted": {
+      "city_yellow_qingshi": 0,
+      "city_yellow_liulin": 0,
+      "city_yellow_baisha": 0,
+      "city_yellow_heishan": 0,
+      "city_yellow_chigang": 0
+    },
+    "starving": {
+      "city_yellow_qingshi": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_liulin": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_baisha": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_heishan": {
+        "hours": 0,
+        "lastHour": null
+      },
+      "city_yellow_chigang": {
+        "hours": 0,
+        "lastHour": null
+      }
+    },
+    "minFood": {
+      "capital": 10000,
+      "city_yellow_qingshi": 59557,
+      "city_yellow_liulin": 59554,
+      "city_yellow_baisha": 59563,
+      "city_yellow_heishan": 40635,
+      "city_yellow_chigang": 34000
+    },
+    "end": {
+      "capital": {
+        "food": 459175,
+        "rate": 11111,
+        "army": 7591
+      },
+      "city_yellow_qingshi": {
+        "food": 59558,
+        "rate": -1590,
+        "army": 1674
+      },
+      "city_yellow_liulin": {
+        "food": 59556,
+        "rate": -1602,
+        "army": 1672
+      },
+      "city_yellow_baisha": {
+        "food": 59564,
+        "rate": -1571,
+        "army": 1641
+      },
+      "city_yellow_heishan": {
+        "food": 59567,
+        "rate": -1559,
+        "army": 1629
+      },
+      "city_yellow_chigang": {
+        "food": 59580,
+        "rate": -1513,
+        "army": 1583
+      }
+    },
+    "validSave": true,
+    "wallSeconds": 26.517
+  }
+]

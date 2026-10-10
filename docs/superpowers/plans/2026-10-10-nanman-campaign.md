@@ -1,6 +1,6 @@
 # 南蛮入侵与易容面具实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. 沿用本人逐项实施、最后一次整批独立审查；不逐任务派代理。
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking. 沿用本人逐项实施、最后一次整批独立审查；不逐任务派代理。
 
 **Goal:** 增加可完整通关的南蛮主支线、独立每日蛮族箱、七件套与真实潜入路线，兼容已有黄巾存档。
 
@@ -66,57 +66,57 @@ System接口新增/改造：`quote(s,general,army,api,campaign='yellow_turban')`
 
 黄巾 s6 成功潜入保留盾兵90、取消弓兵50；普通敌军不变。口令选择：b6对白“来使先问山路，守卫以归林作答”，答案 `forest`；s6对白“口令先说黄天，守卫答当立”，答案 `rise`。界面还给出 `river`/`return` 两个错误选项，未知答案拒绝且不占次数。合法错误选择锁定 normal；正确锁定 infiltration，不随机抽签。
 
-- [ ] 写测试：`available([], 'nanman')` 等于 `['n1','b1','b2']`；n3后开放n4/b3/b4，n6后开放n7/b5/b6；拒绝重复或跨副本完成节点；main reward=1200/200，全支线=1800/320；克隆配置修改不污染后续读取。副本正式id固定 `nanman`。
-- [ ] 运行 `node --test tests/nanman-data.test.cjs`，确认新增接口/配置缺失导致失败。
-- [ ] 实现配置和接口，沿用黄巾旧数据；将中文对白、支线效果及路线敌军放配置，不以显示名字分支。
-- [ ] 运行 `node --test tests/battlefield-data.test.cjs tests/nanman-data.test.cjs` 全通过；`node --check battlefield-data.js`。
-- [ ] 提交本任务配置和测试，提交说明不含跳过CI指令。
+- [x] 写测试：`available([], 'nanman')` 等于 `['n1','b1','b2']`；n3后开放n4/b3/b4，n6后开放n7/b5/b6；拒绝重复或跨副本完成节点；main reward=1200/200，全支线=1800/320；克隆配置修改不污染后续读取。副本正式id固定 `nanman`。
+- [x] 运行 `node --test tests/nanman-data.test.cjs`，确认新增接口/配置缺失导致失败。
+- [x] 实现配置和接口，沿用黄巾旧数据；将中文对白、支线效果及路线敌军放配置，不以显示名字分支。
+- [x] 运行 `node --test tests/battlefield-data.test.cjs tests/nanman-data.test.cjs` 全通过；`node --check battlefield-data.js`。
+- [x] 提交本任务配置和测试，提交说明不含跳过CI指令。
 
 ### Task 2：双副本状态、门槛与迁移
 
 **Files:** Modify `battlefield-system.js`, `engine.js`, `tests/helpers/battlefield.cjs`; Create `tests/nanman-state.test.cjs`, `tests/fixtures/battlefield-yellow-v57.json`。
 **Interfaces:** Consumes Task1配置；Produces上述Game报价/开局/视图API。新轮id为 `nanman:<全局seq>`，旧轮 `yellow:<seq>` 保留。run新增 `infiltration:{}`；旧run只有缺失时补该字段。保留 routeDiscovered 布尔值，按当前campaign指向s2或b2。
 
-- [ ] 从v57运行时生成并保存含真实进行中黄巾战斗的固定存档，再写失败测试：迁移后回合、命令、兵种统计、pool、wounded不变；视图前后完整存档相等。
-- [ ] 补失败测试：无黄巾首通不能报价南蛮；9级失败10级成功；错误副本/旧报价跨副本启动拒绝不扣令；同时仅一轮；源城固定；池守恒3000+500×已完成b1/b5；非法新字段不被迁移抹掉。
-- [ ] 运行 `node --test tests/nanman-state.test.cjs` 确认失败。
-- [ ] 实现缺失字段迁移、campaign参数、确认键、源城冻结、逐副本节点与租兵总额校验。修改 `validSave` 顺序时保留先校验城市再校验战场；欠薪busy覆盖活动主将。
-- [ ] 加多城切换、欠薪跨离线tick、放弃后可离队回归，运行 `node --test tests/battlefield-state.test.cjs tests/nanman-state.test.cjs` 全通过，检查两文件语法。
-- [ ] 提交本任务与固定旧档，不包含根目录其他修改。
+- [x] 从v57运行时生成并保存含真实进行中黄巾战斗的固定存档，再写失败测试：迁移后回合、命令、兵种统计、pool、wounded不变；视图前后完整存档相等。
+- [x] 补失败测试：无黄巾首通不能报价南蛮；9级失败10级成功；错误副本/旧报价跨副本启动拒绝不扣令；同时仅一轮；源城固定；池守恒3000+500×已完成b1/b5；非法新字段不被迁移抹掉。
+- [x] 运行 `node --test tests/nanman-state.test.cjs` 确认失败。
+- [x] 实现缺失字段迁移、campaign参数、确认键、源城冻结、逐副本节点与租兵总额校验。修改 `validSave` 顺序时保留先校验城市再校验战场；欠薪busy覆盖活动主将。
+- [x] 加多城切换、欠薪跨离线tick、放弃后可离队回归，运行 `node --test tests/battlefield-state.test.cjs tests/nanman-state.test.cjs` 全通过，检查两文件语法。
+- [x] 提交本任务与固定旧档，不包含根目录其他修改。
 
 ### Task 3：真实支线效果与潜入快照
 
 **Files:** Modify `battlefield-system.js`, `engine.js`; Create `tests/nanman-combat.test.cjs`。
 **Interfaces:** Produces `attemptInfiltration`/Game公开API；run.infiltration只接受该副本指定节点，值为 `normal` 或 `infiltration`。潜入尝试需地点可达、未完成、没有未结束战斗、主将实际装备面具、尚未尝试。battle新增 `route`，旧档战斗缺失时补normal；新路线敌军依配置严格校验。
 
-- [ ] 写失败测试：正确选择仅记录路线，战斗未启动；再选拒绝；正常选项不扣物品；错误答案锁normal；未知答案不写；没有面具不可尝试但可正面战斗；合法infiltration必须有已保存正确尝试。
-- [ ] 补失败测试：b2 hidden无routeDiscovered拒绝；南蛮n3仅弓兵攻击1.08而枪兵不变；n6防御1.12、n9防御1.10分别被正确支线取消；b1/b5/b4仅胜利一次发本轮额度；两种s6路线均解除黄巾最终防御且只计一次贡献。
-- [ ] 运行 `node --test tests/nanman-combat.test.cjs` 确认失败。
-- [ ] 实现路线冻结、配置化敌军及支线修正。n3攻击修正落到指定敌军stats.atk；防御使用现有首领乘数；校验双方统计时按同一纯配置公式重算。旧黄巾s3攻击×1.08规则保留。
-- [ ] 对成功潜入战斗败退→补租→换饰品→导出重载→重试进行断言：已存决定不变；已确认潜入路线可继续，卸下面具不能产生新尝试。活动战斗/选择节点锁住新尝试，普通战斗并发时开战拒绝。检验快照篡改拒绝，真实城军/人口/伤兵不变。
-- [ ] 运行 `node --test tests/battlefield-combat.test.cjs tests/nanman-combat.test.cjs` 全通过并检查语法，提交。
+- [x] 写失败测试：正确选择仅记录路线，战斗未启动；再选拒绝；正常选项不扣物品；错误答案锁normal；未知答案不写；没有面具不可尝试但可正面战斗；合法infiltration必须有已保存正确尝试。
+- [x] 补失败测试：b2 hidden无routeDiscovered拒绝；南蛮n3仅弓兵攻击1.08而枪兵不变；n6防御1.12、n9防御1.10分别被正确支线取消；b1/b5/b4仅胜利一次发本轮额度；两种s6路线均解除黄巾最终防御且只计一次贡献。
+- [x] 运行 `node --test tests/nanman-combat.test.cjs` 确认失败。
+- [x] 实现路线冻结、配置化敌军及支线修正。n3攻击修正落到指定敌军stats.atk；防御使用现有首领乘数；校验双方统计时按同一纯配置公式重算。旧黄巾s3攻击×1.08规则保留。
+- [x] 对成功潜入战斗败退→补租→换饰品→导出重载→重试进行断言：已存决定不变；已确认潜入路线可继续，卸下面具不能产生新尝试。活动战斗/选择节点锁住新尝试，普通战斗并发时开战拒绝。检验快照篡改拒绝，真实城军/人口/伤兵不变。
+- [x] 运行 `node --test tests/battlefield-combat.test.cjs tests/nanman-combat.test.cjs` 全通过并检查语法，提交。
 
 ### Task 4：独立每日奖励、面具与蛮族七件套
 
 **Files:** Modify `battlefield-system.js`, `manual-data.js`, `hero-system.js`; Create `tests/nanman-rewards.test.cjs`, `tests/nanman-equipment.test.cjs`。
 **Interfaces:** 南蛮 inventory物品key=`barbarianEquipmentBox`，setId=`nanman`，relic=`mask`；面具资格 `battlefields.relics.mask={unlocked:true,claimed:boolean}`。领取沿用 `claimBattlefieldRelic('mask')`。日记录/首次完整通关按campaign键独立；最新lastReceipt的验证只能绑定自己的campaign。
 
-- [ ] 写失败测试：同一天黄巾→南蛮→黄巾→南蛮，两个首次箱各1，后两次各无箱且半额；全支线1800/320、重复900/160；跨UTC8零点和失败重试不提前占资格；重复胜利回调不再次发奖。
-- [ ] 补失败测试：首次n2只解锁资格、容量满不领且不扣；已领mask最多一件且与claimed一致；重复n2不重发。蛮族箱七槽tier3，满库不扣；套装2/4/7合计分别4/0/0、4/6/0、10/12/5；混套、不同将领、未穿装备不凑套；坐骑stats为空、速度14、旧黄巾与旧品质套数值不变。
-- [ ] 运行两组新测试确认失败。
-- [ ] 实现物品定义、统一结算、回执校验、满库与奇物身份、装备名称/属性/动作保护。面具与罗盘互斥穿戴但均永久持有；物品定义须在可生成箱的结算代码生效前落地。
-- [ ] 运行上述新测试与 `tests/battlefield-rewards.test.cjs`、`tests/battlefield-equipment.test.cjs` 全通过并检查语法；提交。
+- [x] 写失败测试：同一天黄巾→南蛮→黄巾→南蛮，两个首次箱各1，后两次各无箱且半额；全支线1800/320、重复900/160；跨UTC8零点和失败重试不提前占资格；重复胜利回调不再次发奖。
+- [x] 补失败测试：首次n2只解锁资格、容量满不领且不扣；已领mask最多一件且与claimed一致；重复n2不重发。蛮族箱七槽tier3，满库不扣；套装2/4/7合计分别4/0/0、4/6/0、10/12/5；混套、不同将领、未穿装备不凑套；坐骑stats为空、速度14、旧黄巾与旧品质套数值不变。
+- [x] 运行两组新测试确认失败。
+- [x] 实现物品定义、统一结算、回执校验、满库与奇物身份、装备名称/属性/动作保护。面具与罗盘互斥穿戴但均永久持有；物品定义须在可生成箱的结算代码生效前落地。
+- [x] 运行上述新测试与 `tests/battlefield-rewards.test.cjs`、`tests/battlefield-equipment.test.cjs` 全通过并检查语法；提交。
 
 ### Task 5：手机双副本入口与潜入选择
 
 **Files:** Modify `battlefield-ui.js`, `hero-ui.js`, `app.js`, `web-edition.css`; Create `tests/nanman-ui.test.cjs`。
 **Interfaces:** 界面暂存 selectedCampaign 默认为黄巾，不写存档；活动轮覆盖选择。pending确认对象必须含campaign/runId/node/choice，最终提交再次核对；新增action统一battlefield前缀并纳入保存阻断允许列表的只读动作。
 
-- [ ] 写失败测试：入口含两副本与各自锁定原因、独立今日箱状态；只有无活动轮时能切换；确认键过时不开始；节点实际路线敌军显示匹配；最后决战提示“胜利即结束本轮”。
-- [ ] 补测试：面具/罗盘领取按钮身份正确；潜入选项先展示线索及可能结果、已试后不能再选；开箱选择已有同套部位时先提示再确认；英雄装备页解释两套2/4/7与两件奇物用途，不把面具写成罗盘来源。
-- [ ] 运行 `node --test tests/nanman-ui.test.cjs` 确认失败。
-- [ ] 实现双卡、三段地图、确认与报告、箱子选择、奇物使用与提示。沿用最小44px点击目标；手机单列、桌面三段；新增hover显示规则只在支持hover设备启用。
-- [ ] 运行新UI测试及 `tests/battlefield-ui.test.cjs`、`tests/touch-tap.test.cjs` 全通过，检查JS语法；提交。
+- [x] 写失败测试：入口含两副本与各自锁定原因、独立今日箱状态；只有无活动轮时能切换；确认键过时不开始；节点实际路线敌军显示匹配；最后决战提示“胜利即结束本轮”。
+- [x] 补测试：面具/罗盘领取按钮身份正确；潜入选项先展示线索及可能结果、已试后不能再选；开箱选择已有同套部位时先提示再确认；英雄装备页解释两套2/4/7与两件奇物用途，不把面具写成罗盘来源。
+- [x] 运行 `node --test tests/nanman-ui.test.cjs` 确认失败。
+- [x] 实现双卡、三段地图、确认与报告、箱子选择、奇物使用与提示。沿用最小44px点击目标；手机单列、桌面三段；新增hover显示规则只在支持hover设备启用。
+- [x] 运行新UI测试及 `tests/battlefield-ui.test.cjs`、`tests/touch-tap.test.cjs` 全通过，检查JS语法；提交。
 
 ### Task 6：正常成长、手机验证与候选交付
 

@@ -1,0 +1,1466 @@
+[
+  {
+    "seed": 1,
+    "openingMinutes": 4440.671983333334,
+    "cultivationDays": 8.036331041666667,
+    "drills": 8,
+    "trainingGold": 58000,
+    "entryGold": 44854.70166692918,
+    "purchaseGold": 32500,
+    "reports": [
+      {
+        "sides": false,
+        "army": {
+          "militia": 800
+        },
+        "rounds": 49,
+        "losses": 2279,
+        "battles": [
+          {
+            "id": "n1",
+            "rounds": 1,
+            "lost": 29,
+            "pool": 2217
+          },
+          {
+            "id": "n2",
+            "rounds": 7,
+            "lost": 221,
+            "pool": 2320
+          },
+          {
+            "id": "n3",
+            "rounds": 7,
+            "lost": 315,
+            "pool": 2288
+          },
+          {
+            "id": "n4",
+            "rounds": 6,
+            "lost": 221,
+            "pool": 2105
+          },
+          {
+            "id": "n5",
+            "rounds": 2,
+            "lost": 102,
+            "pool": 1945
+          },
+          {
+            "id": "n6",
+            "rounds": 7,
+            "lost": 299,
+            "pool": 2022
+          },
+          {
+            "id": "n7",
+            "rounds": 2,
+            "lost": 153,
+            "pool": 1814
+          },
+          {
+            "id": "n8",
+            "rounds": 7,
+            "lost": 335,
+            "pool": 1862
+          },
+          {
+            "id": "n9",
+            "rounds": 10,
+            "lost": 604,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155179321,
+          "completed": [
+            "n1",
+            "n2",
+            "n3",
+            "n4",
+            "n5",
+            "n6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1200,
+          "xp": 200,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "army": {
+          "militia": 800
+        },
+        "rounds": 65,
+        "losses": 2738,
+        "battles": [
+          {
+            "id": "b1",
+            "rounds": 1,
+            "lost": 19,
+            "pool": 2711
+          },
+          {
+            "id": "b2",
+            "rounds": 7,
+            "lost": 138,
+            "pool": 2774
+          },
+          {
+            "id": "n1",
+            "rounds": 1,
+            "lost": 29,
+            "pool": 2653
+          },
+          {
+            "id": "n2",
+            "rounds": 7,
+            "lost": 221,
+            "pool": 2756
+          },
+          {
+            "id": "n3",
+            "rounds": 7,
+            "lost": 291,
+            "pool": 2709
+          },
+          {
+            "id": "b3",
+            "rounds": 1,
+            "lost": 62,
+            "pool": 2455
+          },
+          {
+            "id": "n4",
+            "rounds": 6,
+            "lost": 221,
+            "pool": 2525
+          },
+          {
+            "id": "n5",
+            "rounds": 2,
+            "lost": 102,
+            "pool": 2365
+          },
+          {
+            "id": "n6",
+            "rounds": 7,
+            "lost": 292,
+            "pool": 2438
+          },
+          {
+            "id": "b5",
+            "rounds": 1,
+            "lost": 100,
+            "pool": 2706
+          },
+          {
+            "id": "b6",
+            "rounds": 6,
+            "lost": 183,
+            "pool": 2715
+          },
+          {
+            "id": "n7",
+            "rounds": 2,
+            "lost": 153,
+            "pool": 2623
+          },
+          {
+            "id": "n8",
+            "rounds": 7,
+            "lost": 335,
+            "pool": 2671
+          },
+          {
+            "id": "n9",
+            "rounds": 10,
+            "lost": 592,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155179321,
+          "completed": [
+            "b1",
+            "b2",
+            "n1",
+            "n2",
+            "n3",
+            "b3",
+            "b4",
+            "n4",
+            "n5",
+            "n6",
+            "b5",
+            "b6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1800,
+          "xp": 320,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "army": {
+          "spear": 300,
+          "shield": 300,
+          "archer": 200
+        },
+        "rounds": 40,
+        "losses": 488,
+        "battles": [
+          {
+            "id": "b1",
+            "rounds": 2,
+            "lost": 0,
+            "pool": 2700
+          },
+          {
+            "id": "b2",
+            "rounds": 3,
+            "lost": 27,
+            "pool": 2716
+          },
+          {
+            "id": "n1",
+            "rounds": 2,
+            "lost": 0,
+            "pool": 2689
+          },
+          {
+            "id": "n2",
+            "rounds": 3,
+            "lost": 44,
+            "pool": 2715
+          },
+          {
+            "id": "n3",
+            "rounds": 3,
+            "lost": 55,
+            "pool": 2704
+          },
+          {
+            "id": "b3",
+            "rounds": 3,
+            "lost": 0,
+            "pool": 2649
+          },
+          {
+            "id": "n4",
+            "rounds": 3,
+            "lost": 44,
+            "pool": 2675
+          },
+          {
+            "id": "n5",
+            "rounds": 3,
+            "lost": 18,
+            "pool": 2641
+          },
+          {
+            "id": "n6",
+            "rounds": 3,
+            "lost": 57,
+            "pool": 2657
+          },
+          {
+            "id": "b5",
+            "rounds": 3,
+            "lost": 14,
+            "pool": 3108
+          },
+          {
+            "id": "b6",
+            "rounds": 3,
+            "lost": 39,
+            "pool": 3117
+          },
+          {
+            "id": "n7",
+            "rounds": 3,
+            "lost": 31,
+            "pool": 3096
+          },
+          {
+            "id": "n8",
+            "rounds": 3,
+            "lost": 63,
+            "pool": 3102
+          },
+          {
+            "id": "n9",
+            "rounds": 3,
+            "lost": 96,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155179321,
+          "completed": [
+            "b1",
+            "b2",
+            "n1",
+            "n2",
+            "n3",
+            "b3",
+            "b4",
+            "n4",
+            "n5",
+            "n6",
+            "b5",
+            "b6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1800,
+          "xp": 320,
+          "box": 1
+        }
+      }
+    ],
+    "probes": [
+      {
+        "target": "n3",
+        "normalLoss": 315,
+        "alternateLoss": 291,
+        "enemies": [
+          [
+            {
+              "id": "spear",
+              "count": 120
+            },
+            {
+              "id": "archer",
+              "count": 100
+            }
+          ],
+          [
+            {
+              "id": "spear",
+              "count": 120
+            },
+            {
+              "id": "archer",
+              "count": 100
+            }
+          ]
+        ]
+      },
+      {
+        "target": "n6",
+        "normalLoss": 299,
+        "alternateLoss": 292,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 80
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 80
+            }
+          ]
+        ]
+      },
+      {
+        "target": "n9",
+        "normalLoss": 604,
+        "alternateLoss": 592,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 110
+            },
+            {
+              "id": "cavalry",
+              "count": 70
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 110
+            },
+            {
+              "id": "cavalry",
+              "count": 70
+            }
+          ]
+        ]
+      },
+      {
+        "target": "b2",
+        "normalLoss": 138,
+        "alternateLoss": 44,
+        "enemies": [
+          [
+            {
+              "id": "spear",
+              "count": 90
+            },
+            {
+              "id": "archer",
+              "count": 50
+            }
+          ],
+          [
+            {
+              "id": "spear",
+              "count": 90
+            }
+          ]
+        ]
+      },
+      {
+        "target": "b6",
+        "normalLoss": 183,
+        "alternateLoss": 32,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 100
+            },
+            {
+              "id": "archer",
+              "count": 70
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 100
+            }
+          ]
+        ]
+      }
+    ],
+    "sevenDailyBoxes": true,
+    "setBonus": {
+      "atk": 10,
+      "def": 12,
+      "pol": 0,
+      "wis": 0,
+      "lead": 5
+    }
+  },
+  {
+    "seed": 7,
+    "openingMinutes": 4440.734483333334,
+    "cultivationDays": 8.036331041666667,
+    "drills": 8,
+    "trainingGold": 58000,
+    "entryGold": 74854.79982278614,
+    "purchaseGold": 32500,
+    "reports": [
+      {
+        "sides": false,
+        "army": {
+          "militia": 800
+        },
+        "rounds": 49,
+        "losses": 2279,
+        "battles": [
+          {
+            "id": "n1",
+            "rounds": 1,
+            "lost": 29,
+            "pool": 2217
+          },
+          {
+            "id": "n2",
+            "rounds": 7,
+            "lost": 221,
+            "pool": 2320
+          },
+          {
+            "id": "n3",
+            "rounds": 7,
+            "lost": 315,
+            "pool": 2288
+          },
+          {
+            "id": "n4",
+            "rounds": 6,
+            "lost": 221,
+            "pool": 2105
+          },
+          {
+            "id": "n5",
+            "rounds": 2,
+            "lost": 102,
+            "pool": 1945
+          },
+          {
+            "id": "n6",
+            "rounds": 7,
+            "lost": 299,
+            "pool": 2022
+          },
+          {
+            "id": "n7",
+            "rounds": 2,
+            "lost": 153,
+            "pool": 1814
+          },
+          {
+            "id": "n8",
+            "rounds": 7,
+            "lost": 335,
+            "pool": 1862
+          },
+          {
+            "id": "n9",
+            "rounds": 10,
+            "lost": 604,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155183071,
+          "completed": [
+            "n1",
+            "n2",
+            "n3",
+            "n4",
+            "n5",
+            "n6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1200,
+          "xp": 200,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "army": {
+          "militia": 800
+        },
+        "rounds": 65,
+        "losses": 2738,
+        "battles": [
+          {
+            "id": "b1",
+            "rounds": 1,
+            "lost": 19,
+            "pool": 2711
+          },
+          {
+            "id": "b2",
+            "rounds": 7,
+            "lost": 138,
+            "pool": 2774
+          },
+          {
+            "id": "n1",
+            "rounds": 1,
+            "lost": 29,
+            "pool": 2653
+          },
+          {
+            "id": "n2",
+            "rounds": 7,
+            "lost": 221,
+            "pool": 2756
+          },
+          {
+            "id": "n3",
+            "rounds": 7,
+            "lost": 291,
+            "pool": 2709
+          },
+          {
+            "id": "b3",
+            "rounds": 1,
+            "lost": 62,
+            "pool": 2455
+          },
+          {
+            "id": "n4",
+            "rounds": 6,
+            "lost": 221,
+            "pool": 2525
+          },
+          {
+            "id": "n5",
+            "rounds": 2,
+            "lost": 102,
+            "pool": 2365
+          },
+          {
+            "id": "n6",
+            "rounds": 7,
+            "lost": 292,
+            "pool": 2438
+          },
+          {
+            "id": "b5",
+            "rounds": 1,
+            "lost": 100,
+            "pool": 2706
+          },
+          {
+            "id": "b6",
+            "rounds": 6,
+            "lost": 183,
+            "pool": 2715
+          },
+          {
+            "id": "n7",
+            "rounds": 2,
+            "lost": 153,
+            "pool": 2623
+          },
+          {
+            "id": "n8",
+            "rounds": 7,
+            "lost": 335,
+            "pool": 2671
+          },
+          {
+            "id": "n9",
+            "rounds": 10,
+            "lost": 592,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155183071,
+          "completed": [
+            "b1",
+            "b2",
+            "n1",
+            "n2",
+            "n3",
+            "b3",
+            "b4",
+            "n4",
+            "n5",
+            "n6",
+            "b5",
+            "b6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1800,
+          "xp": 320,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "army": {
+          "spear": 300,
+          "shield": 300,
+          "archer": 200
+        },
+        "rounds": 40,
+        "losses": 488,
+        "battles": [
+          {
+            "id": "b1",
+            "rounds": 2,
+            "lost": 0,
+            "pool": 2700
+          },
+          {
+            "id": "b2",
+            "rounds": 3,
+            "lost": 27,
+            "pool": 2716
+          },
+          {
+            "id": "n1",
+            "rounds": 2,
+            "lost": 0,
+            "pool": 2689
+          },
+          {
+            "id": "n2",
+            "rounds": 3,
+            "lost": 44,
+            "pool": 2715
+          },
+          {
+            "id": "n3",
+            "rounds": 3,
+            "lost": 55,
+            "pool": 2704
+          },
+          {
+            "id": "b3",
+            "rounds": 3,
+            "lost": 0,
+            "pool": 2649
+          },
+          {
+            "id": "n4",
+            "rounds": 3,
+            "lost": 44,
+            "pool": 2675
+          },
+          {
+            "id": "n5",
+            "rounds": 3,
+            "lost": 18,
+            "pool": 2641
+          },
+          {
+            "id": "n6",
+            "rounds": 3,
+            "lost": 57,
+            "pool": 2657
+          },
+          {
+            "id": "b5",
+            "rounds": 3,
+            "lost": 14,
+            "pool": 3108
+          },
+          {
+            "id": "b6",
+            "rounds": 3,
+            "lost": 39,
+            "pool": 3117
+          },
+          {
+            "id": "n7",
+            "rounds": 3,
+            "lost": 31,
+            "pool": 3096
+          },
+          {
+            "id": "n8",
+            "rounds": 3,
+            "lost": 63,
+            "pool": 3102
+          },
+          {
+            "id": "n9",
+            "rounds": 3,
+            "lost": 96,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155183071,
+          "completed": [
+            "b1",
+            "b2",
+            "n1",
+            "n2",
+            "n3",
+            "b3",
+            "b4",
+            "n4",
+            "n5",
+            "n6",
+            "b5",
+            "b6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1800,
+          "xp": 320,
+          "box": 1
+        }
+      }
+    ],
+    "probes": [
+      {
+        "target": "n3",
+        "normalLoss": 315,
+        "alternateLoss": 291,
+        "enemies": [
+          [
+            {
+              "id": "spear",
+              "count": 120
+            },
+            {
+              "id": "archer",
+              "count": 100
+            }
+          ],
+          [
+            {
+              "id": "spear",
+              "count": 120
+            },
+            {
+              "id": "archer",
+              "count": 100
+            }
+          ]
+        ]
+      },
+      {
+        "target": "n6",
+        "normalLoss": 299,
+        "alternateLoss": 292,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 80
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 80
+            }
+          ]
+        ]
+      },
+      {
+        "target": "n9",
+        "normalLoss": 604,
+        "alternateLoss": 592,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 110
+            },
+            {
+              "id": "cavalry",
+              "count": 70
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 110
+            },
+            {
+              "id": "cavalry",
+              "count": 70
+            }
+          ]
+        ]
+      },
+      {
+        "target": "b2",
+        "normalLoss": 138,
+        "alternateLoss": 44,
+        "enemies": [
+          [
+            {
+              "id": "spear",
+              "count": 90
+            },
+            {
+              "id": "archer",
+              "count": 50
+            }
+          ],
+          [
+            {
+              "id": "spear",
+              "count": 90
+            }
+          ]
+        ]
+      },
+      {
+        "target": "b6",
+        "normalLoss": 183,
+        "alternateLoss": 32,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 100
+            },
+            {
+              "id": "archer",
+              "count": 70
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 100
+            }
+          ]
+        ]
+      }
+    ],
+    "sevenDailyBoxes": true,
+    "setBonus": {
+      "atk": 10,
+      "def": 12,
+      "pol": 0,
+      "wis": 0,
+      "lead": 5
+    }
+  },
+  {
+    "seed": 19,
+    "openingMinutes": 4440.796983333334,
+    "cultivationDays": 8.036331041666667,
+    "drills": 8,
+    "trainingGold": 58000,
+    "entryGold": 44861.89791180272,
+    "purchaseGold": 32500,
+    "reports": [
+      {
+        "sides": false,
+        "army": {
+          "militia": 800
+        },
+        "rounds": 49,
+        "losses": 2279,
+        "battles": [
+          {
+            "id": "n1",
+            "rounds": 1,
+            "lost": 29,
+            "pool": 2217
+          },
+          {
+            "id": "n2",
+            "rounds": 7,
+            "lost": 221,
+            "pool": 2320
+          },
+          {
+            "id": "n3",
+            "rounds": 7,
+            "lost": 315,
+            "pool": 2288
+          },
+          {
+            "id": "n4",
+            "rounds": 6,
+            "lost": 221,
+            "pool": 2105
+          },
+          {
+            "id": "n5",
+            "rounds": 2,
+            "lost": 102,
+            "pool": 1945
+          },
+          {
+            "id": "n6",
+            "rounds": 7,
+            "lost": 299,
+            "pool": 2022
+          },
+          {
+            "id": "n7",
+            "rounds": 2,
+            "lost": 153,
+            "pool": 1814
+          },
+          {
+            "id": "n8",
+            "rounds": 7,
+            "lost": 335,
+            "pool": 1862
+          },
+          {
+            "id": "n9",
+            "rounds": 10,
+            "lost": 604,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155186821,
+          "completed": [
+            "n1",
+            "n2",
+            "n3",
+            "n4",
+            "n5",
+            "n6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1200,
+          "xp": 200,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "army": {
+          "militia": 800
+        },
+        "rounds": 65,
+        "losses": 2738,
+        "battles": [
+          {
+            "id": "b1",
+            "rounds": 1,
+            "lost": 19,
+            "pool": 2711
+          },
+          {
+            "id": "b2",
+            "rounds": 7,
+            "lost": 138,
+            "pool": 2774
+          },
+          {
+            "id": "n1",
+            "rounds": 1,
+            "lost": 29,
+            "pool": 2653
+          },
+          {
+            "id": "n2",
+            "rounds": 7,
+            "lost": 221,
+            "pool": 2756
+          },
+          {
+            "id": "n3",
+            "rounds": 7,
+            "lost": 291,
+            "pool": 2709
+          },
+          {
+            "id": "b3",
+            "rounds": 1,
+            "lost": 62,
+            "pool": 2455
+          },
+          {
+            "id": "n4",
+            "rounds": 6,
+            "lost": 221,
+            "pool": 2525
+          },
+          {
+            "id": "n5",
+            "rounds": 2,
+            "lost": 102,
+            "pool": 2365
+          },
+          {
+            "id": "n6",
+            "rounds": 7,
+            "lost": 292,
+            "pool": 2438
+          },
+          {
+            "id": "b5",
+            "rounds": 1,
+            "lost": 100,
+            "pool": 2706
+          },
+          {
+            "id": "b6",
+            "rounds": 6,
+            "lost": 183,
+            "pool": 2715
+          },
+          {
+            "id": "n7",
+            "rounds": 2,
+            "lost": 153,
+            "pool": 2623
+          },
+          {
+            "id": "n8",
+            "rounds": 7,
+            "lost": 335,
+            "pool": 2671
+          },
+          {
+            "id": "n9",
+            "rounds": 10,
+            "lost": 592,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155186821,
+          "completed": [
+            "b1",
+            "b2",
+            "n1",
+            "n2",
+            "n3",
+            "b3",
+            "b4",
+            "n4",
+            "n5",
+            "n6",
+            "b5",
+            "b6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1800,
+          "xp": 320,
+          "box": 1
+        }
+      },
+      {
+        "sides": true,
+        "army": {
+          "spear": 300,
+          "shield": 300,
+          "archer": 200
+        },
+        "rounds": 40,
+        "losses": 488,
+        "battles": [
+          {
+            "id": "b1",
+            "rounds": 2,
+            "lost": 0,
+            "pool": 2700
+          },
+          {
+            "id": "b2",
+            "rounds": 3,
+            "lost": 27,
+            "pool": 2716
+          },
+          {
+            "id": "n1",
+            "rounds": 2,
+            "lost": 0,
+            "pool": 2689
+          },
+          {
+            "id": "n2",
+            "rounds": 3,
+            "lost": 44,
+            "pool": 2715
+          },
+          {
+            "id": "n3",
+            "rounds": 3,
+            "lost": 55,
+            "pool": 2704
+          },
+          {
+            "id": "b3",
+            "rounds": 3,
+            "lost": 0,
+            "pool": 2649
+          },
+          {
+            "id": "n4",
+            "rounds": 3,
+            "lost": 44,
+            "pool": 2675
+          },
+          {
+            "id": "n5",
+            "rounds": 3,
+            "lost": 18,
+            "pool": 2641
+          },
+          {
+            "id": "n6",
+            "rounds": 3,
+            "lost": 57,
+            "pool": 2657
+          },
+          {
+            "id": "b5",
+            "rounds": 3,
+            "lost": 14,
+            "pool": 3108
+          },
+          {
+            "id": "b6",
+            "rounds": 3,
+            "lost": 39,
+            "pool": 3117
+          },
+          {
+            "id": "n7",
+            "rounds": 3,
+            "lost": 31,
+            "pool": 3096
+          },
+          {
+            "id": "n8",
+            "rounds": 3,
+            "lost": 63,
+            "pool": 3102
+          },
+          {
+            "id": "n9",
+            "rounds": 3,
+            "lost": 96,
+            "pool": null
+          }
+        ],
+        "receipt": {
+          "runId": "nanman:10",
+          "campaign": "nanman",
+          "general": "lin",
+          "sourceCity": "capital",
+          "day": "2026-10-16",
+          "at": 1792155186821,
+          "completed": [
+            "b1",
+            "b2",
+            "n1",
+            "n2",
+            "n3",
+            "b3",
+            "b4",
+            "n4",
+            "n5",
+            "n6",
+            "b5",
+            "b6",
+            "n7",
+            "n8",
+            "n9"
+          ],
+          "prestige": 1800,
+          "xp": 320,
+          "box": 1
+        }
+      }
+    ],
+    "probes": [
+      {
+        "target": "n3",
+        "normalLoss": 315,
+        "alternateLoss": 291,
+        "enemies": [
+          [
+            {
+              "id": "spear",
+              "count": 120
+            },
+            {
+              "id": "archer",
+              "count": 100
+            }
+          ],
+          [
+            {
+              "id": "spear",
+              "count": 120
+            },
+            {
+              "id": "archer",
+              "count": 100
+            }
+          ]
+        ]
+      },
+      {
+        "target": "n6",
+        "normalLoss": 299,
+        "alternateLoss": 292,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 80
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 80
+            }
+          ]
+        ]
+      },
+      {
+        "target": "n9",
+        "normalLoss": 604,
+        "alternateLoss": 592,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 110
+            },
+            {
+              "id": "cavalry",
+              "count": 70
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 180
+            },
+            {
+              "id": "archer",
+              "count": 110
+            },
+            {
+              "id": "cavalry",
+              "count": 70
+            }
+          ]
+        ]
+      },
+      {
+        "target": "b2",
+        "normalLoss": 138,
+        "alternateLoss": 44,
+        "enemies": [
+          [
+            {
+              "id": "spear",
+              "count": 90
+            },
+            {
+              "id": "archer",
+              "count": 50
+            }
+          ],
+          [
+            {
+              "id": "spear",
+              "count": 90
+            }
+          ]
+        ]
+      },
+      {
+        "target": "b6",
+        "normalLoss": 183,
+        "alternateLoss": 32,
+        "enemies": [
+          [
+            {
+              "id": "shield",
+              "count": 100
+            },
+            {
+              "id": "archer",
+              "count": 70
+            }
+          ],
+          [
+            {
+              "id": "shield",
+              "count": 100
+            }
+          ]
+        ]
+      }
+    ],
+    "sevenDailyBoxes": true,
+    "setBonus": {
+      "atk": 10,
+      "def": 12,
+      "pol": 0,
+      "wis": 0,
+      "lead": 5
+    }
+  }
+]

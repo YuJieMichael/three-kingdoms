@@ -1,0 +1,12 @@
+{"node":"c4_sishui","label":"武力 96 主将","won":true,"rounds":6,"lost":599,"sent":22565,"gate":0,"validSave":true}
+{"node":"c4_sishui","label":"武力 64 主将","won":true,"rounds":9,"lost":6973,"sent":22565,"gate":0,"validSave":true}
+{"node":"c4_hulao","label":"6,000 精兵","won":true,"rounds":8,"lost":1531,"sent":6000,"gate":0,"validSave":true}
+{"node":"c4_hulao","label":"超出上限","error":"虎牢关关道狭窄：出征总兵力最多 6000，骑兵最多 1500"}
+{"node":"c4_xingyang","label":"大军速攻","won":true,"rounds":3,"lost":1445,"sent":32000,"gate":null,"validSave":true}
+{"node":"c4_xingyang","label":"兵力不足","won":false,"rounds":6,"lost":11475,"sent":13500,"gate":null,"validSave":true}
+{"node":"c4_meiwu","label":"步骑趁夜","won":true,"rounds":5,"lost":883,"sent":22565,"gate":0,"validSave":true}
+{"node":"c4_meiwu","label":"弓兵固守","won":false,"rounds":30,"lost":0,"sent":22565,"gate":120000,"validSave":true}
+{"node":"c4_lianying","label":"智 85 主将","won":true,"rounds":4,"lost":808,"sent":22565,"gate":null,"validSave":true}
+{"node":"c4_lianying","label":"智 58 主将","won":true,"rounds":8,"lost":8136,"sent":22565,"gate":null,"validSave":true}
+{"node":"c4_luoyang","label":"器械主力","won":true,"rounds":7,"lost":4210,"sent":30140,"gate":0,"validSave":true}
+{"node":"c4_luoyang","label":"缺器械","won":false,"rounds":12,"lost":5830,"sent":30000,"gate":284375,"validSave":true}
