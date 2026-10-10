@@ -1,6 +1,14 @@
 'use strict';
 // General cultivation and equipment numbers are prototype rules, not historical tables.
 const HeroSystem=(()=>{
+  // This game's initial command values, not an original-game or historical table.
+  const initialLeadershipValues=Object.freeze({weiyan:20,xushu:18,zhaoyun:23,huangzhong:20,ganning:21,zhangliao:28,machao:23,xunyu:16,pangtong:23,zhouyu:30,guanyu:25,zhangfei:20,dianwei:15,lvbu:24,taishici:20,liubei:25,sunjian:25,gaoshun:24,chengong:20,lejin:20,yujin:24,zhanghe:25,xuhuang:25,zhugeliang:30,sunce:28,xuchu:15});
+  const initialLeadership=key=>Object.hasOwn(initialLeadershipValues,key)?initialLeadershipValues[key]:0;
+  function baseLeadership(raw,currentLevel){
+    if(!raw.lead)return currentLevel*10;
+    const recruitedLevel=Number.isFinite(raw.level)?raw.level:currentLevel;
+    return raw.lead+10*Math.max(0,currentLevel-recruitedLevel);
+  }
   const attrs={atk:'勇武',def:'统御',pol:'内政',wis:'智谋',lead:'统率'};
   // Free points only raise these three; 统御 and 统率 grow from level and equipment.
   const allocatable=['atk','pol','wis'];
@@ -179,5 +187,5 @@ const HeroSystem=(()=>{
   function refine(eid){const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
+  return {initialLeadership,baseLeadership,attrs,allocatable,slots,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();
