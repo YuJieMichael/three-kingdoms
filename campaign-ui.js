@@ -4,14 +4,14 @@ function campaignMarchReferenceHTML(n){
   if(!Game.marchQuote)return '配兵后可查看行军时间';
   return `弓兵参考 ${duration(Game.marchQuote(n.id,{archer:1}).seconds)} · 纯骑兵 ${duration(Game.marchQuote(n.id,{cavalry:1}).seconds)} · 混编按最慢兵种行军`;
 }
-function campaignMarchHTML(nodeId,army){
+function campaignMarchHTML(nodeId,army,generalId=''){
   if(!Game.marchQuote)return '';
-  const quote=Game.marchQuote(nodeId,army);if(quote.error)return '<p class="hint">选择士兵后，可查看行军与预计返程时间。</p>';
-  return `<div class="notice campaign-march-quote"><strong>预计去程 ${duration(quote.seconds)} · 预计返程 ${duration(quote.returnSeconds)}</strong><p>最慢兵种：${esc(Game.units[quote.slowest].name)} · 当前速度 ${num(quote.speed)} · 试玩倍率 ×${quote.trialMultiplier}</p><p class="hint">纯骑兵可快奔袭；混编弓兵或运输部队时，整队取最慢速度。返程按届时归队兵种、科技与倍率重新计算；已出发部队保留原抵达时间。</p></div>`;
+  const quote=Game.marchQuote(nodeId,army,generalId);if(quote.error)return '<p class="hint">选择士兵后，可查看行军与预计返程时间。</p>';
+  return `<div class="notice campaign-march-quote"><strong>预计去程 ${duration(quote.seconds)} · 预计返程 ${duration(quote.returnSeconds)}</strong><p>最慢兵种：${esc(Game.units[quote.slowest].name)} · 当前速度 ${num(quote.speed)} · 试玩倍率 ×${quote.trialMultiplier}</p><p class="hint">纯骑兵可快奔袭；混编弓兵或运输部队时，整队取最慢速度。${quote.mountProfile?.speed>0?'坐骑队伍的去程与返程按出发时速度固定。':'返程按届时归队兵种、科技与倍率重新计算；已出发部队保留原抵达时间。'}</p></div>`;
 }
 function updateCampaignMarchPreview(){
   const target=document.getElementById('campaign-march-preview'),select=document.getElementById('dispatch-mode');if(!target||!select)return;
-  const html=campaignMarchHTML(select.dataset.node,dispatchArmy());if(target.innerHTML!==html)target.innerHTML=html;
+  const html=campaignMarchHTML(select.dataset.node,dispatchArmy(),document.getElementById('dispatch-general')?.value||'');if(target.innerHTML!==html)target.innerHTML=html;
 }
 function yellowGoldText(n){const at=S().yellowGold?.[n.id]||0,left=at-Date.now();return left>0?`黄金刷新：${new Date(at).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false})}（约 ${duration(left/1000)}后）`:`黄金 ${num(n.loot?.gold||0)} · 占领战胜利可缴获`;}
 function resourceAmount(n){return n>0&&n<.01?'不足 0.01':n.toLocaleString('zh-CN',{maximumFractionDigits:2});}

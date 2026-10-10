@@ -661,6 +661,15 @@ dialog .web-plot-preview h3{
   color:#e9dcb8
 }
 
+/* Eight exclusive equipment slots: two phone columns, four desktop columns. */
+.hero-slots {grid-template-columns:repeat(4,minmax(0,1fr));}
+.hero-slots article {min-width:0;overflow-wrap:anywhere;}
+.hero-slots article button {min-height:44px;}
+@media(max-width:760px){
+  .hero-slots {grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .hero-slots article {padding:10px;}
+}
+
 /* Mobile building boards keep art and taps inside a single logical cell. */
 .flat-building-board{border:1px solid #8a805a;border-radius:7px;background:#303a2c;overflow:hidden;margin-bottom:12px}
 .flat-building-heading{display:flex;flex-direction:column;gap:4px;padding:12px 10px;color:#eee0b4}

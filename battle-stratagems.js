@@ -236,12 +236,12 @@ const BattleStratagems=(()=>{
         if(s.orders[foe][target.id].command==='hold'){invalidate(b,p,'目标坚守，完全抵消冲阵',api);continue;}
         if(!normalAttackAllowed(b,side,moving.id)){invalidate(b,p,'响应轮骑兵主攻击已用于其他准备',api);continue;}
         p.effectApplied=true;p.status='triggered';s.spent.push({side,unit:moving.id,round:s.round,kind:'charge',planId:p.id});
-        const origin=target.pos,amount=Math.floor(Math.min(target.stats.speed/2,200)),to=clipMove(b,origin,Math.max(0,Math.min(b.length,origin+(side==='player'?amount:-amount))));target.pos=to;
+        const origin=target.pos,amount=Math.floor(Math.min(target.stats.speed/2,200)*(typeof HeroSystem!=='undefined'?HeroSystem.movementSpeed(target.stats)/target.stats.speed:1)),to=clipMove(b,origin,Math.max(0,Math.min(b.length,origin+(side==='player'?amount:-amount))));target.pos=to;
         emit(b,'charge',p,'马超冲阵：'+unitName(target.id,api)+'被推退 '+Math.abs(to-origin)+'，位置 '+origin+' → '+to+'；骑兵本轮主攻击已消耗，没有额外伤害'+(to===origin?'，边界或火区挡住推退':'')+'。',api);
         if(to!==origin)triggered.push({kind:'forcedMove',side:foe,unit:target.id,from:origin,to,planId:p.id,sourceSide:side,sourceUnit:moving.id});
       }
     }
-    const plans=s.plans.filter(p=>p.type==='huangzhong'&&p.side!==side&&p.readyRound===s.round&&p.status==='ready').sort((a,z)=>(row(b,z.side,z.unit)?.stats.speed||0)-(row(b,a.side,a.unit)?.stats.speed||0)||(a.side===z.side?0:a.side==='enemy'?-1:1)||a.unit.localeCompare(z.unit));
+    const plans=s.plans.filter(p=>p.type==='huangzhong'&&p.side!==side&&p.readyRound===s.round&&p.status==='ready').sort((a,z)=>(typeof HeroSystem!=='undefined'?HeroSystem.actionSpeed(row(b,z.side,z.unit)?.stats||{speed:0}):row(b,z.side,z.unit)?.stats.speed||0)-(typeof HeroSystem!=='undefined'?HeroSystem.actionSpeed(row(b,a.side,a.unit)?.stats||{speed:0}):row(b,a.side,a.unit)?.stats.speed||0)||(a.side===z.side?0:a.side==='enemy'?-1:1)||a.unit.localeCompare(z.unit));
     for(const p of plans){const archer=row(b,p.side,p.unit);if(!alive(archer)||!alive(moving)||s.spent.some(x=>x.side===p.side&&x.unit===p.unit)||Math.abs(from-archer.pos)<=archer.stats.range||Math.abs(moving.pos-archer.pos)>archer.stats.range||moving.pos===from)continue;
       p.status='triggered';s.spent.push({side:p.side,unit:p.unit,round:s.round,kind:'trigger',planId:p.id});triggered.push({kind:'readyShot',side:p.side,unit:p.unit,target:moving.id,planId:p.id});
       emit(b,'trigger',p,'黄忠预备射击：'+unitName(moving.id,api)+'实际进入射程；弓队本回合主攻击已使用。',api);
