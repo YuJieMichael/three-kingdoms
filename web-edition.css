@@ -679,3 +679,5 @@ dialog .web-plot-preview h3{
 .flat-building-grid .flat-building-cell:focus-visible{outline:2px solid #fff0aa;outline-offset:-3px}
 .flat-building-expansion{display:flex;flex-direction:column;gap:3px;width:100%;padding:11px;border:0;border-top:1px solid #8a805a;background:#414934;color:#ddd6b5;text-align:left;font:inherit;touch-action:pan-y}
 .flat-building-expansion strong{font-size:13px}.flat-building-expansion span{font-size:11px}.flat-building-note{font-size:11px;color:#cbd0b4;padding:9px 10px;margin:0}
+
+.plot-replacement-options{margin-top:10px;border-top:1px solid #817855;padding-top:8px}.plot-replacement-options>summary{padding:8px 0;cursor:pointer;font-size:13px;color:#cbd0b4}.plot-replacement-options .plot-options{margin-top:8px}

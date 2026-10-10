@@ -51,3 +51,19 @@ test('switching cities shows only that city\'s buildings and plots without chang
  assert.equal(JSON.stringify(g.state),before);
  assert.equal(g.switchCity('capital'),null);assert.doesNotMatch(e.evaluate('webCityScene()'),/民房/);assert.doesNotMatch(e.evaluate('webOutskirtsScene()'),/铁矿/);
 });
+function fieldDetailEnv(){
+ const e=sceneEnv();e.evaluate(`var modalCapture=null,showModal=(title,body,footer)=>{modalCapture={title,body,footer};};
+ var num=String,duration=String,costs=()=>'',speedupQueueButton=()=>'';`);
+ e.evaluate(fs.readFileSync(path.join(__dirname,'../outskirts.js'),'utf8'));return e;
+}
+test('existing fields keep upgrade primary and replacement options inside a closed disclosure',()=>{
+ const e=fieldDetailEnv();e.Game.state.plots[0]={type:'farm',level:1};e.evaluate('plotModal(0)');const view=e.evaluate('modalCapture');
+ const details=view.body.match(/<details\b([^>]*)>([\s\S]*?)<\/details>/);assert.ok(details,'replacement must be collapsed');assert.doesNotMatch(details[1],/\bopen\b/);
+ assert.match(details[2],/更换产业/);assert.match(details[2],/data-id="0:lumber"/);assert.doesNotMatch(details[2],/data-id="0:farm"/);
+ const outside=view.body.replace(details[0],'');assert.match(outside,/升级这块资源田/);assert.doesNotMatch(outside,/data-id="0:lumber"/);
+});
+test('empty fields still offer all four industries directly and construction retains cancellation',()=>{
+ const e=fieldDetailEnv();e.evaluate('plotModal(0)');let view=e.evaluate('modalCapture');assert.doesNotMatch(view.body,/<details/);
+ assert.deepEqual(buttons(view.body).map(b=>b.id),['0:farm','0:lumber','0:quarry','0:mine']);
+ assert.equal(e.Game.developPlot(0,'farm'),null);e.evaluate('plotModal(0)');view=e.evaluate('modalCapture');assert.match(view.title,/施工中/);assert.match(view.footer,/data-id="plot:0"/);
+});
