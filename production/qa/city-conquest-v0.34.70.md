@@ -46,3 +46,5 @@
 11. 不判定实际联机部署，只确认生成物一致，原型未开放；线上配置或运行时差异可能遗漏。
 
 未合并main；待PR与CI。此审查仅认可可提交审查，不是发布授权或全局平衡通过。
+
+PR：https://github.com/YuJieMichael/three-kingdoms/pull/73 ，基于PR72；CI状态以PR当前提交为准。候选仍未上线。
