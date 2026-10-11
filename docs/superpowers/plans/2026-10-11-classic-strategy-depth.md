@@ -33,7 +33,7 @@ Expose Game.recoveryView() pure and Game.setRecoveryPriority(boolean) transactio
 ### Task 2: Public stage-based training targets
 
 **Spec:** design/quick-specs/classic-training-targets-2026-10-11.md
-**Files:** world-navigation.js (or new training-targets.js), engine.js, world-navigation-ui.js/app.js; tests/training-targets.test.cjs
+**Files:** world-targets.js (or new training-targets.js), engine.js, world-targets-ui.js/app.js; tests/training-targets.test.cjs
 
 1. Read existing paths and spec; write focused RED tests before product changes.
 2. Implement the following contract:
@@ -46,7 +46,7 @@ Expose Game.trainingTargets(stage) pure with stage ids beginner/advanced/famous,
 ### Task 3: Owned named-city economic specialty
 
 **Spec:** design/quick-specs/classic-territory-2026-10-11.md
-**Files:** city-strategy.js, engine.js rates/trainSeconds (or existing production hook), city-strategy-ui.js / city UI; tests/named-territory.test.cjs
+**Files:** city-strategy.js, engine.js rates/trainSeconds (or existing production hook), city-ui.js / city UI; tests/named-territory.test.cjs
 
 1. Read existing paths and spec; write focused RED tests before product changes.
 2. Implement the following contract:
@@ -59,12 +59,12 @@ Expose CityStrategy.territory(s,cityMeta) pure with food/wood/stone/iron/gold fa
 ### Task 4: Five named-city hero stories
 
 **Spec:** design/quick-specs/classic-heroes-2026-10-11.md
-**Files:** named-city-data.js, named-garrison.js, hero-system.js, hero-identity.js, hero-catalog.js, engine.js, appropriate hero UI; tests/named-hero-stories.test.cjs
+**Files:** named-city-data.js, named-garrison.js, hero-system.js, hero-identity.js, world-targets.js (HeroCatalog), named-city-system.js, engine.js, appropriate hero UI; tests/named-hero-stories.test.cjs
 
 1. Read existing paths and spec; write focused RED tests before product changes.
 2. Implement the following contract:
 
-Add nodes named_changshan/named_changsha/named_xiliang/named_xuchang/named_chaisang with five hero definitions, stable ids local_7100000000000006..10 in same order. Freeze existing famous-prefecture access requirement at original ceil(5/3)=2 ordinary named counties; do not compute from enlarged roster. New cities county or prefecture consistent with same rule. New stats from retained same-name wild definitions; garrison raw level20, growth enrollment capture/start65/65/70/65/70, so not ×3 leadership. Use short original stories and supply/loyalty siege hints; dynamic identity table maps stablecity IDs. Existing retired wild counterparts remain valid but prevent creating second recruited stable identity for same named hero (including direct/defeated-hero paths); old legitimately duplicated saves remain readable. No boxes for newcity capture. Distinct locations insideWORLD_SIZE not collision existing nodes. Tests siege loyalty capture true actual paths,1..3lvl loss+title gates, migrated five→ten garrisons, tampered source/capture invalid, retained wild save valid, originals threshold unchanged, no new city firstcapturebox.
+Add nodes named_changshan/named_changsha/named_xiliang/named_xuchang/named_chaisang with five hero definitions, stable ids local_7100000000000006..10 in same order. Freeze existing famous-prefecture access requirement at original ceil(16/3)=6 owned named cities; do not compute from enlarged roster. New cities county or prefecture consistent with same rule. New stats from retained same-name wild definitions; garrison raw level20, growth enrollment capture/start65/65/70/65/70, so not ×3 leadership. Use short original stories and supply/loyalty siege hints; dynamic identity table maps stablecity IDs. Existing retired wild counterparts remain valid but prevent creating second recruited stable identity for same named hero (including direct/defeated-hero paths); old legitimately duplicated saves remain readable. No boxes for newcity capture. Distinct locations insideWORLD_SIZE not collision existing nodes. Tests siege loyalty capture true actual paths,1..3lvl loss+title gates, migrated five→ten garrisons, tampered source/capture invalid, retained wild save valid, originals threshold unchanged, no new city firstcapturebox.
 
 3. Add compact Chinese UI and meaningful tests. Run focused test, syntax checks, regenerate runtime.
 4. Run npm test once, commit only task files, self-review, report RED/GREEN and actual results.
