@@ -75,8 +75,8 @@ const LAYOUT_MORE_TABS=[['war','征战'],['city','城务'],['tools','辅助']];
 function layoutMoreModal(){
   const unread=Game.automation.unread(S());
   const groups={
-    war:btn('战场','battlefieldOpen','','secondary')+btn('征战与成长','webEditionHub','','secondary')+btn('掠夺找资源','webRaids','','secondary',WebEdition.shared())+btn('名城版图','namedCities','','secondary')+btn('新手补给 · '+S().onboarding.claims.length+'/10','onboardingGifts','','secondary'),
-    city:btn('领地与驻军','classicTerritory','','secondary')+btn('来袭与守城','npcDefense','','secondary')+btn('城务与薪俸','governance','','secondary')+btn('伤兵营','warCare','','secondary')+btn('城池详情','classicInfo','','secondary'),
+    war:btn('征程','journeyOpen','','secondary')+btn('战场','battlefieldOpen','','secondary')+btn('征战与成长','webEditionHub','','secondary')+btn('掠夺找资源','webRaids','','secondary',WebEdition.shared())+btn('名城版图','namedCities','','secondary')+btn('新手补给 · '+S().onboarding.claims.length+'/10','onboardingGifts','','secondary'),
+    city:btn('治下城市','citySwitchList','','secondary')+btn('领地与驻军','classicTerritory','','secondary')+btn('来袭与守城','npcDefense','','secondary')+btn('城务与薪俸','governance','','secondary')+btn('伤兵营','warCare','','secondary')+btn('城池详情','classicInfo','','secondary'),
     tools:(layoutFeatureOpen('automation')?btn('自动助手'+(unread?' · '+unread+' 未读':''),'automationOpen','','secondary'):'')+btn('消息记录','webMessages','','secondary')+btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','secondary')
   };
   const tabs=LAYOUT_MORE_TABS.map(([id,label])=>`<button role="tab" id="more-tab-${id}" aria-controls="more-category-panel" aria-selected="${layoutMoreCategory===id}" tabindex="${layoutMoreCategory===id?0:-1}" data-action="layoutMoreTab" data-id="${id}">${label}${id==='tools'&&unread?'<i aria-label="有未读记录"></i>':''}</button>`).join('');

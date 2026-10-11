@@ -1,0 +1,224 @@
+[
+  {
+    "seed": 723,
+    "hours": 96,
+    "supply": false,
+    "cities": [
+      "city_yellow_qingshi",
+      "city_yellow_baisha"
+    ],
+    "startArmy": {
+      "city_yellow_qingshi": 1166,
+      "city_yellow_baisha": 1129
+    },
+    "deserted": {
+      "city_yellow_qingshi": 0,
+      "city_yellow_baisha": 0
+    },
+    "days": [
+      {
+        "hour": 0,
+        "capital": {
+          "food": 451355,
+          "army": 5420,
+          "rate": 62806
+        },
+        "city_yellow_qingshi": {
+          "food": 25862,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 25416,
+          "army": 1129,
+          "rate": -1059
+        }
+      },
+      {
+        "hour": 24,
+        "capital": {
+          "food": 1739389,
+          "army": 5420,
+          "rate": 56030
+        },
+        "city_yellow_qingshi": {
+          "food": 25967,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 25416,
+          "army": 1129,
+          "rate": -1059
+        }
+      },
+      {
+        "hour": 48,
+        "capital": {
+          "food": 3027015,
+          "army": 5420,
+          "rate": 56030
+        },
+        "city_yellow_qingshi": {
+          "food": 25967,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 25416,
+          "army": 1129,
+          "rate": -1059
+        }
+      },
+      {
+        "hour": 72,
+        "capital": {
+          "food": 4314641,
+          "army": 5420,
+          "rate": 56030
+        },
+        "city_yellow_qingshi": {
+          "food": 25967,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 25416,
+          "army": 1129,
+          "rate": -1059
+        }
+      },
+      {
+        "hour": 96,
+        "capital": {
+          "food": 5471453,
+          "army": 5420,
+          "rate": 56030
+        },
+        "city_yellow_qingshi": {
+          "food": 25967,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 25416,
+          "army": 1129,
+          "rate": -1059
+        }
+      }
+    ],
+    "validSave": true,
+    "wallSeconds": 1.691
+  },
+  {
+    "seed": 723,
+    "hours": 96,
+    "supply": true,
+    "cities": [
+      "city_yellow_qingshi",
+      "city_yellow_baisha"
+    ],
+    "startArmy": {
+      "city_yellow_qingshi": 1166,
+      "city_yellow_baisha": 1129
+    },
+    "deserted": {
+      "city_yellow_qingshi": 0,
+      "city_yellow_baisha": 0
+    },
+    "days": [
+      {
+        "hour": 0,
+        "capital": {
+          "food": 382575,
+          "army": 5400,
+          "rate": 62806
+        },
+        "city_yellow_qingshi": {
+          "food": 25862,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 25416,
+          "army": 1129,
+          "rate": -1059
+        }
+      },
+      {
+        "hour": 24,
+        "capital": {
+          "food": 1675020,
+          "army": 5400,
+          "rate": 56030
+        },
+        "city_yellow_qingshi": {
+          "food": 58917,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 58940,
+          "army": 1129,
+          "rate": -1059
+        }
+      },
+      {
+        "hour": 48,
+        "capital": {
+          "food": 2966940,
+          "army": 5400,
+          "rate": 56030
+        },
+        "city_yellow_qingshi": {
+          "food": 58917,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 58940,
+          "army": 1129,
+          "rate": -1059
+        }
+      },
+      {
+        "hour": 72,
+        "capital": {
+          "food": 4258860,
+          "army": 5400,
+          "rate": 56030
+        },
+        "city_yellow_qingshi": {
+          "food": 58917,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 58940,
+          "army": 1129,
+          "rate": -1059
+        }
+      },
+      {
+        "hour": 96,
+        "capital": {
+          "food": 5497800,
+          "army": 5400,
+          "rate": 56030
+        },
+        "city_yellow_qingshi": {
+          "food": 58917,
+          "army": 1166,
+          "rate": -1082
+        },
+        "city_yellow_baisha": {
+          "food": 58940,
+          "army": 1129,
+          "rate": -1059
+        }
+      }
+    ],
+    "validSave": true,
+    "wallSeconds": 1.817
+  }
+]
