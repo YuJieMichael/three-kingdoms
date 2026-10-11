@@ -805,3 +805,6 @@ dialog .web-plot-preview h3{
 .garrison-rules summary{font-size:12px;color:#e0d6b5}
 .garrison-status-card .garrison-loyalty{height:20px;margin:10px 0 6px}
 .garrison-status-card .garrison-loyalty span{line-height:20px;text-shadow:0 1px 2px #000;font-size:12px}
+
+/* Journey milestones remain compact and touch friendly. */
+.journey-list{display:grid;gap:10px}.journey-card{padding:12px;border:1px solid #78795c;border-radius:6px;background:#29352b}.journey-card.is-current{border-color:#c4a66c}.journey-card h3{font-size:16px;margin:0}.journey-card .guide-actions{display:flex;gap:8px}.journey-card button{min-height:44px;flex:1}.journey-card .hint{overflow-wrap:anywhere}
