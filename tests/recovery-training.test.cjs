@@ -61,3 +61,27 @@ test('mobile priority change preserves unsaved target, toggles only this policy 
 test('expected recovery at the soldier count boundary matches actual automatic treatment',()=>{
  const e=prepared(),{g}=e;g.setAutoHeal(true);priority(g);wounds(e,2);g.state.army.archer=Number.MAX_SAFE_INTEGER-1;assert.equal(g.recoveryView().recoverable.archer,1);g.tick(e.now(),true);assert.equal(g.state.army.archer,Number.MAX_SAFE_INTEGER);assert.equal(g.state.warCare.wounded.archer,1);
 });
+
+test('recovery priority leaves a full salary day after the same boundary pays wages and arrears',()=>{
+ for(const row of [
+  {gold:1008,assistant:0,owed:0,healed:0,after:968},
+  {gold:1048,assistant:0,owed:0,healed:1,after:960},
+  {gold:1148,assistant:0,owed:100,healed:1,after:960},
+  {gold:2088,assistant:2000,owed:0,healed:1,after:2000},
+  {gold:2188,assistant:2000,owed:100,healed:1,after:2000}
+ ]){
+  const e=prepared(),{g}=e;g.state.tax=0;priority(g);g.setAutoHeal(true);wounds(e);g.state.res.gold=row.gold;g.state.automation.reserve.gold=row.assistant;if(row.owed){g.state.heroService.owed.lin=60;g.state.heroService.owed.su=40;}
+  e.advance(3600000,true);assert.equal(g.state.warCare.treated.archer,row.healed,JSON.stringify(row));assert.equal(g.state.res.gold,row.after,JSON.stringify(row));assert.equal(g.economyBudget().goldHours,row.after/40);assert.deepEqual(copy(g.state.heroService.owed),{});
+ }
+});
+test('offline catchup uses each payable salary boundary and preserves assistant reserve without double billing',()=>{
+ for(const row of [{hours:3,gold:1128,assistant:0,owed:0,after:960},{hours:24,gold:1328,assistant:0,owed:0,after:960},{hours:24,gold:2468,assistant:2000,owed:100,after:2000}]){
+  const e=prepared(),{g}=e;g.state.tax=0;priority(g);g.setAutoHeal(true);wounds(e);g.state.res.gold=row.gold;g.state.automation.reserve.gold=row.assistant;if(row.owed){g.state.heroService.owed.lin=60;g.state.heroService.owed.su=40;}
+  e.offline(row.hours*3600000);assert.equal(g.state.warCare.treated.archer,1,JSON.stringify(row));assert.equal(g.state.res.gold,row.after,JSON.stringify(row));assert.deepEqual(copy(g.state.heroService.owed),{});const before=JSON.stringify(g.state);g.init();assert.equal(JSON.stringify(g.state),before);assert.equal(g.validSave(g.state),true);
+ }
+});
+test('priority still heals before recruiting at a salary boundary and legacy automatic care keeps its former spending rule',()=>{
+ const e=prepared(),{g}=e;g.state.tax=0;g.state.army.archer=619;target(g);priority(g);g.setAutoHeal(true);g.setTrainingTemplateEnabled(true);wounds(e);g.state.res.gold=9688; // 181*48 + one due salary40 + reserve960
+ e.advance(3600000,true);assert.equal(g.state.army.archer,800);assert.equal(g.state.warCare.treated.archer,181);assert.equal(g.state.trainQueue.length,0);assert.equal(g.state.res.gold,960);
+ const legacy=prepared();legacy.g.state.tax=0;legacy.g.setAutoHeal(true);wounds(legacy);legacy.g.state.res.gold=1008;legacy.advance(3600000,true);assert.equal(legacy.g.state.warCare.treated.archer,21);assert.equal(legacy.g.state.res.gold,0);assert.equal(legacy.g.state.heroService.owed.lin,20);assert.equal(legacy.g.state.heroService.owed.su,20);
+});
