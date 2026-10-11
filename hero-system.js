@@ -226,6 +226,12 @@ const HeroSystem=(()=>{
   }
   // Construction rewards depend on the completed level, not duration or game speed.
   const constructionXp=level=>level*10;
+  function defeatedPopulation(rows){return rows.reduce((sum,row)=>{
+    const unit=ManualData.units[row.id];if(!unit)return sum;
+    const surviving=Math.max(0,Math.ceil(row.hp/row.stats.hp));
+    return sum+Math.max(0,row.initial-Math.min(row.initial,surviving))*(unit.people||1);
+  },0);}
+  function battleXp(level,won,population=0){return won?level*45+Math.floor(Math.max(0,population)/5):15;}
   function addXp(s,id,xp){s.generalXp[id]=(s.generalXp[id]||0)+xp;while(s.generalLevels[id]<10000&&s.generalXp[id]>=s.generalLevels[id]*80){s.generalXp[id]-=s.generalLevels[id]*80;s.generalLevels[id]++;}init(s);}
   function addEquipment(s,slot,tier,named){const e={id:++s.equipmentSeq,slot,tier,enhance:0,hero:'',...(named?{named}:{})};s.equipment.push(e);return e;}
   function drops(s,level){
@@ -263,5 +269,5 @@ const HeroSystem=(()=>{
   function refine(eid){const blocked=Game.saveBlockReason();if(blocked)return blocked;const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.relic)return '剧情奇物不能强化、炼化或分解';if(e.slot==='mount')return '坐骑不能炼化属性';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {initialLeadership,startingLevel,captureLevel,enrollStartingLevel,migrateStartingLevels,baseLeadership,battlefieldSetBonus,attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,setSlots,setExchangeQuote,exchangeSet,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
+  return {initialLeadership,startingLevel,captureLevel,enrollStartingLevel,migrateStartingLevels,baseLeadership,battlefieldSetBonus,attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,defeatedPopulation,battleXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,setSlots,setExchangeQuote,exchangeSet,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();
