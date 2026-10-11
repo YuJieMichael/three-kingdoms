@@ -1,0 +1,6792 @@
+{
+  "code": {
+    "version": "0.34.71",
+    "revision": "eaa3adabb6fe9a00abdf90b72873c2f3737a377b",
+    "sourceHash": "2f1a6fdb8a8c29f566bd85788bc14a512aaf0e15d62e39c1ef1274845149bc7b",
+    "verifiedProductRevision": "778b9524bb5e60b96821d17cef1ff6dd5b31c6d2",
+    "executionNote": "Ran stable v0.34.71 working tree before Task5 commit; whole-JS hash verified unchanged against this product commit."
+  },
+  "description": "Earned old-save real rental-token routes; difficulty unlock sequence and same-day shared boxes; no grants",
+  "results": [
+    {
+      "seed": 1,
+      "campaign": "yellow_turban",
+      "kind": "main",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 5000,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 11,
+              "won": true,
+              "guards": 100,
+              "remainingPool": 2206
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2203
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 104,
+              "won": true,
+              "guards": 150,
+              "remainingPool": 2251
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 102,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2208
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 71,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2148
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 136,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2158
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 179,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 2129
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 80,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 1998
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 232,
+              "won": true,
+              "guards": 320,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:1",
+            "campaign": "yellow_turban",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1000,
+            "xp": 160,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 568,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 232,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 139,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 20,
+              "won": true,
+              "guards": 175,
+              "remainingPool": 3312
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3306
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 181,
+              "won": true,
+              "guards": 262,
+              "remainingPool": 3390
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 179,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3316
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 124,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3211
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 252,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3238
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 312,
+              "won": true,
+              "guards": 367,
+              "remainingPool": 3173
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 141,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 2945
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 422,
+              "won": true,
+              "guards": 560,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:2",
+            "campaign": "yellow_turban",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 625,
+            "xp": 100,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 778,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 422,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 253,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 35,
+              "won": true,
+              "guards": 300,
+              "remainingPool": 5521
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5511
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 313,
+              "won": true,
+              "guards": 450,
+              "remainingPool": 5656
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 307,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5527
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 213,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5347
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 437,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5396
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 537,
+              "won": true,
+              "guards": 630,
+              "remainingPool": 5281
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 241,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 4888
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 727,
+              "won": true,
+              "guards": 960,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:3",
+            "campaign": "yellow_turban",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 750,
+            "xp": 120,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1273,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 727,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 436,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 1,
+      "campaign": "yellow_turban",
+      "kind": "all",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 5000,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 9,
+              "won": true,
+              "guards": 80,
+              "remainingPool": 2705
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 59,
+              "won": true,
+              "guards": 90,
+              "remainingPool": 2731
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 11,
+              "won": true,
+              "guards": 100,
+              "remainingPool": 2678
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2675
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 99,
+              "won": true,
+              "guards": 150,
+              "remainingPool": 2720
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 68,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2661
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 102,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2654
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 71,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2594
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 136,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2604
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 59,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 3003
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 85,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2995
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 179,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3017
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 80,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2886
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 209,
+              "won": true,
+              "guards": 304,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:1",
+            "campaign": "yellow_turban",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1600,
+            "xp": 256,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 591,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 209,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 125,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 16,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 3809
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 103,
+              "won": true,
+              "guards": 157,
+              "remainingPool": 3854
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 20,
+              "won": true,
+              "guards": 175,
+              "remainingPool": 3763
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3757
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 173,
+              "won": true,
+              "guards": 262,
+              "remainingPool": 3836
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 119,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3734
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 179,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3722
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 124,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3617
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 245,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3640
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 103,
+              "won": true,
+              "guards": 245,
+              "remainingPool": 3956
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 148,
+              "won": true,
+              "guards": 244,
+              "remainingPool": 3941
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 312,
+              "won": true,
+              "guards": 367,
+              "remainingPool": 3980
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 141,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3752
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 381,
+              "won": true,
+              "guards": 531,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:2",
+            "campaign": "yellow_turban",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1000,
+            "xp": 160,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 819,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 381,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 228,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 28,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 6016
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 179,
+              "won": true,
+              "guards": 270,
+              "remainingPool": 6095
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 35,
+              "won": true,
+              "guards": 300,
+              "remainingPool": 5937
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5927
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 298,
+              "won": true,
+              "guards": 450,
+              "remainingPool": 6063
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 204,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5887
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 307,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5867
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 213,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5687
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 425,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5729
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 177,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 5910
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 255,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 5886
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 537,
+              "won": true,
+              "guards": 630,
+              "remainingPool": 5953
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 241,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5560
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 661,
+              "won": true,
+              "guards": 912,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:3",
+            "campaign": "yellow_turban",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1200,
+            "xp": 192,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1339,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 661,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 396,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 1,
+      "campaign": "nanman",
+      "kind": "main",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 7500,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 21,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2212
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 159,
+              "won": true,
+              "guards": 180,
+              "remainingPool": 2286
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 215,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2256
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 136,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2122
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 66,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 2025
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 169,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2060
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 97,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 1949
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 189,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 1965
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 266,
+              "won": true,
+              "guards": 360,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:4",
+            "campaign": "nanman",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1200,
+            "xp": 200,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 534,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 266,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 159,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 37,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3322
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 278,
+              "won": true,
+              "guards": 315,
+              "remainingPool": 3451
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 376,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3398
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 252,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3173
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 116,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 2990
+            },
+            {
+              "id": "n6",
+              "rounds": 7,
+              "lost": 351,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3084
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 170,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 2835
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 347,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 2873
+            },
+            {
+              "id": "n9",
+              "rounds": 7,
+              "lost": 534,
+              "won": true,
+              "guards": 629,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:5",
+            "campaign": "nanman",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 750,
+            "xp": 125,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 5,
+                "rounds": 7
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 666,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 534,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 320,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 7
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 63,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5537
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 477,
+              "won": true,
+              "guards": 540,
+              "remainingPool": 5760
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 645,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5670
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 437,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5287
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 199,
+              "won": true,
+              "guards": 720,
+              "remainingPool": 4969
+            },
+            {
+              "id": "n6",
+              "rounds": 7,
+              "lost": 605,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5133
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 291,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 4702
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 600,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 4771
+            },
+            {
+              "id": "n9",
+              "rounds": 7,
+              "lost": 921,
+              "won": true,
+              "guards": 1080,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:6",
+            "campaign": "nanman",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 900,
+            "xp": 150,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 5,
+                "rounds": 7
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1079,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 921,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 552,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 7
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 1,
+      "campaign": "nanman",
+      "kind": "all",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 7500,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2708
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 99,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2753
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 21,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2666
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 159,
+              "won": true,
+              "guards": 180,
+              "remainingPool": 2740
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 199,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2700
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 45,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2528
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 136,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2564
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 66,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 2467
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 163,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2498
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 72,
+              "won": true,
+              "guards": 170,
+              "remainingPool": 2878
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 119,
+              "won": true,
+              "guards": 170,
+              "remainingPool": 2877
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 97,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2816
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 189,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2832
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 244,
+              "won": true,
+              "guards": 341,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:4",
+            "campaign": "nanman",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1800,
+            "xp": 320,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 556,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 244,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 146,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 245,
+              "remainingPool": 3814
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 173,
+              "won": true,
+              "guards": 244,
+              "remainingPool": 3893
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 37,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3742
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 278,
+              "won": true,
+              "guards": 315,
+              "remainingPool": 3871
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 348,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3801
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 78,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3499
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 252,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3572
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 116,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 3389
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 301,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3453
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 126,
+              "won": true,
+              "guards": 297,
+              "remainingPool": 3727
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 208,
+              "won": true,
+              "guards": 297,
+              "remainingPool": 3725
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 170,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3619
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 347,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3657
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 442,
+              "won": true,
+              "guards": 596,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:5",
+            "campaign": "nanman",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1125,
+            "xp": 200,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 758,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 442,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 265,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 6025
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 298,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 6161
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 63,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5900
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 477,
+              "won": true,
+              "guards": 540,
+              "remainingPool": 6123
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 597,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 6004
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 135,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5488
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 437,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5615
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 199,
+              "won": true,
+              "guards": 720,
+              "remainingPool": 5297
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 522,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5411
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 216,
+              "won": true,
+              "guards": 510,
+              "remainingPool": 5518
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 358,
+              "won": true,
+              "guards": 510,
+              "remainingPool": 5516
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 291,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5332
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 600,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5401
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 766,
+              "won": true,
+              "guards": 1025,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:6",
+            "campaign": "nanman",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791320800221,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1350,
+            "xp": 240,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1234,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 766,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 459,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 7,
+      "campaign": "yellow_turban",
+      "kind": "main",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 5000,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 11,
+              "won": true,
+              "guards": 100,
+              "remainingPool": 2206
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2203
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 104,
+              "won": true,
+              "guards": 150,
+              "remainingPool": 2251
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 102,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2208
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 71,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2148
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 136,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2158
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 179,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 2129
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 80,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 1998
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 232,
+              "won": true,
+              "guards": 320,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:1",
+            "campaign": "yellow_turban",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1000,
+            "xp": 160,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 568,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 232,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 139,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 20,
+              "won": true,
+              "guards": 175,
+              "remainingPool": 3312
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3306
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 181,
+              "won": true,
+              "guards": 262,
+              "remainingPool": 3390
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 179,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3316
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 124,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3211
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 252,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3238
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 312,
+              "won": true,
+              "guards": 367,
+              "remainingPool": 3173
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 141,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 2945
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 422,
+              "won": true,
+              "guards": 560,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:2",
+            "campaign": "yellow_turban",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 625,
+            "xp": 100,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 778,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 422,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 253,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 35,
+              "won": true,
+              "guards": 300,
+              "remainingPool": 5521
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5511
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 313,
+              "won": true,
+              "guards": 450,
+              "remainingPool": 5656
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 307,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5527
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 213,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5347
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 437,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5396
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 537,
+              "won": true,
+              "guards": 630,
+              "remainingPool": 5281
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 241,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 4888
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 727,
+              "won": true,
+              "guards": 960,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:3",
+            "campaign": "yellow_turban",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 750,
+            "xp": 120,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1273,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 727,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 436,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 7,
+      "campaign": "yellow_turban",
+      "kind": "all",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 5000,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 9,
+              "won": true,
+              "guards": 80,
+              "remainingPool": 2705
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 59,
+              "won": true,
+              "guards": 90,
+              "remainingPool": 2731
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 11,
+              "won": true,
+              "guards": 100,
+              "remainingPool": 2678
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2675
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 99,
+              "won": true,
+              "guards": 150,
+              "remainingPool": 2720
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 68,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2661
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 102,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2654
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 71,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2594
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 136,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2604
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 59,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 3003
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 85,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2995
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 179,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3017
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 80,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2886
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 209,
+              "won": true,
+              "guards": 304,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:1",
+            "campaign": "yellow_turban",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1600,
+            "xp": 256,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 591,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 209,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 125,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 16,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 3809
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 103,
+              "won": true,
+              "guards": 157,
+              "remainingPool": 3854
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 20,
+              "won": true,
+              "guards": 175,
+              "remainingPool": 3763
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3757
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 173,
+              "won": true,
+              "guards": 262,
+              "remainingPool": 3836
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 119,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3734
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 179,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3722
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 124,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3617
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 245,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3640
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 103,
+              "won": true,
+              "guards": 245,
+              "remainingPool": 3956
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 148,
+              "won": true,
+              "guards": 244,
+              "remainingPool": 3941
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 312,
+              "won": true,
+              "guards": 367,
+              "remainingPool": 3980
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 141,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3752
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 381,
+              "won": true,
+              "guards": 531,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:2",
+            "campaign": "yellow_turban",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1000,
+            "xp": 160,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 819,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 381,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 228,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 28,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 6016
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 179,
+              "won": true,
+              "guards": 270,
+              "remainingPool": 6095
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 35,
+              "won": true,
+              "guards": 300,
+              "remainingPool": 5937
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5927
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 298,
+              "won": true,
+              "guards": 450,
+              "remainingPool": 6063
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 204,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5887
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 307,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5867
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 213,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5687
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 425,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5729
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 177,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 5910
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 255,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 5886
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 537,
+              "won": true,
+              "guards": 630,
+              "remainingPool": 5953
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 241,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5560
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 661,
+              "won": true,
+              "guards": 912,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:3",
+            "campaign": "yellow_turban",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1200,
+            "xp": 192,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1339,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 661,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 396,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 7,
+      "campaign": "nanman",
+      "kind": "main",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 7500,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 21,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2212
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 159,
+              "won": true,
+              "guards": 180,
+              "remainingPool": 2286
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 215,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2256
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 136,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2122
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 66,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 2025
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 169,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2060
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 97,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 1949
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 189,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 1965
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 266,
+              "won": true,
+              "guards": 360,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:4",
+            "campaign": "nanman",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1200,
+            "xp": 200,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 534,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 266,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 159,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 37,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3322
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 278,
+              "won": true,
+              "guards": 315,
+              "remainingPool": 3451
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 376,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3398
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 252,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3173
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 116,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 2990
+            },
+            {
+              "id": "n6",
+              "rounds": 7,
+              "lost": 351,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3084
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 170,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 2835
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 347,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 2873
+            },
+            {
+              "id": "n9",
+              "rounds": 7,
+              "lost": 534,
+              "won": true,
+              "guards": 629,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:5",
+            "campaign": "nanman",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 750,
+            "xp": 125,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 5,
+                "rounds": 7
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 666,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 534,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 320,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 7
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 63,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5537
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 477,
+              "won": true,
+              "guards": 540,
+              "remainingPool": 5760
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 645,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5670
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 437,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5287
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 199,
+              "won": true,
+              "guards": 720,
+              "remainingPool": 4969
+            },
+            {
+              "id": "n6",
+              "rounds": 7,
+              "lost": 605,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5133
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 291,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 4702
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 600,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 4771
+            },
+            {
+              "id": "n9",
+              "rounds": 7,
+              "lost": 921,
+              "won": true,
+              "guards": 1080,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:6",
+            "campaign": "nanman",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 900,
+            "xp": 150,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 5,
+                "rounds": 7
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1079,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 921,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 552,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 7
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 7,
+      "campaign": "nanman",
+      "kind": "all",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 7500,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2708
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 99,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2753
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 21,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2666
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 159,
+              "won": true,
+              "guards": 180,
+              "remainingPool": 2740
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 199,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2700
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 45,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2528
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 136,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2564
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 66,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 2467
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 163,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2498
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 72,
+              "won": true,
+              "guards": 170,
+              "remainingPool": 2878
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 119,
+              "won": true,
+              "guards": 170,
+              "remainingPool": 2877
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 97,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2816
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 189,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2832
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 244,
+              "won": true,
+              "guards": 341,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:4",
+            "campaign": "nanman",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1800,
+            "xp": 320,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 556,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 244,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 146,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 245,
+              "remainingPool": 3814
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 173,
+              "won": true,
+              "guards": 244,
+              "remainingPool": 3893
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 37,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3742
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 278,
+              "won": true,
+              "guards": 315,
+              "remainingPool": 3871
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 348,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3801
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 78,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3499
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 252,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3572
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 116,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 3389
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 301,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3453
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 126,
+              "won": true,
+              "guards": 297,
+              "remainingPool": 3727
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 208,
+              "won": true,
+              "guards": 297,
+              "remainingPool": 3725
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 170,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3619
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 347,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3657
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 442,
+              "won": true,
+              "guards": 596,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:5",
+            "campaign": "nanman",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1125,
+            "xp": 200,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 758,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 442,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 265,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 6025
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 298,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 6161
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 63,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5900
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 477,
+              "won": true,
+              "guards": 540,
+              "remainingPool": 6123
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 597,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 6004
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 135,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5488
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 437,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5615
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 199,
+              "won": true,
+              "guards": 720,
+              "remainingPool": 5297
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 522,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5411
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 216,
+              "won": true,
+              "guards": 510,
+              "remainingPool": 5518
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 358,
+              "won": true,
+              "guards": 510,
+              "remainingPool": 5516
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 291,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5332
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 600,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5401
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 766,
+              "won": true,
+              "guards": 1025,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:6",
+            "campaign": "nanman",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791351506167,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1350,
+            "xp": 240,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1234,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 766,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 459,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 19,
+      "campaign": "yellow_turban",
+      "kind": "main",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 5000,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 11,
+              "won": true,
+              "guards": 100,
+              "remainingPool": 2206
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2203
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 103,
+              "won": true,
+              "guards": 150,
+              "remainingPool": 2250
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 101,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2207
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 70,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2148
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 135,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2159
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 177,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 2130
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 79,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2000
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 229,
+              "won": true,
+              "guards": 320,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:1",
+            "campaign": "yellow_turban",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1000,
+            "xp": 160,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 571,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 229,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 137,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 20,
+              "won": true,
+              "guards": 175,
+              "remainingPool": 3312
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3306
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 179,
+              "won": true,
+              "guards": 262,
+              "remainingPool": 3389
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 177,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3316
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 123,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3212
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 248,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3237
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 309,
+              "won": true,
+              "guards": 367,
+              "remainingPool": 3174
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 139,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 2948
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 416,
+              "won": true,
+              "guards": 560,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:2",
+            "campaign": "yellow_turban",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 625,
+            "xp": 100,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 784,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 416,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 249,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 35,
+              "won": true,
+              "guards": 300,
+              "remainingPool": 5521
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5511
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 310,
+              "won": true,
+              "guards": 450,
+              "remainingPool": 5655
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 303,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5526
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 211,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5349
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 429,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5395
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 531,
+              "won": true,
+              "guards": 630,
+              "remainingPool": 5284
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 239,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 4896
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 717,
+              "won": true,
+              "guards": 960,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:3",
+            "campaign": "yellow_turban",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "m1",
+              "m2",
+              "m3",
+              "m4",
+              "m5",
+              "m6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 750,
+            "xp": 120,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1283,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 717,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 430,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 19,
+      "campaign": "yellow_turban",
+      "kind": "all",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 5000,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 9,
+              "won": true,
+              "guards": 80,
+              "remainingPool": 2705
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 59,
+              "won": true,
+              "guards": 90,
+              "remainingPool": 2731
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 11,
+              "won": true,
+              "guards": 100,
+              "remainingPool": 2678
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2675
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 98,
+              "won": true,
+              "guards": 150,
+              "remainingPool": 2719
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 67,
+              "won": true,
+              "guards": 120,
+              "remainingPool": 2661
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 101,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2654
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 70,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2595
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 135,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2606
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 58,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 3005
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 84,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2997
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 177,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3019
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 79,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2889
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 205,
+              "won": true,
+              "guards": 304,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:1",
+            "campaign": "yellow_turban",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1600,
+            "xp": 256,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 595,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 205,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 123,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 16,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 3809
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 102,
+              "won": true,
+              "guards": 157,
+              "remainingPool": 3854
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 20,
+              "won": true,
+              "guards": 175,
+              "remainingPool": 3764
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3758
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 171,
+              "won": true,
+              "guards": 262,
+              "remainingPool": 3836
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 118,
+              "won": true,
+              "guards": 210,
+              "remainingPool": 3735
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 177,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3723
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 123,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3619
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 241,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3640
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 102,
+              "won": true,
+              "guards": 245,
+              "remainingPool": 3960
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 146,
+              "won": true,
+              "guards": 244,
+              "remainingPool": 3945
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 309,
+              "won": true,
+              "guards": 367,
+              "remainingPool": 3984
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 139,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3758
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 376,
+              "won": true,
+              "guards": 531,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:2",
+            "campaign": "yellow_turban",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1000,
+            "xp": 160,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 824,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 376,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 225,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "s1",
+              "rounds": 1,
+              "lost": 28,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 6016
+            },
+            {
+              "id": "s2",
+              "rounds": 7,
+              "lost": 177,
+              "won": true,
+              "guards": 270,
+              "remainingPool": 6094
+            },
+            {
+              "id": "m1",
+              "rounds": 1,
+              "lost": 35,
+              "won": true,
+              "guards": 300,
+              "remainingPool": 5938
+            },
+            {
+              "id": "m2",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5928
+            },
+            {
+              "id": "m3",
+              "rounds": 7,
+              "lost": 295,
+              "won": true,
+              "guards": 450,
+              "remainingPool": 6063
+            },
+            {
+              "id": "s3",
+              "rounds": 6,
+              "lost": 202,
+              "won": true,
+              "guards": 360,
+              "remainingPool": 5889
+            },
+            {
+              "id": "m4",
+              "rounds": 6,
+              "lost": 303,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5868
+            },
+            {
+              "id": "m5",
+              "rounds": 1,
+              "lost": 211,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5691
+            },
+            {
+              "id": "m6",
+              "rounds": 6,
+              "lost": 418,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5730
+            },
+            {
+              "id": "s5",
+              "rounds": 1,
+              "lost": 175,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 5917
+            },
+            {
+              "id": "s6",
+              "rounds": 6,
+              "lost": 253,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 5893
+            },
+            {
+              "id": "m7",
+              "rounds": 7,
+              "lost": 531,
+              "won": true,
+              "guards": 630,
+              "remainingPool": 5958
+            },
+            {
+              "id": "m8",
+              "rounds": 1,
+              "lost": 239,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5570
+            },
+            {
+              "id": "m9",
+              "rounds": 6,
+              "lost": 651,
+              "won": true,
+              "guards": 912,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "yellow:3",
+            "campaign": "yellow_turban",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "s1",
+              "s2",
+              "m1",
+              "m2",
+              "m3",
+              "s3",
+              "s4",
+              "m4",
+              "m5",
+              "m6",
+              "s5",
+              "s6",
+              "m7",
+              "m8",
+              "m9"
+            ],
+            "prestige": 1200,
+            "xp": 192,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1349,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 651,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 390,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 19,
+      "campaign": "nanman",
+      "kind": "main",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 7500,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 21,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2212
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 157,
+              "won": true,
+              "guards": 180,
+              "remainingPool": 2285
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 212,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2255
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 135,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2124
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 65,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 2028
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 167,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2063
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 96,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 1953
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 186,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 1968
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 262,
+              "won": true,
+              "guards": 360,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:4",
+            "campaign": "nanman",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1200,
+            "xp": 200,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 538,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 262,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 157,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 36,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3321
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 275,
+              "won": true,
+              "guards": 315,
+              "remainingPool": 3450
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 372,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3398
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 248,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3174
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 114,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 2994
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 306,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3063
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 168,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 2857
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 342,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 2894
+            },
+            {
+              "id": "n9",
+              "rounds": 7,
+              "lost": 526,
+              "won": true,
+              "guards": 629,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:5",
+            "campaign": "nanman",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 750,
+            "xp": 125,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 5,
+                "rounds": 7
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 674,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 526,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 315,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 7
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "main",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 63,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5537
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 472,
+              "won": true,
+              "guards": 540,
+              "remainingPool": 5757
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 638,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5667
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 429,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5286
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 196,
+              "won": true,
+              "guards": 720,
+              "remainingPool": 4974
+            },
+            {
+              "id": "n6",
+              "rounds": 7,
+              "lost": 597,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5136
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 288,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 4711
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 591,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 4777
+            },
+            {
+              "id": "n9",
+              "rounds": 7,
+              "lost": 909,
+              "won": true,
+              "guards": 1080,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:6",
+            "campaign": "nanman",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "n1",
+              "n2",
+              "n3",
+              "n4",
+              "n5",
+              "n6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 900,
+            "xp": 150,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 5,
+                "rounds": 7
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1091,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 909,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 545,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 7
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    },
+    {
+      "seed": 19,
+      "campaign": "nanman",
+      "kind": "all",
+      "normalEconomy": true,
+      "sourceVersion": "0.34.70",
+      "goldSpent": 7500,
+      "boxesEarned": 1,
+      "reports": [
+        {
+          "difficulty": "simple",
+          "cap": 800,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 14,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2708
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 98,
+              "won": true,
+              "guards": 140,
+              "remainingPool": 2752
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 21,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2666
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 157,
+              "won": true,
+              "guards": 180,
+              "remainingPool": 2739
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 196,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2699
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 44,
+              "won": true,
+              "guards": 160,
+              "remainingPool": 2529
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 135,
+              "won": true,
+              "guards": 200,
+              "remainingPool": 2566
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 65,
+              "won": true,
+              "guards": 240,
+              "remainingPool": 2470
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 160,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2501
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 71,
+              "won": true,
+              "guards": 170,
+              "remainingPool": 2883
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 118,
+              "won": true,
+              "guards": 170,
+              "remainingPool": 2882
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 96,
+              "won": true,
+              "guards": 220,
+              "remainingPool": 2821
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 186,
+              "won": true,
+              "guards": 260,
+              "remainingPool": 2836
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 240,
+              "won": true,
+              "guards": 341,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:4",
+            "campaign": "nanman",
+            "difficulty": "simple",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1800,
+            "xp": 320,
+            "box": 1,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 560,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 240,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 144,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "normal",
+          "cap": 1200,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 24,
+              "won": true,
+              "guards": 245,
+              "remainingPool": 3814
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 171,
+              "won": true,
+              "guards": 244,
+              "remainingPool": 3892
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 36,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3742
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 275,
+              "won": true,
+              "guards": 315,
+              "remainingPool": 3871
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 344,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3802
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 77,
+              "won": true,
+              "guards": 280,
+              "remainingPool": 3504
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 248,
+              "won": true,
+              "guards": 350,
+              "remainingPool": 3575
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 114,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 3395
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 297,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3459
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 124,
+              "won": true,
+              "guards": 297,
+              "remainingPool": 3736
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 205,
+              "won": true,
+              "guards": 297,
+              "remainingPool": 3735
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 168,
+              "won": true,
+              "guards": 385,
+              "remainingPool": 3630
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 342,
+              "won": true,
+              "guards": 455,
+              "remainingPool": 3667
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 436,
+              "won": true,
+              "guards": 596,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:5",
+            "campaign": "nanman",
+            "difficulty": "normal",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1125,
+            "xp": 200,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 764,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 436,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 261,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        },
+        {
+          "difficulty": "hard",
+          "cap": 2000,
+          "kind": "all",
+          "error": "",
+          "completed": true,
+          "battles": [
+            {
+              "id": "b1",
+              "rounds": 1,
+              "lost": 42,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 6025
+            },
+            {
+              "id": "b2",
+              "rounds": 7,
+              "lost": 295,
+              "won": true,
+              "guards": 420,
+              "remainingPool": 6160
+            },
+            {
+              "id": "n1",
+              "rounds": 1,
+              "lost": 63,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5902
+            },
+            {
+              "id": "n2",
+              "rounds": 7,
+              "lost": 472,
+              "won": true,
+              "guards": 540,
+              "remainingPool": 6122
+            },
+            {
+              "id": "n3",
+              "rounds": 7,
+              "lost": 590,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 6004
+            },
+            {
+              "id": "b3",
+              "rounds": 1,
+              "lost": 133,
+              "won": true,
+              "guards": 480,
+              "remainingPool": 5493
+            },
+            {
+              "id": "n4",
+              "rounds": 6,
+              "lost": 429,
+              "won": true,
+              "guards": 600,
+              "remainingPool": 5617
+            },
+            {
+              "id": "n5",
+              "rounds": 1,
+              "lost": 196,
+              "won": true,
+              "guards": 720,
+              "remainingPool": 5305
+            },
+            {
+              "id": "n6",
+              "rounds": 6,
+              "lost": 514,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5417
+            },
+            {
+              "id": "b5",
+              "rounds": 1,
+              "lost": 214,
+              "won": true,
+              "guards": 510,
+              "remainingPool": 5531
+            },
+            {
+              "id": "b6",
+              "rounds": 6,
+              "lost": 354,
+              "won": true,
+              "guards": 510,
+              "remainingPool": 5529
+            },
+            {
+              "id": "n7",
+              "rounds": 1,
+              "lost": 288,
+              "won": true,
+              "guards": 660,
+              "remainingPool": 5347
+            },
+            {
+              "id": "n8",
+              "rounds": 6,
+              "lost": 591,
+              "won": true,
+              "guards": 780,
+              "remainingPool": 5413
+            },
+            {
+              "id": "n9",
+              "rounds": 6,
+              "lost": 755,
+              "won": true,
+              "guards": 1025,
+              "remainingPool": null
+            }
+          ],
+          "receipt": {
+            "runId": "nanman:6",
+            "campaign": "nanman",
+            "difficulty": "hard",
+            "general": "local_1000000000000001",
+            "sourceCity": "capital",
+            "day": "2026-10-07",
+            "at": 1791349808718,
+            "completed": [
+              "b1",
+              "b2",
+              "n1",
+              "n2",
+              "n3",
+              "b3",
+              "b4",
+              "n4",
+              "n5",
+              "n6",
+              "b5",
+              "b6",
+              "n7",
+              "n8",
+              "n9"
+            ],
+            "prestige": 1350,
+            "xp": 240,
+            "box": 0,
+            "battleResult": {
+              "facts": {
+                "version": 1,
+                "endedBy": "win",
+                "hadGate": false,
+                "gateAttacks": 0,
+                "gateBroken": false,
+                "machineLost": 0,
+                "attacks": 4,
+                "rounds": 6
+              },
+              "won": true,
+              "back": {
+                "worker": 0,
+                "militia": 1245,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "lost": {
+                "worker": 0,
+                "militia": 755,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "recovered": {
+                "worker": 0,
+                "militia": 453,
+                "scout": 0,
+                "spear": 0,
+                "shield": 0,
+                "archer": 0,
+                "cavalry": 0,
+                "heavy": 0,
+                "wagon": 0,
+                "ballista": 0,
+                "ram": 0,
+                "catapult": 0
+              },
+              "round": 6
+            }
+          },
+          "validSave": true
+        }
+      ],
+      "completed": true,
+      "validSave": true
+    }
+  ]
+}
