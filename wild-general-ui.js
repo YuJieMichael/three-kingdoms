@@ -23,8 +23,8 @@ function wildPortraitDispatchHTML(n){
 function wildGeneralApproachHTML(d){return d.line==='wanderer'?`<p class="hint">骑兵特长。建议准备 30 轻骑兵快速奔袭；需先解锁骑兵，${esc(Game.unitRequirements('cavalry')||'当前已满足训练前置')}。这是准备建议，胜负仍取决于兵力与指挥。任何兵种均可俘获，混编会按最慢兵种行军。</p>`:`<p class="hint">${esc(Game.units[d.bonus].name)}特长。先侦察驻军、确认兵力和招贤馆房间，再选择掠夺或占领。</p>`;}
 function wildGeneralNodeHTML(n){
  const r=S().wildGenerals.rumors.find(r=>r.node===n.id&&r.status==='active');if(!r)return '';
- const d=HeroSystem.wild.definitions.find(d=>d.line===r.line);
- return `<section class="wild-node-lead notice"><h3>在野将领 · ${esc(d.name)}</h3><p class="hint">拥有对应画像并歼灭此处全部守军后才可俘获，战败或撤退不会俘获。招贤馆满员时自动释放；俘获后还需手动招降。</p><details class="wild-card-attributes"><summary>属性 ›</summary>${wildGeneralStatsHTML(d)}</details>${wildCaptureRewardHTML(d)}${wildGeneralApproachHTML(d)}${wildPortraitStatusHTML(d)}<p class="hint">招降要求：${HeritageData.nobles[d.noble].name}及以上 · 黄金 ${num(d.gold)} 或 ${wildGeneralCostHTML({gold:0,jewels:d.jewels})} · 忠诚 40</p>${btn('查看线索与俘将','wildGenerals','','small secondary')}</section>`;
+ const d=HeroSystem.wild.definitions.find(d=>d.line===r.line),level=S().captureLevels[r.id]?.level||HeroSystem.wild.recruitmentLevel(d),rank=HeritageSystem.recruitmentQuote(S(),level);
+ return `<section class="wild-node-lead notice"><h3>在野将领 · ${esc(d.name)}</h3><p class="hint">拥有对应画像并歼灭此处全部守军后才可俘获，战败或撤退不会俘获。招贤馆满员时自动释放；俘获后还需手动招降。</p><details class="wild-card-attributes"><summary>属性 ›</summary>${wildGeneralStatsHTML(d)}</details>${wildCaptureRewardHTML(d)}${wildGeneralApproachHTML(d)}${wildPortraitStatusHTML(d)}<p class="hint">招降要求：${esc(rank.nobleName)}及以上（原 / 已俘 Lv.${level}；俘获降1–3级，按实际等级重新报价） · 黄金 ${num(d.gold)} 或 ${wildGeneralCostHTML({gold:0,jewels:d.jewels})} · 忠诚 40</p>${btn('查看线索与俘将','wildGenerals','','small secondary')}</section>`;
 }
 function wildGeneralBattleHTML(result){
  const r=result.wildGeneral;if(!r)return '';

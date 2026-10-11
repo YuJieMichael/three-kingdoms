@@ -1,0 +1,985 @@
+{
+  "code": {
+    "version": "0.34.71",
+    "revision": "c4b37af85dc8a6140c4bee38556b11da347ac455",
+    "sourceHash": "1ba8470a16d04b6040b6693e37b3ea7b2ead0cc1cbf464ac1ecc0ebb08052736"
+  },
+  "description": "Earned-old-save 72h grain-city operating diagnostic; no resources/levels/army granted, followed by a real 24h housing expansion policy and paid archer-template refill; not full economic balance.",
+  "results": [
+    {
+      "seed": 1,
+      "sourceVersion": "0.34.70",
+      "normalEconomy": true,
+      "policy": "grain preset; tick once per game minute for 72 hours; existing policies retained",
+      "grainPhaseHours": 72,
+      "totalHours": 104.98333333333333,
+      "grainCheckpoint": {
+        "gold": 1983060.026737406,
+        "food": 2237953.228438763,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1640,
+          "owed": 0,
+          "goldHours": 1209.1829431325646,
+          "foodNet": 6085.922330097084,
+          "foodHours": null,
+          "population": 0,
+          "salaryReserve": 39360,
+          "gold": 1983060.026737406,
+          "food": 2237953.228438763,
+          "warnings": []
+        }
+      },
+      "initial": {
+        "gold": 2088977.5262045655,
+        "food": 2263186.1065661097,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1560,
+          "owed": 0,
+          "goldHours": 1339.0881578234394,
+          "foodNet": -757.4000000000001,
+          "foodHours": 2988.0988996119745,
+          "population": 536,
+          "salaryReserve": 37440,
+          "gold": 2088977.5262045655,
+          "food": 2263186.1065661097,
+          "warnings": []
+        }
+      },
+      "final": {
+        "gold": 1943886.7472288508,
+        "food": 2019308.228438763,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1640,
+          "owed": 0,
+          "goldHours": 1185.2967970907628,
+          "foodNet": 16558.4,
+          "foodHours": null,
+          "population": 1310,
+          "salaryReserve": 39360,
+          "gold": 1943886.7472288508,
+          "food": 2019308.228438763,
+          "warnings": []
+        },
+        "plots": [
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          }
+        ],
+        "queues": 0,
+        "preset": {
+          "version": 1,
+          "id": "grain",
+          "buildings": {
+            "hall": 10,
+            "house": 10,
+            "warehouse": 3,
+            "market": 1
+          },
+          "plots": {
+            "counts": {
+              "farm": 24,
+              "lumber": 5,
+              "quarry": 5,
+              "mine": 5
+            },
+            "level": 3
+          },
+          "active": true
+        }
+      },
+      "grainMinimumGold": 1983043.226737407,
+      "grainMinimumFood": 2237953.228438763,
+      "lostHeroes": [],
+      "training": {
+        "initialTrainingBlock": {
+          "reason": "暂无可排训练：检查前置、人口、资源与队列",
+          "blocked": {
+            "shield": "空闲人口不足",
+            "archer": "空闲人口不足"
+          },
+          "population": 1200,
+          "workers": 3090,
+          "free": 0,
+          "max": 1500
+        },
+        "housingCorrection": {
+          "houseTarget": 10,
+          "hallTarget": 10,
+          "hours": 24,
+          "population": 3600,
+          "workers": 3090,
+          "free": 510,
+          "max": 4500,
+          "actualHouse": 9,
+          "actualHall": 10,
+          "buildQueues": 1
+        },
+        "preset": "archer",
+        "hours": 32.983333333333334,
+        "firstBatchPaid": {
+          "food": 91500,
+          "wood": 81750,
+          "stone": 0,
+          "iron": 151500,
+          "gold": 0
+        },
+        "orders": [
+          {
+            "id": "shield",
+            "count": 300,
+            "seconds": 16071.428571428572
+          },
+          {
+            "id": "archer",
+            "count": 105,
+            "seconds": 8437.5
+          }
+        ],
+        "initialRemaining": {
+          "shield": 0,
+          "archer": 97
+        },
+        "initialBatchBlocked": {
+          "archer": "本次部分补齐，其余等待资源与人口"
+        },
+        "error": "",
+        "completed": true,
+        "army": {
+          "worker": 0,
+          "militia": 29,
+          "scout": 1,
+          "spear": 0,
+          "shield": 300,
+          "archer": 1000,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "budget": {
+          "cityId": "capital",
+          "wages": 1640,
+          "owed": 0,
+          "goldHours": 1185.2967970907628,
+          "foodNet": 16558.4,
+          "foodHours": null,
+          "population": 1310,
+          "salaryReserve": 39360,
+          "gold": 1943886.7472288508,
+          "food": 2019308.228438763,
+          "warnings": []
+        }
+      },
+      "validSave": true,
+      "foodSustainable": true
+    },
+    {
+      "seed": 7,
+      "sourceVersion": "0.34.70",
+      "normalEconomy": true,
+      "policy": "grain preset; tick once per game minute for 72 hours; existing policies retained",
+      "grainPhaseHours": 72,
+      "totalHours": 104.93333333333334,
+      "grainCheckpoint": {
+        "gold": 1551483.6349703313,
+        "food": 1877922.201335079,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1600,
+          "owed": 0,
+          "goldHours": 969.6772718564571,
+          "foodNet": 6168.922330097085,
+          "foodHours": null,
+          "population": 0,
+          "salaryReserve": 38400,
+          "gold": 1551483.6349703313,
+          "food": 1877922.201335079,
+          "warnings": []
+        }
+      },
+      "initial": {
+        "gold": 1654469.5347272928,
+        "food": 1903131.8909418217,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1520,
+          "owed": 0,
+          "goldHours": 1088.4667991626927,
+          "foodNet": -674.3999999999999,
+          "foodHours": 2821.963064860353,
+          "population": 797,
+          "salaryReserve": 36480,
+          "gold": 1654469.5347272928,
+          "food": 1903131.8909418217,
+          "warnings": []
+        }
+      },
+      "final": {
+        "gold": 1513599.557673476,
+        "food": 1659877.201335079,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1600,
+          "owed": 0,
+          "goldHours": 945.9997235459225,
+          "foodNet": 16643.4,
+          "foodHours": null,
+          "population": 1310,
+          "salaryReserve": 38400,
+          "gold": 1513599.557673476,
+          "food": 1659877.201335079,
+          "warnings": []
+        },
+        "plots": [
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          }
+        ],
+        "queues": 0,
+        "preset": {
+          "version": 1,
+          "id": "grain",
+          "buildings": {
+            "hall": 10,
+            "house": 10,
+            "warehouse": 3,
+            "market": 1
+          },
+          "plots": {
+            "counts": {
+              "farm": 24,
+              "lumber": 5,
+              "quarry": 5,
+              "mine": 5
+            },
+            "level": 3
+          },
+          "active": true
+        }
+      },
+      "grainMinimumGold": 1551377.2349703384,
+      "grainMinimumFood": 1877922.201335079,
+      "lostHeroes": [],
+      "training": {
+        "initialTrainingBlock": {
+          "reason": "暂无可排训练：检查前置、人口、资源与队列",
+          "blocked": {
+            "shield": "空闲人口不足",
+            "archer": "空闲人口不足"
+          },
+          "population": 1200,
+          "workers": 3090,
+          "free": 0,
+          "max": 1500
+        },
+        "housingCorrection": {
+          "houseTarget": 10,
+          "hallTarget": 10,
+          "hours": 24,
+          "population": 3600,
+          "workers": 3090,
+          "free": 510,
+          "max": 4500,
+          "actualHouse": 9,
+          "actualHall": 10,
+          "buildQueues": 1
+        },
+        "preset": "archer",
+        "hours": 32.93333333333333,
+        "firstBatchPaid": {
+          "food": 91500,
+          "wood": 81750,
+          "stone": 0,
+          "iron": 151500,
+          "gold": 0
+        },
+        "orders": [
+          {
+            "id": "shield",
+            "count": 300,
+            "seconds": 16071.428571428572
+          },
+          {
+            "id": "archer",
+            "count": 105,
+            "seconds": 8437.5
+          }
+        ],
+        "initialRemaining": {
+          "shield": 0,
+          "archer": 95
+        },
+        "initialBatchBlocked": {
+          "archer": "本次部分补齐，其余等待资源与人口"
+        },
+        "error": "",
+        "completed": true,
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 300,
+          "archer": 1000,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "budget": {
+          "cityId": "capital",
+          "wages": 1600,
+          "owed": 0,
+          "goldHours": 945.9997235459225,
+          "foodNet": 16643.4,
+          "foodHours": null,
+          "population": 1310,
+          "salaryReserve": 38400,
+          "gold": 1513599.557673476,
+          "food": 1659877.201335079,
+          "warnings": []
+        }
+      },
+      "validSave": true,
+      "foodSustainable": true
+    },
+    {
+      "seed": 19,
+      "sourceVersion": "0.34.70",
+      "normalEconomy": true,
+      "policy": "grain preset; tick once per game minute for 72 hours; existing policies retained",
+      "grainPhaseHours": 72,
+      "totalHours": 105.38333333333334,
+      "grainCheckpoint": {
+        "gold": 1679469.992725552,
+        "food": 2171362.2043573884,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1680,
+          "owed": 0,
+          "goldHours": 999.6845194794953,
+          "foodNet": 6118.922330097085,
+          "foodHours": null,
+          "population": 0,
+          "salaryReserve": 40320,
+          "gold": 1679469.992725552,
+          "food": 2171362.2043573884,
+          "warnings": []
+        }
+      },
+      "initial": {
+        "gold": 1788259.8476784928,
+        "food": 2196585.6954622664,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1600,
+          "owed": 0,
+          "goldHours": 1117.662404799058,
+          "foodNet": -724.4000000000001,
+          "foodHours": 3032.2828485122395,
+          "population": 679,
+          "salaryReserve": 38400,
+          "gold": 1788259.8476784928,
+          "food": 2196585.6954622664,
+          "warnings": []
+        }
+      },
+      "final": {
+        "gold": 1639222.9004234092,
+        "food": 1947317.2043573884,
+        "budget": {
+          "cityId": "capital",
+          "wages": 1680,
+          "owed": 0,
+          "goldHours": 975.727916918696,
+          "foodNet": 16573.4,
+          "foodHours": null,
+          "population": 1310,
+          "salaryReserve": 40320,
+          "gold": 1639222.9004234092,
+          "food": 1947317.2043573884,
+          "warnings": []
+        },
+        "plots": [
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          },
+          {
+            "type": "farm",
+            "level": 3
+          },
+          {
+            "type": "lumber",
+            "level": 3
+          },
+          {
+            "type": "quarry",
+            "level": 3
+          },
+          {
+            "type": "mine",
+            "level": 3
+          }
+        ],
+        "queues": 0,
+        "preset": {
+          "version": 1,
+          "id": "grain",
+          "buildings": {
+            "hall": 10,
+            "house": 10,
+            "warehouse": 3,
+            "market": 1
+          },
+          "plots": {
+            "counts": {
+              "farm": 24,
+              "lumber": 5,
+              "quarry": 5,
+              "mine": 5
+            },
+            "level": 3
+          },
+          "active": true
+        }
+      },
+      "grainMinimumGold": 1679441.992725554,
+      "grainMinimumFood": 2171362.2043573884,
+      "lostHeroes": [],
+      "training": {
+        "initialTrainingBlock": {
+          "reason": "暂无可排训练：检查前置、人口、资源与队列",
+          "blocked": {
+            "shield": "空闲人口不足",
+            "archer": "空闲人口不足"
+          },
+          "population": 1200,
+          "workers": 3090,
+          "free": 0,
+          "max": 1500
+        },
+        "housingCorrection": {
+          "houseTarget": 10,
+          "hallTarget": 10,
+          "hours": 24,
+          "population": 3600,
+          "workers": 3090,
+          "free": 510,
+          "max": 4500,
+          "actualHouse": 9,
+          "actualHall": 10,
+          "buildQueues": 1
+        },
+        "preset": "archer",
+        "hours": 33.38333333333333,
+        "firstBatchPaid": {
+          "food": 91500,
+          "wood": 81750,
+          "stone": 0,
+          "iron": 151500,
+          "gold": 0
+        },
+        "orders": [
+          {
+            "id": "shield",
+            "count": 300,
+            "seconds": 16071.428571428572
+          },
+          {
+            "id": "archer",
+            "count": 105,
+            "seconds": 8437.5
+          }
+        ],
+        "initialRemaining": {
+          "shield": 0,
+          "archer": 115
+        },
+        "initialBatchBlocked": {
+          "archer": "本次部分补齐，其余等待资源与人口"
+        },
+        "error": "",
+        "completed": true,
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 300,
+          "archer": 1000,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "budget": {
+          "cityId": "capital",
+          "wages": 1680,
+          "owed": 0,
+          "goldHours": 975.727916918696,
+          "foodNet": 16573.4,
+          "foodHours": null,
+          "population": 1310,
+          "salaryReserve": 40320,
+          "gold": 1639222.9004234092,
+          "food": 1947317.2043573884,
+          "warnings": []
+        }
+      },
+      "validSave": true,
+      "foodSustainable": true
+    }
+  ]
+}

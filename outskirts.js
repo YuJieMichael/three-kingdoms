@@ -1,6 +1,6 @@
 'use strict';
 let cityArea='inner';
-function cityPage(){return cityArea==='inner'?innerCityPage():outsideCityPage();}
+function cityPage(){return economyBudgetHTML()+(cityArea==='inner'?innerCityPage():outsideCityPage());}
 function legacyPlotArt(type,level=1,index=0,working=false){
   const tier=Math.max(1,Math.min(3,Math.ceil(level/3))),seed=landscapeSeed(index,level);
   const ground='<path d="M3 72L72 31 157 72 87 114Z" fill="#5c6b43"/><path d="M3 72v6l84 42 70-42v-6l-70 42Z" fill="#354931"/><path d="M7 72l65-37 80 37-65 37Z" fill="#90906a"/>';

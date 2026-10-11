@@ -49,5 +49,10 @@ const BattlefieldData=(()=>{
   function get(id,campaign='yellow_turban'){const n=list(campaign)?.find(n=>n.id===id);return n?clone(n):null;}
   function available(done,campaign='yellow_turban'){return validCompleted(done,campaign)?list(campaign).filter(n=>!done.includes(n.id)&&n.requires.every(id=>done.includes(id))).map(n=>n.id):null;}
   function reward(done,campaign='yellow_turban'){if(!validCompleted(done,campaign))return null;const c=campaigns[campaign],side=done.filter(id=>c.sideIds.includes(id)).length;return {prestige:c.baseReward.prestige+side*c.sideReward.prestige,xp:c.baseReward.xp+side*c.sideReward.xp};}
-  return {CONFIG_VERSION:1,MAIN_IDS:Object.freeze(MAIN_IDS),SIDE_IDS:Object.freeze(SIDE_IDS),config,catalog,get,available,reward,validCompleted};
+  const difficulties={simple:{id:'simple',name:'简单',limit:800,pool:3000,guards:1,rewards:1},normal:{id:'normal',name:'普通',limit:1200,pool:4500,guards:1.75,rewards:1.25},hard:{id:'hard',name:'困难',limit:2000,pool:7500,guards:3,rewards:1.5}};
+  const difficulty=id=>Object.hasOwn(difficulties,id)?clone(difficulties[id]):null;
+  function enemySnapshot(campaign,d='simple'){const c=config(campaign),v=difficulty(d);return c&&v?Object.fromEntries([...c.mainIds,...c.sideIds].map(id=>[id,Object.fromEntries(Object.entries(get(id,campaign).army).map(([unit,n])=>[unit,Math.max(1,Math.floor(n*v.guards))]))])):null;}
+  function rewardSnapshot(campaign,d='simple'){const c=config(campaign),v=difficulty(d);return c&&v?{base:{prestige:Math.floor(c.baseReward.prestige*v.rewards),xp:Math.floor(c.baseReward.xp*v.rewards)},side:{prestige:Math.floor(c.sideReward.prestige*v.rewards),xp:Math.floor(c.sideReward.xp*v.rewards)}}:null;}
+  function scaledReward(done,campaign,d='simple'){const r=reward(done,campaign),v=difficulty(d);return r&&v?{prestige:Math.floor(r.prestige*v.rewards),xp:Math.floor(r.xp*v.rewards)}:null;}
+  return {difficulty,difficulties:()=>Object.keys(difficulties).map(difficulty),enemySnapshot,rewardSnapshot,scaledReward,CONFIG_VERSION:1,MAIN_IDS:Object.freeze(MAIN_IDS),SIDE_IDS:Object.freeze(SIDE_IDS),config,catalog,get,available,reward,validCompleted};
 })();
