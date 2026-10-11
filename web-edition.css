@@ -815,3 +815,5 @@ dialog .web-plot-preview h3{
 .siege-targets{display:grid;gap:8px;margin:12px 0}.siege-target{display:flex;align-items:center;justify-content:space-between;gap:12px}.siege-target small{display:block;color:var(--muted)}.siege-target input{width:100px;min-height:44px}.siege-targets~.notice{margin-top:12px}
 
 .hero-set-materials{padding:12px;border:1px solid var(--border,#8e835d);border-radius:8px;margin:12px 0}.hero-set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0}.hero-set-row span{min-width:0}.hero-set-row small{display:block;overflow-wrap:anywhere;opacity:.8}.hero-set-row button{min-width:72px;min-height:44px}#set-exchange-slot{min-height:44px;width:100%}
+/* Equipment cards retain their light paper background in the dark game shell. */
+.equipment-card{color:#352f23}.equipment-card h3,.equipment-card .hint{color:#453b26}
