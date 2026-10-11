@@ -1,0 +1,489 @@
+{
+  "scope": "只读诊断；游戏代码与数值未改。临时对照不代表完整成长通过。",
+  "siegeBaseline": [
+    {
+      "seed": 1,
+      "error": "Template refill observation exhausted",
+      "hours": 791.489,
+      "resources": {
+        "food": 1492500,
+        "wood": 4922.9381834694605,
+        "stone": 697084,
+        "iron": 412500,
+        "gold": 295936.79217414954
+      },
+      "rates": {
+        "food": 147.8726666666667,
+        "wood": 76.38026666666669,
+        "stone": 90.05546666666667,
+        "iron": 101.86586666666668,
+        "gold": 41.06666666666666
+      },
+      "upkeep": 12829,
+      "population": 17600,
+      "free": 14180,
+      "heroes": [
+        "lin",
+        "su",
+        "yan",
+        "local_1000000000000001"
+      ],
+      "loyalty": {
+        "lin": 80,
+        "su": 80,
+        "yan": 80,
+        "local_1000000000000001": 40
+      },
+      "queue": [],
+      "refills": [
+        {
+          "hours": 789.069,
+          "kind": "templateRefill",
+          "id": "named_jiangling",
+          "orders": [
+            {
+              "id": "cavalry",
+              "count": 2,
+              "seconds": 232.5581395348837
+            }
+          ],
+          "cost": {
+            "food": 2000,
+            "wood": 1200,
+            "iron": 1000
+          },
+          "remaining": {
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 816,
+            "ram": 0
+          }
+        },
+        {
+          "hours": 789.134,
+          "kind": "templateRefill",
+          "id": "named_jiangling",
+          "orders": [
+            {
+              "id": "cavalry",
+              "count": 1,
+              "seconds": 116.27906976744185
+            }
+          ],
+          "cost": {
+            "food": 1000,
+            "wood": 600,
+            "iron": 500
+          },
+          "remaining": {
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 815,
+            "ram": 0
+          }
+        },
+        {
+          "hours": 790.166,
+          "kind": "templateRefill",
+          "id": "named_jiangling",
+          "orders": [
+            {
+              "id": "cavalry",
+              "count": 8,
+              "seconds": 930.2325581395348
+            }
+          ],
+          "cost": {
+            "food": 8000,
+            "wood": 4800,
+            "iron": 4000
+          },
+          "remaining": {
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 807,
+            "ram": 0
+          }
+        },
+        {
+          "hours": 790.424,
+          "kind": "templateRefill",
+          "id": "named_jiangling",
+          "orders": [
+            {
+              "id": "cavalry",
+              "count": 2,
+              "seconds": 232.5581395348837
+            }
+          ],
+          "cost": {
+            "food": 2000,
+            "wood": 1200,
+            "iron": 1000
+          },
+          "remaining": {
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 805,
+            "ram": 0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "error": "请选择合法主将、指令和目标兵力",
+      "hours": 664.979,
+      "resources": {
+        "food": 1405314.4813665666,
+        "wood": 48904.65919225566,
+        "stone": 412500,
+        "iron": 289136.6548705264,
+        "gold": 18516.5348601587
+      },
+      "rates": {
+        "food": 168.47266666666673,
+        "wood": 76.38026666666669,
+        "stone": 90.05546666666667,
+        "iron": 101.86586666666668,
+        "gold": 41.06666666666666
+      },
+      "upkeep": 13631,
+      "population": 17600,
+      "free": 14180,
+      "heroes": [
+        "lin",
+        "su",
+        "yan"
+      ],
+      "loyalty": {
+        "lin": 80,
+        "su": 80,
+        "yan": 80
+      },
+      "queue": [],
+      "refills": []
+    },
+    {
+      "seed": 19,
+      "error": "Template refill observation exhausted",
+      "hours": 832.831,
+      "resources": {
+        "food": 1485284.5997567477,
+        "wood": 295.042909932296,
+        "stone": 743990,
+        "iron": 409444.00989723095,
+        "gold": 142662.31246216976
+      },
+      "rates": {
+        "food": 145.77266666666674,
+        "wood": 76.38026666666669,
+        "stone": 90.05546666666667,
+        "iron": 101.86586666666668,
+        "gold": 41.06666666666666
+      },
+      "upkeep": 12989,
+      "population": 17600,
+      "free": 14180,
+      "heroes": [
+        "lin",
+        "su",
+        "yan",
+        "local_1000000000000001"
+      ],
+      "loyalty": {
+        "lin": 80,
+        "su": 45,
+        "yan": 80,
+        "local_1000000000000001": 40
+      },
+      "queue": [],
+      "refills": [
+        {
+          "hours": 831.418,
+          "kind": "templateRefill",
+          "id": "named_jiangling",
+          "orders": [
+            {
+              "id": "cavalry",
+              "count": 2,
+              "seconds": 229.00763358778624
+            }
+          ],
+          "cost": {
+            "food": 2000,
+            "wood": 1200,
+            "iron": 1000
+          },
+          "remaining": {
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 653,
+            "ram": 0
+          }
+        },
+        {
+          "hours": 831.481,
+          "kind": "templateRefill",
+          "id": "named_jiangling",
+          "orders": [
+            {
+              "id": "cavalry",
+              "count": 1,
+              "seconds": 114.50381679389312
+            }
+          ],
+          "cost": {
+            "food": 1000,
+            "wood": 600,
+            "iron": 500
+          },
+          "remaining": {
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 652,
+            "ram": 0
+          }
+        },
+        {
+          "hours": 832.513,
+          "kind": "templateRefill",
+          "id": "named_jiangling",
+          "orders": [
+            {
+              "id": "cavalry",
+              "count": 8,
+              "seconds": 916.030534351145
+            }
+          ],
+          "cost": {
+            "food": 8000,
+            "wood": 4800,
+            "iron": 4000
+          },
+          "remaining": {
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 644,
+            "ram": 0
+          }
+        },
+        {
+          "hours": 832.768,
+          "kind": "templateRefill",
+          "id": "named_jiangling",
+          "orders": [
+            {
+              "id": "cavalry",
+              "count": 2,
+              "seconds": 229.00763358778624
+            }
+          ],
+          "cost": {
+            "food": 2000,
+            "wood": 1200,
+            "iron": 1000
+          },
+          "remaining": {
+            "spear": 0,
+            "shield": 0,
+            "archer": 0,
+            "cavalry": 642,
+            "ram": 0
+          }
+        }
+      ]
+    }
+  ],
+  "siegeLoopLimitProbe": {
+    "change": "仅模拟补兵循环500→5000，仍保留90天观察上限",
+    "seed": 1,
+    "error": "需要爵位 公大夫（当前可招 30 级）",
+    "stage": "jiangling siege",
+    "hours": 896.528,
+    "valid": true,
+    "resources": {
+      "food": 1645750.8152259989,
+      "wood": 180895.4308627771,
+      "stone": 866684,
+      "iron": 600591.660802871,
+      "gold": 608320.0399007205
+    },
+    "sieges": [
+      {
+        "id": "named_jiangling",
+        "mode": "occupy",
+        "general": "local_1000000000000001",
+        "hours": 605.73,
+        "enemy": 12500,
+        "rounds": 12,
+        "won": true,
+        "lost": 1907,
+        "army": {
+          "archer": 8000,
+          "shield": 2500,
+          "spear": 1500,
+          "cavalry": 1000,
+          "ram": 60
+        },
+        "receipt": null,
+        "before": {
+          "gold": 302370.29949159455,
+          "food": 1378836.4215312866,
+          "level": 58
+        },
+        "claimed": false
+      },
+      {
+        "id": "named_jiangling",
+        "mode": "occupy",
+        "general": "local_1000000000000001",
+        "hours": 896.515,
+        "enemy": 12500,
+        "rounds": 12,
+        "won": true,
+        "lost": 1907,
+        "army": {
+          "archer": 8000,
+          "shield": 2500,
+          "spear": 1500,
+          "cavalry": 1000,
+          "ram": 60
+        },
+        "receipt": null,
+        "before": {
+          "gold": 352157.37157183164,
+          "food": 1529542.8152259989,
+          "level": 58
+        },
+        "claimed": true
+      }
+    ],
+    "garrison": {
+      "loyalty": 0,
+      "updatedAt": 1794391200000,
+      "pressureAt": 1794421854615,
+      "army": {
+        "shield": 1050,
+        "spear": 1200,
+        "archer": 1050,
+        "cavalry": 450
+      },
+      "armyAt": 1794421854615,
+      "captive": true,
+      "recruited": false,
+      "persuadeDay": 20768,
+      "sowAt": 1794349625732
+    },
+    "noble": 2,
+    "nobleBoost": {
+      "kind": "nobleAdvanced",
+      "end": 1792184650213
+    }
+  },
+  "gearHousingProbe": {
+    "change": "从正常南蛮入场档增建6座4级民房；资源不足按真实生产等待，不发资源；每天离线24小时后各打一次黄巾和南蛮；未测试凑套",
+    "results": [
+      {
+        "seed": 1,
+        "development": {
+          "hours": 40.565553333333334,
+          "waits": 38,
+          "houseCount": 7,
+          "pop": 4960.001582055664,
+          "maxPop": 6600,
+          "gold": 56438.54159271184
+        },
+        "day": 26,
+        "error": "黄金不足，需要2500黄金",
+        "maxPop": 6600,
+        "pop": 5280,
+        "stock": {
+          "food": 10904.23605366665,
+          "wood": 30000,
+          "stone": 36889.70231264615,
+          "iron": 60000,
+          "gold": 1996.5407778767185
+        },
+        "rates": {
+          "food": 2.26,
+          "wood": 7.396666666666667,
+          "stone": 7.396666666666667,
+          "iron": 13.626666666666667,
+          "gold": 12.32
+        },
+        "wages": 460,
+        "valid": true
+      },
+      {
+        "seed": 7,
+        "development": {
+          "hours": 40.565553333333334,
+          "waits": 38,
+          "houseCount": 7,
+          "pop": 4960.001582055664,
+          "maxPop": 6600,
+          "gold": 86438.63974857226
+        },
+        "day": 30,
+        "error": null,
+        "maxPop": 6600,
+        "pop": 5280,
+        "stock": {
+          "food": 20599,
+          "wood": 30000,
+          "stone": 46266.38755492386,
+          "iron": 61296.59629082467,
+          "gold": 18111.038933779033
+        },
+        "rates": {
+          "food": 2.2766666666666664,
+          "wood": 7.396666666666667,
+          "stone": 7.396666666666667,
+          "iron": 13.626666666666667,
+          "gold": 12.32
+        },
+        "wages": 480,
+        "valid": true
+      },
+      {
+        "seed": 19,
+        "development": {
+          "hours": 40.565553333333334,
+          "waits": 38,
+          "houseCount": 7,
+          "pop": 4960.001582055664,
+          "maxPop": 6600,
+          "gold": 56445.73783758538
+        },
+        "day": 26,
+        "error": "黄金不足，需要2500黄金",
+        "maxPop": 6600,
+        "pop": 5280,
+        "stock": {
+          "food": 10323.015080611149,
+          "wood": 30000,
+          "stone": 36889.70231264614,
+          "iron": 60000,
+          "gold": 2003.737022750276
+        },
+        "rates": {
+          "food": 2.2766666666666664,
+          "wood": 7.396666666666667,
+          "stone": 7.396666666666667,
+          "iron": 13.626666666666667,
+          "gold": 12.32
+        },
+        "wages": 460,
+        "valid": true
+      }
+    ]
+  }
+}
