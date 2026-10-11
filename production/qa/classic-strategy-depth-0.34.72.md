@@ -86,3 +86,5 @@
 - 根代理正常七项矩阵在c4cf292完整复跑，退出0，completed=true/failures=[]；36历史战场通关、18演练、五名将独立分支、7势力来源/来袭路线和9场循环、两跨日与一同日双本样本均完成。源码hash f6d4af7c69d29778987b601b688cc8b1483dae5c0d1752254c0324fab5e6f4ac，runtime52源a7a8c1c691efa0469c489c9ae12a92433ed5a5502165046b9130b1231e4300ad。
 - 修复无UI变化；390修后再次冷启动版本0.34.72，新console error/warn为0，版本截图重新保存。57图其余保留各任务阶段原字节，不全部标成修后重新截图。实体Safari未验。
 - 原6a03a16有效证据与修前问题保留；最终报告、RED/GREEN/关联日志和唯一复审原文保存在evidence/reviews。最终完整日志以npm-test-c4cf292.log和balance-c4cf292.log为准。
+
+候选已推送并建立[PR75](https://github.com/YuJieMichael/three-kingdoms/pull/75)，base main；CI结果以PR当前HEAD检查为准，本记录写入时等待GitHub自动验证。提交仅产品和证据，未合并上线。原始RED日志有Node输出自带尾随空白，为保持证据逐字节保留；除该原始日志外整支diff-check通过，所有91份manifest列举文件均已入库并核对SHA256。
