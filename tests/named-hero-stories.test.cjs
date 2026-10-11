@@ -35,7 +35,7 @@ for(const [city,line,,start]of rows)test(city+' actual siege capture loses 1–3
  const e=prepared(),g=e.Game,G=e.evaluate('NamedGarrison'),s=g.state;s.realm.namedCities.garrisons[id].loyalty=29;
  G.settleBattle(s,id,{won:true,mode:'occupy',gateBroken:true},e.now(),{site:x=>g.getNode(x)});
  const h=G.hero(id),cap=s.captureLevels[h.id];assert.equal(cap.original,start);assert.ok(cap.loss>=1&&cap.loss<=3);assert.equal(s.inventory.barbarianEquipmentBox||0,0);
- s.honors.noble=0;assert.match(g.recruitGarrisonGeneral(id),/爵位/);s.honors.noble=10;assert.equal(g.recruitGarrisonGeneral(id),null);assert.equal(e.evaluate('HeroIdentity').key(s,h.id),line);assert.ok(g.general(h.id).lead<start*30);
+ s.honors.noble=0;assert.match(g.recruitGarrisonGeneral(id),/爵位/);s.honors.noble=10;assert.equal(g.recruitGarrisonGeneral(id),null);assert.equal(e.evaluate('HeroIdentity').key(s,h.id),line);const level=s.generalLevels[h.id],initial={zhaoyun:23,huangzhong:20,machao:23,xunyu:16,zhouyu:30}[line],old=e.evaluate('HeroSystem.wild.definitions').find(d=>d.line===line);assert.equal(h.lead,200);assert.equal(s.famousStarts[h.id].leadGrowth,0);assert.equal(g.general(h.id).lead,200+initial*10);assert.equal(g.general(h.id).def,old.def+(level-1)*3);e.evaluate('HeroSystem').addXp(s,h.id,level*80);assert.equal(s.generalLevels[h.id],level+1);assert.equal(g.general(h.id).lead,200+initial*10+10);assert.equal(g.general(h.id).def,old.def+level*3);
  for(const mutate of [d=>d.captureLevels[h.id].original++,d=>d.customGenerals.find(x=>x.id===h.id).atk++,d=>d.customGenerals.find(x=>x.id===h.id).sourceNode='wild_0_0']){const d=cloneActiveSave(s);mutate(d);assert.equal(g.validSave(d),false);}
 });
 test('retained wild hero remains valid but blocks a duplicate city capture and recruitment',()=>{
@@ -83,4 +83,17 @@ test('new city malformed migration data stays invalid, and all three capture los
 for(const action of ['persuadeGarrison','sowGarrison'])test(action+' persistence failure restores costs and siege cooldowns',()=>{
  const e=prepared(),g=e.Game;if(action==='sowGarrison')g.state.cityRoles.counsellor='su';g.save();const before=JSON.stringify(g.state);
  e.evaluate("localStorage.setItem=()=>{throw Error('test write failure')}");assert.match(g[action]('named_changshan'),/保存失败/);assert.equal(JSON.stringify(g.state),before);
+});
+
+test('direct inn recruitment rolls back the entire pre-tick realm when real storage writes fail',()=>{
+ const e=prepared(),g=e.Game;assert.equal(g.refreshInn(),null);const candidate=JSON.parse(JSON.stringify(g.state.innCandidates[0]));
+ g.state.conquered.yellow_qingshi=true;const c=e.evaluate("CitySystem.empty(Game.state,Game.getNode('yellow_qingshi'),Date.now())");g.state.realm.cities[c.id]=c;g.state.realm.heroLocations.lin=c.id;
+ const earlier=e.now()-2*3600000;g.state.last=earlier;c.data.last=earlier;g.state.heroService.lastPay=earlier;c.data.res.gold=1000;g.save();
+ assert.equal(g.validSave(g.state),true);const before=JSON.stringify(g.state),pay=g.state.heroService.lastPay,otherGold=c.data.res.gold;
+ e.evaluate("localStorage.setItem=()=>{throw Error('test direct recruitment write failure')}");assert.match(g.recruit(candidate.id),/保存失败/);
+ assert.equal(JSON.stringify(g.state),before);assert.equal(g.state.heroService.lastPay,pay);assert.equal(g.state.realm.cities[c.id].data.res.gold,otherGold);assert.ok(g.state.innCandidates.some(h=>h.id===candidate.id));assert.equal(g.state.generals.includes(candidate.id),false);assert.equal(g.saveSessionInfo().mode,'write-error');
+});
+test('ordinary direct inn recruitment still pays once, joins and consumes only the chosen candidate',()=>{
+ const e=prepared(),g=e.Game;assert.equal(g.refreshInn(),null);const h=JSON.parse(JSON.stringify(g.state.innCandidates[0])),gold=g.state.res.gold,others=Array.from(g.state.innCandidates.slice(1),x=>x.id);
+ assert.equal(g.recruit(h.id),null);assert.equal(g.state.res.gold,gold-h.price);assert.equal(g.state.generals.filter(id=>id===h.id).length,1);assert.deepEqual(Array.from(g.state.innCandidates,x=>x.id),others);assert.equal(g.state.generalLevels[h.id],h.level);assert.equal(g.validSave(g.state),true);assert.ok(g.recruit(h.id));assert.equal(g.state.res.gold,gold-h.price);
 });
