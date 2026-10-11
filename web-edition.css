@@ -866,3 +866,5 @@ dialog .web-plot-preview h3{
 
 /* Named-city income is a local passive effect, separate from development rewards. */
 .named-city-territory{padding:8px;margin:8px 0;border:1px solid var(--line,#b0b69c);border-radius:6px;overflow-wrap:anywhere}.named-city-territory .guide-actions{display:flex;flex-wrap:wrap;gap:6px}.named-city-territory .btn{min-height:44px;white-space:normal}
+
+.faction-panel{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--border);border-radius:10px}.faction-card{padding:12px;margin:10px 0;border:1px solid var(--border);border-radius:10px}.faction-panel .btn,.faction-card .btn,[data-action="factionToggle"],[data-action="factionOpen"]{min-height:44px;min-width:44px}.world-faction-mark{position:absolute;left:2px;top:2px;z-index:4;background:#693d20;color:#fff5d6;border-radius:4px;padding:2px 4px;font-size:10px;pointer-events:none}
