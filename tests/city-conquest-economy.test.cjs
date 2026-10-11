@@ -24,3 +24,16 @@ test('old saves append new cities while preserving owned wild cells and existing
  g.importSave(cloneActiveSave(old));const before=JSON.stringify(g.state);for(const id of names){const n=g.getNode(id);g.getWorldTile(n.x,n.y);g.attackInfo(id,'occupy');}assert.equal(JSON.stringify(g.state),before);
  const bad=cloneActiveSave(g.state);bad.openCitySites.yellow_xikou={...bad.openCitySites.yellow_shiqiao};assert.equal(g.validSave(bad),false);
 });
+test('a legacy player-founded city reserves a newly proposed yellow city coordinate',()=>{
+ const e=loadGame(),g=e.Game,{city}=require('./helpers/game.cjs');
+ // Move only the new target aside to construct a real player-city fixture at its old wild cell.
+ g.state.openCitySites.yellow_dongdu={x:0,y:0};city(g,{hall:3,drill:1,tavern:4});g.state.honors.noble=2;
+ for(const k of Object.keys(g.resources))g.state.res[k]=200000;
+ const n=g.getWorldTile(24,29);assert.equal(n.wild,true);assert.equal(n.type,'plain');
+ g.state.conquered[n.id]=true;g.state.landClaims[n.id]={at:e.now(),level:n.level};g.state.realm.wildOwners[n.id]='capital';
+ const q=g.foundCityQuote(n.id,'旧档边城');assert.equal(q.reason,'');assert.equal(g.foundCity(n.id,'旧档边城',q.key),null);
+ const old=cloneActiveSave(g.state),id='city_'+n.id,kept=plain(old.realm.cities[id]);
+ for(const id of names){delete old.towns[id];delete old.openCitySites[id];}
+ const migrated=g.migrateSave(old);assert.equal(g.validSave(migrated),true);
+ assert.deepEqual(plain(migrated.realm.cities[id]),kept);assert.notDeepEqual(plain(migrated.openCitySites.yellow_dongdu),{x:24,y:29});
+});
