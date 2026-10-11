@@ -116,7 +116,7 @@ const HeroSystem=(()=>{
     function validReceipt(r,s){if(r===undefined||r===null)return true;return object(r)&&definition(r.line)?.name===r.name&&validId(r.id,s)&&nodeValid(r.node,s)&&['captured','released','portrait_required'].includes(r.status)&&r.loyalty===(r.status==='captured'?40:0)&&typeof r.reason==='string'&&r.reason.length<=100;}
     function location(s,d){
       const occupied=new Set(s.wildGenerals.rumors.filter(r=>r.status!=='released').map(r=>r.node));
-      const available=n=>n?.wild&&n.level===d.fieldLevel&&!s.conquered[n.id]&&!occupied.has(n.id)&&Object.values(n.army).some(v=>v>0);
+      const available=n=>n?.wild&&!n.factionCamp&&n.level===d.fieldLevel&&!s.conquered[n.id]&&!occupied.has(n.id)&&Object.values(n.army).some(v=>v>0);
       const preferred=Game.getWorldTile(d.anchor.x,d.anchor.y);if(available(preferred))return preferred;
       let best=null,score=Infinity;for(let y=0;y<Game.WORLD_SIZE;y++)for(let x=0;x<Game.WORLD_SIZE;x++){const n=Game.getWorldTile(x,y);if(!available(n))continue;const next=Math.hypot(x-d.anchor.x,y-d.anchor.y);if(next<score){best=n;score=next;}}return best;
     }
