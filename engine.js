@@ -985,7 +985,7 @@ const Game = (() => {
     const lesson=context?.kind==='lesson'?context.lesson:null,battlefield=context?.kind==='battlefield';
     const finish=(won,why)=>lesson?TacticalLessons.finish(lesson,won):battlefield?BattlefieldSystem.finishNode(state,b,won,battlefieldApi(),why):finishBattle(won,false,why);
     if(!b||b.finished)return b||null;if(b.rules===3&&!tacticsAvailable())return '此模式暂不支持名将计谋战斗';
-    if(!lesson&&(b.round>=30||!b.player.some(r=>r.hp>0)||!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp)){const error=finish(b.player.some(r=>r.hp>0)&&!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp);save();return error||b;}
+    if(!lesson&&(b.round>=30||!b.player.some(r=>r.hp>0)||!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp)){const error=finish(b.player.some(r=>r.hp>0)&&!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp);if(!battlefield)save();return error||b;}
     if(!b.generalSnapshot)for(const row of b.player){const baseStats=unitStats(row.id),stats=b.mountProfile?HeroSystem.speedStats(baseStats,row.id,b.mountProfile):baseStats;row.hp=Math.min(row.initial*stats.hp,row.hp/row.stats.hp*stats.hp);row.maxHp=row.initial*stats.hp;row.stats=stats;}b.round++;
     const tactics=b.rules===3&&!!b.stratagem;
     normalizeBattleTargets(b);
@@ -1066,7 +1066,7 @@ const Game = (() => {
     else if(!lesson&&rule?.kind==='timeLimit'&&b.round>=rule.rounds){pushLog(b,'已到第 '+rule.rounds+' 回合：董卓焚城撤走，本次攻打失败。');finish(false,'timeout');}
     else if(!living(b.player).length||b.round>=30){if(b.round>=30)pushLog(b,lesson?'演练达到回合上限，可重开比较指令。':'达到回合上限，'+(b.gate?.hp>0?'城防仍未攻破'+(living(b.enemy).length?'且守军尚未清空':''):'守军尚未清空')+'，本次攻打失败。');finish(false);}
     else if(lesson&&!TacticalLessons.practical(lesson.id)&&TacticalLessons.objectiveMet(lesson))finish(false);
-    if(!lesson){if(tactics&&!b.finished)planEnemyTactic(b,node);save();}return b;
+    if(!lesson){if(tactics&&!b.finished)planEnemyTactic(b,node);if(!battlefield)save();}return b;
   }
   function finishBattle(won,retreated=false,endedBy){
     const b=state.battle,e=state.expedition;if(!b||b.finished)return;
@@ -1390,7 +1390,7 @@ const Game = (() => {
   const battlefieldView=(campaign='yellow_turban',difficulty='simple')=>BattlefieldSystem.view(state,battlefieldApi(),campaign,difficulty);
   const battlefieldQuote=(id,army,campaign='yellow_turban',difficulty='simple')=>BattlefieldSystem.quote(state,id,army,battlefieldApi(),campaign,difficulty);
   function battlefieldAction(name,...args){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const previous=CitySystem.clone(state),error=BattlefieldSystem[name](state,...args,battlefieldApi());if(!error&&!save()){state=previous;CitySystem.capture(state);return '存档失败，请重试';}return error;}
-  function openBattlefieldBox(campaign='yellow_turban'){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem.openBox(state,battlefieldApi(),campaign);if(!error)save();return error;}
+  function openBattlefieldBox(campaign='yellow_turban'){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const previous=CitySystem.clone(state),error=BattlefieldSystem.openBox(state,battlefieldApi(),campaign);if(!error&&!save()){state=previous;CitySystem.capture(state);return '存档失败，请重试';}return error;}
   const claimBattlefieldRelic=id=>battlefieldAction('claimRelic',id);
   const attemptBattlefieldInfiltration=(node,answer)=>battlefieldAction('attemptInfiltration',node,answer);
   const discoverBattlefieldRoute=()=>battlefieldAction('discoverRoute');
@@ -1400,23 +1400,23 @@ const Game = (() => {
   function enterBattlefieldNode(id,choice='normal'){
     if(!tacticsAvailable())return '剧本战场仅在单机模式开放';
     if(lessonSession||state.battle&&!state.battle.finished||CitySystem.list(state).some(c=>CitySystem.scope(state,c).cityDefense.battle))return '请先结束当前战斗或演练';
-    const error=BattlefieldSystem.enter(state,id,choice,battlefieldApi());if(error)return error;
-    const r=state.battlefields.run;if(r.selectedNode){r.battle=createBattlefieldBattle(r,BattlefieldSystem.nodeForRun(r,id,choice));battlefieldScreenActive=true;}save();return null;
+    const previous=CitySystem.clone(state),screen=battlefieldScreenActive,error=BattlefieldSystem.enter(state,id,choice,battlefieldApi());if(error)return error;
+    const r=state.battlefields.run;if(r.selectedNode){r.battle=createBattlefieldBattle(r,BattlefieldSystem.nodeForRun(r,id,choice));battlefieldScreenActive=true;}if(!save()){state=previous;CitySystem.capture(state);battlefieldScreenActive=screen;return '存档失败，请重试';}return null;
   }
   function createBattlefieldBattle(r,n){
     const frozen=withCityScope(r.sourceCity,()=>({general:{...general(r.general)},skill:GeneralGrowth.profile(state,r.general),mount:HeroSystem.mountProfile(state,r.general),proc:LegendaryWeapons.procChance(state,r.general)}));
     const currentTech=CitySystem.scope(state,state.realm.cities[r.sourceCity]).tech;
     frozen.general.lead=frozen.general.lead/(1+currentTech.leadership*.1)*(1+r.techSnapshot.leadership*.1);
-    const rows=(army,enemy)=>Object.entries(army).filter(([,count])=>count>0).map(([id,count])=>{let stats=enemy?{...unitStats(id,false),atk:unitStats(id,false).atk*(n.armyAttack[id]||1)}:{...r.unitSnapshot[id],atk:r.unitSnapshot[id].atk*(r.completed.includes('s3')?1.08:1)};if(!enemy)stats=HeroSystem.speedStats(stats,id,frozen.mount);return {id,initial:count,stats,hp:count*stats.hp,maxHp:count*stats.hp,pos:0,defending:false};});
+    const rows=(army,enemy)=>Object.entries(army).filter(([,count])=>count>0).map(([id,count])=>{let stats=enemy?{...unitStats(id,false),atk:unitStats(id,false).atk*(n.armyAttack[id]||1)}:{...r.unitSnapshot[id],atk:r.unitSnapshot[id].atk*(r.completed.includes(BattlefieldData.config(r.campaign).attackSide)?1.08:1)};if(!enemy)stats=HeroSystem.speedStats(stats,id,frozen.mount);return {id,initial:count,stats,hp:count*stats.hp,maxHp:count*stats.hp,pos:0,defending:false};});
     const player=rows(r.army,false),enemy=rows(n.army,true),length=battleLength([...player,...enemy]);for(const row of enemy)row.pos=length;
     const orders=rows=>Object.fromEntries(rows.map(row=>[row.id,{command:'advance',target:''}]));
     const b={kind:'battlefield',supplyEffect:BattlefieldSystem.supplyEffect(r,n),route:n.route,runId:r.id,completedBefore:[...r.completed],rules:3,length,node:n.id,general:r.general,sourceCity:r.sourceCity,generalSnapshot:frozen.general,skillProfile:frozen.skill,traitProfile:HeroTraits.profile(state,r.general),mountProfile:frozen.mount,legendProcChance:frozen.proc,mode:'raid',siege:false,gate:null,militia:0,round:0,machineGateAttacks:0,currentRoundSummary:{round:0,events:[]},player,enemy,orders:orders(player),enemyOrders:orders(enemy),enemyGeneralSnapshot:{id:'enemy_'+n.id,name:n.name,wildLine:'',atk:0,def:0,pol:0,wis:0,lead:0},log:[n.intro],auto:false,finished:false,result:null};
     b.facts=BattleReview.createFacts(b);b.stratagem=BattleStratagems.create(b,{player:b.generalSnapshot,enemy:b.enemyGeneralSnapshot});return b;
   }
-  function battlefieldOrder(unit,command,target=''){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const b=state.battlefields?.run?.battle;if(!b||b.finished||!b.player.some(row=>row.id===unit&&row.hp>0)||!['advance','hold','fallback'].includes(command)||target!==''&&!b.enemy.some(row=>row.id===target))return '战场指令无效';b.orders[unit]={command,target};save();return null;}
+  function battlefieldOrder(unit,command,target=''){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const b=state.battlefields?.run?.battle;if(!b||b.finished||!b.player.some(row=>row.id===unit&&row.hp>0)||!['advance','hold','fallback'].includes(command)||target!==''&&!b.enemy.some(row=>row.id===target))return '战场指令无效';const previous=CitySystem.clone(state);b.orders[unit]={command,target};if(!save()){state=previous;CitySystem.capture(state);return '存档失败，请重试';}return null;}
   function resumeBattlefieldBattle(){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';if(lessonSession||state.battle&&!state.battle.finished||CitySystem.list(state).some(c=>CitySystem.scope(state,c).cityDefense.battle))return '请先结束当前战斗或演练';if(!BattlefieldSystem.locked(state))return '暂无进行中的战场战斗';battlefieldScreenActive=true;return null;}
   function pauseBattlefieldBattle(){battlefieldScreenActive=false;return null;}
-  function battlefieldRound(){const b=state.battlefields?.run?.battle;if(!b||b.finished)return b||'尚未进入战场地点';const error=resumeBattlefieldBattle();if(error)return error;const result=resolveBattleRound(b,{kind:'battlefield',node:BattlefieldSystem.nodeForRun(state.battlefields.run,b.node,b.route,b.supplyEffect!==undefined)});if(b.finished)battlefieldScreenActive=false;return result;}
+  function battlefieldRound(){const b=state.battlefields?.run?.battle;if(!b||b.finished)return b||'尚未进入战场地点';const previous=CitySystem.clone(state),screen=battlefieldScreenActive,error=resumeBattlefieldBattle();if(error)return error;const result=resolveBattleRound(b,{kind:'battlefield',node:BattlefieldSystem.nodeForRun(state.battlefields.run,b.node,b.route,b.supplyEffect!==undefined)});if(typeof result==='string'){state=previous;CitySystem.capture(state);battlefieldScreenActive=screen;return result;}if(!save()){state=previous;CitySystem.capture(state);battlefieldScreenActive=screen;return '存档失败，请重试';}if(b.finished)battlefieldScreenActive=false;return result;}
   const battlefieldCanEquip=id=>state.battlefields?.run?.general===id&&!BattlefieldSystem.locked(state)&&!otherGeneralBusy(id);
 
   const reinforceBattlefield=army=>battlefieldAction('reinforce',army);

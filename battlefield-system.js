@@ -60,7 +60,8 @@ const BattlefieldSystem=(()=>{
   function nodeForRun(r,id,route='normal',applySupply=true){
     const c=BattlefieldData.config(r.campaign),n=BattlefieldData.get(id,r.campaign);if(!n||!c)return null;n.army=clone(r.enemySnapshot?.[id]||n.army);n.route=route;n.armyAttack={};n.commander={name:n.name,title:c.name,attack:1,defense:1};
     if(c.id==='yellow_turban'){if(id==='m3'&&!r.completed.includes('s2'))n.commander.attack=1.05;if(id==='m9'&&!r.completed.includes('s6'))n.commander.defense=1.1;if(id==='s6'&&route==='infiltration')delete n.army.archer;}
-    else {if(id==='n3'&&!r.completed.includes('b2'))n.armyAttack.archer=1.08;if(id==='n6'&&!r.completed.includes('b3'))n.commander.defense=1.12;if(id==='n9'&&!r.completed.includes('b6'))n.commander.defense=1.1;if(id==='b2'&&route==='hidden'||id==='b6'&&route==='infiltration')delete n.army.archer;}
+    else if(c.id==='nanman'){if(id==='n3'&&!r.completed.includes('b2'))n.armyAttack.archer=1.08;if(id==='n6'&&!r.completed.includes('b3'))n.commander.defense=1.12;if(id==='n9'&&!r.completed.includes('b6'))n.commander.defense=1.1;if(id==='b2'&&route==='hidden'||id==='b6'&&route==='infiltration')delete n.army.archer;}
+    else {for(const effect of c.support||[])if(id===effect.node&&!r.completed.includes(effect.side)){if(effect.stat==='archerAttack')n.armyAttack.archer=effect.factor;else n.commander[effect.stat]=effect.factor;}if(id===c.discover&&route==='hidden'||id===c.infiltration&&route==='infiltration')delete n.army.archer;}
     if(applySupply)n.army=finalArmy(r,n);return n;
   }
   function finishNode(s,b,won,api,endedBy){const r=active(s);if(!r||r.battle!==b||b.finished||b.runId!==r.id||r.selectedNode!==b.node)return '战场快照不匹配';const back=blank(api),lost=blank(api),recovered=blank(api);
@@ -75,7 +76,7 @@ const BattlefieldSystem=(()=>{
     const c=BattlefieldData.config(r.campaign),n=nodeForRun(r,b.node,b.route,b.supplyEffect!==undefined);if(!n||n.dialogue||b.supplyEffect!==undefined&&(!object(b.supplyEffect)||Object.keys(b.supplyEffect).length!==2||b.supplyEffect.version!==1||b.supplyEffect.side!==supplyEffect(r,n).side)||!['normal','hidden','infiltration'].includes(b.route)||b.route==='hidden'&&(b.node!==c.discover||!r.routeDiscovered)||b.route==='infiltration'&&r.infiltration[b.node]!=='infiltration'||r.infiltration[b.node]&&b.route!==r.infiltration[b.node]||!Array.isArray(b.player)||!Array.isArray(b.enemy)||!b.player.length||!b.enemy.length||!object(b.orders)||!object(b.enemyOrders)||!Array.isArray(b.log)||b.log.length>40||b.log.some(x=>typeof x!=='string'||x.length>1000)||!BattleStratagems.valid(b,api))return false;
     if(b.finished?(b.result?.won?!r.completed.includes(b.node):r.selectedNode!==b.node):r.selectedNode!==b.node||!BattlefieldData.available(r.completed,r.campaign).includes(b.node))return false;
     if(!BattlefieldData.validCompleted(b.completedBefore,r.campaign)||JSON.stringify(b.completedBefore)!==JSON.stringify(r.completed.filter(id=>!(b.finished&&b.result?.won&&id===b.node))))return false;
-    const bonus=b.completedBefore.includes('s3')?1.08:1;
+    const bonus=c.attackSide&&b.completedBefore.includes(c.attackSide)?1.08:1;
     for(const [side,rows,orders] of [['player',b.player,b.orders],['enemy',b.enemy,b.enemyOrders]]){
       if(new Set(rows.map(row=>row.id)).size!==rows.length||Object.keys(orders).length!==rows.length)return false;
       for(const row of rows){const base=side==='player'?r.unitSnapshot[row.id]:api.units[row.id],expected=base?{hp:base.hp,atk:base.atk*(side==='player'?bonus:n.armyAttack[row.id]||1),def:base.def,speed:base.speed,range:base.range}:null;

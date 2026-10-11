@@ -37,12 +37,55 @@ const BattlefieldData=(()=>{
     ['b6','截获军情',3,{shield:100,archer:70},'来使先问山路，守卫以归林作答。','取得军情，解除孟获防御优势；面具可减少守军。','军情到手，孟获防御优势解除。','军情未得，可补租后正面重试。']
   ];
   const nanNodes=nanRows.map(([id,name,arc,army,intro,objective,victory,defeat])=>({id,name,arc,army,intro,objective,victory,defeat,kind:id[0]==='n'?'main':'side',requires:id[0]==='n'?(id==='n1'?[]:['n'+(Number(id.slice(1))-1)]):arc===1?[]:['n'+((arc-1)*3)],dialogue:id==='b4'}));
+  // New stories reuse the established rental-army gradient, never the old node IDs.
+  function historicalNodes(mainPrefix,sidePrefix,story,baseline){
+    return story.map(([name,intro,objective,victory],i)=>{const source=baseline[i],id=(i<9?mainPrefix:sidePrefix)+(i<9?i+1:i-8),arc=source.arc;return {id,name,arc,army:{...source.army},intro,objective,victory,defeat:name+'仍有守军，补租后可重试，也可先取支线支援。',kind:i<9?'main':'side',requires:i<9?(i===0?[]:[mainPrefix+i]):arc===1?[]:[mainPrefix+((arc-1)*3)],dialogue:i===12};});
+  }
+  const eunuchNodes=historicalNodes('t','u',[
+    ['京师救民','宫中政变传到街市，百姓被乱军截住。','击退街市乱军，沿粮道进入京师。','街市得安，勤王军找到宫门前路。'],
+    ['粮道清障','粮车停在宫道，盾兵守住辎重。','清开宫道，查明张让近卫的位置。','宫道已通，近卫营阵形显露。'],
+    ['宫门近卫','近卫据粮列阵，阻住勤王军。','击败近卫；夺回粮仓可解除攻击优势。','近卫败退，勤王军进入禁苑外围。'],
+    ['禁苑外围','禁苑盾阵护住弓手，乱军仍在交战。','突破外围军阵，接应禁苑内的百姓。','外围守军退去，洛桥方向开放。'],
+    ['洛桥争夺','洛桥两端互相呼应，枪骑扼住归路。','清除桥头军阵，打通皇城撤离路线。','洛桥已通，宫道督军现出主阵。'],
+    ['宫道督军','督军列盾护弓，军械库仍被扣押。','击败督军；支线军械可使本轮攻击增加。','宫道督军败退，北宫道路开放。'],
+    ['北宫接应','勤王军被截在北宫，援军传来旗号。','击退北宫守军，接应失散的勤王军。','北宫军阵已散，河宫哨阵就在前方。'],
+    ['河宫哨阵','河宫骑兵保护内侍，哨阵封住出口。','击退哨阵，追上张让率领的近卫。','河宫哨阵退去，张让已无退路。'],
+    ['张让决战','张让率最后近卫列阵，宫中乱局将定。','击败张让完成本轮；取密诏可削弱防御。','张让近卫败退，京师乱局暂定，统一结算。'],
+    ['救援勤王军','勤王军散兵被困街巷，请你从侧面接应。','击退围兵，本轮补租池增加500人。','勤王军得救，本轮补租池增加500人。'],
+    ['夺回内仓','内仓仍向宫门近卫供粮，守卫封住巷口。','夺回内仓情报，解除近卫攻击优势。','内仓得保，宫门近卫攻击优势解除。'],
+    ['接应军械匠','军械匠被困禁苑，愿把器械送入军中。','本轮攻击+8%，终战守军−5%。','军械入军，本轮攻击+8%，终战守军−5%。'],
+    ['护送太医','太医背着药囊等待接应，愿救治勤王伤者。','护送太医，获得200人救治额度。','太医随军，本轮获得200人救治额度。'],
+    ['解围北军','北军被围在河宫侧道，发来接应旗号。','解围北军，本轮补租池增加500人。','北军得救，本轮补租池增加500人。'],
+    ['取得密诏','宫中来使藏有密诏；先问宫门，守卫以归营作答。','取得近卫军情，解除张让防御优势。','密诏入手，张让防御优势解除。']
+  ],nodes);
+  const dongNodes=historicalNodes('d','e',[
+    ['曹阳牵制','联军前锋抵达曹阳，西凉军阻住辎重。','击退西凉前阵，接通联军前锋。','曹阳军阵已散，汜水战线开放。'],
+    ['汜水接战','汜水守军列枪护弓，骑阵从侧翼逼近。','突破汜水军阵，查明华雄营位。','汜水守军败退，华雄主阵显露。'],
+    ['华雄营阵','华雄据营设伏，弓兵守住两翼。','击败华雄；查探骑阵可解除弓兵攻击优势。','华雄营阵溃散，联军向荥阳推进。'],
+    ['荥阳对峙','荥阳前线盾阵紧密，弓手护住补给。','击退荥阳军阵，掩护联军继续推进。','荥阳前线得通，虎牢骑阵进入视野。'],
+    ['虎牢骑阵','虎牢前的枪盾部队护住骑兵集结。','破开外围军阵，逼近吕布主阵。','外围骑阵退去，吕布前来接战。'],
+    ['吕布接战','吕布军阵借辎重固守，弓盾交错。','击退吕布军阵；夺军械可解除防御优势。','吕布军阵退去，洛阳外围道路开放。'],
+    ['洛阳外营','洛阳外营枪骑并进，试图截断联军。','击退外营，接应勤王援军。','洛阳外营败退，西凉后阵显露。'],
+    ['西凉后阵','西凉盾兵护弓，董卓退兵的旗号将起。','击退后阵，抢在退兵前完成最后接战。','后阵已散，董卓主阵就在前方。'],
+    ['董卓决战','董卓率西凉主阵接战，欲保住最后营地。','击败董卓完成本轮；营图可削弱防御。','董卓军阵败退，联军得胜，本轮统一结算。'],
+    ['救援联军前锋','联军前锋被困山道，旗号仍在抵抗。','救出前锋，本轮补租池增加500人。','前锋脱困，本轮补租池增加500人。'],
+    ['查探骑阵','侦骑传来敌阵动向，哨兵堵住小道。','取得骑阵情报，解除华雄弓兵攻击优势。','骑阵情报到手，华雄弓兵攻击优势解除。'],
+    ['夺回军械','军械辎重停在荥阳，盾兵护住工匠。','本轮攻击+8%，解除吕布防御优势，终战守军−5%。','军械得保，本轮攻击+8%，吕布防御优势解除，终战守军−5%。'],
+    ['护送联军医官','医官正在等待联军护送，可收治伤者。','护送医官，获得200人救治额度。','医官抵达，本轮获得200人救治额度。'],
+    ['接应勤王援军','勤王援军被西凉骑兵截在侧道。','解围援军，本轮补租池增加500人。','援军抵达，本轮补租池增加500人。'],
+    ['夺得西凉营图','西凉传令使携带营图；先问营门，哨兵以归营作答。','取得营图，解除董卓主阵防御优势。','西凉营图到手，董卓防御优势解除。']
+  ],nanNodes);
   const campaigns={
     yellow_turban:{id:'yellow_turban',name:'黄巾之乱',arcs:['张梁：断粮救民','张宝：破围夺营','张角：广宗决战'],mainIds:MAIN_IDS,sideIds:SIDE_IDS,finalNode:'m9',minLevel:5,boxItem:'yellowEquipmentBox',setId:'yellow_turban',tier:2,baseReward:{prestige:1000,xp:160},sideReward:{prestige:100,xp:16},pool:3000,limit:800,prefix:'yellow',rescue:['s1','s5'],medical:'s4',attackSide:'s3',supplySide:'s3',discover:'s2',relicNode:'m2',relic:'compass',infiltration:'s6',answer:'rise'},
     nanman:{id:'nanman',name:'南蛮入侵',arcs:['林地：边寨接战','藤甲：渡口破阵','蛮营：孟获决战'],mainIds:nanNodes.filter(n=>n.kind==='main').map(n=>n.id),sideIds:nanNodes.filter(n=>n.kind==='side').map(n=>n.id),finalNode:'n9',minLevel:10,boxItem:'barbarianEquipmentBox',setId:'nanman',tier:3,baseReward:{prestige:1200,xp:200},sideReward:{prestige:100,xp:20},pool:3000,limit:800,prefix:'nanman',rescue:['b1','b5'],medical:'b4',attackSide:null,supplySide:'b3',discover:'b2',relicNode:'n2',relic:'mask',infiltration:'b6',answer:'forest'}
   };
+  for(const [id,name,ns,minLevel,baseReward,boxItem,setId,tier,arcs,boss] of [
+    ['ten_eunuchs','十常侍之乱',eunuchNodes,15,{prestige:1400,xp:240},'yellowEquipmentBox','yellow_turban',2,['京师：断粮救民','禁苑：接应勤王','河宫：平定乱局'],'张让'],
+    ['dongzhuo','讨伐董卓',dongNodes,20,{prestige:1600,xp:280},'barbarianEquipmentBox','nanman',3,['汜水：联军接战','虎牢：截械破阵','洛阳：西凉决战'],'董卓']
+  ]){const mainIds=ns.filter(n=>n.kind==='main').map(n=>n.id),sideIds=ns.filter(n=>n.kind==='side').map(n=>n.id);campaigns[id]={id,name,arcs,boss,mainIds,sideIds,finalNode:mainIds[8],minLevel,boxItem,setId,tier,boxNote:'复用'+(setId==='yellow_turban'?'黄巾':'蛮族')+'套装箱，品质与随机七部位不变',baseReward,sideReward:{prestige:100,xp:20},pool:3000,limit:800,prefix:id,rescue:[sideIds[0],sideIds[4]],medical:sideIds[3],attackSide:sideIds[2],supplySide:sideIds[2],discover:sideIds[1],relicNode:null,relic:null,infiltration:sideIds[5],answer:'return',support:id==='ten_eunuchs'?[{node:mainIds[2],side:sideIds[1],stat:'attack',factor:1.05},{node:mainIds[8],side:sideIds[5],stat:'defense',factor:1.1}]:[{node:mainIds[2],side:sideIds[1],stat:'archerAttack',factor:1.08},{node:mainIds[5],side:sideIds[2],stat:'defense',factor:1.12},{node:mainIds[8],side:sideIds[5],stat:'defense',factor:1.1}]};}
+  const nodeLists={yellow_turban:nodes,nanman:nanNodes,ten_eunuchs:eunuchNodes,dongzhuo:dongNodes};
   nodes.find(n=>n.id==='s6').intro='口令先说黄天，守卫答当立；祭坛仍需攻下。';
-  const clone=x=>JSON.parse(JSON.stringify(x)),list=id=>id==='yellow_turban'?nodes:id==='nanman'?nanNodes:null;
+  const clone=x=>JSON.parse(JSON.stringify(x)),list=id=>Object.hasOwn(nodeLists,id)?nodeLists[id]:null;
   function config(id='yellow_turban'){return Object.hasOwn(campaigns,id)?clone(campaigns[id]):null;}
   function catalog(){return Object.values(campaigns).map(c=>({id:c.id,name:c.name,minLevel:c.minLevel,boxItem:c.boxItem}));}
   function validCompleted(done,campaign='yellow_turban'){const ns=list(campaign);return !!ns&&Array.isArray(done)&&new Set(done).size===done.length&&done.every(id=>ns.some(n=>n.id===id))&&done.every(id=>ns.find(n=>n.id===id).requires.every(dep=>done.includes(dep)));}

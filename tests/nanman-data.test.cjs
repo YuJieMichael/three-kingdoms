@@ -15,7 +15,7 @@ test('nanman full clear counts each optional contribution exactly once',()=>{
  assert.equal(d.reward([...main,'b1','b1'],'nanman'),null);
 });
 test('campaign projections cannot change later battle or rental rules',()=>{
- const d=data();assert.equal(typeof d.catalog,'function');assert.equal(d.catalog().length,2);
+ const d=data();assert.equal(typeof d.catalog,'function');assert.deepEqual(plain(d.catalog().map(c=>c.id)),['yellow_turban','nanman','ten_eunuchs','dongzhuo']);
  const c=d.config('nanman');c.pool=999;assert.equal(d.config('nanman').pool,3000);
  const n=d.get('n3','nanman');assert.ok(n);n.army.archer=999;assert.equal(d.get('n3','nanman').army.archer,100);
  for(const id of [...d.config('nanman').mainIds,...d.config('nanman').sideIds])for(const key of ['intro','objective','victory','defeat'])assert.ok(d.get(id,'nanman')[key].length>5);

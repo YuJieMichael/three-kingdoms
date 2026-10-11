@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="cc0557269160cde89b22fc9312aef774b2453bb91942b2f369ed874022063943";
+export const runtimeHash="a0968be1d2e9e121bc731d81da447b0c50c84b82546acf8aceb3b93154a104d6";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","faction-system.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -16250,12 +16250,55 @@ const BattlefieldData=(()=>{
     ['b6','截获军情',3,{shield:100,archer:70},'来使先问山路，守卫以归林作答。','取得军情，解除孟获防御优势；面具可减少守军。','军情到手，孟获防御优势解除。','军情未得，可补租后正面重试。']
   ];
   const nanNodes=nanRows.map(([id,name,arc,army,intro,objective,victory,defeat])=>({id,name,arc,army,intro,objective,victory,defeat,kind:id[0]==='n'?'main':'side',requires:id[0]==='n'?(id==='n1'?[]:['n'+(Number(id.slice(1))-1)]):arc===1?[]:['n'+((arc-1)*3)],dialogue:id==='b4'}));
+  // New stories reuse the established rental-army gradient, never the old node IDs.
+  function historicalNodes(mainPrefix,sidePrefix,story,baseline){
+    return story.map(([name,intro,objective,victory],i)=>{const source=baseline[i],id=(i<9?mainPrefix:sidePrefix)+(i<9?i+1:i-8),arc=source.arc;return {id,name,arc,army:{...source.army},intro,objective,victory,defeat:name+'仍有守军，补租后可重试，也可先取支线支援。',kind:i<9?'main':'side',requires:i<9?(i===0?[]:[mainPrefix+i]):arc===1?[]:[mainPrefix+((arc-1)*3)],dialogue:i===12};});
+  }
+  const eunuchNodes=historicalNodes('t','u',[
+    ['京师救民','宫中政变传到街市，百姓被乱军截住。','击退街市乱军，沿粮道进入京师。','街市得安，勤王军找到宫门前路。'],
+    ['粮道清障','粮车停在宫道，盾兵守住辎重。','清开宫道，查明张让近卫的位置。','宫道已通，近卫营阵形显露。'],
+    ['宫门近卫','近卫据粮列阵，阻住勤王军。','击败近卫；夺回粮仓可解除攻击优势。','近卫败退，勤王军进入禁苑外围。'],
+    ['禁苑外围','禁苑盾阵护住弓手，乱军仍在交战。','突破外围军阵，接应禁苑内的百姓。','外围守军退去，洛桥方向开放。'],
+    ['洛桥争夺','洛桥两端互相呼应，枪骑扼住归路。','清除桥头军阵，打通皇城撤离路线。','洛桥已通，宫道督军现出主阵。'],
+    ['宫道督军','督军列盾护弓，军械库仍被扣押。','击败督军；支线军械可使本轮攻击增加。','宫道督军败退，北宫道路开放。'],
+    ['北宫接应','勤王军被截在北宫，援军传来旗号。','击退北宫守军，接应失散的勤王军。','北宫军阵已散，河宫哨阵就在前方。'],
+    ['河宫哨阵','河宫骑兵保护内侍，哨阵封住出口。','击退哨阵，追上张让率领的近卫。','河宫哨阵退去，张让已无退路。'],
+    ['张让决战','张让率最后近卫列阵，宫中乱局将定。','击败张让完成本轮；取密诏可削弱防御。','张让近卫败退，京师乱局暂定，统一结算。'],
+    ['救援勤王军','勤王军散兵被困街巷，请你从侧面接应。','击退围兵，本轮补租池增加500人。','勤王军得救，本轮补租池增加500人。'],
+    ['夺回内仓','内仓仍向宫门近卫供粮，守卫封住巷口。','夺回内仓情报，解除近卫攻击优势。','内仓得保，宫门近卫攻击优势解除。'],
+    ['接应军械匠','军械匠被困禁苑，愿把器械送入军中。','本轮攻击+8%，终战守军−5%。','军械入军，本轮攻击+8%，终战守军−5%。'],
+    ['护送太医','太医背着药囊等待接应，愿救治勤王伤者。','护送太医，获得200人救治额度。','太医随军，本轮获得200人救治额度。'],
+    ['解围北军','北军被围在河宫侧道，发来接应旗号。','解围北军，本轮补租池增加500人。','北军得救，本轮补租池增加500人。'],
+    ['取得密诏','宫中来使藏有密诏；先问宫门，守卫以归营作答。','取得近卫军情，解除张让防御优势。','密诏入手，张让防御优势解除。']
+  ],nodes);
+  const dongNodes=historicalNodes('d','e',[
+    ['曹阳牵制','联军前锋抵达曹阳，西凉军阻住辎重。','击退西凉前阵，接通联军前锋。','曹阳军阵已散，汜水战线开放。'],
+    ['汜水接战','汜水守军列枪护弓，骑阵从侧翼逼近。','突破汜水军阵，查明华雄营位。','汜水守军败退，华雄主阵显露。'],
+    ['华雄营阵','华雄据营设伏，弓兵守住两翼。','击败华雄；查探骑阵可解除弓兵攻击优势。','华雄营阵溃散，联军向荥阳推进。'],
+    ['荥阳对峙','荥阳前线盾阵紧密，弓手护住补给。','击退荥阳军阵，掩护联军继续推进。','荥阳前线得通，虎牢骑阵进入视野。'],
+    ['虎牢骑阵','虎牢前的枪盾部队护住骑兵集结。','破开外围军阵，逼近吕布主阵。','外围骑阵退去，吕布前来接战。'],
+    ['吕布接战','吕布军阵借辎重固守，弓盾交错。','击退吕布军阵；夺军械可解除防御优势。','吕布军阵退去，洛阳外围道路开放。'],
+    ['洛阳外营','洛阳外营枪骑并进，试图截断联军。','击退外营，接应勤王援军。','洛阳外营败退，西凉后阵显露。'],
+    ['西凉后阵','西凉盾兵护弓，董卓退兵的旗号将起。','击退后阵，抢在退兵前完成最后接战。','后阵已散，董卓主阵就在前方。'],
+    ['董卓决战','董卓率西凉主阵接战，欲保住最后营地。','击败董卓完成本轮；营图可削弱防御。','董卓军阵败退，联军得胜，本轮统一结算。'],
+    ['救援联军前锋','联军前锋被困山道，旗号仍在抵抗。','救出前锋，本轮补租池增加500人。','前锋脱困，本轮补租池增加500人。'],
+    ['查探骑阵','侦骑传来敌阵动向，哨兵堵住小道。','取得骑阵情报，解除华雄弓兵攻击优势。','骑阵情报到手，华雄弓兵攻击优势解除。'],
+    ['夺回军械','军械辎重停在荥阳，盾兵护住工匠。','本轮攻击+8%，解除吕布防御优势，终战守军−5%。','军械得保，本轮攻击+8%，吕布防御优势解除，终战守军−5%。'],
+    ['护送联军医官','医官正在等待联军护送，可收治伤者。','护送医官，获得200人救治额度。','医官抵达，本轮获得200人救治额度。'],
+    ['接应勤王援军','勤王援军被西凉骑兵截在侧道。','解围援军，本轮补租池增加500人。','援军抵达，本轮补租池增加500人。'],
+    ['夺得西凉营图','西凉传令使携带营图；先问营门，哨兵以归营作答。','取得营图，解除董卓主阵防御优势。','西凉营图到手，董卓防御优势解除。']
+  ],nanNodes);
   const campaigns={
     yellow_turban:{id:'yellow_turban',name:'黄巾之乱',arcs:['张梁：断粮救民','张宝：破围夺营','张角：广宗决战'],mainIds:MAIN_IDS,sideIds:SIDE_IDS,finalNode:'m9',minLevel:5,boxItem:'yellowEquipmentBox',setId:'yellow_turban',tier:2,baseReward:{prestige:1000,xp:160},sideReward:{prestige:100,xp:16},pool:3000,limit:800,prefix:'yellow',rescue:['s1','s5'],medical:'s4',attackSide:'s3',supplySide:'s3',discover:'s2',relicNode:'m2',relic:'compass',infiltration:'s6',answer:'rise'},
     nanman:{id:'nanman',name:'南蛮入侵',arcs:['林地：边寨接战','藤甲：渡口破阵','蛮营：孟获决战'],mainIds:nanNodes.filter(n=>n.kind==='main').map(n=>n.id),sideIds:nanNodes.filter(n=>n.kind==='side').map(n=>n.id),finalNode:'n9',minLevel:10,boxItem:'barbarianEquipmentBox',setId:'nanman',tier:3,baseReward:{prestige:1200,xp:200},sideReward:{prestige:100,xp:20},pool:3000,limit:800,prefix:'nanman',rescue:['b1','b5'],medical:'b4',attackSide:null,supplySide:'b3',discover:'b2',relicNode:'n2',relic:'mask',infiltration:'b6',answer:'forest'}
   };
+  for(const [id,name,ns,minLevel,baseReward,boxItem,setId,tier,arcs,boss] of [
+    ['ten_eunuchs','十常侍之乱',eunuchNodes,15,{prestige:1400,xp:240},'yellowEquipmentBox','yellow_turban',2,['京师：断粮救民','禁苑：接应勤王','河宫：平定乱局'],'张让'],
+    ['dongzhuo','讨伐董卓',dongNodes,20,{prestige:1600,xp:280},'barbarianEquipmentBox','nanman',3,['汜水：联军接战','虎牢：截械破阵','洛阳：西凉决战'],'董卓']
+  ]){const mainIds=ns.filter(n=>n.kind==='main').map(n=>n.id),sideIds=ns.filter(n=>n.kind==='side').map(n=>n.id);campaigns[id]={id,name,arcs,boss,mainIds,sideIds,finalNode:mainIds[8],minLevel,boxItem,setId,tier,boxNote:'复用'+(setId==='yellow_turban'?'黄巾':'蛮族')+'套装箱，品质与随机七部位不变',baseReward,sideReward:{prestige:100,xp:20},pool:3000,limit:800,prefix:id,rescue:[sideIds[0],sideIds[4]],medical:sideIds[3],attackSide:sideIds[2],supplySide:sideIds[2],discover:sideIds[1],relicNode:null,relic:null,infiltration:sideIds[5],answer:'return',support:id==='ten_eunuchs'?[{node:mainIds[2],side:sideIds[1],stat:'attack',factor:1.05},{node:mainIds[8],side:sideIds[5],stat:'defense',factor:1.1}]:[{node:mainIds[2],side:sideIds[1],stat:'archerAttack',factor:1.08},{node:mainIds[5],side:sideIds[2],stat:'defense',factor:1.12},{node:mainIds[8],side:sideIds[5],stat:'defense',factor:1.1}]};}
+  const nodeLists={yellow_turban:nodes,nanman:nanNodes,ten_eunuchs:eunuchNodes,dongzhuo:dongNodes};
   nodes.find(n=>n.id==='s6').intro='口令先说黄天，守卫答当立；祭坛仍需攻下。';
-  const clone=x=>JSON.parse(JSON.stringify(x)),list=id=>id==='yellow_turban'?nodes:id==='nanman'?nanNodes:null;
+  const clone=x=>JSON.parse(JSON.stringify(x)),list=id=>Object.hasOwn(nodeLists,id)?nodeLists[id]:null;
   function config(id='yellow_turban'){return Object.hasOwn(campaigns,id)?clone(campaigns[id]):null;}
   function catalog(){return Object.values(campaigns).map(c=>({id:c.id,name:c.name,minLevel:c.minLevel,boxItem:c.boxItem}));}
   function validCompleted(done,campaign='yellow_turban'){const ns=list(campaign);return !!ns&&Array.isArray(done)&&new Set(done).size===done.length&&done.every(id=>ns.some(n=>n.id===id))&&done.every(id=>ns.find(n=>n.id===id).requires.every(dep=>done.includes(dep)));}
@@ -16334,7 +16377,8 @@ const BattlefieldSystem=(()=>{
   function nodeForRun(r,id,route='normal',applySupply=true){
     const c=BattlefieldData.config(r.campaign),n=BattlefieldData.get(id,r.campaign);if(!n||!c)return null;n.army=clone(r.enemySnapshot?.[id]||n.army);n.route=route;n.armyAttack={};n.commander={name:n.name,title:c.name,attack:1,defense:1};
     if(c.id==='yellow_turban'){if(id==='m3'&&!r.completed.includes('s2'))n.commander.attack=1.05;if(id==='m9'&&!r.completed.includes('s6'))n.commander.defense=1.1;if(id==='s6'&&route==='infiltration')delete n.army.archer;}
-    else {if(id==='n3'&&!r.completed.includes('b2'))n.armyAttack.archer=1.08;if(id==='n6'&&!r.completed.includes('b3'))n.commander.defense=1.12;if(id==='n9'&&!r.completed.includes('b6'))n.commander.defense=1.1;if(id==='b2'&&route==='hidden'||id==='b6'&&route==='infiltration')delete n.army.archer;}
+    else if(c.id==='nanman'){if(id==='n3'&&!r.completed.includes('b2'))n.armyAttack.archer=1.08;if(id==='n6'&&!r.completed.includes('b3'))n.commander.defense=1.12;if(id==='n9'&&!r.completed.includes('b6'))n.commander.defense=1.1;if(id==='b2'&&route==='hidden'||id==='b6'&&route==='infiltration')delete n.army.archer;}
+    else {for(const effect of c.support||[])if(id===effect.node&&!r.completed.includes(effect.side)){if(effect.stat==='archerAttack')n.armyAttack.archer=effect.factor;else n.commander[effect.stat]=effect.factor;}if(id===c.discover&&route==='hidden'||id===c.infiltration&&route==='infiltration')delete n.army.archer;}
     if(applySupply)n.army=finalArmy(r,n);return n;
   }
   function finishNode(s,b,won,api,endedBy){const r=active(s);if(!r||r.battle!==b||b.finished||b.runId!==r.id||r.selectedNode!==b.node)return '战场快照不匹配';const back=blank(api),lost=blank(api),recovered=blank(api);
@@ -16349,7 +16393,7 @@ const BattlefieldSystem=(()=>{
     const c=BattlefieldData.config(r.campaign),n=nodeForRun(r,b.node,b.route,b.supplyEffect!==undefined);if(!n||n.dialogue||b.supplyEffect!==undefined&&(!object(b.supplyEffect)||Object.keys(b.supplyEffect).length!==2||b.supplyEffect.version!==1||b.supplyEffect.side!==supplyEffect(r,n).side)||!['normal','hidden','infiltration'].includes(b.route)||b.route==='hidden'&&(b.node!==c.discover||!r.routeDiscovered)||b.route==='infiltration'&&r.infiltration[b.node]!=='infiltration'||r.infiltration[b.node]&&b.route!==r.infiltration[b.node]||!Array.isArray(b.player)||!Array.isArray(b.enemy)||!b.player.length||!b.enemy.length||!object(b.orders)||!object(b.enemyOrders)||!Array.isArray(b.log)||b.log.length>40||b.log.some(x=>typeof x!=='string'||x.length>1000)||!BattleStratagems.valid(b,api))return false;
     if(b.finished?(b.result?.won?!r.completed.includes(b.node):r.selectedNode!==b.node):r.selectedNode!==b.node||!BattlefieldData.available(r.completed,r.campaign).includes(b.node))return false;
     if(!BattlefieldData.validCompleted(b.completedBefore,r.campaign)||JSON.stringify(b.completedBefore)!==JSON.stringify(r.completed.filter(id=>!(b.finished&&b.result?.won&&id===b.node))))return false;
-    const bonus=b.completedBefore.includes('s3')?1.08:1;
+    const bonus=c.attackSide&&b.completedBefore.includes(c.attackSide)?1.08:1;
     for(const [side,rows,orders] of [['player',b.player,b.orders],['enemy',b.enemy,b.enemyOrders]]){
       if(new Set(rows.map(row=>row.id)).size!==rows.length||Object.keys(orders).length!==rows.length)return false;
       for(const row of rows){const base=side==='player'?r.unitSnapshot[row.id]:api.units[row.id],expected=base?{hp:base.hp,atk:base.atk*(side==='player'?bonus:n.armyAttack[row.id]||1),def:base.def,speed:base.speed,range:base.range}:null;
@@ -17469,7 +17513,7 @@ const Game = (() => {
     const lesson=context?.kind==='lesson'?context.lesson:null,battlefield=context?.kind==='battlefield';
     const finish=(won,why)=>lesson?TacticalLessons.finish(lesson,won):battlefield?BattlefieldSystem.finishNode(state,b,won,battlefieldApi(),why):finishBattle(won,false,why);
     if(!b||b.finished)return b||null;if(b.rules===3&&!tacticsAvailable())return '此模式暂不支持名将计谋战斗';
-    if(!lesson&&(b.round>=30||!b.player.some(r=>r.hp>0)||!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp)){const error=finish(b.player.some(r=>r.hp>0)&&!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp);save();return error||b;}
+    if(!lesson&&(b.round>=30||!b.player.some(r=>r.hp>0)||!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp)){const error=finish(b.player.some(r=>r.hp>0)&&!b.enemy.some(r=>r.hp>0)&&!b.gate?.hp);if(!battlefield)save();return error||b;}
     if(!b.generalSnapshot)for(const row of b.player){const baseStats=unitStats(row.id),stats=b.mountProfile?HeroSystem.speedStats(baseStats,row.id,b.mountProfile):baseStats;row.hp=Math.min(row.initial*stats.hp,row.hp/row.stats.hp*stats.hp);row.maxHp=row.initial*stats.hp;row.stats=stats;}b.round++;
     const tactics=b.rules===3&&!!b.stratagem;
     normalizeBattleTargets(b);
@@ -17550,7 +17594,7 @@ const Game = (() => {
     else if(!lesson&&rule?.kind==='timeLimit'&&b.round>=rule.rounds){pushLog(b,'已到第 '+rule.rounds+' 回合：董卓焚城撤走，本次攻打失败。');finish(false,'timeout');}
     else if(!living(b.player).length||b.round>=30){if(b.round>=30)pushLog(b,lesson?'演练达到回合上限，可重开比较指令。':'达到回合上限，'+(b.gate?.hp>0?'城防仍未攻破'+(living(b.enemy).length?'且守军尚未清空':''):'守军尚未清空')+'，本次攻打失败。');finish(false);}
     else if(lesson&&!TacticalLessons.practical(lesson.id)&&TacticalLessons.objectiveMet(lesson))finish(false);
-    if(!lesson){if(tactics&&!b.finished)planEnemyTactic(b,node);save();}return b;
+    if(!lesson){if(tactics&&!b.finished)planEnemyTactic(b,node);if(!battlefield)save();}return b;
   }
   function finishBattle(won,retreated=false,endedBy){
     const b=state.battle,e=state.expedition;if(!b||b.finished)return;
@@ -17874,7 +17918,7 @@ const Game = (() => {
   const battlefieldView=(campaign='yellow_turban',difficulty='simple')=>BattlefieldSystem.view(state,battlefieldApi(),campaign,difficulty);
   const battlefieldQuote=(id,army,campaign='yellow_turban',difficulty='simple')=>BattlefieldSystem.quote(state,id,army,battlefieldApi(),campaign,difficulty);
   function battlefieldAction(name,...args){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const previous=CitySystem.clone(state),error=BattlefieldSystem[name](state,...args,battlefieldApi());if(!error&&!save()){state=previous;CitySystem.capture(state);return '存档失败，请重试';}return error;}
-  function openBattlefieldBox(campaign='yellow_turban'){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const error=BattlefieldSystem.openBox(state,battlefieldApi(),campaign);if(!error)save();return error;}
+  function openBattlefieldBox(campaign='yellow_turban'){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const previous=CitySystem.clone(state),error=BattlefieldSystem.openBox(state,battlefieldApi(),campaign);if(!error&&!save()){state=previous;CitySystem.capture(state);return '存档失败，请重试';}return error;}
   const claimBattlefieldRelic=id=>battlefieldAction('claimRelic',id);
   const attemptBattlefieldInfiltration=(node,answer)=>battlefieldAction('attemptInfiltration',node,answer);
   const discoverBattlefieldRoute=()=>battlefieldAction('discoverRoute');
@@ -17884,23 +17928,23 @@ const Game = (() => {
   function enterBattlefieldNode(id,choice='normal'){
     if(!tacticsAvailable())return '剧本战场仅在单机模式开放';
     if(lessonSession||state.battle&&!state.battle.finished||CitySystem.list(state).some(c=>CitySystem.scope(state,c).cityDefense.battle))return '请先结束当前战斗或演练';
-    const error=BattlefieldSystem.enter(state,id,choice,battlefieldApi());if(error)return error;
-    const r=state.battlefields.run;if(r.selectedNode){r.battle=createBattlefieldBattle(r,BattlefieldSystem.nodeForRun(r,id,choice));battlefieldScreenActive=true;}save();return null;
+    const previous=CitySystem.clone(state),screen=battlefieldScreenActive,error=BattlefieldSystem.enter(state,id,choice,battlefieldApi());if(error)return error;
+    const r=state.battlefields.run;if(r.selectedNode){r.battle=createBattlefieldBattle(r,BattlefieldSystem.nodeForRun(r,id,choice));battlefieldScreenActive=true;}if(!save()){state=previous;CitySystem.capture(state);battlefieldScreenActive=screen;return '存档失败，请重试';}return null;
   }
   function createBattlefieldBattle(r,n){
     const frozen=withCityScope(r.sourceCity,()=>({general:{...general(r.general)},skill:GeneralGrowth.profile(state,r.general),mount:HeroSystem.mountProfile(state,r.general),proc:LegendaryWeapons.procChance(state,r.general)}));
     const currentTech=CitySystem.scope(state,state.realm.cities[r.sourceCity]).tech;
     frozen.general.lead=frozen.general.lead/(1+currentTech.leadership*.1)*(1+r.techSnapshot.leadership*.1);
-    const rows=(army,enemy)=>Object.entries(army).filter(([,count])=>count>0).map(([id,count])=>{let stats=enemy?{...unitStats(id,false),atk:unitStats(id,false).atk*(n.armyAttack[id]||1)}:{...r.unitSnapshot[id],atk:r.unitSnapshot[id].atk*(r.completed.includes('s3')?1.08:1)};if(!enemy)stats=HeroSystem.speedStats(stats,id,frozen.mount);return {id,initial:count,stats,hp:count*stats.hp,maxHp:count*stats.hp,pos:0,defending:false};});
+    const rows=(army,enemy)=>Object.entries(army).filter(([,count])=>count>0).map(([id,count])=>{let stats=enemy?{...unitStats(id,false),atk:unitStats(id,false).atk*(n.armyAttack[id]||1)}:{...r.unitSnapshot[id],atk:r.unitSnapshot[id].atk*(r.completed.includes(BattlefieldData.config(r.campaign).attackSide)?1.08:1)};if(!enemy)stats=HeroSystem.speedStats(stats,id,frozen.mount);return {id,initial:count,stats,hp:count*stats.hp,maxHp:count*stats.hp,pos:0,defending:false};});
     const player=rows(r.army,false),enemy=rows(n.army,true),length=battleLength([...player,...enemy]);for(const row of enemy)row.pos=length;
     const orders=rows=>Object.fromEntries(rows.map(row=>[row.id,{command:'advance',target:''}]));
     const b={kind:'battlefield',supplyEffect:BattlefieldSystem.supplyEffect(r,n),route:n.route,runId:r.id,completedBefore:[...r.completed],rules:3,length,node:n.id,general:r.general,sourceCity:r.sourceCity,generalSnapshot:frozen.general,skillProfile:frozen.skill,traitProfile:HeroTraits.profile(state,r.general),mountProfile:frozen.mount,legendProcChance:frozen.proc,mode:'raid',siege:false,gate:null,militia:0,round:0,machineGateAttacks:0,currentRoundSummary:{round:0,events:[]},player,enemy,orders:orders(player),enemyOrders:orders(enemy),enemyGeneralSnapshot:{id:'enemy_'+n.id,name:n.name,wildLine:'',atk:0,def:0,pol:0,wis:0,lead:0},log:[n.intro],auto:false,finished:false,result:null};
     b.facts=BattleReview.createFacts(b);b.stratagem=BattleStratagems.create(b,{player:b.generalSnapshot,enemy:b.enemyGeneralSnapshot});return b;
   }
-  function battlefieldOrder(unit,command,target=''){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const b=state.battlefields?.run?.battle;if(!b||b.finished||!b.player.some(row=>row.id===unit&&row.hp>0)||!['advance','hold','fallback'].includes(command)||target!==''&&!b.enemy.some(row=>row.id===target))return '战场指令无效';b.orders[unit]={command,target};save();return null;}
+  function battlefieldOrder(unit,command,target=''){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';const b=state.battlefields?.run?.battle;if(!b||b.finished||!b.player.some(row=>row.id===unit&&row.hp>0)||!['advance','hold','fallback'].includes(command)||target!==''&&!b.enemy.some(row=>row.id===target))return '战场指令无效';const previous=CitySystem.clone(state);b.orders[unit]={command,target};if(!save()){state=previous;CitySystem.capture(state);return '存档失败，请重试';}return null;}
   function resumeBattlefieldBattle(){if(!tacticsAvailable())return '剧本战场仅在单机模式开放';if(lessonSession||state.battle&&!state.battle.finished||CitySystem.list(state).some(c=>CitySystem.scope(state,c).cityDefense.battle))return '请先结束当前战斗或演练';if(!BattlefieldSystem.locked(state))return '暂无进行中的战场战斗';battlefieldScreenActive=true;return null;}
   function pauseBattlefieldBattle(){battlefieldScreenActive=false;return null;}
-  function battlefieldRound(){const b=state.battlefields?.run?.battle;if(!b||b.finished)return b||'尚未进入战场地点';const error=resumeBattlefieldBattle();if(error)return error;const result=resolveBattleRound(b,{kind:'battlefield',node:BattlefieldSystem.nodeForRun(state.battlefields.run,b.node,b.route,b.supplyEffect!==undefined)});if(b.finished)battlefieldScreenActive=false;return result;}
+  function battlefieldRound(){const b=state.battlefields?.run?.battle;if(!b||b.finished)return b||'尚未进入战场地点';const previous=CitySystem.clone(state),screen=battlefieldScreenActive,error=resumeBattlefieldBattle();if(error)return error;const result=resolveBattleRound(b,{kind:'battlefield',node:BattlefieldSystem.nodeForRun(state.battlefields.run,b.node,b.route,b.supplyEffect!==undefined)});if(typeof result==='string'){state=previous;CitySystem.capture(state);battlefieldScreenActive=screen;return result;}if(!save()){state=previous;CitySystem.capture(state);battlefieldScreenActive=screen;return '存档失败，请重试';}if(b.finished)battlefieldScreenActive=false;return result;}
   const battlefieldCanEquip=id=>state.battlefields?.run?.general===id&&!BattlefieldSystem.locked(state)&&!otherGeneralBusy(id);
 
   const reinforceBattlefield=army=>battlefieldAction('reinforce',army);
