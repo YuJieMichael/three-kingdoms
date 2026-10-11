@@ -1,0 +1,576 @@
+{
+  "version": "0.34.72",
+  "sourceRevision": "c4cf292ed4d991653e053883de7190faf1c1ef23",
+  "note": "Original CUA JPEG bytes, no pixel edits. Task-stage captures retained; version-390 and fresh-browser-check refreshed after final fix. Desktop responsive viewports, physical Safari unverified. Pre-fix reports retain original revision.",
+  "files": [
+    {
+      "path": "balance-6a03a16.json",
+      "bytes": 530385,
+      "sha256": "c4f9f8b314e0c43e6338c6875246d2f98f92b9b1fc5b15b5bd7df97aec33aed7"
+    },
+    {
+      "path": "balance-6a03a16.log",
+      "bytes": 2953,
+      "sha256": "27e7ffc5ec4fcb35b56276f7d0f7df77a54015f44a8e49c0bcc2e053d854298f"
+    },
+    {
+      "path": "balance-c4cf292.log",
+      "bytes": 2953,
+      "sha256": "27e7ffc5ec4fcb35b56276f7d0f7df77a54015f44a8e49c0bcc2e053d854298f"
+    },
+    {
+      "path": "campaign-catalog-1280.jpg",
+      "bytes": 69761,
+      "sha256": "b10881402ac8482edc0718e1ff3573b4d1af6d59de692041f2e7f8144e51d4ea",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "campaign-catalog-390.jpg",
+      "bytes": 41733,
+      "sha256": "41287382ed01ec5b36be46ab35f3eb65954a14c962a12be791633d37ba6d3839",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "campaign-catalog-440.jpg",
+      "bytes": 46093,
+      "sha256": "87f4d0552b586cd884c9a8cf43666dbb8a03d77a22e3c1bbe71156e556eeb20b",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "campaign-dongzhuo-1280.jpg",
+      "bytes": 67967,
+      "sha256": "0a09e5dee92ae66dcbc9a838ecce4dcc856186e90bfab5e12302e5e481a40b1e",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "campaign-dongzhuo-390.jpg",
+      "bytes": 38007,
+      "sha256": "08ac7acd919faa799f15a063a473e0ca015b4c7f43cdae1d43a2a0a3744df7b6",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "campaign-dongzhuo-440.jpg",
+      "bytes": 45144,
+      "sha256": "dd196493230fcb4c70c8c83a8f01d156b3f38c09fb632bb1b23a48eacc112b39",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "campaign-dongzhuo-route-1280.jpg",
+      "bytes": 74306,
+      "sha256": "de91ab051751fb4786940d9d087b02aae10c603c5f7897ccdc578b0461cff498",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "campaign-dongzhuo-route-390.jpg",
+      "bytes": 47100,
+      "sha256": "90a2e67b15c769dd25df99ffa547b38cea0df99c9a5d93291592434de1fbd797",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "campaign-dongzhuo-route-440.jpg",
+      "bytes": 52292,
+      "sha256": "2ecbfc544efd6b68359ac829d865f925df5b161dc68333efd6180d0b3dca2488",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "campaign-ten_eunuchs-1280.jpg",
+      "bytes": 66773,
+      "sha256": "61ccabec19ceab6bd622871d95cf367047fe0b39fa896fab7df9aa59d53b95cd",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "campaign-ten_eunuchs-390.jpg",
+      "bytes": 37477,
+      "sha256": "bb19b5dd469ad6e9767475658ee849daffa6eb32c697706bac9c5434141ce670",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "campaign-ten_eunuchs-440.jpg",
+      "bytes": 44100,
+      "sha256": "a97eaa896c44609a5967078692e1913e43f18fb7052c03f064fcb33c5ed7f66e",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "campaign-ten_eunuchs-battle-1280.jpg",
+      "bytes": 46184,
+      "sha256": "9f301134f3541aa70fd62d4bbfd2e480a4422c6bcfff00d363aa80291fac4e07",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "campaign-ten_eunuchs-battle-390.jpg",
+      "bytes": 25096,
+      "sha256": "a72c68c8214b1e7100e1063dd530512809bcef73b6ef4858f6b75dc37c3a8817",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "campaign-ten_eunuchs-battle-440.jpg",
+      "bytes": 27479,
+      "sha256": "3666cfb11625ebc1aec8a806da3c3206d23225d0237480fab577eed8fc84d37d",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "campaign-ten_eunuchs-route-390.jpg",
+      "bytes": 45887,
+      "sha256": "1544cb5115fbb9e56a9d44aa5aaff0977b9a40076048c73b3696885d9c397f7c",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "campaign-ten_eunuchs-story-1280.jpg",
+      "bytes": 40313,
+      "sha256": "659f49694aae0d390408ba7c88764a7fd8b9dd9bf68e2a9d0c7f84fafca8110c",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "campaign-ten_eunuchs-story-390.jpg",
+      "bytes": 19263,
+      "sha256": "cce401010142244399519cbb5aad90ca5cd36b080ad8f87dd17a4c199631d95f",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "campaign-ten_eunuchs-story-440.jpg",
+      "bytes": 21929,
+      "sha256": "c2be94fa605eceb1d6b90eae906382bf80ab311cc6b7f5c4e87741ab97c9862f",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "earned-chapters-7.json",
+      "bytes": 377772,
+      "sha256": "cd9874f23f2bfb2c200ffc7de344925026700a1565a331b8f254a4a8c68972e7"
+    },
+    {
+      "path": "earned-siege-7.json",
+      "bytes": 711260,
+      "sha256": "9b4040026558103cf1feb9674c4e47845b57cce8b735c4d8fd62979edca47ee9"
+    },
+    {
+      "path": "faction-camp-1280.jpg",
+      "bytes": 71815,
+      "sha256": "a61a52590271399ca6cd52edd378c0a0144950ea61a28d47bbdf3b731b13aefc",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "faction-camp-390.jpg",
+      "bytes": 42383,
+      "sha256": "b4442b04c10f65894b1f6cf527a0b7a9ab5cac2cac45930b494e7eab9725ed2d",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "faction-camp-440.jpg",
+      "bytes": 51524,
+      "sha256": "a0ddf30d6ee917e0843919d64a88c218a1cb1585afcff82a43848c146ce3cb48",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "factions-1280.jpg",
+      "bytes": 46808,
+      "sha256": "6f3c29928fa28422542d878c6e13bb2c2e606682da7e094bd5f42c6371d625a3",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "factions-390.jpg",
+      "bytes": 27120,
+      "sha256": "b1e3caef3d2fb4b280ec49a7d3614da789a71b12efe3dfc633e13f9c4072476c",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "factions-440.jpg",
+      "bytes": 29402,
+      "sha256": "950b7e7f6a332215477ac69f56f7b5a53bbee459070699b2d9177fde8cda7601",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "factions-harness-read-error.json",
+      "bytes": 29093,
+      "sha256": "e1b9686d935e00309ead6b630495819c634c1e53af57ccf52e29c22cfc606413"
+    },
+    {
+      "path": "fresh-browser-check.json",
+      "bytes": 267,
+      "sha256": "c6e87220b396a78c519242ea88c6ceed9efed3c658c5d73aebfc53d4ecb4939b"
+    },
+    {
+      "path": "heroes-1280.jpg",
+      "bytes": 69357,
+      "sha256": "ab75f75611eb6de39dd98fa79362eb1751118c3bdd10419049c261e793b93712",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "heroes-390.jpg",
+      "bytes": 33950,
+      "sha256": "dce7dd55e6bd20bace579b244a54aa20d603075ce9f6150997441c1b8810f182",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "heroes-440.jpg",
+      "bytes": 39120,
+      "sha256": "0de99b7275fe61426cdac3b2d39a41680f97baf8bdaf9ebd9f3dd65d88fbbb69",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "hospital-1280.jpg",
+      "bytes": 57459,
+      "sha256": "54384e1478e6749b5ff3b561fef34875b6343e9cc9cc0c0805449c3541af888f",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "hospital-390.jpg",
+      "bytes": 34751,
+      "sha256": "793e264d736872a3510cfc009e420328d0062097c3e32e7ebb9b6220d98e0e6a",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "hospital-440.jpg",
+      "bytes": 38128,
+      "sha256": "351160f33ba28c64ddfc6a52b0ef782c9034591eee9217f3de97d7347f95104f",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "lesson-shield-1280.jpg",
+      "bytes": 93542,
+      "sha256": "c125590ba10f821310b2917fbd33fd34680606ecd9d85813ffc70fee7d23326b",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "lesson-shield-390.jpg",
+      "bytes": 48646,
+      "sha256": "a26127b767ab28653cd7521981293c85fe7c18a282fe85c2b1a43dfe3fa272d3",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "lesson-shield-440.jpg",
+      "bytes": 54178,
+      "sha256": "16c2059b4507e8894db1d45ca966ea2ee2504d0e446ebc184b4459254e67047d",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "lesson-siege-1280.jpg",
+      "bytes": 117695,
+      "sha256": "04f1007d32a3577c486381a0c483935852fff57a4db9ccf2bd92fb1547bdd5dc",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "lesson-siege-390.jpg",
+      "bytes": 57692,
+      "sha256": "5555c0612936d9cd3c1c6d81e65b79d1419b7fea65b28b75f4bc67fdc90a86b5",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "lesson-siege-440.jpg",
+      "bytes": 66308,
+      "sha256": "2b16517ec1a8e372fd18533da9379eca6ccb7d9dc5be7cabcee9d244f1036c79",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "lesson-siege-win-390.jpg",
+      "bytes": 52319,
+      "sha256": "03838c5471f971b47e0d989493500cb51f0d573311d6452c562ef4bc7777784b",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "lesson-spear-1280.jpg",
+      "bytes": 92051,
+      "sha256": "9cf1f7e5291ad9e95a78832096a653c83c5a531a9c2777303af1e1ea25c116b5",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "lesson-spear-390.jpg",
+      "bytes": 48037,
+      "sha256": "9c5d4cb7936796c15bf88e1f87493b54028f7020b731963365b1204d1637c884",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "lesson-spear-440.jpg",
+      "bytes": 55318,
+      "sha256": "999ce7d24f36564367eb8aebf2c8218cfc1148800a625f7cbe6435a7bcb88369",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "lessons-1280.jpg",
+      "bytes": 79411,
+      "sha256": "441790acef17fba46e14a9231d720cb06242cd6fd55f4b2bd662106f101fde69",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "lessons-390.jpg",
+      "bytes": 49584,
+      "sha256": "1b7a90d294e874e1631f744630963e9b9521aabbe96a0f41c70a7b9c7922305a",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "lessons-440.jpg",
+      "bytes": 58104,
+      "sha256": "7bfa0af9007e3845a22de357269fecb2c87e01a00007ed40be6f4d0944d00cd4",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "npm-test-6a03a16.log",
+      "bytes": 115810,
+      "sha256": "7ae651c5c8f5c3de3cca7ef6f922512ebccb67c0054408d7972feb1826c06b33"
+    },
+    {
+      "path": "npm-test-c4cf292.log",
+      "bytes": 116940,
+      "sha256": "63e163df737123cb9612af2413fbfbc74927649d86c93e36319ed2e17baeecff"
+    },
+    {
+      "path": "recovery-1280.jpg",
+      "bytes": 59071,
+      "sha256": "69eccd9e4add9e6d630ed07e5223c7df0cc34fa91f2d07a16b5a1035ae723207",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "recovery-390.jpg",
+      "bytes": 32936,
+      "sha256": "d7cdd012348c23166841b9124ebd4d9244a4ca00389b8df943c9591a70d5b9c1",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "recovery-440.jpg",
+      "bytes": 39661,
+      "sha256": "874ffd7928f7c5b72d1a64b996e11707672c4efbfcbf21826de1791458cd4e3c",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "reviews/final-fix-green.log",
+      "bytes": 1266,
+      "sha256": "fd763b9d7df71a1149972a1023cf458f3f2ffbeec5b8ae48426d73018a754492"
+    },
+    {
+      "path": "reviews/final-fix-red.log",
+      "bytes": 131771,
+      "sha256": "3b2582e931fcdc8c5eee21e54fc5895d1e61bc7f576cea5b2c57f4931f9bc9ff"
+    },
+    {
+      "path": "reviews/final-fix-report.md",
+      "bytes": 5494,
+      "sha256": "8fc2ac9b624544b10fcc85a4f6721c55192d8a47f02f0ee6f15f7d96d3bf8275"
+    },
+    {
+      "path": "reviews/final-fix-review.md",
+      "bytes": 2925,
+      "sha256": "b24e1aec05cfce9263e2bb8f598adde1351011fea35151b21728d05b57fdf255"
+    },
+    {
+      "path": "reviews/final-fix-targeted.log",
+      "bytes": 16388,
+      "sha256": "b8624a6a5f50787f40954fcebdd8a679dcda7dc78a0ffb77170f24acdbc627ba"
+    },
+    {
+      "path": "reviews/final-review.md",
+      "bytes": 11040,
+      "sha256": "bb96c777230c5628b37cf0bfd52cb5c8ab33a2c442d6f10df799986d89827797"
+    },
+    {
+      "path": "reviews/task-1-report.md",
+      "bytes": 9599,
+      "sha256": "e73f3822ca50179382e2dc8759150f4ebe8daccc12f19a5d753e7cca7c74789e"
+    },
+    {
+      "path": "reviews/task-1-rereview-1.md",
+      "bytes": 1767,
+      "sha256": "76c0216507775f30208a61bb7c3518cf73fe5041a8d708093443b132d4978818"
+    },
+    {
+      "path": "reviews/task-1-review.md",
+      "bytes": 5033,
+      "sha256": "8175298ff53f143b04d7e718eab8be6355ec96c4286d054d9d6dd14835522bca"
+    },
+    {
+      "path": "reviews/task-2-report.md",
+      "bytes": 6335,
+      "sha256": "08c0a4f590527af5857e02c869e5c42b74c60373b8e2ae22cf35ddfa34007f41"
+    },
+    {
+      "path": "reviews/task-2-review.md",
+      "bytes": 2714,
+      "sha256": "053f18a2b3adb0d1b963cb2d710f421496c4e35fa0f912fcb19dcb0d7f80addf"
+    },
+    {
+      "path": "reviews/task-3-report.md",
+      "bytes": 6882,
+      "sha256": "e8ccecedb756da435df1a4690e22e4cbf326edc951023785e159f8e4427d160a"
+    },
+    {
+      "path": "reviews/task-3-review.md",
+      "bytes": 2368,
+      "sha256": "5a19231db11413e4d66f5d3609efcdbff4d0330afb122d035dbac24f785eb916"
+    },
+    {
+      "path": "reviews/task-4-fix1-review.md",
+      "bytes": 596,
+      "sha256": "4274fbade7aaf34a24309459a9da26f2bc2a35d25302db7c82256566de2d1f23"
+    },
+    {
+      "path": "reviews/task-4-report.md",
+      "bytes": 7970,
+      "sha256": "3eaa0ec26571f4ef16f179b52acc10bb46d82eec0f4b585fbb2c5c239c91939e"
+    },
+    {
+      "path": "reviews/task-4-review.md",
+      "bytes": 1754,
+      "sha256": "480a5128a7129f63b99c2a5c2b481ce44fd0ab8b211511a52dd3b826a137fb79"
+    },
+    {
+      "path": "reviews/task-5-fix1-review.md",
+      "bytes": 769,
+      "sha256": "e67efec0d2d968b2fae737b9ffa32f8525156326f4e363ac94fa73e02213aa75"
+    },
+    {
+      "path": "reviews/task-5-fix2-review.md",
+      "bytes": 468,
+      "sha256": "94a8d3a584dae18b94673f7f8092fd0e0a25c6e4b8b92d910dbb62a41de565fa"
+    },
+    {
+      "path": "reviews/task-5-report.md",
+      "bytes": 9945,
+      "sha256": "c336d64a45ded20c91112c80cbb547b13c73b8f4dc6d33a48f60fd42ece0b09f"
+    },
+    {
+      "path": "reviews/task-5-review.md",
+      "bytes": 1747,
+      "sha256": "588294c796a9fbc894ed676c8db6c1124f4661fbf2586ea709537a7310c9cfb8"
+    },
+    {
+      "path": "reviews/task-6-report.md",
+      "bytes": 5697,
+      "sha256": "3e820d7be24569d86a811b33a3f2447b4eb35b5446053413bbe96ca38156407e"
+    },
+    {
+      "path": "reviews/task-6-review.md",
+      "bytes": 4512,
+      "sha256": "a8d799736321d8909ba535f9d66112b0cfaeb950fdf841b7f2b161a81d12b0c4"
+    },
+    {
+      "path": "reviews/task-7-report.md",
+      "bytes": 9137,
+      "sha256": "5c9401c9371bb6035e62860f40aed869bfbc5bbd073c303178aacabf5a674984"
+    },
+    {
+      "path": "reviews/task-7-review.md",
+      "bytes": 6357,
+      "sha256": "5fdb74183565f34bfc4d716e46a44b318183e45e267bb561d09e03aae14d4af9"
+    },
+    {
+      "path": "sdd-ledger.md",
+      "bytes": 21809,
+      "sha256": "baa413d8ea8ab2dd694d28fab267ee35a3b3bd684eca50a894bc2e05081996b6"
+    },
+    {
+      "path": "source-recovery-1280.jpg",
+      "bytes": 39844,
+      "sha256": "07c3861b4d7d272cb6a7f7fdce07d06da6e467c909114f772ccbb7bef97c47e3",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "source-recovery-390.jpg",
+      "bytes": 19737,
+      "sha256": "074c42b8adb297e02bcf07320c71b899a9f70a1def5c0332ed01fb43c1c484ba",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "source-recovery-440.jpg",
+      "bytes": 22111,
+      "sha256": "ddc81d290ea39bf822042967e7303b94941cbaf3b82c0176de3dad863dc822d0",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "territory-1280.jpg",
+      "bytes": 60172,
+      "sha256": "b9c4744ebf9b56fcdba0e8c60143c1f704175b6322a58923633f64bc8ca894e2",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "territory-390.jpg",
+      "bytes": 37938,
+      "sha256": "f9724dedb517e9c370bcdd5f2995ce8ab913463965b8e5c6a84349b442b3caae",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "territory-440.jpg",
+      "bytes": 41703,
+      "sha256": "ded013100624a126af9b1225da8457f27748fa62eec60ad9aa1a0d0bbe4e3506",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "training-1280.jpg",
+      "bytes": 62248,
+      "sha256": "42ddccd4b9083a2fc8407e7aa136cee72695659523d03d6c6509e09721f79e1a",
+      "width": 1280,
+      "height": 900
+    },
+    {
+      "path": "training-390.jpg",
+      "bytes": 36363,
+      "sha256": "1cefdb1d1163e4f3f71401b684e4c9642cae582778757a92339496d9b35ae450",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "training-440.jpg",
+      "bytes": 43234,
+      "sha256": "636bd6bfd48513283f099c95de795e90a47a6159b2f3ea03dc4f0f8a69be3a9d",
+      "width": 440,
+      "height": 956
+    },
+    {
+      "path": "version-390.jpg",
+      "bytes": 52526,
+      "sha256": "c3bfc08270986c45313ff84e105a47d7465a2ad30417462dc8f42b5b001fa5ca",
+      "width": 390,
+      "height": 844
+    }
+  ]
+}

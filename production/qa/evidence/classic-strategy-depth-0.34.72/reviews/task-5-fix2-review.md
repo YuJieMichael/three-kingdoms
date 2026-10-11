@@ -1,0 +1,1 @@
+旧战斗胜利后返城存档非法 ADDRESSED：faction-system44 return校验来源城，不再比返城start；march/battle仍要求pre-camp出发+同城。test36真实dispatch→battlewin→return/save/reload→arrival/save/reload，冻结敌军/回执不变，坏来源及另一个真城拒绝。新增问题无，范围外无，30/30+runtime21/21日志已读且源码生成一致，未重跑/修改。All findings addressed, no new Critical/Important breakage。
