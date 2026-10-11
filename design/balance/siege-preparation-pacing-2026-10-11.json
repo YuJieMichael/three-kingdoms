@@ -1,0 +1,2317 @@
+[
+  {
+    "seed": 1,
+    "stage": "jiangling siege",
+    "hours": 744.21,
+    "error": "请选择武将",
+    "first": {
+      "hallTen": {
+        "hours": 33.191,
+        "gold": 270343.45593471697
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 35.07,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_25_50",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 35.082,
+        "enemy": 410,
+        "rounds": 4,
+        "won": true,
+        "lost": 1,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_25_50",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 1764164.2140874723,
+          "food": 2161955.4070260557,
+          "level": 12
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 57,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|57|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 35.088,
+        "noble": 2,
+        "gold": 1764166.8568942393,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 1,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 1,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 57,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|57|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 35.088,
+        "id": "local_1000000000000001",
+        "goldAfter": 1664166.8568942393,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 108,
+          "def": 91,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 12,
+          "wis": 58,
+          "lead": 120
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 57,
+          "atk": 311,
+          "def": 246,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_25_50"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1452356.536960313,
+      "wood": 44872.76719484138,
+      "stone": 721084,
+      "iron": 410955.57537129865,
+      "gold": 54856.79788490413
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 29,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 1000,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "manual",
+    "prepared": false,
+    "sieges": [
+      {
+        "id": "named_jiangling",
+        "mode": "occupy",
+        "general": "local_1000000000000001",
+        "hours": 605.73,
+        "enemy": 12500,
+        "rounds": 12,
+        "won": true,
+        "lost": 1907,
+        "army": {
+          "archer": 8000,
+          "shield": 2500,
+          "spear": 1500,
+          "cavalry": 1000,
+          "ram": 60
+        },
+        "receipt": null,
+        "before": {
+          "gold": 302370.29949159455,
+          "food": 1378836.4215312866,
+          "level": 58
+        },
+        "claimed": false
+      }
+    ],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 0,
+    "refillPreview": []
+  },
+  {
+    "seed": 1,
+    "stage": "jiangling siege",
+    "hours": 772.144,
+    "error": "Template refill observation exhausted",
+    "first": {
+      "hallTen": {
+        "hours": 33.191,
+        "gold": 270343.45593471697
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 35.07,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_25_50",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 35.082,
+        "enemy": 410,
+        "rounds": 4,
+        "won": true,
+        "lost": 1,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_25_50",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 1764164.2140874723,
+          "food": 2161955.4070260557,
+          "level": 12
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 57,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|57|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 35.088,
+        "noble": 2,
+        "gold": 1764166.8568942393,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 1,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 1,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 57,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|57|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 35.088,
+        "id": "local_1000000000000001",
+        "goldAfter": 1664166.8568942393,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 108,
+          "def": 91,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 12,
+          "wis": 58,
+          "lead": 120
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 57,
+          "atk": 311,
+          "def": 246,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_25_50"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1486003.4916391445,
+      "wood": 718.9200333928703,
+      "stone": 697084,
+      "iron": 409434.67287592904,
+      "gold": 490569.97972687567
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 29,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 308,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "template",
+    "prepared": false,
+    "sieges": [
+      {
+        "id": "named_jiangling",
+        "mode": "occupy",
+        "general": "local_1000000000000001",
+        "hours": 605.73,
+        "enemy": 12500,
+        "rounds": 12,
+        "won": true,
+        "lost": 1907,
+        "army": {
+          "archer": 8000,
+          "shield": 2500,
+          "spear": 1500,
+          "cavalry": 1000,
+          "ram": 60
+        },
+        "receipt": null,
+        "before": {
+          "gold": 302370.29949159455,
+          "food": 1378836.4215312866,
+          "level": 58
+        },
+        "claimed": false
+      }
+    ],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 378,
+    "refillPreview": [
+      {
+        "hours": 617.73,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "spear",
+            "count": 385,
+            "seconds": 13860
+          },
+          {
+            "id": "shield",
+            "count": 1,
+            "seconds": 48
+          }
+        ],
+        "cost": {
+          "food": 57950,
+          "wood": 192650,
+          "iron": 38900
+        },
+        "remaining": {
+          "spear": 1115,
+          "shield": 226,
+          "archer": 206,
+          "cavalry": 1000,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 621.594,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "spear",
+            "count": 42,
+            "seconds": 1512
+          },
+          {
+            "id": "shield",
+            "count": 2,
+            "seconds": 96
+          }
+        ],
+        "cost": {
+          "food": 6700,
+          "wood": 21300,
+          "iron": 5000
+        },
+        "remaining": {
+          "spear": 1073,
+          "shield": 224,
+          "archer": 206,
+          "cavalry": 1000,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 771.744,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "cavalry",
+            "count": 9,
+            "seconds": 1080
+          }
+        ],
+        "cost": {
+          "food": 9000,
+          "wood": 5400,
+          "iron": 4500
+        },
+        "remaining": {
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 695,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 772.044,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "cavalry",
+            "count": 3,
+            "seconds": 360
+          }
+        ],
+        "cost": {
+          "food": 3000,
+          "wood": 1800,
+          "iron": 1500
+        },
+        "remaining": {
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 692,
+          "ram": 0
+        }
+      }
+    ]
+  },
+  {
+    "seed": 1,
+    "stage": "jiangling siege",
+    "hours": 791.489,
+    "error": "Template refill observation exhausted",
+    "first": {
+      "hallTen": {
+        "hours": 33.191,
+        "gold": 270343.45593471697
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 35.07,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_25_50",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 35.082,
+        "enemy": 410,
+        "rounds": 4,
+        "won": true,
+        "lost": 1,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_25_50",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 1764164.2140874723,
+          "food": 2161955.4070260557,
+          "level": 12
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 57,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|57|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 35.088,
+        "noble": 2,
+        "gold": 1764166.8568942393,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 1,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 1,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 57,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|57|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 35.088,
+        "id": "local_1000000000000001",
+        "goldAfter": 1664166.8568942393,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 108,
+          "def": 91,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 12,
+          "wis": 58,
+          "lead": 120
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 57,
+          "atk": 311,
+          "def": 246,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_25_50"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1492500,
+      "wood": 4922.9381834694605,
+      "stone": 697084,
+      "iron": 412500,
+      "gold": 295936.79217414954
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 29,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 195,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "template-diplomacy",
+    "prepared": false,
+    "sieges": [
+      {
+        "id": "named_jiangling",
+        "mode": "occupy",
+        "general": "local_1000000000000001",
+        "hours": 605.73,
+        "enemy": 12500,
+        "rounds": 12,
+        "won": true,
+        "lost": 1907,
+        "army": {
+          "archer": 8000,
+          "shield": 2500,
+          "spear": 1500,
+          "cavalry": 1000,
+          "ram": 60
+        },
+        "receipt": null,
+        "before": {
+          "gold": 302370.29949159455,
+          "food": 1378836.4215312866,
+          "level": 58
+        },
+        "claimed": false
+      }
+    ],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 354,
+    "refillPreview": [
+      {
+        "hours": 617.73,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "spear",
+            "count": 363,
+            "seconds": 12662.790697674418
+          },
+          {
+            "id": "shield",
+            "count": 1,
+            "seconds": 46.51162790697674
+          }
+        ],
+        "cost": {
+          "food": 54650,
+          "wood": 181650,
+          "iron": 36700
+        },
+        "remaining": {
+          "spear": 1137,
+          "shield": 226,
+          "archer": 206,
+          "cavalry": 1000,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 621.261,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "spear",
+            "count": 32,
+            "seconds": 1116.2790697674418
+          },
+          {
+            "id": "shield",
+            "count": 1,
+            "seconds": 46.51162790697674
+          }
+        ],
+        "cost": {
+          "food": 5000,
+          "wood": 16150,
+          "iron": 3600
+        },
+        "remaining": {
+          "spear": 1105,
+          "shield": 225,
+          "archer": 206,
+          "cavalry": 1000,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 790.166,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "cavalry",
+            "count": 8,
+            "seconds": 930.2325581395348
+          }
+        ],
+        "cost": {
+          "food": 8000,
+          "wood": 4800,
+          "iron": 4000
+        },
+        "remaining": {
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 807,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 790.424,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "cavalry",
+            "count": 2,
+            "seconds": 232.5581395348837
+          }
+        ],
+        "cost": {
+          "food": 2000,
+          "wood": 1200,
+          "iron": 1000
+        },
+        "remaining": {
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 805,
+          "ram": 0
+        }
+      }
+    ]
+  },
+  {
+    "seed": 7,
+    "stage": "jiangling siege",
+    "hours": 664.979,
+    "error": "请选择武将",
+    "first": {
+      "hallTen": {
+        "hours": 41.727,
+        "gold": 319453.01208102924
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 43.644,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_27_49",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 43.655,
+        "enemy": 376,
+        "rounds": 3,
+        "won": true,
+        "lost": 0,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_27_49",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 1641173.5851168502,
+          "food": 1865872.1524994415,
+          "level": 12
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 58,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|58|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 43.661,
+        "noble": 2,
+        "gold": 1641175.9791829146,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 0,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 0,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 58,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|58|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 43.661,
+        "id": "local_1000000000000001",
+        "goldAfter": 1541175.9791829146,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 108,
+          "def": 91,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 12,
+          "wis": 58,
+          "lead": 120
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 58,
+          "atk": 315,
+          "def": 249,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_27_49"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1453314.4813665666,
+      "wood": 96904.65919225567,
+      "stone": 460500,
+      "iron": 329136.6548705264,
+      "gold": 106516.5348601587
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 26,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 1000,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "manual",
+    "prepared": false,
+    "sieges": [],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 0,
+    "refillPreview": []
+  },
+  {
+    "seed": 7,
+    "stage": "jiangling siege",
+    "hours": 664.979,
+    "error": "请选择合法主将、指令和目标兵力",
+    "first": {
+      "hallTen": {
+        "hours": 41.727,
+        "gold": 319453.01208102924
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 43.644,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_27_49",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 43.655,
+        "enemy": 376,
+        "rounds": 3,
+        "won": true,
+        "lost": 0,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_27_49",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 1641173.5851168502,
+          "food": 1865872.1524994415,
+          "level": 12
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 58,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|58|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 43.661,
+        "noble": 2,
+        "gold": 1641175.9791829146,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 0,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 0,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 58,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|58|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 43.661,
+        "id": "local_1000000000000001",
+        "goldAfter": 1541175.9791829146,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 108,
+          "def": 91,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 12,
+          "wis": 58,
+          "lead": 120
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 58,
+          "atk": 315,
+          "def": 249,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_27_49"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1405314.4813665666,
+      "wood": 48904.65919225566,
+      "stone": 412500,
+      "iron": 289136.6548705264,
+      "gold": 18516.5348601587
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 26,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 1000,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "template",
+    "prepared": false,
+    "sieges": [],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 0,
+    "refillPreview": []
+  },
+  {
+    "seed": 7,
+    "stage": "jiangling siege",
+    "hours": 664.979,
+    "error": "请选择合法主将、指令和目标兵力",
+    "first": {
+      "hallTen": {
+        "hours": 41.727,
+        "gold": 319453.01208102924
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 43.644,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_27_49",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 43.655,
+        "enemy": 376,
+        "rounds": 3,
+        "won": true,
+        "lost": 0,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_27_49",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 1641173.5851168502,
+          "food": 1865872.1524994415,
+          "level": 12
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 58,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|58|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 43.661,
+        "noble": 2,
+        "gold": 1641175.9791829146,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 0,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 0,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 58,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|58|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 43.661,
+        "id": "local_1000000000000001",
+        "goldAfter": 1541175.9791829146,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 108,
+          "def": 91,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 12,
+          "wis": 58,
+          "lead": 120
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 58,
+          "atk": 315,
+          "def": 249,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_27_49"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1405314.4813665666,
+      "wood": 48904.65919225566,
+      "stone": 412500,
+      "iron": 289136.6548705264,
+      "gold": 18516.5348601587
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 26,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 1000,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "template-diplomacy",
+    "prepared": false,
+    "sieges": [],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 0,
+    "refillPreview": []
+  },
+  {
+    "seed": 19,
+    "stage": "jiangling siege",
+    "hours": 777.809,
+    "error": "请选择武将",
+    "first": {
+      "hallTen": {
+        "hours": 41.193,
+        "gold": 270244.1120022608
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 43.166,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_29_49",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 43.178,
+        "enemy": 132,
+        "rounds": 4,
+        "won": true,
+        "lost": 4,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_29_49",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 2137207.5852188603,
+          "food": 2371926.8247501063,
+          "level": 13
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 58,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|58|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 43.183,
+        "noble": 2,
+        "gold": 2137210.41996623,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 0,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 0,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 58,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|58|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 43.183,
+        "id": "local_1000000000000001",
+        "goldAfter": 2037210.4199662302,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 112,
+          "def": 94,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 13,
+          "wis": 58,
+          "lead": 130
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 58,
+          "atk": 315,
+          "def": 249,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_29_49"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1460479.870303838,
+      "wood": 37956.95175457021,
+      "stone": 799990,
+      "iron": 410955.57537129865,
+      "gold": 56437.40231291202
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 26,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 1000,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "manual",
+    "prepared": false,
+    "sieges": [
+      {
+        "id": "named_jiangling",
+        "mode": "occupy",
+        "general": "local_1000000000000001",
+        "hours": 644.516,
+        "enemy": 12500,
+        "rounds": 12,
+        "won": true,
+        "lost": 1900,
+        "army": {
+          "archer": 8000,
+          "shield": 2500,
+          "spear": 1500,
+          "cavalry": 1000,
+          "ram": 60
+        },
+        "receipt": null,
+        "before": {
+          "gold": 103716.25142804557,
+          "food": 1453653.9875553786,
+          "level": 59
+        },
+        "claimed": false
+      }
+    ],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 0,
+    "refillPreview": []
+  },
+  {
+    "seed": 19,
+    "stage": "jiangling siege",
+    "hours": 817.149,
+    "error": "Template refill observation exhausted",
+    "first": {
+      "hallTen": {
+        "hours": 41.193,
+        "gold": 270244.1120022608
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 43.166,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_29_49",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 43.178,
+        "enemy": 132,
+        "rounds": 4,
+        "won": true,
+        "lost": 4,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_29_49",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 2137207.5852188603,
+          "food": 2371926.8247501063,
+          "level": 13
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 58,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|58|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 43.183,
+        "noble": 2,
+        "gold": 2137210.41996623,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 0,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 0,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 58,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|58|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 43.183,
+        "id": "local_1000000000000001",
+        "goldAfter": 2037210.4199662302,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 112,
+          "def": 94,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 13,
+          "wis": 58,
+          "lead": 130
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 58,
+          "atk": 315,
+          "def": 249,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_29_49"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1485394.6273288522,
+      "wood": 567.1245539944503,
+      "stone": 743990,
+      "iron": 409179.23064722685,
+      "gold": 370120.68056875415
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 26,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 501,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "template",
+    "prepared": false,
+    "sieges": [
+      {
+        "id": "named_jiangling",
+        "mode": "occupy",
+        "general": "local_1000000000000001",
+        "hours": 644.516,
+        "enemy": 12500,
+        "rounds": 12,
+        "won": true,
+        "lost": 1900,
+        "army": {
+          "archer": 8000,
+          "shield": 2500,
+          "spear": 1500,
+          "cavalry": 1000,
+          "ram": 60
+        },
+        "receipt": null,
+        "before": {
+          "gold": 103716.25142804557,
+          "food": 1453653.9875553786,
+          "level": 59
+        },
+        "claimed": false
+      }
+    ],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 378,
+    "refillPreview": [
+      {
+        "hours": 656.516,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "spear",
+            "count": 542,
+            "seconds": 19512
+          },
+          {
+            "id": "shield",
+            "count": 2,
+            "seconds": 96
+          }
+        ],
+        "cost": {
+          "food": 81700,
+          "wood": 271300,
+          "iron": 55000
+        },
+        "remaining": {
+          "spear": 958,
+          "shield": 220,
+          "archer": 200,
+          "cavalry": 1000,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 661.936,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "spear",
+            "count": 59,
+            "seconds": 2124
+          },
+          {
+            "id": "shield",
+            "count": 2,
+            "seconds": 96
+          }
+        ],
+        "cost": {
+          "food": 9250,
+          "wood": 29800,
+          "iron": 6700
+        },
+        "remaining": {
+          "spear": 899,
+          "shield": 218,
+          "archer": 200,
+          "cavalry": 1000,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 817.016,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "cavalry",
+            "count": 3,
+            "seconds": 360
+          }
+        ],
+        "cost": {
+          "food": 3000,
+          "wood": 1800,
+          "iron": 1500
+        },
+        "remaining": {
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 500,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 817.116,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "cavalry",
+            "count": 1,
+            "seconds": 120
+          }
+        ],
+        "cost": {
+          "food": 1000,
+          "wood": 600,
+          "iron": 500
+        },
+        "remaining": {
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 499,
+          "ram": 0
+        }
+      }
+    ]
+  },
+  {
+    "seed": 19,
+    "stage": "jiangling siege",
+    "hours": 832.831,
+    "error": "Template refill observation exhausted",
+    "first": {
+      "hallTen": {
+        "hours": 41.193,
+        "gold": 270244.1120022608
+      },
+      "discoveryGate": [
+        {
+          "line": "huaman",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "historical": true,
+          "region": "南中故事",
+          "minInn": 2,
+          "fieldLevel": 5,
+          "anchor": {
+            "x": 27,
+            "y": 50
+          },
+          "level": 6,
+          "atk": 87,
+          "def": 78,
+          "pol": 52,
+          "wis": 66,
+          "bonus": "cavalry",
+          "portraitPrice": 70,
+          "noble": 2,
+          "gold": 100000,
+          "jewels": {
+            "coral": 4,
+            "glass": 2
+          },
+          "firstCaptureBox": true,
+          "locked": true,
+          "reason": "需要爵位 上造",
+          "status": "undiscovered",
+          "portraitOwned": false,
+          "node": null,
+          "heroId": null
+        }
+      ],
+      "portrait": {
+        "hours": 43.166,
+        "gems": 70
+      },
+      "capture": {
+        "id": "wild_29_49",
+        "mode": "raid",
+        "general": "lin",
+        "hours": 43.178,
+        "enemy": 132,
+        "rounds": 4,
+        "won": true,
+        "lost": 4,
+        "army": {
+          "archer": 800
+        },
+        "receipt": {
+          "line": "huaman",
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "node": "wild_29_49",
+          "status": "captured",
+          "loyalty": 40,
+          "reason": "等待手动招降 · 首次俘获蛮族箱已入背包"
+        },
+        "before": {
+          "gold": 2137207.5852188603,
+          "food": 2371926.8247501063,
+          "level": 13
+        },
+        "claimed": false
+      },
+      "recruitQuote": {
+        "id": "local_1000000000000001",
+        "name": "花鬘",
+        "method": "gold",
+        "cost": {
+          "gold": 100000,
+          "jewels": {}
+        },
+        "level": 58,
+        "noble": 5,
+        "nobleName": "大夫",
+        "loyalty": 40,
+        "reason": "",
+        "key": "local_1000000000000001|gold|7|58|4|4|0"
+      },
+      "beforeRecruit": {
+        "hours": 43.183,
+        "noble": 2,
+        "gold": 2137210.41996623,
+        "jewels": {
+          "pearl": 1,
+          "coral": 0,
+          "glass": 0,
+          "amber": 0,
+          "agate": 0,
+          "crystal": 0,
+          "jadeite": 0,
+          "jade": 0,
+          "nightPearl": 0
+        },
+        "quote": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "method": "gold",
+          "cost": {
+            "gold": 100000,
+            "jewels": {}
+          },
+          "level": 58,
+          "noble": 5,
+          "nobleName": "大夫",
+          "loyalty": 40,
+          "reason": "",
+          "key": "local_1000000000000001|gold|7|58|4|4|0"
+        }
+      },
+      "recruited": {
+        "hours": 43.183,
+        "id": "local_1000000000000001",
+        "goldAfter": 2037210.4199662302,
+        "lin": {
+          "id": "lin",
+          "name": "林朔",
+          "title": "乡勇统领",
+          "type": "枪",
+          "atk": 112,
+          "def": 94,
+          "pol": 48,
+          "desc": "熟悉乡间地势，以长枪方阵守住阵线。",
+          "bonus": "spear",
+          "level": 13,
+          "wis": 58,
+          "lead": 130
+        },
+        "hero": {
+          "id": "local_1000000000000001",
+          "name": "花鬘",
+          "title": "南中巾帼",
+          "type": "将",
+          "level": 58,
+          "atk": 315,
+          "def": 249,
+          "pol": 52,
+          "wis": 66,
+          "lead": 240,
+          "price": 100000,
+          "bonus": "cavalry",
+          "desc": "在野名将，取材于三国史事与故事；数值与招降条件为本作试玩设定。",
+          "origin": "wild",
+          "wildLine": "huaman",
+          "sourceNode": "wild_29_49"
+        },
+        "boxes": 1
+      }
+    },
+    "stock": {
+      "food": 1485284.5997567477,
+      "wood": 295.042909932296,
+      "stone": 743990,
+      "iron": 409444.00989723095,
+      "gold": 142662.31246216976
+    },
+    "noble": 2,
+    "army": {
+      "worker": 0,
+      "militia": 26,
+      "scout": 1,
+      "spear": 1500,
+      "shield": 2500,
+      "archer": 8000,
+      "cavalry": 358,
+      "heavy": 0,
+      "wagon": 0,
+      "ballista": 0,
+      "ram": 60,
+      "catapult": 2
+    },
+    "validSave": true,
+    "route": "template-diplomacy",
+    "prepared": false,
+    "sieges": [
+      {
+        "id": "named_jiangling",
+        "mode": "occupy",
+        "general": "local_1000000000000001",
+        "hours": 644.516,
+        "enemy": 12500,
+        "rounds": 12,
+        "won": true,
+        "lost": 1900,
+        "army": {
+          "archer": 8000,
+          "shield": 2500,
+          "spear": 1500,
+          "cavalry": 1000,
+          "ram": 60
+        },
+        "receipt": null,
+        "before": {
+          "gold": 103716.25142804557,
+          "food": 1453653.9875553786,
+          "level": 59
+        },
+        "claimed": false
+      }
+    ],
+    "captured": false,
+    "recruited": false,
+    "refillCount": 356,
+    "refillPreview": [
+      {
+        "hours": 656.516,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "spear",
+            "count": 520,
+            "seconds": 17862.595419847326
+          },
+          {
+            "id": "shield",
+            "count": 2,
+            "seconds": 91.6030534351145
+          }
+        ],
+        "cost": {
+          "food": 78400,
+          "wood": 260300,
+          "iron": 52800
+        },
+        "remaining": {
+          "spear": 980,
+          "shield": 220,
+          "archer": 200,
+          "cavalry": 1000,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 661.477,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "spear",
+            "count": 45,
+            "seconds": 1545.8015267175572
+          },
+          {
+            "id": "shield",
+            "count": 2,
+            "seconds": 91.6030534351145
+          }
+        ],
+        "cost": {
+          "food": 7150,
+          "wood": 22800,
+          "iron": 5300
+        },
+        "remaining": {
+          "spear": 935,
+          "shield": 218,
+          "archer": 200,
+          "cavalry": 1000,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 832.513,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "cavalry",
+            "count": 8,
+            "seconds": 916.030534351145
+          }
+        ],
+        "cost": {
+          "food": 8000,
+          "wood": 4800,
+          "iron": 4000
+        },
+        "remaining": {
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 644,
+          "ram": 0
+        }
+      },
+      {
+        "hours": 832.768,
+        "kind": "templateRefill",
+        "id": "named_jiangling",
+        "orders": [
+          {
+            "id": "cavalry",
+            "count": 2,
+            "seconds": 229.00763358778624
+          }
+        ],
+        "cost": {
+          "food": 2000,
+          "wood": 1200,
+          "iron": 1000
+        },
+        "remaining": {
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 642,
+          "ram": 0
+        }
+      }
+    ]
+  }
+]
