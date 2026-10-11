@@ -30,7 +30,17 @@ const FactionSystem=(()=>{
   }
   function settle(s,m,won,kind,now){const f=s.realm.factions,c=f.camps.find(c=>c.id===m?.id);if(!matches(s,m)||!c||kind==='defense'&&c.status!=='incoming'||kind==='field'&&c.status!=='camp')return '营地结算已失效';if(won)f.camps=f.camps.filter(x=>x.id!==c.id);else{c.status='camp';c.readyAt=now+interval;}f.last={id:c.id,faction:c.faction,node:c.node,sourceCity:c.sourceCity,at:now,kind,won};return null;}
   function validField(s,e){
-    const m=e.faction;if(m===undefined)return true;const q=spec(m);
+    const m=e.faction;
+    if(m===undefined){
+      if(e.result?.faction)return false;
+      const c=s.realm?.factions?.camps.find(c=>c.node===e.node);
+      if(!c||e.finished)return true;
+      // A frozen pre-camp march remains an ordinary battle. Its own city and
+      // strictly earlier departure are the provenance; a live battle uses that march.
+      const march=e.phase?e:s.expedition;
+      return !!march&&march.node===e.node&&march.general===e.general&&march.faction===undefined&&int(march.start)&&march.start<c.createdAt&&(march.sourceCity===undefined||march.sourceCity===s.realm.activeCity)&&(e.sourceCity===undefined||e.sourceCity===s.realm.activeCity)&&!!s.realm.cities[s.realm.activeCity]&&(e.phase!==undefined||march.phase==='battle');
+    }
+    const q=spec(m);
     if(!q||m.startedAt!==undefined||m.node!==e.node||!s.realm.cities[m.sourceCity]||sequence(m.id)>s.realm.factions.seq)return false;
     if(e.enemySnapshot&&!same(e.enemySnapshot,q.army))return false;
     if(e.enemy&&!same(Object.fromEntries(e.enemy.map(r=>[r.id,r.initial])),q.army))return false;

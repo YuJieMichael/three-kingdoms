@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="ec62dd89ecba8d0dc93e9de552354aba127299725dc9cfe86785d08526c8964e";
+export const runtimeHash="3f71dc600c00adc39f2d5ec332405011167ac139846e850b190294075e6658ff";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","faction-system.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -13605,7 +13605,17 @@ const FactionSystem=(()=>{
   }
   function settle(s,m,won,kind,now){const f=s.realm.factions,c=f.camps.find(c=>c.id===m?.id);if(!matches(s,m)||!c||kind==='defense'&&c.status!=='incoming'||kind==='field'&&c.status!=='camp')return '营地结算已失效';if(won)f.camps=f.camps.filter(x=>x.id!==c.id);else{c.status='camp';c.readyAt=now+interval;}f.last={id:c.id,faction:c.faction,node:c.node,sourceCity:c.sourceCity,at:now,kind,won};return null;}
   function validField(s,e){
-    const m=e.faction;if(m===undefined)return true;const q=spec(m);
+    const m=e.faction;
+    if(m===undefined){
+      if(e.result?.faction)return false;
+      const c=s.realm?.factions?.camps.find(c=>c.node===e.node);
+      if(!c||e.finished)return true;
+      // A frozen pre-camp march remains an ordinary battle. Its own city and
+      // strictly earlier departure are the provenance; a live battle uses that march.
+      const march=e.phase?e:s.expedition;
+      return !!march&&march.node===e.node&&march.general===e.general&&march.faction===undefined&&int(march.start)&&march.start<c.createdAt&&(march.sourceCity===undefined||march.sourceCity===s.realm.activeCity)&&(e.sourceCity===undefined||e.sourceCity===s.realm.activeCity)&&!!s.realm.cities[s.realm.activeCity]&&(e.phase!==undefined||march.phase==='battle');
+    }
+    const q=spec(m);
     if(!q||m.startedAt!==undefined||m.node!==e.node||!s.realm.cities[m.sourceCity]||sequence(m.id)>s.realm.factions.seq)return false;
     if(e.enemySnapshot&&!same(e.enemySnapshot,q.army))return false;
     if(e.enemy&&!same(Object.fromEntries(e.enemy.map(r=>[r.id,r.initial])),q.army))return false;
@@ -17595,6 +17605,7 @@ const Game = (() => {
   function releaseCaptives(id,count){tick(Date.now(),false);count=Math.floor(count);if(!RewardData.captives.units.includes(id)||!Number.isSafeInteger(count)||count<1||count>state.captives[id])return '俘虏数量不足';state.captives[id]-=count;save();return null;}
   function battleDropInfo(nodeId){
     const n=getNode(nodeId),level=Math.max(0,Math.min(10,n?.level||0)),d=ManualData.battleDrops;
+    if(n?.factionCamp)return {level,itemChance:0,resourceChance:0};
     return {level,itemChance:Math.min(d.itemChanceMax,d.itemChanceBase+level*d.itemChancePerLevel),resourceChance:Math.min(d.resourceChanceMax,d.resourceChanceBase+level*d.resourceChancePerLevel)};
   }
   // Blueprints also come from play (design/quick-specs/blueprint-sources-2026-10-08.md): wild tiles by level, cities more often.
@@ -17877,7 +17888,7 @@ const Game = (() => {
   const actions=['setTargetFavorite','applyCityPreset','pauseCityPreset','saveSiegePreparation','fillSiegePreparation','dismissGeneral','attemptBattlefieldInfiltration','openBattlefieldBox','claimBattlefieldRelic','discoverBattlefieldRoute','claimStarterReinforcementToken','buyReinforcementToken','battlefieldRound','battlefieldOrder','pauseBattlefieldBattle','resumeBattlefieldBattle','startBattlefield','enterBattlefieldNode','reinforceBattlefield','healBattlefield','abandonBattlefield','freeFinishBuild','useEdict','webEditionAction','claimNamedCityDevelopment','setRecoveryPriority','healWounded','setAutoHeal','setDefenseDoctrine','resolveCityDefense','payHeroArrears','setGovernancePolicy','recruitDefeatedHero','submitBattleTactic','cancelBattleTactic','saveSupplyLine','setSupplyLineEnabled','removeSupplyLine','prepareHeroAdministration','startRegionalFront','switchCity','enterOwnedCity','foundCity','sendTransport','redeployArmy','recallLogistics','dispatchScout','trainGeneralSkill','completeFirstBattleGuide','requestCityDefense','setAutoCityDefense','startCityDefense','cityDefenseRound','endDefenseDrill','grantTestSupplies','recruitAllCaptives','recruitCaptives','releaseCaptives','claimDailyMilestone','claimReadyDaily','acceptDaily','abandonDaily','claimDaily','donateEpic','exchangeCopper','synthesizeJewel','persuadeGarrison','sowGarrison','recruitGarrisonGeneral','startSpecialty','seekLegendary','refineLegendary','smeltLegendary','announceLegendary','selectExpedition','developPlot','setPlotTemplate','applyPlotTemplate','pausePlotTemplate','recallGarrison','abandonWild','queueBuilding','cancelBuild','demolish','setAutoUpgrade','setAutoResearch','setAutomationSettings','readAutomationNotices','dismissTroops','research','scout','refreshInn','recruit','trade','buyItem','useItem','claimStarterGift','claimReadyMissions','claimTrialGems','setSpeed','setStorage','buildDefense','relocateBuilding','upgrade','train','setGovernor','setTax','executeCivicOrder','dispatch','startBattle','battleRound','setBattleOrder','setBattleOrders','setTactic','recall','dismissBattle','claimMission'];
   for(const name of actions){const action=api[name];api[name]=(...args)=>{const error=saveBlockReason();if(error)return error;const result=action(...args);return ['write-error','read-error','readonly','conflict'].includes(saveMode)?saveReason:result;};}
   api.useSpeedup=(...args)=>{const error=saveBlockReason();if(error)return {error};const result=useSpeedup(...args);return saveMode==='active'?result:{error:saveReason};};
-  for(const name of ['startCityDefense','cityDefenseRound','resolveCityDefense','dispatch','startBattle','battleRound']){const action=api[name];api[name]=(...args)=>{const relevant=['startCityDefense','cityDefenseRound','resolveCityDefense'].includes(name)?state.cityDefense.incoming?.faction||state.cityDefense.battle?.faction:name==='dispatch'?getNode(args[0])?.factionCamp:state.expedition?.faction||state.battle?.faction;return relevant?factionAtomic(()=>action(...args)):action(...args);};}
+  for(const name of ['startCityDefense','cityDefenseRound','resolveCityDefense','dispatch','startBattle','battleRound']){const action=api[name];api[name]=(...args)=>{const relevant=['startCityDefense','cityDefenseRound','resolveCityDefense'].includes(name)?state.cityDefense.incoming?.faction||state.cityDefense.battle?.faction:name==='dispatch'?getNode(args[0])?.factionCamp:state.expedition?.faction||state.battle?.faction;const mayAdvance=domesticStrategyAvailable()&&state.realm.factions.enabled;return relevant||mayAdvance?factionAtomic(()=>action(...args)):action(...args);};}
   return api;
 })();
 if(typeof module!=='undefined')module.exports=Game;
