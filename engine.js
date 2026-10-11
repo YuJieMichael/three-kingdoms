@@ -333,7 +333,7 @@ const Game = (() => {
     if(new Set(stationed).size!==stationed.length||stationed.includes(d.expedition?.general))return false;
     if(!Array.isArray(d.generals)||d.generals.length<1||new Set(d.generals).size!==d.generals.length||!d.generals.every(id=>knownHero(id))||(d.governor!==null&&!d.generals.includes(d.governor)))return false;
     if(!object(d.generalLevels)||!object(d.generalXp)||!d.generals.every(id=>integer(d.generalLevels[id])&&d.generalLevels[id]>=1&&d.generalLevels[id]<=10000&&finite(d.generalXp[id])))return false;
-    if(!HeroSystem.valid(d)||!JourneySystem.valid(d)||!SiegePreparation.valid(d))return false;
+    if(!HeroSystem.valid(d)||!JourneySystem.valid(d)||!SiegePreparation.valid(d,generals))return false;
     if(!OnboardingSystem.valid(d)||!WarOrders.valid(d))return false;
     if(!Number.isInteger(d.tax)||d.tax<0||d.tax>100||!object(d.stats)||!integer(d.stats.trained)||!integer(d.stats.victories)||!object(d.conquered)||!Object.entries(d.conquered).every(([id,v])=>node(id)&&v===true)||!object(d.cooldowns)||!Object.entries(d.cooldowns).every(([id,v])=>node(id)&&finite(v)))return false;
     if(!Array.isArray(d.buildQueue)||d.buildQueue.length>5||new Set(d.buildQueue.map(q=>q.plot===undefined?'city:'+q.site:'plot:'+q.plot)).size!==d.buildQueue.length||!d.buildQueue.every(q=>{
@@ -677,14 +677,14 @@ const Game = (() => {
       plan=SiegePreparation.plan(template,state,{population:freePopulation(),limit:trainingLimit(),requirement:unitRequirements,cost:trainCost,seconds:trainSeconds});
       busy=!!template?.hero&&(!state.generals.includes(template.hero)||heroCity(template.hero)!==cityId||generalBusy(template.hero)||!!HeritageSystem.roleOf(state,template.hero));
     }finally{state=live;}
-    const key=JSON.stringify([currentCityId(),cityId,nodeId,template,scope.res,scope.population,scope.army,scope.trainQueue,scope.buildings,scope.cityLayout,scope.cityLevels,scope.tech,state.speed,plan,busy]);
+    const key=JSON.stringify([currentCityId(),cityId,nodeId,template,scope.army,scope.trainQueue,scope.buildings,scope.cityLayout,scope.cityLevels,scope.tech,state.speed,plan,busy]);
     const reason=!template?'先保存兵力目标':cityId!==currentCityId()?'请先进入来源城市':!plan.orders.length?(Object.values(plan.deficits).some(n=>n>0)?'暂无可排训练：检查资源、人口、前置或队列':'目标兵力已齐备'):'';
-    return {...plan,key,template,busy,reason};
+    return {...plan,key,template,busy,reason,completionAt:plan.orders.length?Math.max(Date.now(),...scope.trainQueue.map(q=>q.end))+plan.orders.reduce((n,o)=>n+o.seconds*1000,0):null};
   }
   function saveSiegePreparation(cityId,nodeId,template,key){
     const blocked=saveBlockReason();if(blocked)return blocked;
     const quote=siegePreparationQuote(cityId,nodeId);if(!quote.key||quote.key!==key||cityId!==currentCityId())return '筹备已变化，请重新查看';
-    if(!SiegePreparation.validTemplate(template,state)||template.hero&&!state.generals.includes(template.hero))return '请选择合法主将、指令和目标兵力';
+    if(!SiegePreparation.validTemplate(template,state,generals)||template.hero&&!state.generals.includes(template.hero))return '请选择合法主将、指令和目标兵力';
     const previous=CitySystem.clone(state.siegePreparation);
     state.siegePreparation.templates[cityId]??={};state.siegePreparation.templates[cityId][nodeId]=CitySystem.clone(template);
     if(!save()){state.siegePreparation=previous;return '存档失败，请重试';}return null;

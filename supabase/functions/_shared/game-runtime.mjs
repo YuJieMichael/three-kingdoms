@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="715e77c150c22ef3413eca31c1760aa9f9d9c38c15cc2db181e358b3f2ec69ae";
+export const runtimeHash="be2be777707806f386a2e83fb9c8e6d2f21b2ffcb75a0883f825a30a6ef04d1e";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","siege-preparation.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -16032,8 +16032,9 @@ const BattlefieldSystem=(()=>{
   function buyToken(s,api){const error=entryReason(s,api);if(error)return error;if(s.res.gold<2500)return '黄金不足，需要2500黄金';if((s.inventory.reinforcementToken||0)>=Number.MAX_SAFE_INTEGER)return '援军令数量已达上限';s.res.gold-=2500;s.inventory.reinforcementToken=(s.inventory.reinforcementToken||0)+1;return null;}
   function settle(s,r,now,api){const bf=s.battlefields,c=BattlefieldData.config(r.campaign);if(bf.run!==r||!r.completed.includes(c.finalNode)||!r.battle?.finished||!r.battle.result?.won)return '尚未完成整轮战役';const day=dayKey(now),prior=bf.daily[r.campaign],count=prior?.day===day?prior.count+1:1,first=count===1,base=BattlefieldData.reward(r.completed,r.campaign),prestige=first?base.prestige:Math.floor(base.prestige/2),xp=first?base.xp:Math.floor(base.xp/2);
     s.prestige+=prestige;api.addXp(r.general,xp);if(first)s.inventory[c.boxItem]=(s.inventory[c.boxItem]||0)+1;
-    const receipt={runId:r.id,campaign:r.campaign,general:r.general,sourceCity:r.sourceCity,day,at:now,completed:[...r.completed],prestige,xp,box:first?1:0};bf.daily[r.campaign]={day,count};if(!bf.firstClears[r.campaign])bf.firstClears[r.campaign]={at:now,runId:r.id};bf.lastReceipt=receipt;bf.run=null;return null;
+    const receipt={runId:r.id,campaign:r.campaign,general:r.general,sourceCity:r.sourceCity,day,at:now,completed:[...r.completed],prestige,xp,box:first?1:0,battleResult:JSON.parse(JSON.stringify(r.battle.result))};bf.daily[r.campaign]={day,count};if(!bf.firstClears[r.campaign])bf.firstClears[r.campaign]={at:now,runId:r.id};bf.lastReceipt=receipt;bf.run=null;return null;
   }
+  function validFinalResult(r){return object(r)&&Object.keys(r).length===(r.facts===undefined?5:6)&&r.won===true&&integer(r.round)&&r.round<=30&&[r.back,r.lost,r.recovered].every(a=>object(a)&&Object.keys(a).length===Object.keys(ManualData.units).length&&Object.entries(a).every(([id,n])=>Object.hasOwn(ManualData.units,id)&&integer(n)))&&Object.keys(r.lost).every(id=>r.recovered[id]===Math.floor(r.lost[id]*.6))&&(r.facts===undefined||BattleReview.validFacts(r.facts)&&r.facts.endedBy==='win'&&r.facts.rounds===r.round);}
   function validRewards(bf){
     const date=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&Number.isFinite(Date.parse(s+'T00:00:00Z'))&&new Date(s+'T00:00:00Z').toISOString().slice(0,10)===s;
     const idValid=(id,c)=>{const prefix=c.prefix+':';return typeof id==='string'&&id.startsWith(prefix)&&/^[1-9]\d*$/.test(id.slice(prefix.length))&&integer(Number(id.slice(prefix.length)))&&Number(id.slice(prefix.length))<=bf.seq;};
@@ -16042,7 +16043,7 @@ const BattlefieldSystem=(()=>{
     for(const c of BattlefieldData.catalog().map(x=>BattlefieldData.config(x.id))){const daily=bf.daily[c.id],first=bf.firstClears[c.id];if(daily!==undefined&&(!object(daily)||Object.keys(daily).length!==2||!date(daily.day)||!integer(daily.count)||daily.count<1)||first!==undefined&&(!object(first)||Object.keys(first).length!==2||!integer(first.at)||!idValid(first.runId,c)))return false;if((daily===undefined)!==(first===undefined))return false;}
     const last=bf.lastReceipt;if(last===null)return !Object.keys(bf.daily).length&&!Object.keys(bf.firstClears).length;
     const c=BattlefieldData.config(last?.campaign);if(!c)return false;const daily=bf.daily[c.id],first=bf.firstClears[c.id];
-    if(!object(last)||Object.keys(last).length!==10||!idValid(last.runId,c)||!integer(last.at)||!date(last.day)||dayKey(last.at)!==last.day||typeof last.general!=='string'||last.general.length>100||typeof last.sourceCity!=='string'||last.sourceCity.length>100||!BattlefieldData.validCompleted(last.completed,c.id)||!last.completed.includes(c.finalNode)||!daily||!first||daily.day!==last.day||first.at>last.at)return false;
+    if(!object(last)||(last.battleResult===undefined?Object.keys(last).length!==10:Object.keys(last).length!==11||!validFinalResult(last.battleResult))||!idValid(last.runId,c)||!integer(last.at)||!date(last.day)||dayKey(last.at)!==last.day||typeof last.general!=='string'||last.general.length>100||typeof last.sourceCity!=='string'||last.sourceCity.length>100||!BattlefieldData.validCompleted(last.completed,c.id)||!last.completed.includes(c.finalNode)||!daily||!first||daily.day!==last.day||first.at>last.at)return false;
     const reward=BattlefieldData.reward(last.completed,c.id),isFirst=daily.count===1;return last.prestige===(isFirst?reward.prestige:Math.floor(reward.prestige/2))&&last.xp===(isFirst?reward.xp:Math.floor(reward.xp/2))&&last.box===(isFirst?1:0);
   }
   function nodeForRun(r,id,route='normal'){
@@ -16073,7 +16074,7 @@ const BattlefieldSystem=(()=>{
     }
     if(b.enemy.length!==Object.keys(n.army).length)return false;
     if(!b.finished)return b.result===null&&b.player.length===Object.values(r.army).filter(n=>n>0).length;
-    const result=b.result;if(!object(result)||typeof result.won!=='boolean'||result.round!==b.round||![result.back,result.lost,result.recovered].every(a=>armyValid(a,api))||JSON.stringify(result.back)!==JSON.stringify(r.army))return false;
+    const result=b.result;if(!object(result)||(result.facts!==undefined&&(!BattleReview.validFacts(result.facts)||result.facts.endedBy==='ongoing'||(result.won?result.facts.endedBy!=='win':result.facts.endedBy==='win')||result.facts.rounds!==b.round))||typeof result.won!=='boolean'||result.round!==b.round||![result.back,result.lost,result.recovered].every(a=>armyValid(a,api))||JSON.stringify(result.back)!==JSON.stringify(r.army))return false;
     if(result.won&&(!b.player.some(row=>row.hp>0)||b.enemy.some(row=>row.hp>0)))return false;
     return Object.keys(api.units).every(id=>{const row=b.player.find(row=>row.id===id),back=row?Math.ceil(row.hp/row.stats.hp):0,lost=row?row.initial-back:0;return result.back[id]===back&&result.lost[id]===lost&&result.recovered[id]===Math.floor(lost*.6);});
   }
@@ -16124,8 +16125,8 @@ const SiegePreparation=(()=>{
   const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
   const integer=x=>Number.isSafeInteger(x)&&x>=0;
   function init(s){if(s.siegePreparation===undefined)s.siegePreparation={version:1,templates:{}};}
-  function validTemplate(t,s){return object(t)&&Object.keys(t).length===3&&typeof t.hero==='string'&&(t.hero===''||['lin','su',...(s.customGenerals||[]).map(g=>g.id),...Object.values(NamedGarrison.generals).map(g=>g.id)].includes(t.hero))&&['advance','hold','fallback'].includes(t.tactic)&&object(t.army)&&Object.keys(t.army).length>0&&Object.entries(t.army).every(([id,n])=>Object.hasOwn(ManualData.units,id)&&integer(n)&&n<=100000)&&Object.values(t.army).some(n=>n>0);}
-  function valid(s){const p=s.siegePreparation;return object(p)&&Object.keys(p).length===2&&p.version===1&&object(p.templates)&&Object.entries(p.templates).every(([city,rows])=>!!s.realm?.cities[city]&&object(rows)&&Object.entries(rows).every(([node,t])=>NamedGarrison.ids.includes(node)&&validTemplate(t,s)));}
+  function validTemplate(t,s,definitions){return object(t)&&Object.keys(t).length===3&&typeof t.hero==='string'&&(t.hero===''||[...(definitions||[]).map(g=>g.id),...(s.customGenerals||[]).map(g=>g.id),...Object.values(NamedGarrison.generals).map(g=>g.id)].includes(t.hero))&&['advance','hold','fallback'].includes(t.tactic)&&object(t.army)&&Object.keys(t.army).length>0&&Object.entries(t.army).every(([id,n])=>Object.hasOwn(ManualData.units,id)&&integer(n)&&n<=100000)&&Object.values(t.army).some(n=>n>0);}
+  function valid(s,definitions){const p=s.siegePreparation;return object(p)&&Object.keys(p).length===2&&p.version===1&&object(p.templates)&&Object.entries(p.templates).every(([city,rows])=>!!s.realm?.cities[city]&&object(rows)&&Object.entries(rows).every(([node,t])=>NamedGarrison.ids.includes(node)&&validTemplate(t,s,definitions)));}
   function plan(t,s,api){
     const deficits={},remaining={},orders=[],cost={};let population=api.population,slots=Math.max(0,api.limit-s.trainQueue.length);const funds={...s.res};
     for(const id of Object.keys(ManualData.units)){
@@ -16481,7 +16482,7 @@ const Game = (() => {
     if(new Set(stationed).size!==stationed.length||stationed.includes(d.expedition?.general))return false;
     if(!Array.isArray(d.generals)||d.generals.length<1||new Set(d.generals).size!==d.generals.length||!d.generals.every(id=>knownHero(id))||(d.governor!==null&&!d.generals.includes(d.governor)))return false;
     if(!object(d.generalLevels)||!object(d.generalXp)||!d.generals.every(id=>integer(d.generalLevels[id])&&d.generalLevels[id]>=1&&d.generalLevels[id]<=10000&&finite(d.generalXp[id])))return false;
-    if(!HeroSystem.valid(d)||!JourneySystem.valid(d)||!SiegePreparation.valid(d))return false;
+    if(!HeroSystem.valid(d)||!JourneySystem.valid(d)||!SiegePreparation.valid(d,generals))return false;
     if(!OnboardingSystem.valid(d)||!WarOrders.valid(d))return false;
     if(!Number.isInteger(d.tax)||d.tax<0||d.tax>100||!object(d.stats)||!integer(d.stats.trained)||!integer(d.stats.victories)||!object(d.conquered)||!Object.entries(d.conquered).every(([id,v])=>node(id)&&v===true)||!object(d.cooldowns)||!Object.entries(d.cooldowns).every(([id,v])=>node(id)&&finite(v)))return false;
     if(!Array.isArray(d.buildQueue)||d.buildQueue.length>5||new Set(d.buildQueue.map(q=>q.plot===undefined?'city:'+q.site:'plot:'+q.plot)).size!==d.buildQueue.length||!d.buildQueue.every(q=>{
@@ -16825,14 +16826,14 @@ const Game = (() => {
       plan=SiegePreparation.plan(template,state,{population:freePopulation(),limit:trainingLimit(),requirement:unitRequirements,cost:trainCost,seconds:trainSeconds});
       busy=!!template?.hero&&(!state.generals.includes(template.hero)||heroCity(template.hero)!==cityId||generalBusy(template.hero)||!!HeritageSystem.roleOf(state,template.hero));
     }finally{state=live;}
-    const key=JSON.stringify([currentCityId(),cityId,nodeId,template,scope.res,scope.population,scope.army,scope.trainQueue,scope.buildings,scope.cityLayout,scope.cityLevels,scope.tech,state.speed,plan,busy]);
+    const key=JSON.stringify([currentCityId(),cityId,nodeId,template,scope.army,scope.trainQueue,scope.buildings,scope.cityLayout,scope.cityLevels,scope.tech,state.speed,plan,busy]);
     const reason=!template?'先保存兵力目标':cityId!==currentCityId()?'请先进入来源城市':!plan.orders.length?(Object.values(plan.deficits).some(n=>n>0)?'暂无可排训练：检查资源、人口、前置或队列':'目标兵力已齐备'):'';
-    return {...plan,key,template,busy,reason};
+    return {...plan,key,template,busy,reason,completionAt:plan.orders.length?Math.max(Date.now(),...scope.trainQueue.map(q=>q.end))+plan.orders.reduce((n,o)=>n+o.seconds*1000,0):null};
   }
   function saveSiegePreparation(cityId,nodeId,template,key){
     const blocked=saveBlockReason();if(blocked)return blocked;
     const quote=siegePreparationQuote(cityId,nodeId);if(!quote.key||quote.key!==key||cityId!==currentCityId())return '筹备已变化，请重新查看';
-    if(!SiegePreparation.validTemplate(template,state)||template.hero&&!state.generals.includes(template.hero))return '请选择合法主将、指令和目标兵力';
+    if(!SiegePreparation.validTemplate(template,state,generals)||template.hero&&!state.generals.includes(template.hero))return '请选择合法主将、指令和目标兵力';
     const previous=CitySystem.clone(state.siegePreparation);
     state.siegePreparation.templates[cityId]??={};state.siegePreparation.templates[cityId][nodeId]=CitySystem.clone(template);
     if(!save()){state.siegePreparation=previous;return '存档失败，请重试';}return null;

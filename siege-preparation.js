@@ -3,8 +3,8 @@ const SiegePreparation=(()=>{
   const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
   const integer=x=>Number.isSafeInteger(x)&&x>=0;
   function init(s){if(s.siegePreparation===undefined)s.siegePreparation={version:1,templates:{}};}
-  function validTemplate(t,s){return object(t)&&Object.keys(t).length===3&&typeof t.hero==='string'&&(t.hero===''||['lin','su',...(s.customGenerals||[]).map(g=>g.id),...Object.values(NamedGarrison.generals).map(g=>g.id)].includes(t.hero))&&['advance','hold','fallback'].includes(t.tactic)&&object(t.army)&&Object.keys(t.army).length>0&&Object.entries(t.army).every(([id,n])=>Object.hasOwn(ManualData.units,id)&&integer(n)&&n<=100000)&&Object.values(t.army).some(n=>n>0);}
-  function valid(s){const p=s.siegePreparation;return object(p)&&Object.keys(p).length===2&&p.version===1&&object(p.templates)&&Object.entries(p.templates).every(([city,rows])=>!!s.realm?.cities[city]&&object(rows)&&Object.entries(rows).every(([node,t])=>NamedGarrison.ids.includes(node)&&validTemplate(t,s)));}
+  function validTemplate(t,s,definitions){return object(t)&&Object.keys(t).length===3&&typeof t.hero==='string'&&(t.hero===''||[...(definitions||[]).map(g=>g.id),...(s.customGenerals||[]).map(g=>g.id),...Object.values(NamedGarrison.generals).map(g=>g.id)].includes(t.hero))&&['advance','hold','fallback'].includes(t.tactic)&&object(t.army)&&Object.keys(t.army).length>0&&Object.entries(t.army).every(([id,n])=>Object.hasOwn(ManualData.units,id)&&integer(n)&&n<=100000)&&Object.values(t.army).some(n=>n>0);}
+  function valid(s,definitions){const p=s.siegePreparation;return object(p)&&Object.keys(p).length===2&&p.version===1&&object(p.templates)&&Object.entries(p.templates).every(([city,rows])=>!!s.realm?.cities[city]&&object(rows)&&Object.entries(rows).every(([node,t])=>NamedGarrison.ids.includes(node)&&validTemplate(t,s,definitions)));}
   function plan(t,s,api){
     const deficits={},remaining={},orders=[],cost={};let population=api.population,slots=Math.max(0,api.limit-s.trainQueue.length);const funds={...s.res};
     for(const id of Object.keys(ManualData.units)){
