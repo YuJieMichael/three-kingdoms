@@ -51,11 +51,13 @@ const BattlefieldSystem=(()=>{
     if(!object(last)||(last.battleResult===undefined?Object.keys(last).length!==10:Object.keys(last).length!==11||!validFinalResult(last.battleResult))||!idValid(last.runId,c)||!integer(last.at)||!date(last.day)||dayKey(last.at)!==last.day||typeof last.general!=='string'||last.general.length>100||typeof last.sourceCity!=='string'||last.sourceCity.length>100||!BattlefieldData.validCompleted(last.completed,c.id)||!last.completed.includes(c.finalNode)||!daily||!first||daily.day!==last.day||first.at>last.at)return false;
     const reward=BattlefieldData.reward(last.completed,c.id),isFirst=daily.count===1;return last.prestige===(isFirst?reward.prestige:Math.floor(reward.prestige/2))&&last.xp===(isFirst?reward.xp:Math.floor(reward.xp/2))&&last.box===(isFirst?1:0);
   }
-  function nodeForRun(r,id,route='normal'){
+  function finalArmy(r,node){const c=BattlefieldData.config(r.campaign),army={...node.army};if(c&&node.id===c.finalNode&&r.completed.includes(c.supplySide))for(const id of Object.keys(army))if(army[id]>0)army[id]=Math.max(1,Math.floor(army[id]*.95));return army;}
+  function supplyEffect(r,node){const c=BattlefieldData.config(r.campaign);return {version:1,side:node.id===c.finalNode&&r.completed.includes(c.supplySide)?c.supplySide:''};}
+  function nodeForRun(r,id,route='normal',applySupply=true){
     const c=BattlefieldData.config(r.campaign),n=BattlefieldData.get(id,r.campaign);if(!n||!c)return null;n.route=route;n.armyAttack={};n.commander={name:n.name,title:c.name,attack:1,defense:1};
     if(c.id==='yellow_turban'){if(id==='m3'&&!r.completed.includes('s2'))n.commander.attack=1.05;if(id==='m9'&&!r.completed.includes('s6'))n.commander.defense=1.1;if(id==='s6'&&route==='infiltration')delete n.army.archer;}
     else {if(id==='n3'&&!r.completed.includes('b2'))n.armyAttack.archer=1.08;if(id==='n6'&&!r.completed.includes('b3'))n.commander.defense=1.12;if(id==='n9'&&!r.completed.includes('b6'))n.commander.defense=1.1;if(id==='b2'&&route==='hidden'||id==='b6'&&route==='infiltration')delete n.army.archer;}
-    return n;
+    if(applySupply)n.army=finalArmy(r,n);return n;
   }
   function finishNode(s,b,won,api,endedBy){const r=active(s);if(!r||r.battle!==b||b.finished||b.runId!==r.id||r.selectedNode!==b.node)return '战场快照不匹配';const back=blank(api),lost=blank(api),recovered=blank(api);
     for(const row of b.player){back[row.id]=Math.ceil(row.hp/row.stats.hp);lost[row.id]=row.initial-back[row.id];recovered[row.id]=Math.floor(lost[row.id]*.6);r.wounded[row.id]+=lost[row.id]-recovered[row.id];r.pool+=recovered[row.id];}
@@ -66,7 +68,7 @@ const BattlefieldSystem=(()=>{
   }
   function battleValid(b,r,api){
     if(!object(b)||(b.traitProfile!==undefined&&(!HeroTraits.validProfile(b.traitProfile)||b.traitProfile.id!==HeroTraits.profile(api.state,r.general).id))||(b.facts!==undefined&&(!BattleReview.validFacts(b.facts)||b.facts.rounds!==b.round||b.finished&&JSON.stringify(b.facts)!==JSON.stringify(b.result?.facts)))||b.kind!=='battlefield'||b.runId!==r.id||b.general!==r.general||b.sourceCity!==r.sourceCity||b.rules!==3||b.mode!=='raid'||b.siege!==false||b.gate!==null||!integer(b.round)||b.round>30||typeof b.finished!=='boolean'||typeof b.auto!=='boolean'||!integer(b.length)||b.length<200||b.length>10000||!HeroSystem.validMountProfile(b.mountProfile)||!GeneralGrowth.validProfile(b.skillProfile)||!object(b.generalSnapshot)||b.generalSnapshot.id!==r.general||!['atk','def','pol','wis','lead'].every(k=>Number.isFinite(b.generalSnapshot[k])&&b.generalSnapshot[k]>=0&&b.generalSnapshot[k]<=1e9)||!Number.isFinite(b.legendProcChance)||b.legendProcChance<0||b.legendProcChance>1)return false;
-    const c=BattlefieldData.config(r.campaign),n=nodeForRun(r,b.node,b.route);if(!n||n.dialogue||!['normal','hidden','infiltration'].includes(b.route)||b.route==='hidden'&&(b.node!==c.discover||!r.routeDiscovered)||b.route==='infiltration'&&r.infiltration[b.node]!=='infiltration'||r.infiltration[b.node]&&b.route!==r.infiltration[b.node]||!Array.isArray(b.player)||!Array.isArray(b.enemy)||!b.player.length||!b.enemy.length||!object(b.orders)||!object(b.enemyOrders)||!Array.isArray(b.log)||b.log.length>40||b.log.some(x=>typeof x!=='string'||x.length>1000)||!BattleStratagems.valid(b,api))return false;
+    const c=BattlefieldData.config(r.campaign),n=nodeForRun(r,b.node,b.route,b.supplyEffect!==undefined);if(!n||n.dialogue||b.supplyEffect!==undefined&&(!object(b.supplyEffect)||Object.keys(b.supplyEffect).length!==2||b.supplyEffect.version!==1||b.supplyEffect.side!==supplyEffect(r,n).side)||!['normal','hidden','infiltration'].includes(b.route)||b.route==='hidden'&&(b.node!==c.discover||!r.routeDiscovered)||b.route==='infiltration'&&r.infiltration[b.node]!=='infiltration'||r.infiltration[b.node]&&b.route!==r.infiltration[b.node]||!Array.isArray(b.player)||!Array.isArray(b.enemy)||!b.player.length||!b.enemy.length||!object(b.orders)||!object(b.enemyOrders)||!Array.isArray(b.log)||b.log.length>40||b.log.some(x=>typeof x!=='string'||x.length>1000)||!BattleStratagems.valid(b,api))return false;
     if(b.finished?(b.result?.won?!r.completed.includes(b.node):r.selectedNode!==b.node):r.selectedNode!==b.node||!BattlefieldData.available(r.completed,r.campaign).includes(b.node))return false;
     if(!BattlefieldData.validCompleted(b.completedBefore,r.campaign)||JSON.stringify(b.completedBefore)!==JSON.stringify(r.completed.filter(id=>!(b.finished&&b.result?.won&&id===b.node))))return false;
     const bonus=b.completedBefore.includes('s3')?1.08:1;
@@ -91,5 +93,5 @@ const BattlefieldSystem=(()=>{
     if(RENT_UNITS.some(id=>Object.entries(troopStats(id,r.techSnapshot,r.troopBuffs)).some(([k,v])=>r.unitSnapshot[id][k]!==v)))return false;
     return r.battle===null||battleValid(r.battle,r,{...api,state:s});
   }
-  return {attemptInfiltration,BOX_SLOTS,openBox,claimRelic,discoverRoute,dayKey,buyToken,claimStarterToken,settle,troopStats,nodeForRun,finishNode,battleValid,RENT_UNITS,init,valid,view,quote,start,enter,reinforce,heal,abandon,locked,armyValid,selection,blank,sum};
+  return {attemptInfiltration,BOX_SLOTS,openBox,claimRelic,discoverRoute,dayKey,buyToken,claimStarterToken,settle,troopStats,finalArmy,supplyEffect,nodeForRun,finishNode,battleValid,RENT_UNITS,init,valid,view,quote,start,enter,reinforce,heal,abandon,locked,armyValid,selection,blank,sum};
 })();

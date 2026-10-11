@@ -13,7 +13,7 @@ const BattlefieldData=(()=>{
     ['m9','张角决战',3,{shield:160,archer:100,cavalry:60},'张角高举法杖：苍天已死，黄天当立！','击败张角，完成整轮黄巾战役。','张角败走，黄巾战役通关，统一结算。','决战失利；祭坛情报可削弱敌方防御。'],
     ['s1','救援失散官军',1,{militia:80},'散兵被困山谷，发来求援火号。','击退围兵，获得本轮500人补租额度。','官军得救，本轮补租池增加500人。','官军仍在苦战，救援未能完成。'],
     ['s2','夺回粮仓',1,{spear:60,archer:30},'粮仓藏在岔路之后，守军封住了入口。','夺回粮仓，解除张梁攻击优势。','敌方供给被切断，张梁攻击优势解除。','粮仓尚在敌手，张梁仍有粮草供给。'],
-    ['s3','解放军械库',2,{shield:80,archer:40},'工匠被困军械库，尚有器械可用。','解放工匠，使本轮攻击提高8%。','器械送抵军中，本轮攻击提高8%。','军械库仍被占据，器械无法运出。'],
+    ['s3','解放军械库',2,{shield:80,archer:40},'工匠被困军械库，尚有器械可用。','解放工匠，本轮攻击+8%，终战守军−5%。','器械送抵军中，攻击+8%；敌军粮道受阻，终战守军−5%。','军械库仍被占据，器械无法运出。'],
     ['s4','解放医药营',2,{},'医官愿随军救治伤者，只待你护送。','护送医官，取得200人救治额度。','医官随军，本轮可救治最多200人。','护送未完成，医官仍在营中等待。'],
     ['s5','支援皇甫嵩',3,{spear:100,cavalry:40},'皇甫嵩牵制敌骑，请你攻击其侧翼。','解围后获得本轮500人补租额度。','皇甫嵩派来援军，本轮补租池增加500人。','侧翼仍有敌骑，援军暂时不能到来。'],
     ['s6','潜入祭坛',3,{shield:90,archer:50},'祭坛守军严密，需正面夺取军情。','攻破祭坛，解除张角防御优势。','祭坛军情到手，张角防御优势解除。','祭坛仍在运作，张角防御优势保留。']
@@ -31,15 +31,15 @@ const BattlefieldData=(()=>{
     ['n9','孟获决战',3,{shield:180,archer:110,cavalry:70},'孟获列阵寨前，要与你决一胜负。','击败孟获完成本轮；军情可解除防御优势。','孟获退兵，边境暂安，战役统一结算。','决战失利，可先截获军情削弱防御。'],
     ['b1','救援向导',1,{militia:100,spear:40},'引路乡民被围，举火请求救援。','击退围兵，补租池增加500人。','向导获救，本轮补租池增加500人。','向导仍被困住，救援尚未完成。'],
     ['b2','探明密道',1,{spear:90,archer:50},'密道守卫扼守岔路，罗盘可找到侧翼。','取得密道情报，解除祝融弓兵攻击优势。','密道已探明，祝融弓兵攻击优势解除。','密道仍在敌手，可用罗盘寻找隐藏入口。'],
-    ['b3','截断藤油',2,{shield:100,spear:60},'油车沿山道送入藤甲营，守军紧随。','拦截油车，解除藤甲统领防御优势。','藤油供应断绝，藤甲防御优势解除。','油车仍在通行，藤甲防御优势保留。'],
+    ['b3','截断藤油',2,{shield:100,spear:60},'油车沿山道送入藤甲营，守军紧随。','拦截油车，解除藤甲防御优势，终战守军−5%。','藤油供应断绝，藤甲防御优势解除，终战守军−5%。','油车仍在通行，藤甲防御优势保留。'],
     ['b4','护送药师',2,{},'药师愿随军救治，需有人护送过渡口。','护送药师，取得200人救治额度。','药师安全抵达，取得200人救治额度。','药师仍在等待，本轮尚无救治额度。'],
     ['b5','解救被困援军',3,{spear:120,cavalry:50},'援军困在山谷，旗号遥遥可见。','击退围兵，补租池增加500人。','援军脱困，本轮补租池增加500人。','围兵仍在，援军暂时无法接应。'],
     ['b6','截获军情',3,{shield:100,archer:70},'来使先问山路，守卫以归林作答。','取得军情，解除孟获防御优势；面具可减少守军。','军情到手，孟获防御优势解除。','军情未得，可补租后正面重试。']
   ];
   const nanNodes=nanRows.map(([id,name,arc,army,intro,objective,victory,defeat])=>({id,name,arc,army,intro,objective,victory,defeat,kind:id[0]==='n'?'main':'side',requires:id[0]==='n'?(id==='n1'?[]:['n'+(Number(id.slice(1))-1)]):arc===1?[]:['n'+((arc-1)*3)],dialogue:id==='b4'}));
   const campaigns={
-    yellow_turban:{id:'yellow_turban',name:'黄巾之乱',arcs:['张梁：断粮救民','张宝：破围夺营','张角：广宗决战'],mainIds:MAIN_IDS,sideIds:SIDE_IDS,finalNode:'m9',minLevel:5,boxItem:'yellowEquipmentBox',setId:'yellow_turban',tier:2,baseReward:{prestige:1000,xp:160},sideReward:{prestige:100,xp:16},pool:3000,limit:800,prefix:'yellow',rescue:['s1','s5'],medical:'s4',attackSide:'s3',discover:'s2',relicNode:'m2',relic:'compass',infiltration:'s6',answer:'rise'},
-    nanman:{id:'nanman',name:'南蛮入侵',arcs:['林地：边寨接战','藤甲：渡口破阵','蛮营：孟获决战'],mainIds:nanNodes.filter(n=>n.kind==='main').map(n=>n.id),sideIds:nanNodes.filter(n=>n.kind==='side').map(n=>n.id),finalNode:'n9',minLevel:10,boxItem:'barbarianEquipmentBox',setId:'nanman',tier:3,baseReward:{prestige:1200,xp:200},sideReward:{prestige:100,xp:20},pool:3000,limit:800,prefix:'nanman',rescue:['b1','b5'],medical:'b4',attackSide:null,discover:'b2',relicNode:'n2',relic:'mask',infiltration:'b6',answer:'forest'}
+    yellow_turban:{id:'yellow_turban',name:'黄巾之乱',arcs:['张梁：断粮救民','张宝：破围夺营','张角：广宗决战'],mainIds:MAIN_IDS,sideIds:SIDE_IDS,finalNode:'m9',minLevel:5,boxItem:'yellowEquipmentBox',setId:'yellow_turban',tier:2,baseReward:{prestige:1000,xp:160},sideReward:{prestige:100,xp:16},pool:3000,limit:800,prefix:'yellow',rescue:['s1','s5'],medical:'s4',attackSide:'s3',supplySide:'s3',discover:'s2',relicNode:'m2',relic:'compass',infiltration:'s6',answer:'rise'},
+    nanman:{id:'nanman',name:'南蛮入侵',arcs:['林地：边寨接战','藤甲：渡口破阵','蛮营：孟获决战'],mainIds:nanNodes.filter(n=>n.kind==='main').map(n=>n.id),sideIds:nanNodes.filter(n=>n.kind==='side').map(n=>n.id),finalNode:'n9',minLevel:10,boxItem:'barbarianEquipmentBox',setId:'nanman',tier:3,baseReward:{prestige:1200,xp:200},sideReward:{prestige:100,xp:20},pool:3000,limit:800,prefix:'nanman',rescue:['b1','b5'],medical:'b4',attackSide:null,supplySide:'b3',discover:'b2',relicNode:'n2',relic:'mask',infiltration:'b6',answer:'forest'}
   };
   nodes.find(n=>n.id==='s6').intro='口令先说黄天，守卫答当立；祭坛仍需攻下。';
   const clone=x=>JSON.parse(JSON.stringify(x)),list=id=>id==='yellow_turban'?nodes:id==='nanman'?nanNodes:null;
