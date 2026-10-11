@@ -8,6 +8,6 @@ const HeroTraits=(()=>{
     if(p.id==='menghuo'&&unitId==='shield'&&command==='hold')v.damageTaken=.95;
     if(p.id==='zhurong'&&unitId==='archer')v.initiative=1.05;return v;
   }
-  function describe(p,hero){const text={guanyu:'武圣 · 近战攻门 +8%',menghuo:'蛮王 · 刀盾固守减伤 5%',zhurong:'火神 · 弓队先手 +5%'};return text[p?.id]||(ManualData.units[hero?.bonus]?'兵种专长 · '+ManualData.units[hero.bonus].name:'按已有专长与计谋指挥');}
+  function describe(p,hero){const text={guanyu:'武圣 · 近战攻门 +8%',menghuo:'蛮王 · 刀盾固守减伤 5%（灵斩折损除外）',zhurong:'火神 · 弓队先手 +5%'};return text[p?.id]||(ManualData.units[hero?.bonus]?'兵种专长 · '+ManualData.units[hero.bonus].name:'按已有专长与计谋指挥');}
   return {profile,validProfile,modifiers,describe};
 })();
