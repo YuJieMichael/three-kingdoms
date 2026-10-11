@@ -8,7 +8,7 @@ test('twelve new cities and increased ordinary guards/gold leave famous garrison
  assert.equal(g.getNode('yellow_qingshi').army.shield,90);assert.equal(g.attackInfo('yellow_qingshi','occupy').loot.gold,6000);
  assert.equal(g.getNode('named_jiangling').army.shield,3500);assert.equal(g.getNode('named_jiangling').loot.gold,48000);
  assert.equal(g.getNode('named_hanchuan').army.shield,150);assert.equal(g.getNode('named_hanchuan').loot.gold,6000);
- assert.equal(e.evaluate('NamedCityData.definitions.length'),16);
+ assert.equal(e.evaluate('NamedCityData.definitions.length'),21);
  for(const id of names){const n=g.getNode(id);assert.equal(n.openCity,true);assert.equal(n.faction,'yellow_turban');assert.equal(g.getWorldTile(n.x,n.y).id,id);}
 });
 test('old saves append new cities while preserving owned wild cells and existing locations, and views stay read-only',()=>{

@@ -55,7 +55,7 @@ const GovernanceSystem=(()=>{
   init(loser,now);init(winner,now);const base=heroBase(loser,id),loyalty=loser.heroLoyalty[id]??80;
   if(!base||!loser.generals.includes(id)||loser.generals.length<=1||protectedHeroes.has(id)||busyIds.includes(id)||loyalty>=50)return {id,name:base?.name||id,status:'returned',loyalty};
   const used=winner.generals.length+winner.wildGenerals.captives.length+winner.heroService.captives.length,room=Game.heroCapacity?.(winner)??winner.buildings.tavern;
-  const status=used<room&&winner.customGenerals.length+winner.heroService.captives.length<100&&winner.heroService.seq<1000000?'captured':'released';
+  const sourceIdentity=HeroIdentity.key(loser,id);const status=!HeroIdentity.owns(winner,sourceIdentity)&&used<room&&winner.customGenerals.length+winner.heroService.captives.length<100&&winner.heroService.seq<1000000?'captured':'released';
   const sourceKey=HeroIdentity.key(loser,id),sourceStart=loser.famousStarts[id],sourceGrowth=sourceStart?sourceStart.leadGrowth+10*Math.max(0,loser.generalLevels[id]-sourceStart.level):10*Math.max(0,loser.generalLevels[id]-base.level),source=base.famousSource?{kind:base.famousSource.kind,line:base.famousSource.line}:base.origin==='wild'?{kind:'wild',line:base.wildLine}:{kind:'city',line:Object.keys(NamedGarrison.generals).find(node=>NamedGarrison.generals[node].id===id)};
   const original=loser.generalLevels[id],xp=0,line=base.wildLine||'',originCity=loser.realm.heroLocations[id]||'capital';
   if(!removeHero(loser,id,{reason:status==='captured'?'城破被俘':'城破，下野离城',at:now}))return {id,name:base.name,status:'returned',loyalty};
@@ -68,7 +68,7 @@ const GovernanceSystem=(()=>{
  }
  function captiveQuote(s,id,method='gold'){
   const c=s.heroService.captives.find(c=>c.id===id);if(!c||!['gold','jewels'].includes(method))return null;const rank=HeritageSystem.recruitmentQuote(s,c.level),noble=rank.noble,cost=method==='gold'?{gold:c.level*6000,jewels:{}}:{gold:0,jewels:{pearl:Math.ceil(c.level/2)}};
-  const reason=rank.reason||(s.generals.length+s.wildGenerals.captives.length+s.heroService.captives.length>(Game.heroCapacity?.(s)??s.buildings.tavern)?'招贤馆名额不足':s.customGenerals.length>=100?'将领档案已满':s.res.gold<cost.gold||Object.entries(cost.jewels).some(([k,n])=>(s.jewels[k]||0)<n)?'黄金或珍宝不足':'');
+  const reason=(HeroIdentity.owns(s,HeroIdentity.transferKey(c.hero))?'这名将领已在帐下':'')||rank.reason||(s.generals.length+s.wildGenerals.captives.length+s.heroService.captives.length>(Game.heroCapacity?.(s)??s.buildings.tavern)?'招贤馆名额不足':s.customGenerals.length>=100?'将领档案已满':s.res.gold<cost.gold||Object.entries(cost.jewels).some(([k,n])=>(s.jewels[k]||0)<n)?'黄金或珍宝不足':'');
   return {id,name:c.hero.name,cost,noble,reason,key:[id,c.at,method,rank.rank].join('|'),expiresAt:c.at+DAY};
  }
  function recruitCaptive(s,id,method,key,now){const q=captiveQuote(s,id,method);if(!q||q.key!==key)return '俘将条件已变化';if(q.reason)return q.reason;const c=s.heroService.captives.find(c=>c.id===id);if(now-c.at>=DAY)return '俘将已逃离';s.res.gold-=q.cost.gold;for(const [k,n]of Object.entries(q.cost.jewels))s.jewels[k]-=n;s.customGenerals.push(clone(c.hero));s.generals.push(id);s.generalLevels[id]=c.level;s.generalXp[id]=c.xp;s.heroLoyalty[id]=40;s.realm.heroLocations[id]=s.realm.activeCity;s.heroService.captives=s.heroService.captives.filter(c=>c.id!==id);HeroSystem.init(s);HeroSystem.enrollStartingLevel(s,id);record(s.heroService,{at:now,id,text:c.hero.name+'已归顺，忠诚40'});return null;}

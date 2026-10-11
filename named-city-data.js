@@ -20,7 +20,12 @@ const NamedCityData=(()=>{
     {id:'named_xiaopei',name:'小沛',tier:'county',district:'徐州 · 沛国 · 小沛',parent:null,strategy:'pass',children:[],discoverChapter:3,garrison:true},
     {id:'named_wancheng',name:'宛城',tier:'county',district:'荆州 · 南阳郡 · 宛县',parent:null,strategy:'mine',children:[],discoverChapter:3,garrison:true},
     {id:'named_xiapi',name:'下邳',tier:'prefecture',district:'徐州 · 下邳国',parent:null,strategy:'granary',children:[],discoverChapter:3,garrison:true},
-    {id:'named_beihai',name:'北海',tier:'prefecture',district:'青州 · 北海国',parent:null,strategy:'balanced',children:[],discoverChapter:3,garrison:true}
+    {id:'named_beihai',name:'北海',tier:'prefecture',district:'青州 · 北海国',parent:null,strategy:'balanced',children:[],discoverChapter:3,garrison:true},
+    {id:'named_changshan',name:'常山',tier:'county',district:'河北 · 常山',parent:null,strategy:'pass',children:[],discoverChapter:3,garrison:true},
+    {id:'named_changsha',name:'长沙',tier:'county',district:'荆州 · 长沙',parent:null,strategy:'granary',children:[],discoverChapter:3,garrison:true},
+    {id:'named_xiliang',name:'西凉',tier:'county',district:'凉州 · 西凉',parent:null,strategy:'pass',children:[],discoverChapter:3,garrison:true},
+    {id:'named_xuchang',name:'许昌',tier:'prefecture',district:'中原 · 许昌',parent:null,strategy:'balanced',children:[],discoverChapter:3,garrison:true},
+    {id:'named_chaisang',name:'柴桑',tier:'prefecture',district:'江东 · 柴桑',parent:null,strategy:'granary',children:[],discoverChapter:3,garrison:true}
   ].map(d=>Object.freeze({...d,tierName:tiers[d.tier].name,plotMax:tiers[d.tier].plotMax,goldFactor:tiers[d.tier].goldFactor,children:Object.freeze(d.children),development:Object.freeze({hall:tiers[d.tier].hall,morale:70,population:tiers[d.tier].population,plots:tiers[d.tier].plots,reward:Object.freeze({food:tiers[d.tier].reward,wood:tiers[d.tier].reward,stone:tiers[d.tier].reward,iron:tiers[d.tier].reward,gold:tiers[d.tier].reward/2}),jewels:Object.freeze({...tiers[d.tier].jewels})})}));
   const byId=new Map(definitions.map(d=>[d.id,d]));
   function nodeId(value){if(typeof value==='string')return value.replace(/^city_/,'');if(!value||typeof value!=='object'||value.capital===true)return '';return typeof value.node==='string'?value.node:typeof value.id==='string'?value.id.replace(/^city_/,''):'';}
@@ -40,7 +45,12 @@ const NamedCityData=(()=>{
     garrisoned(node('named_xiaopei',42,45,8,1500,{shield:3000,spear:4500,archer:3500,cavalry:1500},{food:20000,wood:16000,stone:16000,iron:16000,gold:12000},60,{name:'小沛城门',hp:120000,protection:1.6,tower:2000,range:1300,engineWall:true}),'张飞'),
     garrisoned(node('named_wancheng',20,46,8,1500,{shield:4500,spear:3000,archer:3000,cavalry:1000,ballista:60},{food:16000,wood:16000,stone:22000,iron:20000,gold:12000},62,{name:'宛城城门',hp:140000,protection:1.7,tower:1800,range:1300,engineWall:true}),'典韦'),
     garrisoned(node('named_xiapi',50,50,10,3000,{shield:7000,spear:7000,archer:8000,cavalry:6000,heavy:1500,ballista:150,catapult:40},{food:40000,wood:32000,stone:32000,iron:32000,gold:30000},80,{name:'下邳城门墙',hp:300000,protection:1.9,tower:3600,range:1400,engineWall:true}),'吕布'),
-    garrisoned(node('named_beihai',57,37,9,2500,{shield:6000,spear:6000,archer:9000,cavalry:3000,ballista:200},{food:32000,wood:28000,stone:28000,iron:28000,gold:24000},76,{name:'北海城门墙',hp:250000,protection:1.8,tower:4000,range:1500,engineWall:true}),'太史慈')
+    garrisoned(node('named_beihai',57,37,9,2500,{shield:6000,spear:6000,archer:9000,cavalry:3000,ballista:200},{food:32000,wood:28000,stone:28000,iron:28000,gold:24000},76,{name:'北海城门墙',hp:250000,protection:1.8,tower:4000,range:1500,engineWall:true}),'太史慈'),
+    garrisoned(node('named_changshan',35,12,8,1500,{shield:3500,spear:4000,archer:3500,cavalry:1500},{food:20000,wood:16000,stone:16000,iron:16000,gold:12000},60,{name:'常山城门',hp:120000,protection:1.6,tower:2000,range:1300,engineWall:true}),'赵云'),
+    garrisoned(node('named_changsha',34,56,8,1500,{shield:3500,spear:4000,archer:3500,cavalry:1500},{food:20000,wood:16000,stone:16000,iron:16000,gold:12000},60,{name:'长沙城门',hp:120000,protection:1.6,tower:2000,range:1300,engineWall:true}),'黄忠'),
+    garrisoned(node('named_xiliang',6,28,8,1500,{shield:3500,spear:4000,archer:3500,cavalry:1500},{food:20000,wood:16000,stone:16000,iron:16000,gold:12000},60,{name:'西凉城门',hp:120000,protection:1.6,tower:2000,range:1300,engineWall:true}),'马超'),
+    garrisoned(node('named_xuchang',35,24,9,2500,{shield:3500,spear:4000,archer:3500,cavalry:1500},{food:20000,wood:16000,stone:16000,iron:16000,gold:12000},60,{name:'许昌城门',hp:250000,protection:1.6,tower:2000,range:1300,engineWall:true}),'荀彧'),
+    garrisoned(node('named_chaisang',59,53,9,2500,{shield:3500,spear:4000,archer:3500,cavalry:1500},{food:20000,wood:16000,stone:16000,iron:16000,gold:12000},60,{name:'柴桑城门',hp:250000,protection:1.6,tower:2000,range:1300,engineWall:true}),'周瑜')
   ]);
   return Object.freeze({tiers,definitions:Object.freeze(definitions),nodes,nodeId,definition});
 })();

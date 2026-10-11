@@ -4,7 +4,7 @@ const HeroSystem=(()=>{
   // This game's initial command values, not an original-game or historical table.
   const initialLeadershipValues=Object.freeze({menghuo:22,zhurong:20,tadun:23,huaman:18,baosanniang:19,weiyan:20,xushu:18,zhaoyun:23,huangzhong:20,ganning:21,zhangliao:28,machao:23,xunyu:16,pangtong:23,zhouyu:30,guanyu:25,zhangfei:20,dianwei:15,lvbu:24,taishici:20,liubei:25,sunjian:25,gaoshun:24,chengong:20,lejin:20,yujin:24,zhanghe:25,xuhuang:25,zhugeliang:30,sunce:28,xuchu:15});
   const initialLeadership=key=>Object.hasOwn(initialLeadershipValues,key)?initialLeadershipValues[key]:0;
-  const startingLevels=Object.freeze({huaman:60,baosanniang:60,zhurong:65,tadun:65,menghuo:65,guanyu:70,zhangfei:70,dianwei:65,taishici:65,lvbu:70});
+  const startingLevels=Object.freeze({huaman:60,baosanniang:60,zhurong:65,tadun:65,menghuo:65,guanyu:70,zhangfei:70,dianwei:65,taishici:65,lvbu:70,zhaoyun:65,huangzhong:65,machao:70,xunyu:65,zhouyu:70});
   function startingLevel(s,id){
     const key=HeroIdentity.key(s,id),raw=s.customGenerals?.find(g=>g.id===id);
     if(raw?.origin==='battle'&&key&&raw.famousSource)return s.captureLevels?.[id]?.level||0;
@@ -17,8 +17,8 @@ const HeroSystem=(()=>{
     return s.captureLevels[id].level;
   }
   function validCaptureLevels(s){const rows=s.captureLevels;if(!rows||typeof rows!=='object'||Array.isArray(rows)||Object.keys(rows).length>300)return false;
-    if(!(s.wildGenerals?.captives||[]).every(c=>Object.hasOwn(rows,c.id))||!(s.heroService?.captives||[]).every(c=>Object.hasOwn(rows,c.id))||!Object.entries(s.realm?.namedCities?.garrisons||{}).every(([id,r])=>!r.captive||Object.hasOwn(rows,NamedGarrison.generals[id]?.id)))return false;
-    return Object.entries(rows).every(([id,r])=>{const raw=s.customGenerals?.find(g=>g.id===id),wildRow=s.wildGenerals?.rumors?.find(c=>c.id===id),held=s.heroService?.captives?.find(c=>c.id===id),city=Object.values(NamedGarrison.generals).find(g=>g.id===id),expected=wildRow?wild.recruitmentLevel(wild.definitions.find(d=>d.line===wildRow.line)):city?startingLevels[city.name==='关羽'?'guanyu':city.name==='张飞'?'zhangfei':city.name==='典韦'?'dianwei':city.name==='吕布'?'lvbu':'taishici']:null;
+    if(!(s.wildGenerals?.captives||[]).every(c=>Object.hasOwn(rows,c.id))||!(s.heroService?.captives||[]).every(c=>Object.hasOwn(rows,c.id))||!Object.entries(s.realm?.namedCities?.garrisons||{}).every(([id,r])=>!r?.captive||Object.hasOwn(rows,NamedGarrison.generals[id]?.id)))return false;
+    return Object.entries(rows).every(([id,r])=>{const raw=s.customGenerals?.find(g=>g.id===id),wildRow=s.wildGenerals?.rumors?.find(c=>c.id===id),held=s.heroService?.captives?.find(c=>c.id===id),city=Object.values(NamedGarrison.generals).find(g=>g.id===id),expected=wildRow?wild.recruitmentLevel(wild.definitions.find(d=>d.line===wildRow.line)):city?NamedGarrison.recruitmentLevel(Object.keys(NamedGarrison.generals).find(id=>NamedGarrison.generals[id]===city)):null;
       return (raw||wildRow||held||city)&&r&&typeof r==='object'&&!Array.isArray(r)&&Object.keys(r).length===3&&Number.isSafeInteger(r.original)&&r.original>=1&&r.original<=10000&&Number.isInteger(r.loss)&&r.loss>=0&&r.loss<=3&&r.level===Math.max(1,r.original-r.loss)&&(!expected||r.original===expected)&&(!held||held.level===r.level)&&(!raw?.famousSource||raw.famousSource.commandCredit<=10*Math.max(0,r.level-raw.level))&&(!s.generals.includes(id)||s.generalLevels[id]>=r.level);
     });
   }
@@ -122,7 +122,7 @@ const HeroSystem=(()=>{
     }
     function liveWild(){const error=Game.saveBlockReason();if(error)return {error};Game.tick(Date.now(),false);init(Game.state);return {s:Game.state};}
     const persist=()=>Game.save()?null:Game.saveBlockReason()||'保存失败，请保留当前页面';
-    const ownsDefinition=(s,d)=>s.customGenerals.some(g=>s.generals.includes(g.id)&&g.origin==='wild'&&g.wildLine===d.line&&s.wildGenerals.recruited.includes(g.id)&&s.wildGenerals.rumors.some(r=>r.id===g.id&&r.line===d.line&&r.status==='recruited'));
+    const ownsDefinition=(s,d)=>HeroIdentity.owns(s,{warrior:'weiyan',strategist:'xushu'}[d.line]||d.line)||s.customGenerals.some(g=>s.generals.includes(g.id)&&g.origin==='wild'&&g.wildLine===d.line&&s.wildGenerals.recruited.includes(g.id)&&s.wildGenerals.rumors.some(r=>r.id===g.id&&r.line===d.line&&r.status==='recruited'));
     function discover(){
       const live=liveWild();if(live.error)return live.error;const s=live.s,w=s.wildGenerals;if(s.buildings.inn<1)return '请先建造 1 级客栈';
       let changed=false;for(const d of definitions){const previous=w.rumors.find(r=>r.line===d.line);if(d.retired&&(!previous||previous.status==='released'))continue;if(unlockReason(s,d))continue;if(ownsDefinition(s,d))continue;
@@ -157,13 +157,13 @@ const HeroSystem=(()=>{
     function fundsReason(s,cost){if(s.res.gold<cost.gold)return '黄金不足';for(const [id,n]of Object.entries(cost.jewels))if((s.jewels[id]||0)<n)return Progression.jewels[id].name+'不足';return '';}
     function recruitQuote(s,id,method='gold'){
       const c=s.wildGenerals?.captives.find(c=>c.id===id),d=c&&definition(c.line),cost=d&&payment(d,method);if(!c||!cost)return null;
-      const level=s.captureLevels?.[id]?.level||recruitmentLevel(d),rank=HeritageSystem.recruitmentQuote(s,level);const reason=rank.reason||(roomUsed(s)>roomCapacity(s)?'招贤馆名额不足，请扩建或释放俘将':'')||(s.customGenerals.length>=100?'将领总量已达上限':'')||fundsReason(s,cost);
+      const level=s.captureLevels?.[id]?.level||recruitmentLevel(d),rank=HeritageSystem.recruitmentQuote(s,level);const reason=(ownsDefinition(s,d)?'这名将领已在帐下':'')||rank.reason||(roomUsed(s)>roomCapacity(s)?'招贤馆名额不足，请扩建或释放俘将':'')||(s.customGenerals.length>=100?'将领总量已达上限':'')||fundsReason(s,cost);
       return {id,name:c.hero.name,method,cost,level,noble:rank.noble,nobleName:rank.nobleName,loyalty:c.loyalty,reason,key:[id,method,rank.rank,level,roomUsed(s),roomCapacity(s),s.customGenerals.length].join('|')};
     }
     function recruit(id,method,key){
       const live=liveWild();if(live.error)return live.error;const s=live.s,q=recruitQuote(s,id,method);if(!q||typeof key!=='string'||q.key!==key)return '招降条件已变化，请重新查看俘将';if(q.reason)return q.reason;
-      const w=s.wildGenerals,c=w.captives.find(c=>c.id===id);s.res.gold-=q.cost.gold;for(const [j,n]of Object.entries(q.cost.jewels))s.jewels[j]-=n;
-      s.customGenerals.push({...c.hero});s.generals.push(id);s.generalLevels[id]=c.hero.level;s.generalXp[id]=0;s.heroLoyalty[id]=c.loyalty;w.captives=w.captives.filter(c=>c.id!==id);w.rumors.find(r=>r.id===id).status='recruited';w.recruited.push(id);init(s);if(startingLevel(s,id))enrollStartingLevel(s,id);else s.generalLevels[id]=s.captureLevels?.[id]?.level||c.hero.level;return persist();
+      const before=JSON.parse(JSON.stringify(s)),w=s.wildGenerals,c=w.captives.find(c=>c.id===id);s.res.gold-=q.cost.gold;for(const [j,n]of Object.entries(q.cost.jewels))s.jewels[j]-=n;
+      s.customGenerals.push({...c.hero});s.generals.push(id);s.generalLevels[id]=c.hero.level;s.generalXp[id]=0;s.heroLoyalty[id]=c.loyalty;w.captives=w.captives.filter(c=>c.id!==id);w.rumors.find(r=>r.id===id).status='recruited';w.recruited.push(id);init(s);if(startingLevel(s,id))enrollStartingLevel(s,id);else s.generalLevels[id]=s.captureLevels?.[id]?.level||c.hero.level;const error=persist();if(error){Object.assign(s,before);CitySystem.capture(s);}return error;
     }
     function rewardQuote(s,id,method='gold'){
       if(!s.generals.includes(id)||!['gold','jewels'].includes(method))return null;const current=loyalty(s,id),raise=Math.min(10,100-current),cost=method==='gold'?{gold:2000,jewels:{}}:{gold:0,jewels:{pearl:1}};
