@@ -2,11 +2,12 @@
 let cityPresetPending=null,salarySpendPending=null;
 const budgetHours=(hours,stable)=>hours===null?stable:hours.toFixed(1)+'小时';
 function economyBudgetText(b){return `粮 ${b.foodNet>=0?'+':''}${num(Math.round(b.foodNet))}/时 · ${budgetHours(b.foodHours,'稳定')} ｜ 薪 ${budgetHours(b.goldHours,'无支出')} ｜ 闲民 ${num(b.population)}${b.warnings.includes('salary')?' ｜ 薪俸不足8小时':''}${b.warnings.includes('food')?' ｜ 粮草不足8小时':''}`;}
+function economyBudgetContent(b){return economyBudgetText(b).split(/ ｜ | · /).map(text=>`<span>${esc(text)}</span>`).join('');}
 function economyBudgetHTML(){
  if(!Game.domesticStrategyAvailable())return '';const b=Game.economyBudget();
- return `<section class="economy-budget-bar ${b.warnings.length?'negative':''}" aria-label="本城经营预算"><button data-action="economyDetails" data-economy-budget>${esc(economyBudgetText(b))}</button>${btn('⚒ 模板','cityPresets','','small secondary')}</section>`;
+ return `<section class="economy-budget-bar ${b.warnings.length?'negative':''}" aria-label="本城经营预算"><button data-action="economyDetails" data-economy-budget>${economyBudgetContent(b)}</button>${btn('⚒ 模板','cityPresets','','small secondary')}</section>`;
 }
-function refreshEconomyBudget(){document.querySelectorAll('[data-economy-budget]').forEach(el=>{const b=Game.economyBudget();el.textContent=economyBudgetText(b);el.closest('.economy-budget-bar')?.classList.toggle('negative',b.warnings.length>0);});}
+function refreshEconomyBudget(){document.querySelectorAll('[data-economy-budget]').forEach(el=>{const b=Game.economyBudget();el.innerHTML=economyBudgetContent(b);el.closest('.economy-budget-bar')?.classList.toggle('negative',b.warnings.length>0);});}
 function economyDetailsModal(){const b=Game.economyBudget();showModal('本城经营账目',`<p>${esc(Game.cityMeta().name)} · 当前库存估算</p><div class="modal-info"><span>黄金</span><strong>${num(Math.floor(b.gold))}</strong></div><p>本城时薪 ${num(b.wages)} · 欠饷 ${num(b.owed)} · 24小时留金 ${num(b.salaryReserve)}</p><p>可付薪 ${budgetHours(b.goldHours,'无支出')} · 粮食净余 ${num(Math.round(b.foodNet))}/时 · 可支撑 ${budgetHours(b.foodHours,'稳定')}</p><p>空闲人口 ${num(b.population)}</p>${b.warnings.length?'<p class="notice">'+(b.warnings.includes('salary')?'薪俸不足8小时，请补金。 ':'')+(b.warnings.includes('food')?'粮草不足8小时，请补给。':'')+'</p>':''}<details><summary>估算说明</summary><p class="hint">先扣欠饷再估薪俸时长；不预支未来收入。每级将领时薪20黄金，行军调城途中沿用主城付薪。粮草计入现有驻军、在途、伤兵与各类队伍的真实耗粮。</p></details>`,btn('城务','governance','','secondary')+btn('关闭','close','','secondary'));}
 // The callback must call the real Game action, which revalidates cost/balance/queues.
 function salarySpendConfirm(gold,proceed,back=()=>modal.close()){

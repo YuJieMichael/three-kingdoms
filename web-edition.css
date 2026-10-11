@@ -820,7 +820,7 @@ dialog .web-plot-preview h3{
 
 /* City goals and a short local budget on narrow phone screens. */
 .economy-budget-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;margin-bottom:10px;border:1px solid var(--line,#807354);border-radius:8px;background:var(--panel,#ebe4cb);font-size:12px}
-.economy-budget-bar>button:first-child{flex:1;min-width:0;text-align:left;background:transparent;border:0;color:inherit;white-space:normal;line-height:1.7;padding:0;overflow-wrap:anywhere}
+.economy-budget-bar>button:first-child{flex:1;min-width:0;text-align:left;background:transparent;border:0;color:inherit;display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;white-space:normal;line-height:1.7;padding:0;overflow-wrap:normal}
 .economy-budget-bar.negative{color:#9b452e;border-color:#a66d46}
 .city-preset-targets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
 .city-preset-targets label{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0;font-size:13px}
@@ -844,3 +844,14 @@ dialog .web-plot-preview h3{
 .battlefield-route-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.battlefield-route-row.is-side{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:5px;padding-left:12px;border-left:2px solid #827753}
 .battlefield-route-row .battlefield-node{margin:0;padding:8px 6px;min-height:70px;gap:3px;min-width:0;overflow-wrap:anywhere}.battlefield-route-row .battlefield-node strong{font-size:13px}.battlefield-route-row .battlefield-node small{font-size:10px;line-height:1.3}
 .battlefield-map .battlefield-reward{font-size:13px;margin:6px 0}.battlefield-map>.sub{margin:6px 0}
+
+/* Keep each budget metric intact and the codex actions within a phone card. */
+.economy-budget-bar [data-economy-budget]>span{white-space:nowrap}
+.hero-codex-grid{display:grid;gap:8px}
+.hero-codex-entry{min-width:0;padding:10px;border:1px solid var(--line,#b0b69c);border-radius:8px}
+.hero-codex-entry .section-title{flex-wrap:wrap;gap:4px;margin-bottom:4px}
+.hero-codex-entry p{margin:5px 0}
+.hero-codex-entry .guide-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
+.hero-codex-entry .guide-actions button{min-width:0;min-height:44px;padding:6px 4px}
+.hero-codex-entry .guide-actions .btn{grid-column:auto}
+.hero-codex-entry details summary{min-height:44px;display:flex;align-items:center}
