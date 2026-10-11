@@ -12,7 +12,7 @@ function prepared(){
   return e;
 }
 function ui(e){
-  e.evaluate(`function S(){return Game.state;}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}function num(n){return String(n);}function duration(n){return n+' 秒';}function btn(label,action,id='',cls='',disabled=false){return '<button data-action="'+action+'" data-id="'+id+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}globalThis.modalOutput={};function showModal(title,body,footer){modalOutput={title,body,footer};}`);
+  e.evaluate(`function S(){return Game.state;}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}function num(n){return String(n);}function duration(n){return n+' 秒';}function btn(label,action,id='',cls='',disabled=false){return '<button data-action="'+action+'" data-id="'+id+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}var manualModalContext=null;globalThis.modalOutput={};function showModal(title,body,footer){modalOutput={title,body,footer};}`);
   e.evaluate(read('city-ui.js'));e.evaluate(read('named-city-ui.js'));return e;
 }
 test('fixed city roles survive renaming, hall upgrades and site migration; home and self-founded plains remain balanced',()=>{

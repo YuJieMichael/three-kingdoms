@@ -808,3 +808,5 @@ dialog .web-plot-preview h3{
 
 /* Journey milestones remain compact and touch friendly. */
 .journey-list{display:grid;gap:10px}.journey-card{padding:12px;border:1px solid #78795c;border-radius:6px;background:#29352b}.journey-card.is-current{border-color:#c4a66c}.journey-card h3{font-size:16px;margin:0}.journey-card .guide-actions{display:flex;gap:8px}.journey-card button{min-height:44px;flex:1}.journey-card .hint{overflow-wrap:anywhere}
+
+.city-overview-card .guide-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.city-overview-card button{min-height:44px}.city-overview-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;font-size:12px;margin:10px 0}.city-overview-metrics span{overflow-wrap:anywhere}.city-overview-card.negative{border-color:#c4a66c}
