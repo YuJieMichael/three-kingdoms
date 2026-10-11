@@ -53,7 +53,7 @@ const Game = (() => {
     const level=override?.level??(claim?Math.max(0,claim.level-Math.floor((Date.now()-claim.at)/86400000)):base);
     // Use the package's NPC value budget and conversion factor; stable seeded weights
     // adapt its random composition to a persistent browser map.
-    const army={},budget=(ReferenceRules.fieldBudget[level]||0)*1.1,ids=Object.keys(ReferenceRules.npcValues);let allocated=0;
+    const army={},budget=(ReferenceRules.fieldBudget[level]||0)*1.1*(level<=2?1.25:level<=5?1.5:level<=8?2:2.5),ids=Object.keys(ReferenceRules.npcValues);let allocated=0;
     ids.forEach((id,i)=>{const weight=(override&&!override.legacy?WildFields.weight(seed,i):hash(x+i*7,y+i*13))%(100-allocated||1);allocated+=weight;const count=Math.floor(budget*weight*.0078/ReferenceRules.npcValues[id]);if(count>0)army[id]=count;});
     if(level&&!Object.keys(army).length)army.militia=1;
     let bonus=0;if(level&&type!=='plain')bonus=(type==='lake'?5+level*3:type==='grass'?11+level:3+level*2)/100;
@@ -1009,7 +1009,7 @@ const Game = (() => {
     const wildGeneral=HeroSystem.wild.settle(state,n,b,won,Date.now());
     const {captures,captureDiscarded}=won?rollCaptives(b,alive,n):{captures:blankArmy(),captureDiscarded:0};
     const received=Object.fromEntries(Object.keys(resources).map(id=>[id,Math.max(0,Math.floor(state.res[id]-resourceBefore[id]))])),progressionResult=Progression.battle(state,n,b,won,received);
-    const xp=won?n.level*45:15;HeroSystem.addXp(state,e.general,xp);
+    const xp=HeroSystem.battleXp(n.level,won,HeroSystem.defeatedPopulation(b.enemy));HeroSystem.addXp(state,e.general,xp);
     const equipmentResult=won?HeroSystem.drops(state,n.level):{equipmentDrops:[],equipmentDiscarded:0};
     if(stationed)state.expedition=null;else{e.army=back;e.phase='return';e.start=Date.now();e.end=Date.now()+(e.mountProfile?.speed>0?e.returnSeconds:marchQuote(n.id,back,'',e.mountProfile).returnSeconds)*1000;}
     const warOrder=WarOrders.settle(state,n,won,Date.now(),{round:b.round,machineGateAttacks:b.machineGateAttacks||0,army:originalArmy,lost,back,wounded,alive});

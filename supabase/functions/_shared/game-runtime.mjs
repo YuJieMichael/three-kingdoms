@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="78878cca7fe26c6f9fe6f9c76ca8df2624d410b6a8708a784e17401bc7529fcd";
+export const runtimeHash="6a605fed1cd9a50d67e3e2df65a913445609918608e3eff9d70d8425e9d96613";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -12385,6 +12385,12 @@ const HeroSystem=(()=>{
   }
   // Construction rewards depend on the completed level, not duration or game speed.
   const constructionXp=level=>level*10;
+  function defeatedPopulation(rows){return rows.reduce((sum,row)=>{
+    const unit=ManualData.units[row.id];if(!unit)return sum;
+    const surviving=Math.max(0,Math.ceil(row.hp/row.stats.hp));
+    return sum+Math.max(0,row.initial-Math.min(row.initial,surviving))*(unit.people||1);
+  },0);}
+  function battleXp(level,won,population=0){return won?level*45+Math.floor(Math.max(0,population)/5):15;}
   function addXp(s,id,xp){s.generalXp[id]=(s.generalXp[id]||0)+xp;while(s.generalLevels[id]<10000&&s.generalXp[id]>=s.generalLevels[id]*80){s.generalXp[id]-=s.generalLevels[id]*80;s.generalLevels[id]++;}init(s);}
   function addEquipment(s,slot,tier,named){const e={id:++s.equipmentSeq,slot,tier,enhance:0,hero:'',...(named?{named}:{})};s.equipment.push(e);return e;}
   function drops(s,level){
@@ -12422,7 +12428,7 @@ const HeroSystem=(()=>{
   function refine(eid){const blocked=Game.saveBlockReason();if(blocked)return blocked;const s=live(),e=s.equipment.find(e=>e.id===eid);if(!e)return '装备不存在';if(e.relic)return '剧情奇物不能强化、炼化或分解';if(e.slot==='mount')return '坐骑不能炼化属性';if(e.tier<3)return '只有珍稀和传说装备可以炼化';if(e.hero&&busy(e.hero))return busy(e.hero);if((s.inventory.refine||0)<1)return '需要炼化鼎';s.inventory.refine--;e.refine={stat:REFINE_STATS[Math.floor(Math.random()*REFINE_STATS.length)],value:3+Math.floor(Math.random()*6)};Progression.record(s,'item');return save();}
   function expand(item){const s=live();if(!['rack','rackAdvanced'].includes(item)||(s.inventory[item]||0)<1)return '没有武器架';if(s.equipmentCapacity>=500)return '装备容量已达 500 格';s.equipmentCapacity=Math.min(500,s.equipmentCapacity+(item==='rack'?5:50));s.inventory[item]--;Progression.record(s,'item');return save();}
   for(const [id,effect] of Object.entries({resetHero:'heroReset',rack:'equipmentRack',rackAdvanced:'equipmentRack',pearl:'equipmentMaterial',refine:'equipmentRefine'}))ManualData.shop.find(x=>x.id===id).effect=effect;
-  return {initialLeadership,startingLevel,captureLevel,enrollStartingLevel,migrateStartingLevels,baseLeadership,battlefieldSetBonus,attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,setSlots,setExchangeQuote,exchangeSet,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
+  return {initialLeadership,startingLevel,captureLevel,enrollStartingLevel,migrateStartingLevels,baseLeadership,battlefieldSetBonus,attrs,allocatable,slots,legacySlots,forgeSlots,mountSpeed,mountProfile,validMountProfile,actionSpeed,movementSpeed,speedStats,validSpeedStats,mountQuote,buyMount,qualities,names,wild,init,valid,validEquipment,totalPoints,remaining,itemName,requiredLevel,stats,bonus,constructionXp,defeatedPopulation,battleXp,addXp,addEquipment,drops,allocate,reset,drillQuote,drill,gift,equip,unequip,forgeQuote,forge,enhanceQuote,enhance,salvage,setSlots,setExchangeQuote,exchangeSet,expand,SET_BONUS,setTier,legendQuote,forgeLegend,claimLegend,seekLegend,refine};
 })();
 
 
@@ -14014,7 +14020,7 @@ const NamedCityData=(()=>{
   const byId=new Map(definitions.map(d=>[d.id,d]));
   function nodeId(value){if(typeof value==='string')return value.replace(/^city_/,'');if(!value||typeof value!=='object'||value.capital===true)return '';return typeof value.node==='string'?value.node:typeof value.id==='string'?value.id.replace(/^city_/,''):'';}
   function definition(value){return byId.get(nodeId(value))||null;}
-  const node=(id,x,y,level,population,army,loot,time,fortification)=>{const d=byId.get(id);return Object.freeze({id,name:d.name,namedCity:true,openCity:true,terrain:'fort',faction:'local_warlord',x,y,level,population,army:Object.freeze(army),loot:Object.freeze(loot),time,...(fortification?{fortification:Object.freeze(fortification)}:{}),desc:d.district+'的'+d.tierName+'。占领须连续攻城降低民心至零以下；先控制指定辖区，再建立独立城市与补给线。',reward:'本城资源田最高 '+d.plotMax+' 级 · 黄金税收 +'+Math.round((d.goldFactor-1)*100)+'%'});};
+  const node=(id,x,y,level,population,army,loot,time,fortification)=>{const d=byId.get(id);return Object.freeze({id,name:d.name,namedCity:true,openCity:true,terrain:'fort',faction:'local_warlord',x,y,level,population,army:Object.freeze(Object.fromEntries(Object.entries(army).map(([unit,count])=>[unit,d.garrison?count:Math.max(1,Math.round(count*1.5))]))),loot:Object.freeze({...loot,gold:(loot.gold||0)*4}),time,...(fortification?{fortification:Object.freeze(fortification)}:{}),desc:d.district+'的'+d.tierName+'。占领须连续攻城降低民心至零以下；先控制指定辖区，再建立独立城市与补给线。',reward:'本城资源田最高 '+d.plotMax+' 级 · 黄金税收 +'+Math.round((d.goldFactor-1)*100)+'%'});};
   const garrisoned=(n,general)=>Object.freeze({...n,desc:byId.get(n.id).district+'的'+byId.get(n.id).tierName+'，由'+general+'镇守。'+general+'忠诚 30 以上时攻城胜利只能围困、不能占领；攻城、断粮道、劝降与离间把忠诚压到 30 以下，再赢一次即可占城并俘获'+general+'。'+(byId.get(n.id).tier==='prefecture'?'郡城须先占领三分之一的名城。':'')});
   const nodes=Object.freeze([
     node('named_hanchuan',28,20,5,500,{shield:100,spear:100,archer:110,cavalry:30},{food:2200,wood:1800,stone:1800,iron:1800,gold:1500},38),
@@ -14167,7 +14173,17 @@ const YellowCityData={
   }
 };
 // v0.34.34: yellow-turban garrisons were 50–290 men; raised five-fold so taking a city needs a real army.
-YellowCityData.armyScale=5;
+// Twelve rotating occupation targets share the established same-level troop mix.
+for(const [id,name,x,y,source] of [
+  ['xikou','溪口',29,29,'qingshi'],['shiqiao','石桥',35,29,'qingshi'],['songlin','松林',29,35,'qingshi'],['nangang','南岗',35,35,'qingshi'],
+  ['dongdu','东渡',24,29,'baisha'],['xiting','西亭',40,31,'baisha'],['changpo','长坡',30,40,'baisha'],['zhuxi','竹溪',38,25,'baisha'],
+  ['anling','安陵',20,34,'chigang'],['wangshan','望山',45,34,'chigang'],['pingyuan','平原',18,22,'yuntai'],['cangwu','苍梧',48,28,'yuntai']
+]){
+  const template=YellowCityData.nodes.find(n=>n.id==='yellow_'+source);
+  YellowCityData.nodes.push({...template,id:'yellow_'+id,name:name+'黄巾城',x,y,army:{...template.army},loot:{...template.loot},desc:'黄巾据城屯兵。占领战胜利可缴获黄金；每小时刷新，备足运输兵。',reward:'占领缴获黄金 · 每小时刷新'});
+}
+YellowCityData.armyScale=7.5;
+for(const n of YellowCityData.nodes)n.loot.gold*=4;
 for(const n of YellowCityData.nodes)for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*YellowCityData.armyScale);
 
 
@@ -16225,7 +16241,7 @@ const Game = (() => {
     const level=override?.level??(claim?Math.max(0,claim.level-Math.floor((Date.now()-claim.at)/86400000)):base);
     // Use the package's NPC value budget and conversion factor; stable seeded weights
     // adapt its random composition to a persistent browser map.
-    const army={},budget=(ReferenceRules.fieldBudget[level]||0)*1.1,ids=Object.keys(ReferenceRules.npcValues);let allocated=0;
+    const army={},budget=(ReferenceRules.fieldBudget[level]||0)*1.1*(level<=2?1.25:level<=5?1.5:level<=8?2:2.5),ids=Object.keys(ReferenceRules.npcValues);let allocated=0;
     ids.forEach((id,i)=>{const weight=(override&&!override.legacy?WildFields.weight(seed,i):hash(x+i*7,y+i*13))%(100-allocated||1);allocated+=weight;const count=Math.floor(budget*weight*.0078/ReferenceRules.npcValues[id]);if(count>0)army[id]=count;});
     if(level&&!Object.keys(army).length)army.militia=1;
     let bonus=0;if(level&&type!=='plain')bonus=(type==='lake'?5+level*3:type==='grass'?11+level:3+level*2)/100;
@@ -17181,7 +17197,7 @@ const Game = (() => {
     const wildGeneral=HeroSystem.wild.settle(state,n,b,won,Date.now());
     const {captures,captureDiscarded}=won?rollCaptives(b,alive,n):{captures:blankArmy(),captureDiscarded:0};
     const received=Object.fromEntries(Object.keys(resources).map(id=>[id,Math.max(0,Math.floor(state.res[id]-resourceBefore[id]))])),progressionResult=Progression.battle(state,n,b,won,received);
-    const xp=won?n.level*45:15;HeroSystem.addXp(state,e.general,xp);
+    const xp=HeroSystem.battleXp(n.level,won,HeroSystem.defeatedPopulation(b.enemy));HeroSystem.addXp(state,e.general,xp);
     const equipmentResult=won?HeroSystem.drops(state,n.level):{equipmentDrops:[],equipmentDiscarded:0};
     if(stationed)state.expedition=null;else{e.army=back;e.phase='return';e.start=Date.now();e.end=Date.now()+(e.mountProfile?.speed>0?e.returnSeconds:marchQuote(n.id,back,'',e.mountProfile).returnSeconds)*1000;}
     const warOrder=WarOrders.settle(state,n,won,Date.now(),{round:b.round,machineGateAttacks:b.machineGateAttacks||0,army:originalArmy,lost,back,wounded,alive});

@@ -27,9 +27,9 @@ test('inn candidates in one refresh never share a name, also against hired gener
     for(let i=0;i<5;i++){e.advance(1234+i*977);assert.equal(g.refreshInn(),null);const names=g.state.innCandidates.map(c=>c.name);assert.equal(new Set(names).size,names.length,names.join());assert.ok(!names.includes('魏衡'));}
     g.state.customGenerals.pop();}
 });
-test('late garrisons are raised by a fixed factor: chapter 2 ×1.3, chapter 3 ×1.5, yellow-turban cities ×5',()=>{
+test('late garrisons are raised by a fixed factor: chapter 2 ×1.3, chapter 3 ×1.5, yellow-turban cities ×7.5',()=>{
   const e=loadGame(),c=e.Chapter,y=e.evaluate('YellowCityData');
-  assert.equal(JSON.stringify(c.armyScale),'{"2":1.3,"3":1.5,"4":1}');assert.equal(y.armyScale,5);
+  assert.equal(JSON.stringify(c.armyScale),'{"2":1.3,"3":1.5,"4":1}');assert.equal(y.armyScale,7.5);
   assert.ok(total(c.chapterThreeNodes.at(-1).army)>=lateGarrisons.innerCityMin,'河洛内城 '+total(c.chapterThreeNodes.at(-1).army));
   assert.ok(y.nodes.every(n=>total(n.army)>=lateGarrisons.yellowCityMin),y.nodes.map(n=>total(n.army)).join());
 });
