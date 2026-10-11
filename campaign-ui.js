@@ -29,6 +29,8 @@ function battleDropHint(n){const info=Game.battleDropInfo(n.id);return `战斗�
 function siegeIntelHTML(n){return n.commander?`<p class="notice">敌将 ${n.commander.name} · ${n.commander.title} · 攻击 ×${Math.round(n.commander.attack*100)/100} / 防御 ×${Math.round(n.commander.defense*100)/100}${n.fortification?`<br>${n.fortification.name}：耐久 ${num(n.fortification.hp)} · 掩护 ×${n.fortification.protection} · 箭楼射程 ${n.fortification.range}<br>${n.orderRoute?'讨伐':'占领'}需要破城并歼敌；冲车近战破门，投石车远射破墙。${n.orderRoute?'':'掠夺不启用城防。'}`:''}</p>`:'';}
 function battleCargoHTML(result){if(!result.won||result.cargoCapacity===undefined)return '';const receipt=result.overCapacity!==undefined?'<br>战利品在胜利结算时入库，满仓或超仓也能收取；返城不重复结算。':'';return `<p class="notice cargo-summary">幸存部队负重 ${num(result.cargoCapacity)} · 装载资源 ${num(result.cargoLoaded)} / ${num(result.cargoCapacity)}${result.lootDiscarded?`<br>负重不足，${num(result.lootDiscarded)} 基础资源未能带回。`:''}${receipt}<br><span class="hint">伤兵不参与搬运；额外资源与基础战利品共用负重。</span></p>`;}
 function battleFailureHTML(result){
+  if(result.facts){const v=BattleReview.explain(result.facts);return `<section class="battle-facts">${v.reasons.map(reason=>`<p>${esc(reason)}</p>`).join('')}${v.advice?`<p class="hint">${esc(v.advice)}</p>`:''}</section>`;}
+
   const f=result.failure;if(!f)return '';
   const reason={retreat:'主动撤退',army:'我军已失去战斗力',gate:'达到回合上限，城防未破',enemy:'达到回合上限，守军未清空',gate_and_enemy:'达到回合上限，城防和守军均未清除'}[f.reason];
   return `<p class="notice">${reason} · 剩余守军 ${num(f.enemyRemaining)} 人${f.gateHp?` · 城防耐久 ${num(f.gateHp)}`:''}${f.outOfRange?'<br>部分坚守部队无法覆盖敌军。下次可先「向前」接敌，进入射程后再坚守。':''}${f.gateHp?'<br>攻城需同时破城歼敌；可带冲车或投石车，并用步兵保护器械。':''}</p>`;

@@ -203,4 +203,27 @@ function battleReview(report = {}, {battle = null, evidence = null, practice = f
   return result;
 }
 
-return {createRoundEvidence,collectRoundEvidence,battleReview};})();
+
+function createFacts(b){return {version:1,endedBy:'ongoing',hadGate:!!b.gate,gateAttacks:0,gateBroken:false,machineLost:0,attacks:0,rounds:0};}
+function validFacts(f){return object(f)&&Object.keys(f).length===8&&f.version===1&&['ongoing','win','defeat','army','timeout','retreat'].includes(f.endedBy)&&typeof f.hadGate==='boolean'&&typeof f.gateBroken==='boolean'&&(!f.gateBroken||f.hadGate)&&['gateAttacks','machineLost','attacks','rounds'].every(k=>count(f[k]))&&f.rounds<=30&&f.gateAttacks<=f.attacks&&f.attacks<=1000000&&f.machineLost<=Number.MAX_SAFE_INTEGER;}
+function collectFacts(b){
+  if(!b.facts)return;
+  if(b.facts.rounds!==b.round-1){delete b.facts;return;} // Missing historical rounds are never guessed.
+  for(const e of b.currentRoundSummary.events){if(e.side!=='player'||!['strike','gate'].includes(e.type)||e.damage<=0)continue;b.facts.attacks++;if(e.type==='gate')b.facts.gateAttacks++;}
+  b.facts.rounds=b.round;b.facts.gateBroken=!!b.gate&&b.gate.hp<=0;
+}
+function finishFacts(b,won,endedBy){
+  if(!b.facts)return undefined;
+  return {...b.facts,endedBy:won?'win':endedBy||(!b.player.some(r=>r.hp>0)?'army':b.round>=30?'timeout':'defeat'),gateBroken:!!b.gate&&b.gate.hp<=0,machineLost:b.player.filter(r=>['ram','catapult'].includes(r.id)).reduce((n,r)=>n+r.initial-Math.ceil(r.hp/r.stats.hp),0)};
+}
+function explain(f){
+  const output={reasons:[],advice:''};if(!validFacts(f)||f.endedBy==='ongoing')return output;
+  if(f.endedBy==='win'){output.advice='查看兵损，按目标补兵后再出征';return output;}
+  if(f.endedBy==='timeout'){output.reasons=['未在战斗时限内完成目标'];output.advice='优先推进并集中目标，留意回合上限';return output;}
+  if(f.endedBy==='retreat'){output.reasons=['已主动撤退'];output.advice='调整兵力与指令后再出征';return output;}
+  if(f.hadGate&&!f.gateBroken&&f.machineLost>0){output.reasons.push('城门未破，器械已有损失');output.advice='用前排护住器械，推进到破门距离';}
+  if(f.attacks===0){output.reasons.push('我军没有造成有效攻击');output.advice='检查距离与指令，避免全队固守在射程外';}
+  if(!output.advice)output.advice='查看回合记录，调整兵力与目标';output.reasons=output.reasons.slice(0,2);return output;
+}
+
+return {createFacts,validFacts,collectFacts,finishFacts,explain,createRoundEvidence,collectRoundEvidence,battleReview};})();
