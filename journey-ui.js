@@ -5,10 +5,18 @@ function journeyModal(){
   manualModalContext=journeyModal;
 }
 function journeyGo(id){
-  if(id==='build'){guideGo();return;}
+  if(id==='build'){
+    const capital=Game.cityList().find(c=>c.capital);if(!capital)return;
+    if(capital.id!==Game.currentCityId()&&!actResult(Game.switchCity(capital.id)))return;
+    page='city';cityArea='inner';render();
+    if(Game.requirementLevel('hall')<3){manualBuildingModal('site:'+Game.primarySite('hall'));return;}
+    if(Game.requirementLevel('drill')<1){const site=Game.primarySite('drill');if(site>=0)manualBuildingModal('site:'+site);else{const empty=S().cityLayout.findIndex(id=>id===null);if(empty>=0)manualBuildPlan(empty,'drill');else manualBuildingModal('site:'+Game.primarySite('hall'));}return;}
+    const hero=S().generals.some(h=>(S().generalLevels[h]||1)>=5)?null:S().generals.find(h=>(S().generalLevels[h]||1)<5&&Game.heroCity(h)===capital.id);if(hero){heroDetailModal(hero);return;}modal.close();return;
+  }
   if(id==='yellow'){battlefieldModal();return;}
   if(id==='hero'){heroCodexModal();return;}
   if(id==='cities'){citySwitchListModal();return;}
+  if(id==='expand'){if(Game.cityLimit()<=Game.cityList().length)heritageHonorModal();else if(!Game.countyUnlocked()){taskTab='epic';classicMissionModal();}else namedCityOverviewModal();return;}
   if(id==='jiangling'){if(!Game.landmarkVisible('named_jiangling')){namedCityOverviewModal();return;}worldNodeModal('named_jiangling');}
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el||el.disabled)return;if(el.dataset.action==='journeyOpen')journeyModal();if(el.dataset.action==='journeyGo')journeyGo(el.dataset.id);if(el.dataset.action==='journeyTrack'&&actResult(Game.setJourneyTarget(el.dataset.id),'追踪目标已更新')){journeyModal();render();}});
