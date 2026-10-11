@@ -72,7 +72,7 @@ Add nodes named_changshan/named_changsha/named_xiliang/named_xuchang/named_chais
 ### Task 5: Opt-in active NPC camps
 
 **Spec:** design/quick-specs/classic-factions-2026-10-11.md
-**Files:** new faction-system.js and faction-ui.js, npc-defense-data.js/npc-defense.js/engine.js/world UI plus registration lists; tests/faction-system.test.cjs
+**Files:** new faction-system.js and faction-ui.js, npc-data.js (NPCDefenseData)/npc-defense.js/engine.js/world UI plus registration lists; tests/faction-system.test.cjs
 
 1. Read existing paths and spec; write focused RED tests before product changes.
 2. Implement the following contract:
@@ -90,7 +90,7 @@ Expose Game.factionView(), factionToggleQuote(enabled), setFactionsEnabled(enabl
 1. Read existing paths and spec; write focused RED tests before product changes.
 2. Implement the following contract:
 
-Add lesson ids shield_archer/spear_cavalry/siege_gate using existing real resolveBattleRound with fixed reusable unit rows. Shield lesson hold frontline and fireback; spear lesson uses actual existing spear-vs-cavalry counter; siege lesson real gate with rams and existing target siege rules. Do not fabricate lesson fakevictory after entering or roundthreshold, finish won only actual battlewin; objectives require named observed event and tactical effect or gatebreak. Provide brief3-line purpose/actions/failurehint, perlesson meaningful direct player controls. If existing basic branch simplifies result extend onlynew lessonbranch, preserve prior lessons. No persistent rewards/army changes. Realworld dispatch ownarmy role hints based ManualData only, knownenemy types can show actualcounterchart; hidden army must not affect. Tests copied resources/army/xp unchanged before/after exercise; real successful tactic vs demonstrated failed tactic on each lesson; oldlesson creation/results unchanged; no forged completed objective onzero rounds; 390 accessible buttons.
+Add lesson ids shield_archer/spear_block_cavalry/siege_gate using existing real resolveBattleRound with fixed reusable unit rows. Shield lesson hold frontline and fireback; spear lesson uses actual existing spear-vs-cavalry counter; siege lesson real gate with rams and existing target siege rules. Do not fabricate lesson fakevictory after entering or roundthreshold, finish won only actual battlewin; objectives require named observed event and tactical effect or gatebreak. Provide brief3-line purpose/actions/failurehint, perlesson meaningful direct player controls. If existing basic branch simplifies result extend onlynew lessonbranch, preserve prior lessons. No persistent rewards/army changes. Realworld dispatch ownarmy role hints based ManualData only, knownenemy types can show actualcounterchart; hidden army must not affect. Tests copied resources/army/xp unchanged before/after exercise; real successful tactic vs demonstrated failed tactic on each lesson; oldlesson creation/results unchanged; no forged completed objective onzero rounds; 390 accessible buttons.
 
 3. Add compact Chinese UI and meaningful tests. Run focused test, syntax checks, regenerate runtime.
 4. Run npm test once, commit only task files, self-review, report RED/GREEN and actual results.
