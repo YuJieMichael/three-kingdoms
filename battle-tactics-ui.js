@@ -1,6 +1,6 @@
 'use strict';
 const battleTacticLabels={watch:'察伏',fire:'火攻封路',huangzhong:'蓄弦先射',weiyan:'佯退诱追',zhaoyun:'接应撤军',machao:'冲阵退敌',xushu:'料敌先机'};
-const tacticalLessonTitles={spear_cavalry:'长枪抗骑 · 保护弓阵',siege_guard:'护卫器械 · 河洛东门',opening_battle:'黄巾遭遇战 · 开场示范',ready_shot:'预备射击与探阵',bait_chase:'诱追与保持阵线',fire_reveal:'火区与提前揭露',rescue_retreat:'接应撤军与保持距离',charge_hold:'冲阵与固守反制'};
+const tacticalLessonTitles={shield_archer:'盾护弓 · 守线还射',spear_block_cavalry:'枪阻骑 · 后排保全',siege_gate:'器械破城 · 护卫冲车',spear_cavalry:'长枪抗骑 · 保护弓阵',siege_guard:'护卫器械 · 河洛东门',opening_battle:'黄巾遭遇战 · 开场示范',ready_shot:'预备射击与探阵',bait_chase:'诱追与保持阵线',fire_reveal:'火区与提前揭露',rescue_retreat:'接应撤军与保持距离',charge_hold:'冲阵与固守反制'};
 let battleTacticDraft=null;
 function battleTacticsSafeView(b){return typeof Game.battleTacticsView==='function'?Game.battleTacticsView(b):null;}
 function battleIdentityOf(id){return typeof Game.heroIdentity==='function'?Game.heroIdentity(id):null;}
@@ -75,7 +75,7 @@ function battleTacticCancelModal(id){
 }
 function battleTacticIsPracticeAction(action){return ['battleTacticSubmit','battleTacticCancel'].includes(action)&&!!battleTacticDraft?.practice&&Game.lessonInfo?.()?.battle===battleTacticDraft.battle;}
 function tacticalLessonCatalog(){
-  showModal('战术演练',`<p class="sub">固定兵将阵容，不消耗城池部队、主将或资源，也不赠送正式名将。与普通单机战斗共用逐队结算。</p><div class="tactical-lesson-list">${Object.entries(tacticalLessonTitles).map(([id,title],index)=>`<article><div><strong>${index+1}. ${esc(title)}</strong><p class="hint">${{spear_cavalry:'长枪接骑，弓队守后排；观察实际克制。',siege_guard:'护卫器械推进，用真实河洛城门练习破门。',opening_battle:'盾兵掩护，弓队射击；先认识逐回合指令。',ready_shot:'看预兆，比较进入射程与停在射程外。',bait_chase:'比较追击诱兵与保持阵线。',fire_reveal:'先揭露火区，再调整移动时机。',rescue_retreat:'轻骑坚守接应，比较正常后退与有限加速。',charge_hold:'实际推进冲阵，比较敌军前进与固守反制。'}[id]}</p></div>${btn('开始演练','tacticalLessonStart',id,'small')}</article>`).join('')}</div>`,btn('关闭','close','','secondary'));
+  showModal('战术演练',`<p class="sub">固定兵将阵容，不消耗城池部队、主将或资源，也不赠送正式名将。与普通单机战斗共用逐队结算。</p><div class="tactical-lesson-list">${Object.entries(tacticalLessonTitles).map(([id,title],index)=>`<article><div><strong>${index+1}. ${esc(title)}</strong><p class="hint">${{shield_archer:'盾在前承箭，弓在后还射；坚持到真实胜负。',spear_block_cavalry:'枪阵接骑，弓队守后排；比较暴露弓队的代价。',siege_gate:'冲车撞门后继续清守军，城门不破不能获胜。',spear_cavalry:'长枪接骑，弓队守后排；观察实际克制。',siege_guard:'护卫器械推进，用真实河洛城门练习破门。',opening_battle:'盾兵掩护，弓队射击；先认识逐回合指令。',ready_shot:'看预兆，比较进入射程与停在射程外。',bait_chase:'比较追击诱兵与保持阵线。',fire_reveal:'先揭露火区，再调整移动时机。',rescue_retreat:'轻骑坚守接应，比较正常后退与有限加速。',charge_hold:'实际推进冲阵，比较敌军前进与固守反制。'}[id]}</p></div>${btn('开始演练','tacticalLessonStart',id,'small')}</article>`).join('')}</div>`,btn('关闭','close','','secondary'));
 }
 function tacticalLessonModal(){
   const info=Game.lessonInfo();if(!info?.battle){tacticalLessonCatalog();return;}
@@ -84,6 +84,7 @@ function tacticalLessonModal(){
   if(typeof startCombatFeedback==='function')startCombatFeedback();
 }
 function battleLessonResultHTML(context,b){
+  if(!b.finished&&context.practical)return `<p class="hint tactical-lesson-goal" aria-live="polite">本场目标：${esc(context.objective)}<br>已观察：${esc((context.observed||[]).join('、')||'尚未发生')} · 仍需真实获胜</p>`;
   if(!b.finished)return context.objective?`<p class="hint tactical-lesson-goal">本场目标：${esc(typeof context.objective==='string'?context.objective:context.objective.description||'观察计谋与指令的关系')}</p>`:'';
   const result=context.result||b.result||{};
   return `<section class="result-banner ${result.objectiveMet?'':'loss'}"><h3>${result.objectiveMet?'演练目标达成':'试试另一种指令'}</h3><p>${esc(result.summary||'查看回合经过，比较计谋触发条件与兵队指令。')}</p><p class="hint">演练${result.won?'获胜':'结束'} · ${result.round??b.round} 回合 · 城池兵将与资源未消耗</p>${btn('再试一次','tacticalLessonRestart',context.id,'small secondary')}${btn('其他演练','tacticalLessonEnd','','small secondary')}</section>`;
@@ -115,3 +116,10 @@ document.addEventListener('change',event=>{
   if(event.target.dataset.lessonTarget){const unit=event.target.dataset.lessonTarget;refreshTacticalLesson(Game.lessonTarget(Game.lessonInfo().battle.player.findIndex(r=>r.id===unit),event.target.value));}
 });
 document.addEventListener('input',event=>{if(event.target.id==='battle-tactic-range'){document.getElementById('battle-tactic-left').value=event.target.value;updateBattleTacticPreview();}if(event.target.id==='battle-tactic-left')updateBattleTacticPreview();});
+
+// The caller supplies a visible target; only published intelligence identifies enemies.
+function tacticalRoleHintsHTML(node,army){
+  const intel=Game.intel(node.id),known=intel?.public?Object.keys(node.army||{}).filter(id=>node.army[id]>0):intel?.types||Object.keys(intel?.army||intel?.bands||{}).filter(id=>intel?.army?.[id]>0||intel?.bands?.[id]);
+  const hints=TacticalLessons.roleHints(army,known,Game.manual);
+  return `<section class="tactical-role-hints" aria-label="配兵用途"><h4>本方分工</h4>${hints.own.map(r=>`<p class="hint">${esc(r.name)}：${esc(r.role)}</p>`).join('')||'<p class="hint">先选择出征兵队。</p>'}${hints.counters.length?`<h4>已知敌军克制</h4>${hints.counters.map(r=>`<p class="hint">${esc(r.description)}</p>`).join('')}`:known.length?'<p class="hint">所选兵队暂无针对已知敌军的克制项。</p>':'<p class="hint">敌军兵种未知，先侦察再考虑克制。</p>'}</section>`;
+}

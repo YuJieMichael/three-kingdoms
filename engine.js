@@ -928,7 +928,7 @@ const Game = (() => {
     if(next.enemyPlan)tacticSubmit(next.battle,'enemy',next.enemyPlan.type,next.enemyPlan);
     return null;
   }
-  const lessonInfo=()=>lessonSession?{id:lessonSession.id,title:lessonSession.title,basic:!!TacticalLessons.definitions.find(d=>d.id===lessonSession.id)?.basic,generalName:lessonSession.generalName,description:lessonSession.description,objective:lessonSession.objective,node:lessonSession.node,battle:lessonSession.battle,result:lessonSession.result,evidence:lessonEvidence.get(lessonSession.battle)}:null;
+  const lessonInfo=()=>lessonSession?{id:lessonSession.id,title:lessonSession.title,practical:!!lessonSession.practical,actions:lessonSession.actions,failureHint:lessonSession.failureHint,observed:lessonSession.observed?[...lessonSession.observed]:undefined,basic:!!TacticalLessons.definitions.find(d=>d.id===lessonSession.id)?.basic,generalName:lessonSession.generalName,description:lessonSession.description,objective:lessonSession.objective,node:lessonSession.node,battle:lessonSession.battle,result:lessonSession.result,evidence:lessonEvidence.get(lessonSession.battle)}:null;
   function lessonOrder(index,command){const b=lessonSession?.battle,r=Number.isInteger(index)?b?.player[index]:null;if(!r||r.hp<=0||b.finished||!['advance','hold','fallback'].includes(command))return '演练指令无效';b.orders[r.id].command=command;return null;}
   function lessonTarget(index,target){const b=lessonSession?.battle,r=Number.isInteger(index)?b?.player[index]:null;if(!r||r.hp<=0||b.finished||target!==''&&!(target==='gate'&&b.gate?.hp>0)&&!b.enemy.some(t=>t.id===target))return '演练目标无效';b.orders[r.id].target=target;return null;}
   function lessonAllOrders(command){if(!lessonSession||!['advance','hold','fallback'].includes(command)||lessonSession.battle.finished)return '演练指令无效';for(let i=0;i<lessonSession.battle.player.length;i++)if(lessonSession.battle.player[i].hp>0)lessonOrder(i,command);return null;}
@@ -1061,11 +1061,11 @@ const Game = (() => {
     if(rule?.kind==='fire'){const burn=(rows,side)=>{const alive=living(rows);if(!alive.length)return;const front=side==='player'?alive.sort((a,z)=>z.pos-a.pos)[0]:alive.sort((a,z)=>a.pos-z.pos)[0],damage=Math.ceil(front.hp*rule.share*(side==='player'?HeroTraits.modifiers(b.traitProfile,front.id,b.orders[front.id]?.command,'troop').damageTaken:1)),before=Math.ceil(front.hp/front.stats.hp);front.hp=Math.max(0,front.hp-damage);pushLog(b,'火势蔓延：'+(side==='player'?'我军':'敌军')+units[front.id].name+'被烧伤 '+(before-Math.ceil(front.hp/front.stats.hp))+' 人。');};burn(b.enemy,'enemy');if(g.wis<rule.wis)burn(b.player,'player');}
     if(tactics)BattleStratagems.endRound(b,stratagemApi);
     if(!lesson)BattleReview.collectFacts(b);
-    if(lesson)BattleReview.collectRoundEvidence(b.currentRoundSummary,lessonEvidence.get(b),{battle:b});
+    if(lesson){BattleReview.collectRoundEvidence(b.currentRoundSummary,lessonEvidence.get(b),{battle:b});TacticalLessons.observe(lesson);}
     if(!living(b.enemy).length&&(!b.gate||!b.gate.hp))finish(true);
     else if(!lesson&&rule?.kind==='timeLimit'&&b.round>=rule.rounds){pushLog(b,'已到第 '+rule.rounds+' 回合：董卓焚城撤走，本次攻打失败。');finish(false,'timeout');}
     else if(!living(b.player).length||b.round>=30){if(b.round>=30)pushLog(b,lesson?'演练达到回合上限，可重开比较指令。':'达到回合上限，'+(b.gate?.hp>0?'城防仍未攻破'+(living(b.enemy).length?'且守军尚未清空':''):'守军尚未清空')+'，本次攻打失败。');finish(false);}
-    else if(lesson&&TacticalLessons.objectiveMet(lesson))finish(false);
+    else if(lesson&&!TacticalLessons.practical(lesson.id)&&TacticalLessons.objectiveMet(lesson))finish(false);
     if(!lesson){if(tactics&&!b.finished)planEnemyTactic(b,node);save();}return b;
   }
   function finishBattle(won,retreated=false,endedBy){
