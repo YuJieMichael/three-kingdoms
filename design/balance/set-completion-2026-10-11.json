@@ -1,0 +1,22 @@
+{
+  "experiment": "probability only; seven uniform slots, repeats yield one same-set material; 12 exchange first missing slot",
+  "seedRange": [
+    1,
+    10000
+  ],
+  "random": {
+    "samples": 10000,
+    "mean": 18.2405,
+    "median": 17,
+    "p90": 28,
+    "max": 69
+  },
+  "recycling": {
+    "samples": 10000,
+    "mean": 15.6533,
+    "median": 17,
+    "p90": 18,
+    "max": 40
+  },
+  "guaranteedDays": false
+}
