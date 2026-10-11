@@ -863,3 +863,6 @@ dialog .web-plot-preview h3{
 .recovery-figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 10px;margin-top:6px;font-variant-numeric:tabular-nums}
 
 .world-target-list .guide-actions button,.world-battle-receipt .guide-actions button,.report>[data-action="trainingRecovery"]{min-height:44px}
+
+/* Named-city income is a local passive effect, separate from development rewards. */
+.named-city-territory{padding:8px;margin:8px 0;border:1px solid var(--line,#b0b69c);border-radius:6px;overflow-wrap:anywhere}.named-city-territory .guide-actions{display:flex;flex-wrap:wrap;gap:6px}.named-city-territory .btn{min-height:44px;white-space:normal}

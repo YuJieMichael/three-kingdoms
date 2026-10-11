@@ -25,5 +25,18 @@ const CityStrategy=(()=>{
   }
   function summary(city){const p=profile(city),d=typeof NamedCityData==='undefined'?null:NamedCityData.definition(city);return p.name+' · '+({balanced:'普通资源与行军规则',granary:'本城粮食毛产量 +20%',mine:'本城木石铁毛产量 +15%',pass:'本城新派队伍行军时间 −20%'}[p.id])+(d?' · 黄金税收 +'+Math.round((d.goldFactor-1)*100)+'%':'');}
   function marchSeconds(base,city){return Math.max(1,Math.ceil(Math.max(0,Number(base)||0)*profile(city).marchFactor));}
-  return Object.freeze({profiles,roles,profile,summary,marchSeconds});
+  // Only a real, built and still controlled named-city scope earns the extra bonus.
+  // This projection has no claim state and never modifies profiles or city resources.
+  function territory(s,cityMeta){
+    const production={food:1,wood:1,stone:1,iron:1,gold:1};
+    const result={production,trainFactor:1},city=s?.realm?.cities?.[cityMeta?.id];
+    if(!city||city.capital||city.node!==cityMeta.node||!s.conquered?.[city.node]||!NamedCityData.definition(city))return result;
+    const strategy=profile(city).id;
+    if(strategy==='granary')production.food=1.05;
+    else if(strategy==='mine')for(const id of ['wood','stone','iron'])production[id]=1.05;
+    else if(strategy==='pass')result.trainFactor=.95;
+    else production.gold=1.05;
+    return result;
+  }
+  return Object.freeze({profiles,roles,profile,summary,marchSeconds,territory});
 })();

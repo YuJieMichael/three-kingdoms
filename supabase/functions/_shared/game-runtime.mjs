@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="a254a0b31046e78fdb0a9696acc23b4e7a0b1dd882d59c47894789288e72709c";
+export const runtimeHash="2c6a554e25f4f84e69de9bf9ccc0878baa17ce598981daf6c5e3df1aac2a299d";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -14480,7 +14480,20 @@ const CityStrategy=(()=>{
   }
   function summary(city){const p=profile(city),d=typeof NamedCityData==='undefined'?null:NamedCityData.definition(city);return p.name+' · '+({balanced:'普通资源与行军规则',granary:'本城粮食毛产量 +20%',mine:'本城木石铁毛产量 +15%',pass:'本城新派队伍行军时间 −20%'}[p.id])+(d?' · 黄金税收 +'+Math.round((d.goldFactor-1)*100)+'%':'');}
   function marchSeconds(base,city){return Math.max(1,Math.ceil(Math.max(0,Number(base)||0)*profile(city).marchFactor));}
-  return Object.freeze({profiles,roles,profile,summary,marchSeconds});
+  // Only a real, built and still controlled named-city scope earns the extra bonus.
+  // This projection has no claim state and never modifies profiles or city resources.
+  function territory(s,cityMeta){
+    const production={food:1,wood:1,stone:1,iron:1,gold:1};
+    const result={production,trainFactor:1},city=s?.realm?.cities?.[cityMeta?.id];
+    if(!city||city.capital||city.node!==cityMeta.node||!s.conquered?.[city.node]||!NamedCityData.definition(city))return result;
+    const strategy=profile(city).id;
+    if(strategy==='granary')production.food=1.05;
+    else if(strategy==='mine')for(const id of ['wood','stone','iron'])production[id]=1.05;
+    else if(strategy==='pass')result.trainFactor=.95;
+    else production.gold=1.05;
+    return result;
+  }
+  return Object.freeze({profiles,roles,profile,summary,marchSeconds,territory});
 })();
 
 
@@ -16731,7 +16744,7 @@ const Game = (() => {
   function capacity(k){if(!k)return Math.min(...Object.keys(resources).map(capacity));if(k==='gold')return buildRecord('hall',state.buildings.hall)?.capacity||1000000;let total=state.plots.filter(p=>p.type&&plotTypes[p.type].resource===k).reduce((v,p)=>v+buildRecord(p.type,p.level).capacity,0);total+=state.cityLayout.reduce((v,id,i)=>v+(id==='warehouse'?(buildRecord(id,state.cityLevels[i])?.capacity||0)*state.storageAllocation[k]/100:0),0);return Math.max(10000,total)*(1+state.tech.storage*.1);}
   const activeBuff=(id,generalId)=>Object.values(state.buffs).some(b=>b.effect===id&&b.end>(economyClock??Date.now())&&(!generalId||b.general===generalId));
   function productionBoost(){const gov=general(state.governor);return 1+gov.pol/100*Math.min(1,gov.lead*1000/Math.max(1,state.population));}
-  const cityStrategy=(city=CitySystem.current(state))=>CitySpecialty.apply(CityStrategy.profile(city),state,city,economyClock??Date.now());
+  const cityStrategy=(city=CitySystem.current(state))=>{const strategy=CitySpecialty.apply(CityStrategy.profile(city),state,city,economyClock??Date.now()),territory=CityStrategy.territory(state,city);return {...strategy,production:Object.fromEntries(Object.entries(strategy.production).map(([id,n])=>[id,n*territory.production[id]])),territory};};
   const specialtyApi={lineOf:id=>CitySpecialty.lineFor(CityStrategy.profile(state.realm.cities[id])).id};
   // City specialty building of the active city (city-specialty.js).
   function specialtyQuote(){const c=CitySystem.current(state);return CitySpecialty.quote(state,c.id,CityStrategy.profile(c),Date.now(),state.buildings.hall||0);}
@@ -16741,7 +16754,8 @@ const Game = (() => {
   const freePopulation=()=>Math.max(0,Math.floor(state.population)-workers());
   function plotYield(plot){if(!plot?.type)return 0;const cfg=plotTypes[plot.type],labor=Math.min(1,state.population/Math.max(1,workers()));return buildRecord(plot.type,plot.level).output*ECONOMY_OUTPUT_FACTOR/60*productionBoost()*(1+state.tech[cfg.tech]*.1)*resourceBonus(cfg.resource)*labor*cityStrategy().production[cfg.resource];}
   function upkeep(army){return Object.entries(army).reduce((v,[id,n])=>v+(units[id]?.upkeep||0)*n,0);}
-  function rates(){let r={food:100/60,wood:100/60,stone:100/60,iron:100/60,gold:state.population*state.tax/100/60*(ChapterData.hasSeal(state)?1.1:1)};for(const key of Object.keys(r))r[key]*=ECONOMY_OUTPUT_FACTOR*cityStrategy().production[key];for(const p of state.plots)if(p.type)r[plotTypes[p.type].resource]+=plotYield(p);r.food-=(upkeep(WarCare.heldArmy(state))*2+upkeep(ScoutSystem.heldArmy(state))+sourceLogistics().reduce((v,j)=>v+upkeep(j.army),0)+upkeep(NPCDefense.heldArmy(state))+upkeep(state.army)+allExpeditions().reduce((v,e)=>v+upkeep(e.army),0)+Object.values(state.garrisons).reduce((v,g)=>v+upkeep(g.army)*(g.phase==='stationed'?2:1),0))/60;return r;}
+  function grossRates(){const r={food:100/60,wood:100/60,stone:100/60,iron:100/60,gold:state.population*state.tax/100/60*(ChapterData.hasSeal(state)?1.1:1)},strategy=cityStrategy();for(const key of Object.keys(r))r[key]*=ECONOMY_OUTPUT_FACTOR*strategy.production[key];for(const p of state.plots)if(p.type)r[plotTypes[p.type].resource]+=plotYield(p);return r;}
+  function rates(){const r=grossRates();r.food-=(upkeep(WarCare.heldArmy(state))*2+upkeep(ScoutSystem.heldArmy(state))+sourceLogistics().reduce((v,j)=>v+upkeep(j.army),0)+upkeep(NPCDefense.heldArmy(state))+upkeep(state.army)+allExpeditions().reduce((v,e)=>v+upkeep(e.army),0)+Object.values(state.garrisons).reduce((v,g)=>v+upkeep(g.army)*(g.phase==='stationed'?2:1),0))/60;return r;}
   const currentCityId=()=>state.realm.activeCity;
   const domesticStrategyAvailable=()=>!onlineAuthority&&typeof GAME_SERVER_RUNTIME==='undefined';
   const domesticStrategyReason=()=>domesticStrategyAvailable()?'':'当前共享世界暂未开放区域战线、自动补给与主动备防';
@@ -16758,7 +16772,7 @@ const Game = (() => {
     CitySystem.capture(state);const selected=currentCityId();CitySystem.activate(state,id);
     try{return read();}finally{CitySystem.capture(state);CitySystem.activate(state,selected);}
   }
-  const citySummary=id=>{const c=state.realm.cities[id];if(!c)return null;const d=CitySystem.scope(state,c),net=withCityScope(id,rates),foodSeconds=net.food<0?Math.max(0,Math.floor(d.res.food/-net.food*60)):null;return {...cityMeta(id),strategy:cityStrategy(c),res:{...d.res},army:{...d.army},buildings:{...d.buildings},governor:d.governor,population:d.population,tax:d.tax,rates:net,foodSeconds,regionalFront:CitySystem.clone(d.regionalFront),heroAdministration:CitySystem.clone(d.heroAdministration),queues:{build:d.buildQueue.length,train:d.trainQueue.length,research:d.researchQueue?1:0},garrisons:CitySystem.clone(d.garrisons),expeditions:CitySystem.clone([...(d.expedition?[d.expedition]:[]),...d.expeditions]),scoutQueue:CitySystem.clone(d.scoutQueue)};};
+  const citySummary=id=>{const c=state.realm.cities[id];if(!c)return null;const d=CitySystem.scope(state,c),net=withCityScope(id,rates),gross=withCityScope(id,grossRates),factors=CityStrategy.territory(state,c),territory={...factors,gains:Object.fromEntries(Object.entries(gross).map(([key,n])=>[key,n*(1-1/factors.production[key])*60]))},foodSeconds=net.food<0?Math.max(0,Math.floor(d.res.food/-net.food*60)):null;return {...cityMeta(id),strategy:cityStrategy(c),territory,res:{...d.res},army:{...d.army},buildings:{...d.buildings},governor:d.governor,population:d.population,tax:d.tax,rates:net,foodSeconds,regionalFront:CitySystem.clone(d.regionalFront),heroAdministration:CitySystem.clone(d.heroAdministration),queues:{build:d.buildQueue.length,train:d.trainQueue.length,research:d.researchQueue?1:0},garrisons:CitySystem.clone(d.garrisons),expeditions:CitySystem.clone([...(d.expedition?[d.expedition]:[]),...d.expeditions]),scoutQueue:CitySystem.clone(d.scoutQueue)};};
   const cityList=()=>CitySystem.list(state).map(c=>citySummary(c.id));
   const getCityState=(id=currentCityId())=>{const c=state.realm.cities[id];return c?CitySystem.clone(CitySystem.scope(state,c)):null;};
   const everyExpedition=()=>CitySystem.list(state).flatMap(c=>{const d=CitySystem.scope(state,c);return [...(d.expedition?[d.expedition]:[]),...d.expeditions].map(e=>({...e,sourceCity:c.id}));});
@@ -17047,7 +17061,7 @@ const Game = (() => {
   const unitUnlocked=id=>!unitRequirements(id);
   const trainingLimit=()=>state.cityLayout.reduce((v,id,i)=>v+(id==='barracks'?state.cityLevels[i]:0),0);
   function trainCost(id,count){return Object.fromEntries(Object.entries(units[id].cost).map(([k,v])=>[k,v*count]));}
-  function trainSeconds(id,count){const u=units[id],tech=u.kind==='machine'?state.tech.manufacture:state.tech.training;return Math.max(1,count*u.time/(1+tech*.1+general(HeritageSystem.effectiveHero(state,'train')).atk/100)/state.speed);}
+  function trainSeconds(id,count){const u=units[id],tech=u.kind==='machine'?state.tech.manufacture:state.tech.training;return Math.max(1,count*u.time/(1+tech*.1+general(HeritageSystem.effectiveHero(state,'train')).atk/100)/state.speed*CityStrategy.territory(state,CitySystem.current(state)).trainFactor);}
   function siegePreparationQuote(cityId,nodeId){
     const empty={key:'',deficits:{},remaining:{},orders:[],cost:{},people:0,template:null,reason:''};
     if(!state.realm.cities[cityId]||!NamedGarrison.ids.includes(nodeId))return {...empty,reason:'请选择己方城市与名城'};

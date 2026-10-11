@@ -29,8 +29,8 @@ test('profiles are immutable and speculative map descriptions do not change owne
 });
 test('grain and mine multipliers apply to local gross output and plot previews once, with unchanged upkeep and county tax paid once',()=>{
   const e=prepared(),g=e.Game,capital=copy(g.rates()),capitalPlots=g.state.plots.slice(0,4).map(p=>g.plotYield(p)),upkeep=g.upkeep(g.state.army)/60;
-  assert.equal(g.switchCity('city_yellow_qingshi'),null);const grain=g.rates();close(grain.food,(capital.food+upkeep)*1.2-upkeep);for(const k of ['wood','stone','iron'])close(grain[k],capital[k]);close(grain.gold,capital.gold*1.1);close(g.plotYield(g.state.plots[0]),capitalPlots[0]*1.2);close(g.plotYield(g.state.plots[1]),capitalPlots[1]);
-  assert.equal(g.switchCity('city_yellow_baisha'),null);const mine=g.rates();close(mine.food,capital.food);close(mine.gold,capital.gold*1.1);for(const k of ['wood','stone','iron'])close(mine[k],capital[k]*1.15);for(let i=1;i<4;i++)close(g.plotYield(g.state.plots[i]),capitalPlots[i]*1.15);
+  assert.equal(g.switchCity('city_yellow_qingshi'),null);const grain=g.rates();close(grain.food,(capital.food+upkeep)*1.2*1.05-upkeep);for(const k of ['wood','stone','iron'])close(grain[k],capital[k]);close(grain.gold,capital.gold*1.1);close(g.plotYield(g.state.plots[0]),capitalPlots[0]*1.2*1.05);close(g.plotYield(g.state.plots[1]),capitalPlots[1]);
+  assert.equal(g.switchCity('city_yellow_baisha'),null);const mine=g.rates();close(mine.food,capital.food);close(mine.gold,capital.gold*1.1);for(const k of ['wood','stone','iron'])close(mine[k],capital[k]*1.15*1.05);for(let i=1;i<4;i++)close(g.plotYield(g.state.plots[i]),capitalPlots[i]*1.15*1.05);
   assert.equal(g.switchCity('capital'),null);for(const k in capital)close(g.rates()[k],capital[k]);assert.equal(g.citySummary('city_yellow_qingshi').strategy.id,'granary');assert.equal(g.citySummary('city_yellow_baisha').strategy.id,'mine');assert.equal(g.validSave(g.state),true);
 });
 test('pass-city expedition previews equal actual timestamps, and switching cities or reloading cannot retime a departed army',()=>{
