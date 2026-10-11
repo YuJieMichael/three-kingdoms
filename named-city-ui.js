@@ -81,7 +81,7 @@ function handleSiegePreparationAction(action,id){
   if(!['siegeSave','siegeFill','siegeDraft'].includes(action))return false;
   const city=modalBody.dataset.siegeCity,key=modalBody.dataset.siegeKey;
   if(action==='siegeSave'){const t=siegeEditedTemplate();if(actResult(Game.saveSiegePreparation(city,id,t,key),'兵力目标已保存'))siegePreparationModal(id);else siegePreparationModal(id,t);}
-  if(action==='siegeFill'){const draft=siegeEditedTemplate();if(actResult(Game.fillSiegePreparation(city,id,key),'已加入训练队列')){siegePreparationModal(id);render();}else siegePreparationModal(id,draft);}
+  if(action==='siegeFill'){const draft=siegeEditedTemplate(),q=Game.siegePreparationQuote(city,id);salarySpendConfirm(q.cost.gold||0,()=>{if(actResult(Game.fillSiegePreparation(city,id,key),'已加入训练队列')){siegePreparationModal(id);render();}else siegePreparationModal(id,draft);},()=>siegePreparationModal(id,draft));}
   if(action==='siegeDraft'){const q=Game.siegePreparationQuote(city,id);if(q.key!==key||city!==Game.currentCityId()){const draft=siegeEditedTemplate();toast('筹备已变化，请重新查看');siegePreparationModal(id,draft);return true;}if(q.template){manualModalContext=null;campaignDispatchModal(id,'occupy',q.template);}}
   return true;
 }

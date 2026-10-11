@@ -17,6 +17,7 @@ const GovernanceSystem=(()=>{
   const h=s.heroService;return validCity(s)&&object(h)&&h.version===1&&time(h.lastPay)&&int(h.seq)&&h.seq<=1000000&&object(h.owed)&&Object.entries(h.owed).every(([id,n])=>s.generals.includes(id)&&int(n))&&Array.isArray(h.pending)&&new Set(h.pending).size===h.pending.length&&h.pending.every(id=>s.generals.includes(id)&&s.heroLoyalty[id]===0)&&Array.isArray(h.captives)&&h.captives.length<=100&&new Set(h.captives.map(c=>c.id)).size===h.captives.length&&h.captives.every(c=>object(c)&&/^local_\d+$/.test(c.id)&&!s.generals.includes(c.id)&&object(c.hero)&&c.hero.id===c.id&&(!c.hero.famousSource||!!HeroIdentity.transferKey(c.hero)&&c.hero.famousSource.commandCredit<=10*Math.max(0,c.level-c.hero.level))&&typeof c.hero.name==='string'&&c.hero.name.length<=20&&['atk','def','pol','wis','lead','level','price'].every(k=>Number.isFinite(c.hero[k])&&c.hero[k]>=0)&&int(c.level)&&c.level>=1&&c.level<=10000&&Number.isFinite(c.xp)&&c.xp>=0&&time(c.at)&&typeof c.previousOwner==='string'&&typeof c.originCity==='string')&&Array.isArray(h.log)&&h.log.length<=40&&h.log.every(r=>object(r)&&time(r.at)&&typeof r.text==='string'&&r.text.length<=500);
  }
  const moraleTarget=s=>Math.min(100,Math.max(0,100-s.tax-s.unrest+(typeof ChapterData!=='undefined'&&ChapterData.hasSeal(s)?5:0)));
+ const salaryCity=(s,id)=>s.realm.cities[s.realm.heroLocations[id]]?s.realm.heroLocations[id]:'capital';
  const wage=(s,id)=>20*(s.generalLevels[id]||1);
  const scopes=s=>Object.values(s.realm?.cities||{});
  const scopeData=(s,c)=>c.id===s.realm.activeCity?s:c.data;
@@ -36,7 +37,7 @@ const GovernanceSystem=(()=>{
  function tickHeroes(s,now,api={}){
   init(s,now);const h=s.heroService,from=Math.max(h.lastPay,api.capStart??now-8*HOUR),steps=Math.max(0,Math.floor((now-from)/HOUR));
   if(steps){for(let step=0;step<steps;step++){const at=from+(step+1)*HOUR;for(const id of [...s.generals]){
-   const location=s.realm.heroLocations[id],city=s.realm.cities[location]||s.realm.cities.capital,d=scopeData(s,city),due=wage(s,id)+(h.owed[id]||0);
+   const city=s.realm.cities[salaryCity(s,id)],d=scopeData(s,city),due=wage(s,id)+(h.owed[id]||0);
    if(d.res.gold>=due){d.res.gold-=due;delete h.owed[id];record(h,{at,id,text:(heroBase(s,id)?.name||id)+'领取薪俸 '+due+' 黄金'});}
    else{h.owed[id]=due;s.heroLoyalty[id]=Math.max(protectedHeroes.has(id)?20:0,s.heroLoyalty[id]-5);record(h,{at,id,text:(heroBase(s,id)?.name||id)+'欠饷 '+due+' 黄金，忠诚降至 '+s.heroLoyalty[id]});}
   }}h.lastPay=from+steps*HOUR;}
@@ -46,8 +47,8 @@ const GovernanceSystem=(()=>{
   h.pending=h.pending.filter(id=>s.generals.includes(id)&&s.heroLoyalty[id]===0);
  }
  function salaryQuote(s,id='all'){
-  const ids=id==='all'?s.generals:[id].filter(x=>s.generals.includes(x)),rows=ids.map(id=>({id,name:heroBase(s,id)?.name||id,wage:wage(s,id),owed:s.heroService.owed[id]||0,loyalty:s.heroLoyalty[id],city:s.realm.heroLocations[id]}));
-  const cost=rows.reduce((n,r)=>n+r.owed,0),reason=!rows.length?'将领不存在':!cost?'没有待补发薪俸':s.res.gold<cost?'本城黄金不足':'';return {rows,cost,reason,key:rows.map(r=>r.id+':'+r.owed).join('|')};
+  const owned=id==='all'?s.generals:[id].filter(x=>s.generals.includes(x)),ids=owned.filter(x=>salaryCity(s,x)===s.realm.activeCity),rows=ids.map(id=>({id,name:heroBase(s,id)?.name||id,wage:wage(s,id),owed:s.heroService.owed[id]||0,loyalty:s.heroLoyalty[id],city:s.realm.heroLocations[id]}));
+  const cost=rows.reduce((n,r)=>n+r.owed,0),reason=!rows.length?'将领不在本城付薪':!cost?'没有待补发薪俸':s.res.gold<cost?'本城黄金不足':'';return {rows,cost,reason,key:rows.map(r=>r.id+':'+r.owed).join('|')};
  }
  function payArrears(s,id,key,now){const q=salaryQuote(s,id);if(q.key!==key)return '欠饷已变化，请重新查看';if(q.reason)return q.reason;s.res.gold-=q.cost;for(const r of q.rows){delete s.heroService.owed[r.id];s.heroLoyalty[r.id]=Math.min(100,s.heroLoyalty[r.id]+10);}s.heroService.pending=s.heroService.pending.filter(id=>s.heroLoyalty[id]===0);record(s.heroService,{at:now,text:'补发 '+q.cost+' 黄金薪俸，相关将领忠诚 +10'});return null;}
  function captureDefeated(loser,winner,id,now,{busyIds=[]}={}){
@@ -85,5 +86,5 @@ const GovernanceSystem=(()=>{
   if(g.eventsEnabled&&g.nextEvent&&g.nextEvent<=now){let count=0;while(g.nextEvent<=now&&count++<2){const at=g.nextEvent,e=nextEvent(s);if(e.bad&&g.wardUntil>=at){g.wardUntil=0;record(g,{at,text:'祭天庇护免除了 '+e.name});}else if(e.bad){const amount=Math.floor(s.res[e.resource]*.05);s.res[e.resource]-=amount;s.unrest=Math.min(100,s.unrest+10);record(g,{at,text:e.name+'：'+Game.resources[e.resource].name+'损失 '+amount+'，民怨+10'});}else{const amount=Math.max(500,Math.floor(s.population*5))*(g.blessingUntil>=at?2:1);s.res[e.resource]+=amount;if(g.blessingUntil>=at)g.blessingUntil=0;record(g,{at,text:'天赐 '+e.name+'：'+Game.resources[e.resource].name+' +'+amount+'，允许爆仓'});}g.eventSeq++;g.nextEvent+=4*HOUR;}}
  }
  function status(s,now){const g=s.governance,q=salaryQuote(s);return {moraleTarget:moraleTarget(s),warnings:[...(g.crisisSince?['民心/民怨危险：'+Math.max(0,Math.ceil((g.crisisSince+HOUR-now)/60000))+'分钟后可能内乱']:[]),...(g.starvedSince?['断粮：'+Math.max(0,Math.ceil((g.starvedSince+HOUR-now)/60000))+'分钟后本城驻军逃散']:[])],nextEvent:g.eventsEnabled?{...nextEvent(s),at:g.nextEvent}:null,wages:q.rows.reduce((n,r)=>n+r.wage,0),owed:q.cost};}
- return {HOUR,DAY,events,init,initCity,valid,validCity,moraleTarget,wage,tickHeroes,tickCity,status,salaryQuote,payArrears,removeHero,captureDefeated,captiveQuote,recruitCaptive,setPolicy,sacrificeQuote,sacrifice};
+ return {HOUR,DAY,events,init,initCity,valid,validCity,moraleTarget,wage,salaryCity,tickHeroes,tickCity,status,salaryQuote,payArrears,removeHero,captureDefeated,captiveQuote,recruitCaptive,setPolicy,sacrificeQuote,sacrifice};
 })();

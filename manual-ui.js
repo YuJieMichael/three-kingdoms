@@ -161,7 +161,7 @@ const [site,b]=id.split(':');manualBuildPlan(Number(site),b);}
   if(a==='manualExpeditionRecall'){const error=Game.selectExpedition(id);if(error)toast(error);else showModal('召回部队','<p class="sub">取消行军，部队返回。已消耗的粮食不返还。</p>',btn('继续行军','close','','secondary')+btn('确认召回','recallConfirm'));}
 
   if(a==='manualMarket')manualMarketModal();
-  if(a==='manualTradeConfirm'){const buy=document.getElementById('market-mode').value==='buy';actResult(Game.trade(document.getElementById('market-resource').value,Number(document.getElementById('market-count').value),buy),'交易完成');updateMarketTrade();}
+  if(a==='manualTradeConfirm'){const buy=document.getElementById('market-mode').value==='buy',resource=document.getElementById('market-resource').value,count=Number(document.getElementById('market-count').value);const back=()=>{manualMarketModal();document.getElementById('market-mode').value=buy?'buy':'sell';document.getElementById('market-resource').value=resource;document.getElementById('market-count').value=count;updateMarketTrade();};salarySpendConfirm(buy?count:0,()=>{actResult(Game.trade(resource,count,buy),'交易完成');back();},back);}
   if(a==='manualStorage')manualStorageModal();
   if(a==='manualStorageSave'&&actResult(Game.setStorage(Object.fromEntries([...document.querySelectorAll('[data-storage]')].map(el=>[el.dataset.storage,Number(el.value)]))),'仓储分配已保存'))modal.close();
   if(a==='manualDefense')manualDefenseModal();

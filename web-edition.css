@@ -817,3 +817,12 @@ dialog .web-plot-preview h3{
 .hero-set-materials{padding:12px;border:1px solid var(--border,#8e835d);border-radius:8px;margin:12px 0}.hero-set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0}.hero-set-row span{min-width:0}.hero-set-row small{display:block;overflow-wrap:anywhere;opacity:.8}.hero-set-row button{min-width:72px;min-height:44px}#set-exchange-slot{min-height:44px;width:100%}
 /* Equipment cards retain their light paper background in the dark game shell. */
 .equipment-card{color:#352f23}.equipment-card h3,.equipment-card .hint{color:#453b26}
+
+/* City goals and a short local budget on narrow phone screens. */
+.economy-budget-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;margin-bottom:10px;border:1px solid var(--line,#807354);border-radius:8px;background:var(--panel,#ebe4cb);font-size:12px}
+.economy-budget-bar>button:first-child{flex:1;min-width:0;text-align:left;background:transparent;border:0;color:inherit;white-space:normal;line-height:1.7;padding:0;overflow-wrap:anywhere}
+.economy-budget-bar.negative{color:#9b452e;border-color:#a66d46}
+.city-preset-targets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.city-preset-targets label{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0;font-size:13px}
+.city-preset-targets input{width:64px;min-width:0;flex-shrink:0;padding:7px}
+@media(max-width:420px){.city-preset-targets{grid-template-columns:1fr 1fr}.city-preset-targets label{flex-wrap:wrap}.city-preset-targets input{width:58px}}
