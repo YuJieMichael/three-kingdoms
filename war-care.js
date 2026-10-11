@@ -10,12 +10,12 @@ const WarCare=(()=>{
   const same=(a,b)=>JSON.stringify(Object.entries(a).sort())===JSON.stringify(Object.entries(b).sort());
   const counts=(a,u,full=true)=>obj(a)&&(!full||Object.keys(u).every(id=>int(a[id])))&&Object.entries(a).every(([id,n])=>Object.hasOwn(u,id)&&int(n));
   function defaultDefense(u){return {mode:'field',autoResolve:true,orders:Object.fromEntries(Object.keys(roster(u)).map(id=>[id,{command:'hold',target:''}]))};}
-  function init(s,u){u=roster(u);if(s.warCare===undefined)s.warCare={version:1,defense:defaultDefense(u),autoHeal:false,wounded:blank(u),admitted:blank(u),treated:blank(u),receipts:{},archived:{counts:blank(u),through:{}}};return s.warCare;}
+  function init(s,u){u=roster(u);if(s.warCare===undefined)s.warCare={version:1,defense:defaultDefense(u),autoHeal:false,recoveryPriority:false,wounded:blank(u),admitted:blank(u),treated:blank(u),receipts:{},archived:{counts:blank(u),through:{}}};if(obj(s.warCare)&&s.warCare.recoveryPriority===undefined)s.warCare.recoveryPriority=false;return s.warCare;}
   const cityOf=s=>s.scopeID||s.realm?.activeCity;
   function token(id){const m=/^(field|npc|pvp):([^:]+):([0-9]+)(?::([^:]+))?$/.exec(id),sequence=m?Number(m[3]):NaN;return m&&int(sequence)&&sequence>0&&(m[1]!=='npc'?!!m[4]:!m[4])?{city:m[2],channel:m[1]+':'+m[2]+(m[1]!=='npc'?':'+m[4]:''),sequence}:null;}
   function validDefense(d,u){u=roster(u);return obj(d)&&['field','inside'].includes(d.mode)&&typeof d.autoResolve==='boolean'&&obj(d.orders)&&Object.keys(d.orders).length===Object.keys(u).length&&Object.keys(u).every(id=>{const r=d.orders[id];return obj(r)&&Object.keys(r).length===2&&['advance','hold','fallback'].includes(r.command)&&typeof r.target==='string'&&(r.target===''||Object.hasOwn(u,r.target));});}
   function valid(s,u){
-    u=roster(u);const w=s.warCare;if(!obj(w)||w.version!==1||!validDefense(w.defense,u)||typeof w.autoHeal!=='boolean'||![w.wounded,w.admitted,w.treated].every(a=>counts(a,u))||!obj(w.receipts))return false;
+    u=roster(u);const w=s.warCare;if(!obj(w)||w.version!==1||!validDefense(w.defense,u)||typeof w.autoHeal!=='boolean'||typeof w.recoveryPriority!=='boolean'||![w.wounded,w.admitted,w.treated].every(a=>counts(a,u))||!obj(w.receipts))return false;
     if(!obj(w.archived)||!counts(w.archived.counts,u)||!obj(w.archived.through)||Object.entries(w.archived.through).some(([channel,n])=>!/^(npc:[^:]+|(field|pvp):[^:]+:[^:]+)$/.test(channel)||cityOf(s)&&channel.split(':')[1]!==cityOf(s)||!int(n))||Object.keys(w.receipts).length>100)return false;
     const total={...w.archived.counts};
     for(const [id,r]of Object.entries(w.receipts)){const t=token(id);if(!t||id.length>200||cityOf(s)&&t.city!==cityOf(s)||t.sequence<=(w.archived.through[t.channel]||0)||!obj(r)||Object.keys(r).length!==2||!time(r.at)||!counts(r.counts,u,false)||!sum(r.counts))return false;for(const [unit,n]of Object.entries(r.counts)){total[unit]+=n;if(!int(total[unit]))return false;}}
@@ -53,12 +53,19 @@ const WarCare=(()=>{
     return {healed:q.count,gold:q.gold,counts:{...q.selected}};
   }
   function setAuto(s,enabled){if(typeof enabled!=='boolean')return '请选择是否自动治疗';s.warCare.autoHeal=enabled;return null;}
-  function tick(s,now,u){
-    u=roster(u);const w=s.warCare;if(!w?.autoHeal||!sum(w.wounded))return null;let healed=0,gold=0;
-    for(const id of Object.keys(u)){const n=Math.min(w.wounded[id],Math.floor(s.res.gold/price(id,u)));if(!n)continue;const result=heal(s,id,n,undefined,u);if(typeof result==='string')continue;healed+=result.healed;gold+=result.gold;}
+  // Shared ordered affordability projection: one gold budget cannot fund multiple types twice.
+  function recovery(s,reserve=0,u){
+    u=roster(u);const w=s.warCare,counts=blank(u);let available=Math.max(0,s.res.gold-reserve),gold=0;
+    if(w?.autoHeal)for(const id of Object.keys(u)){const n=Math.min(w.wounded[id],Math.floor(available/price(id,u)),Number.MAX_SAFE_INTEGER-(s.army[id]||0));counts[id]=n;const paid=n*price(id,u);available-=paid;gold+=paid;}
+    return {counts,gold,reserve,available:Math.max(0,s.res.gold-reserve)};
+  }
+  function setPriority(s,enabled){if(typeof enabled!=='boolean')return '请选择是否优先恢复伤兵';s.warCare.recoveryPriority=enabled;return null;}
+  function tick(s,now,u,reserve=0){
+    u=roster(u);const w=s.warCare;if(!w?.autoHeal||!sum(w.wounded))return null;let healed=0,gold=0;const planned=recovery(s,reserve,u).counts;
+    for(const id of Object.keys(u)){const n=planned[id];if(!n)continue;const result=heal(s,id,n,undefined,u);if(typeof result==='string')continue;healed+=result.healed;gold+=result.gold;}
     const remaining=sum(w.wounded),blocked=remaining>0;
     if(healed||!w.lastAuto||w.lastAuto.remaining!==remaining||w.lastAuto.blocked!==blocked)w.lastAuto={at:now,healed,gold,remaining,blocked};
     return {healed,gold,remaining,blocked};
   }
-  return {init,valid,validDefense,defaultDefense,setDefense,defenseSnapshot,admit,price,quote,heal,setAuto,tick,heldArmy:s=>({...s.warCare?.wounded})};
+  return {init,valid,validDefense,defaultDefense,setDefense,defenseSnapshot,admit,price,quote,heal,setAuto,setPriority,recovery,tick,heldArmy:s=>({...s.warCare?.wounded})};
 })();

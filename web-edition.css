@@ -855,3 +855,9 @@ dialog .web-plot-preview h3{
 .hero-codex-entry .guide-actions button{min-width:0;min-height:44px;padding:6px 4px}
 .hero-codex-entry .guide-actions .btn{grid-column:auto}
 .hero-codex-entry details summary{min-height:44px;display:flex;align-items:center}
+
+/* 本城恢复补兵：手机可点选，四项兵数保持独立。 */
+.recovery-priority-choice{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 10px;border:1px solid var(--line,#67583a);border-radius:8px;cursor:pointer}
+.recovery-priority-choice input{width:20px;height:20px;flex-shrink:0}
+.recovery-troop-card{margin-top:8px;padding:8px;border:1px solid var(--line,#67583a);border-radius:8px}
+.recovery-figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 10px;margin-top:6px;font-variant-numeric:tabular-nums}
