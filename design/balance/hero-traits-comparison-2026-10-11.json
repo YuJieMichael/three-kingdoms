@@ -1,0 +1,167 @@
+[
+  {
+    "fixture": "prepared, same hero/army/enemy; only frozen trait toggled",
+    "control": {
+      "name": "guanyu",
+      "enabled": false,
+      "hpLost": 149,
+      "gateDamage": 2400,
+      "firstAttack": "player",
+      "events": [
+        {
+          "type": "gate",
+          "side": "player",
+          "unit": "shield",
+          "damage": 2400
+        }
+      ],
+      "range": 30,
+      "speed": 275
+    },
+    "trait": {
+      "name": "guanyu",
+      "enabled": true,
+      "hpLost": 149,
+      "gateDamage": 2592,
+      "firstAttack": "player",
+      "events": [
+        {
+          "type": "gate",
+          "side": "player",
+          "unit": "shield",
+          "damage": 2592
+        }
+      ],
+      "range": 30,
+      "speed": 275
+    }
+  },
+  {
+    "fixture": "prepared, same hero/army/enemy; only frozen trait toggled",
+    "control": {
+      "name": "menghuo",
+      "enabled": false,
+      "hpLost": 3898,
+      "gateDamage": 0,
+      "firstAttack": "enemy",
+      "events": [
+        {
+          "type": "strike",
+          "side": "enemy",
+          "unit": "spear",
+          "damage": 3898
+        },
+        {
+          "type": "strike",
+          "side": "player",
+          "unit": "shield",
+          "damage": 30000
+        },
+        {
+          "type": "strike",
+          "side": "player",
+          "unit": "shield",
+          "damage": 12500
+        }
+      ],
+      "range": 30,
+      "speed": 275
+    },
+    "trait": {
+      "name": "menghuo",
+      "enabled": true,
+      "hpLost": 3703,
+      "gateDamage": 0,
+      "firstAttack": "enemy",
+      "events": [
+        {
+          "type": "strike",
+          "side": "enemy",
+          "unit": "spear",
+          "damage": 3703
+        },
+        {
+          "type": "strike",
+          "side": "player",
+          "unit": "shield",
+          "damage": 30000
+        },
+        {
+          "type": "strike",
+          "side": "player",
+          "unit": "shield",
+          "damage": 12500
+        }
+      ],
+      "range": 30,
+      "speed": 275
+    }
+  },
+  {
+    "fixture": "prepared, same hero/army/enemy; only frozen trait toggled",
+    "control": {
+      "name": "zhurong",
+      "enabled": false,
+      "hpLost": 10199,
+      "gateDamage": 0,
+      "firstAttack": "enemy",
+      "events": [
+        {
+          "type": "strike",
+          "side": "enemy",
+          "unit": "spear",
+          "damage": 7285
+        },
+        {
+          "type": "strike",
+          "side": "player",
+          "unit": "archer",
+          "damage": 30000
+        },
+        {
+          "type": "strike",
+          "side": "enemy",
+          "unit": "archer",
+          "damage": 2914
+        },
+        {
+          "type": "strike",
+          "side": "player",
+          "unit": "archer",
+          "damage": 12500
+        }
+      ],
+      "range": 1260,
+      "speed": 250
+    },
+    "trait": {
+      "name": "zhurong",
+      "enabled": true,
+      "hpLost": 7285,
+      "gateDamage": 0,
+      "firstAttack": "enemy",
+      "events": [
+        {
+          "type": "strike",
+          "side": "enemy",
+          "unit": "spear",
+          "damage": 7285
+        },
+        {
+          "type": "strike",
+          "side": "player",
+          "unit": "archer",
+          "damage": 30000
+        },
+        {
+          "type": "strike",
+          "side": "player",
+          "unit": "archer",
+          "damage": 12500
+        }
+      ],
+      "range": 1260,
+      "speed": 250
+    }
+  }
+]
