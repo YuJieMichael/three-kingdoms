@@ -37,4 +37,4 @@
 
 战场矩阵：种子1/7/19 × 黄巾/南蛮 × 9主线/15全节点 × 简单→普通→困难，共36通关，全部通过。南蛮输入先以真实黄巾连续通关获得解锁；每个副本三档共只得一个当日装备箱，后续经验声望减半。报告 classic-mobile-campaigns-2026-10-11.json 保留逐战守军、兵损、补租池和结算。
 
-复现：node tests/balance/classic-mobile-campaigns.cjs <report.json>；可选第三参数保存真实获得的中间UI档。各报告code记录运行时Git基点和实际全JS sourceHash；运行在Task5提交前的稳定0.34.71工作树，最终提交按sourceHash核对，不能把基点提交误当未改动工作树。
+复现：node tests/balance/classic-mobile-campaigns.cjs <report.json>；可选第三参数保存真实获得的中间UI档。各报告code记录运行时Git基点和实际全JS sourceHash；最终存储修复后重新运行于已提交c4b37af85dc8a6140c4bee38556b11da347ac455，全JS sourceHash为1ba8470a16d04b6040b6693e37b3ea7b2ead0cc1cbf464ac1ecc0ebb08052736；与之前Task5路线结果一致。

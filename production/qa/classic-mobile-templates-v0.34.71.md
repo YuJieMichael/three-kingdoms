@@ -117,3 +117,142 @@ Task4独立classic_review4 Approved，Critical0/Important0，自动预览方向�
 最终8192运行没有新增console error/warn；日志仅三条已记录的旧8191初次加载错误。所有表单和导航用真实UI，evaluate只读，无浏览器脚本修改Game或存档。真实iPhone Safari、网络权威模式、线上0.34.71未验。
 
 三个数值报告执行时Git基点eaa3ada但实际代码是待提交的稳定0.34.71；全JS哈希已精确核对与778b952一致，各code.verifiedProductRevision记录该提交，同时保留实际执行基点，未伪称在旧eaa3ada原代码上运行。
+
+## 最终整支审查与修复门禁
+
+1934f0c上的最终gpt-6-astra整支审查：Critical0、Important1、Minor0。完整51块runtime与实际源逐块一致，版本/脚本清单/数值聚合已独立核对。唯一I1：applyCityPreset/pauseCityPreset在localStorage写入失败时只返回错误，不回滚资源、工程、模板和竞争自动设置；真实复现粮木石铁各5000变3900/3500/3875/3900且新增两队列，暂停内存与持久档分叉。已交最终统一fix wave，未带缺陷推送。root pre-fix全量953/953、53.41s表明原测试缺少该边界，不能替代新增失败回归。
+
+最终审查排除项逐项裁定：实体Safari/联网权威/线上候选无环境或尚未发布，沿原规格标未验；全部开局经济仅已有三旧档路线不能外推；旧掉头坐标缺信息不可恢复，新pathStart已解决新召回；未来难度规则变更须另迁移，本轮未改配置；旧全仓训练/研究保存机制不扩为本批重构，当前仅新增模板两个入口做完整回滚。若需要扩大范围，代价依次是补真机/联网/线上验收、补其他开局平衡、旧信息无法找回、未来追加配置迁移、旧动作存储故障机制暂保留。
+
+12. 最终审查七项排除沿批准范围处理，集中修新增模板事务；代价为真机/联机/线上仍须补验、其他开局另平衡，旧历史掉头不能还原、未来难度另迁移、旧动作存储机制暂保留。
+
+
+## 最终存储修复验收（c4b37af）
+
+# 最终唯一 fix wave：I1 城池模板保存失败
+
+状态：DONE。没有 push、没有 merge；版本仍为 0.34.71 候选。
+
+- 工作树：`/Users/lihuazeng/.codex/worktrees/nanman-campaign/superpower`
+- 分支：`feat/classic-mobile-templates`
+- 固定基线：`1934f0c88f608cce911c1a1b076ab7c0c0c5a6a8`
+- 修复提交 / 最终 HEAD：`c4b37af85dc8a6140c4bee38556b11da347ac455`
+- 提交标题：`fix: 城池模板存档失败时回滚并一次提交队列`
+
+## 确认的问题与最小设计
+
+原实现的 applyCityPreset 在修改模板、关闭竞争自动设置之后，调用 processCityPreset。enqueueBuilding 与 enqueuePlot 每入队一个工程都会保存一次，最后 apply 又保存一次。pauseCityPreset 也在失败时只报告错误而保留已暂停的内存。外层动作包装器只把保存错误返回给调用方，不能恢复状态。
+
+修复沿已有 SupplyLines / setResearchRoute 的完整快照回滚模式：
+
+1. apply 保留原来的自然时间结算与报价校验，在修改目标前 clone 完整 state。
+2. 给内部 enqueueBuilding / enqueuePlot / processCityPreset 加默认值为 true 的 saveNow 参数。只有本次 apply 用 false，先计算所有能入队的工程和实际扣费，再调用一次既有 save。
+3. 保存失败时恢复 state 快照并 CitySystem.capture，使资源、布局、等级、队列、目标、自动升级 / 城外样板设置和 realm 当前城市投影恢复一致。
+4. pause 同样先保存完整 state 快照，失败时恢复并 capture。
+
+没有引入全仓事务、临时存档字段、公共新 API 或新 schema。手动建设与后续自动调度继续采用默认保存行为；成功成本、前置门槛、旧队列、离线结算及双城规则没有改变。
+
+代价是每次用户应用 / 暂停模板增加一次全存档内存快照；频繁 tick 不新增快照。只暂缓本次应用的队列中间保存，避免“第一队已经持久、第二队失败”的半份模板。仍使用既有 save 的写入租约、冲突检查、备份与主档流程，未重构公共 save。
+
+## 存储保护
+
+回归直接运行 tests/helpers/game.cjs 加载的真实全局引擎和数据模块，没有 mockGame、假报价或假 enqueue。只在 localStorage.setItem 边界注入抛错，未命中的写入继续写入既有 Map 存储，随后从真实存储读取 JSON、检查主档 / 备份并通过 Game.init 重新载入。
+
+覆盖所有写入抛错、writer 租约抛错、backup 抛错、primary 抛错，以及第二次租约 / 备份 / 主档才失败。最终提交前失败时主档原字节保持不变。主档写失败但备份已成功时，备份可以从更旧的完整档更新为本次动作前的完整主档；不包含新部分模板。租约刷新保持原来的写入权机制，未尝试在存储故障期间追加危险的回写。写入故障模式仍由既有 save 保持，恢复存储后重新读取再重试。
+
+## RED → GREEN 证据
+
+### 第一阶段：先写回滚与整批保存测试，再改产品代码
+
+命令：`node --test tests/city-presets.test.cjs`。
+
+实际基线结果：33 tests，12 pass，21 fail。失败覆盖四类存储写入阶段 × 三种队列（城内 / 混合 / 城外）、暂停、单次完整主档要求和双城。
+
+代表错误：`resource charges, sites, queues, targets and competing automation all roll back`。
+实际内存仍有 house / market 两队，autoUpgrade 从 true 变 false，模板 active=true；粮城资源从各 5000 变为 food=3900、wood=3500、stone=3875、iron=3900。暂停失败后内存与 realm 投影仍为 active=false。
+
+初次 GREEN 检查为 29/33：四个失败位于存储恢复后的农田成功成本字面量，回滚断言已全部通过。对照 manual-data.js 的农田一级独立成本 food=50、wood=300、stone=200、iron=150，将两农田手算期待改为 4900 / 4400 / 4600 / 4700；随后 33/33。
+
+### 第二阶段：真实基线重跑“第一次已写、第二次才失败”和恢复暂停目标
+
+添加三个第二写入阶段用例和一个失败恢复用例，未增加产品改动。使用 git show 的固定基线 engine 通过临时 fs 读取入口注入到独立 Node 测试进程；工作树产品文件始终保持修复版。其余模块、计时、报价、保存与存储读取均真实。
+
+命令：
+
+```sh
+git show 1934f0c88f608cce911c1a1b076ab7c0c0c5a6a8:engine.js > /tmp/classic-final-fix-baseline-engine.js
+node -r /tmp/classic-final-fix-baseline-loader.cjs --test --test-reporter=tap tests/city-presets.test.cjs
+node -r /tmp/classic-final-fix-baseline-loader.cjs --test --test-reporter=tap --test-name-pattern='failed resume|initial preset batch' tests/city-presets.test.cjs
+```
+
+加载器仅把当前目录 engine.js 的 fs.readFileSync 结果替换为固定基线源；没有替换 Game 方法。
+
+- 全部基线 RED：36 tests，12 pass，24 fail。
+- 新四例单独基线 RED：4 tests，0 pass，4 fail，exit 1。
+- 第二写入失败的三个错误均为 `one completed preset write must replace all intermediate commits`。
+- 恢复暂停目标失败：已暂停的自定义目标 active=false 变为 true，主档仍是暂停。
+
+额外独立探针分别在第二次 writer / backup / primary 写入时抛错。原版本三种情况均返回“保存失败”，内存队列为 `[house,farm]`，真实主档却仅有 `[house]`，持久资源为 `{food:4900,wood:4500,stone:4875,iron:4900,gold:5000}`。修复版三种情况均成功返回 null，内存与主档同为 `[house,farm]`，持久资源为 `{food:4850,wood:4200,stone:4675,iron:4750,gold:5000}`。原因是已没有第二次中间保存。
+
+第二写入测试清除故障注入后再检查 reload / pause；故障不是自动消失的，测试没有绕过实际保存行为。
+
+## 最终 GREEN
+
+- `node --test --test-reporter=tap tests/city-presets.test.cjs tests/plot-template.test.cjs tests/automation.test.cjs tests/save-session.test.cjs`：60/60，fail 0，skip 0，1635.725 ms。其中模板 37/37，新增 25 项。
+- `npm test`：978/978，fail 0，skip 0，52843.936 ms，exit 0。原有 953 加 25 回归。
+- `node scripts/build-online-runtime.cjs`：51 个源文件重建成功。
+- `node --check engine.js`、`node --check tests/city-presets.test.cjs`、`node --check supabase/functions/_shared/game-runtime.mjs`：均 exit 0。
+- `git diff --check` 与提交前 `git diff --cached --check`：exit 0。
+
+存储恢复检查包括：原状态 reload、成功重试只扣一次、原有队列不重排、已暂停目标恢复不再二次收费、成功暂停与重新应用、第二城失败不改变第一城、来回切城后目标 / 队列 / 活跃投影一致。既有正常递增时钟调度和离线不启动队列测试仍通过。
+
+临时详细证据路径：`/tmp/classic-final-fix-red.log`、`/tmp/classic-final-fix-red2.log`、`/tmp/classic-final-fix-red3.log`、`/tmp/classic-final-fix-focused.log`、`/tmp/classic-final-fix-full.log`、`/tmp/classic-final-fix-storage-red-probe.log`、`/tmp/classic-final-fix-storage-green-probe.log`。报告内已保存关键结果，临时文件未提交。
+
+## 文件 / Hash / 边界自审
+
+提交仅含：`engine.js`、`tests/city-presets.test.cjs`、`supabase/functions/_shared/game-runtime.mjs`，没有 stage 根代理 QA / docs / design / production / balance 文件。
+
+SHA256：
+
+- engine.js：`4546a0d56b8c064268c141069c813a3e44a8436fcfd3b8272d9921d201659216`
+- runtime 文件：`20f22f89a0267ad3fc7ba839ad6268d5c5ba48388859346b3d3a3c563f673a33`
+- tests/city-presets.test.cjs：`1ae6a11f6aca1748c4bbf94cc4d996f537af3cb19fd6276d902122a2d3945423`
+- runtime 内嵌 runtimeHash：`d079cab50bff509b72320a1b5b1d85fdb27a34540e7aa11e7a5360e95552235e`
+
+自审确认 default=true 使所有旧调用保留原行为，新增 false 只出现于 applyCityPreset，回滚后 capture 恢复活跃投影引用；共享世界拒绝模板动作的逻辑未变。没有变更视觉或版本号，没有自行扩大到其他历史动作的保存失败语义。
+
+根代理已收到产品稳定 hash / HEAD，可以在此提交上完成三个正常数值复跑与 fresh reload 手机模板成功应用 / 暂停核对。该数值 / 浏览器补充验收由根执行，本报告不把未运行的项目写成通过。没有已知未解决实现问题。
+
+
+根代理在提交c4b37af重新执行三条正常数值脚本，报告code.revision均为该提交，全JS sourceHash为1ba8470a16d04b6040b6693e37b3ea7b2ead0cc1cbf464ac1ecc0ebb08052736。经营三种子完整补兵通过；副本36路线通过、每日共享箱不重复；多城种子1/19仍真实占领失败，种子7真实建城运粮成功，退出1如实保留。
+
+根代理fresh reload手机390：正常旧档实际运行均衡模板，营造出现两项工程，仓库施工且四类资源按真实费用减少；暂停显示已暂停，已开工继续。截图final-fix-template-390.jpg。8192无新控制台警告/错误；旧8191缓存启动三条错误仍作为历史记录。
+
+
+## 最终范围复审通过
+
+**I1（Important）：模板保存失败未回滚、逐项保存可能留下半份模板 — ADDRESSED。**
+
+- `engine.js:609` 在自然时间结算与报价校验之后、修改模板之前克隆完整状态；`engine.js:612` 用 `processCityPreset(false)` 暂缓内部逐项保存，整批只调用一次 `save()`。失败恢复快照并调用 `CitySystem.capture`，资源、布局、等级、队列、目标、原自动升级与城外样板设置、当前城池投影一起恢复。
+- `engine.js:614` 对暂停采用同样的快照与回滚，失败不会留下已暂停的内存目标。
+- `engine.js:578`、`engine.js:585`、`engine.js:615` 的 `saveNow` 默认均为 `true`；`engine.js:619` 只传递该参数。旧手动建设与自动调度调用保留原行为，只有首次应用模板使用 `false`，未改成本、门槛或队列顺序。
+- `tests/city-presets.test.cjs:45` 覆盖全部写入、租约、备份、主档四类真实存储边界故障，分别验证城内、混合、城外模板完整回滚、主档字节不变、备份仍为完整旧档、投影引用恢复、重载与成功重试。`tests/city-presets.test.cjs:59` 覆盖失败暂停与成功暂停/恢复；`:69` 断言两个工程只提交一次完整主档；`:79` 覆盖第二城失败、首城保留、重载与切城；`:93` 覆盖原来第二次租约/备份/主档写入才失败的场景；`:106` 覆盖已暂停自定义目标恢复失败不重复扣费或重排旧队列。
+
+**核对：** 已核对固定修复包 `1934f0c88f608cce911c1a1b076ab7c0c0c5a6a8..c4b37af85dc8a6140c4bee38556b11da347ac455`、实现报告与源码。三个产品/测试文件 SHA256 均与报告一致。
+
+**核对：** `/tmp/classic-final-fix-focused.log` 为 60/60、失败 0、跳过 0，其中模板用例 1–37 全部通过，新增 25 项；`/tmp/classic-final-fix-full.log` 为 978/978、失败 0、跳过 0、耗时 52843.93575 ms。未重跑全套或定向测试，现有运行与代码已回答本次范围内疑问。
+
+**核对：** 第二写入红/绿独立探针日志一致：原版本返回保存失败但主档只含 `[house]`；修复版三阶段均只写一次，内存与主档同为 `[house,farm]`，持久资源一致。RED 日志确认旧实现 36 项中 24 失败，新增四例独立基线 4/4 失败。
+
+**核对：** 只读重新计算生成运行时的 51 个源文件摘要并比对完整嵌入源码，`sourceMatch=true`，`runtimeHash=d079cab50bff509b72320a1b5b1d85fdb27a34540e7aa11e7a5360e95552235e`；生成运行时与本次修复源码一致。
+
+**本次修复新增问题：** Critical 无；Important 无；Minor 无。
+
+**范围外观察：** 无。本次未重新审查整体界面、联机或其他历史动作的保存失败语义。
+
+**Fix round verdict：All findings addressed, no new Critical/Important breakage。** I1 已关闭，无开放 finding。
+
+
+手机暂停后重新载入仍显示已暂停，已有工程继续，截图final-fix-paused-reload-390.jpg。最终产品c4b37af，978/978，runtime d079cab50bff509b72320a1b5b1d85fdb27a34540e7aa11e7a5360e95552235e；以上原953、778b952、511778段落为修复前历史证据。最终唯一Important已关闭，无开放Critical/Important/Minor，候选版尚未发布。
+
+根代理推前最终全量再次运行：npm test，978/978，fail/cancelled/skipped/todo均0，58.941秒，日志/tmp/classic-mobile-final-integration-test.log。产品未再修改，文档与数值证据刷新。
