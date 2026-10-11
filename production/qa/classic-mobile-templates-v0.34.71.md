@@ -256,3 +256,6 @@ SHA256：
 手机暂停后重新载入仍显示已暂停，已有工程继续，截图final-fix-paused-reload-390.jpg。最终产品c4b37af，978/978，runtime d079cab50bff509b72320a1b5b1d85fdb27a34540e7aa11e7a5360e95552235e；以上原953、778b952、511778段落为修复前历史证据。最终唯一Important已关闭，无开放Critical/Important/Minor，候选版尚未发布。
 
 根代理推前最终全量再次运行：npm test，978/978，fail/cancelled/skipped/todo均0，58.941秒，日志/tmp/classic-mobile-final-integration-test.log。产品未再修改，文档与数值证据刷新。
+
+
+候选整合PR已建立并附加：https://github.com/YuJieMichael/three-kingdoms/pull/74 ，base main，branch feat/classic-mobile-templates。推前根代理978/978、最终复审通过，CI以当前PR提交检查为准。本批12项自主决定均已公开QA，临时计划目录已清理，保留managed worktree供后续审查。负责人本轮尚未说发布/合并，不合main。
