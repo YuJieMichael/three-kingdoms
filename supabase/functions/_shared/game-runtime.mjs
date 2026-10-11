@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="511778c69fe41995b856b691c23029feb72ce3e1ee4369bf1dbba1f679c52ffe";
+export const runtimeHash="d079cab50bff509b72320a1b5b1d85fdb27a34540e7aa11e7a5360e95552235e";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -16901,14 +16901,14 @@ const Game = (() => {
   function defenseCapacity(){return ReferenceRules.wallRows.find(r=>r.level===state.buildings.wall)?.area||0;}
   function defenseUsed(){return Object.entries(NPCDefense.heldDefenses(state)).reduce((v,[id,n])=>v+n*(ManualData.defenses[id].area||1),0)+Object.entries(state.defenses).reduce((v,[id,n])=>v+n*(ManualData.defenses[id].area||1),0)+state.defenseQueue.reduce((v,q)=>v+q.count*(ManualData.defenses[q.id].area||1),0);}
   function defenseRequirements(id,count=1){const d=ManualData.defenses[id];return requirementsText(d?.requires||[])||(defenseUsed()+count*(d?.area||1)>defenseCapacity()?'城防空间不足':'');}
-  function enqueueBuilding(site,id){if(!Number.isInteger(site)||site<0||site>=36||!cityIds.includes(id)||state.cityLayout[site]==='reserved')return '请选择城内空地';const requirement=buildingRequirements(id,(state.cityLevels[site]||0)+1);if(requirement)return requirement;const current=state.cityLayout[site],level=state.cityLevels[site]||0;if(current&&current!==id)return '这块地已有其他建筑';if(!current&&!buildings[id].repeat&&state.cityLayout.includes(id))return '该建筑在本城只能建一座';if(level>=10)return '本城建筑最高 10 级';if(state.buildQueue.length>=buildLimit())return '建造队正在忙碌';if(state.buildQueue.some(q=>q.site===site))return '该建筑正在施工';const cost=buildRecord(id,level+1).cost;if(!canPay(cost))return '建设资源不足';pay(cost);state.cityLayout[site]=id;const start=Date.now();state.buildQueue.push({id,site,paidItems:payBuildingItems(id,level+1),kind:level?'upgrade':'build',level:level+1,paid:{...cost},start,end:start+buildSeconds(id,level+1)*1000});save();return null;}
+  function enqueueBuilding(site,id,saveNow=true){if(!Number.isInteger(site)||site<0||site>=36||!cityIds.includes(id)||state.cityLayout[site]==='reserved')return '请选择城内空地';const requirement=buildingRequirements(id,(state.cityLevels[site]||0)+1);if(requirement)return requirement;const current=state.cityLayout[site],level=state.cityLevels[site]||0;if(current&&current!==id)return '这块地已有其他建筑';if(!current&&!buildings[id].repeat&&state.cityLayout.includes(id))return '该建筑在本城只能建一座';if(level>=10)return '本城建筑最高 10 级';if(state.buildQueue.length>=buildLimit())return '建造队正在忙碌';if(state.buildQueue.some(q=>q.site===site))return '该建筑正在施工';const cost=buildRecord(id,level+1).cost;if(!canPay(cost))return '建设资源不足';pay(cost);state.cityLayout[site]=id;const start=Date.now();state.buildQueue.push({id,site,paidItems:payBuildingItems(id,level+1),kind:level?'upgrade':'build',level:level+1,paid:{...cost},start,end:start+buildSeconds(id,level+1)*1000});if(saveNow)save();return null;}
   function upgrade(id){const site=typeof id==='number'?id:primarySite(id);return site<0?'请先在城内空地建造':queueBuilding(site,state.cityLayout[site]);}
   const unlockedPlots=()=>Math.min(PLOT_COUNT,Math.max(12+(state.buildings.hall-1)*3,1+state.plots.findLastIndex(p=>p.type!==null)));
   const plotJob=index=>state.buildQueue.find(q=>q.plot===index);
   function plotCost(index,type){const p=state.plots[index];return buildRecord(type,p?.type===type?p.level+1:1)?.cost||{};}
   function plotTime(index,type){const p=state.plots[index];return buildSeconds(type,p.type===type?p.level+1:1);}
   function developPlot(index,type){tick(Date.now(),false);const error=enqueuePlot(index,type);if(!error){state.plotTemplate.active=false;save();}return error;}
-  function enqueuePlot(index,type){if(!Number.isInteger(index)||index<0||index>=unlockedPlots())return '升级官府后可开垦这块土地';if(!Object.hasOwn(plotTypes,type))return '请选择资源产业';if(plotJob(index))return '该地块正在施工';if(state.buildQueue.length>=buildLimit())return '建造队正在忙碌';const p=state.plots[index],same=p.type===type;if(same&&p.level>=plotMaxLevel())return '本城资源田最高 '+plotMaxLevel()+' 级';const requirement=buildingRequirements(type,same?p.level+1:1);if(requirement)return '需要 '+requirement;const cost=plotCost(index,type);if(!canPay(cost))return '资源不足';pay(cost);const start=Date.now();state.buildQueue.push({id:type,plot:index,paidItems:payBuildingItems(type,same?p.level+1:1),paid:{...cost},kind:same?'upgrade':p.type?'replace':'build',level:same?p.level+1:1,start,end:start+plotTime(index,type)*1000});save();return null;}
+  function enqueuePlot(index,type,saveNow=true){if(!Number.isInteger(index)||index<0||index>=unlockedPlots())return '升级官府后可开垦这块土地';if(!Object.hasOwn(plotTypes,type))return '请选择资源产业';if(plotJob(index))return '该地块正在施工';if(state.buildQueue.length>=buildLimit())return '建造队正在忙碌';const p=state.plots[index],same=p.type===type;if(same&&p.level>=plotMaxLevel())return '本城资源田最高 '+plotMaxLevel()+' 级';const requirement=buildingRequirements(type,same?p.level+1:1);if(requirement)return '需要 '+requirement;const cost=plotCost(index,type);if(!canPay(cost))return '资源不足';pay(cost);const start=Date.now();state.buildQueue.push({id:type,plot:index,paidItems:payBuildingItems(type,same?p.level+1:1),paid:{...cost},kind:same?'upgrade':p.type?'replace':'build',level:same?p.level+1:1,start,end:start+plotTime(index,type)*1000});if(saveNow)save();return null;}
   function economyBudget(cityId=currentCityId()){
     const city=state.realm.cities[cityId];if(!city)return null;
     const live=state,scope=CitySystem.scope(live,city);let foodNet,population;
@@ -16932,14 +16932,17 @@ const Game = (() => {
   }
   function applyCityPreset(draft,key){
     if(!domesticStrategyAvailable())return '城池模板仅在单机开放';tick(Date.now(),false);const q=cityPresetQuote(draft);if(q.error)return q.error;if(!key||q.key!==key)return '城池目标或资源已变化，请重新查看';
-    state.cityPreset={version:1,...CitySystem.clone(q.draft),active:true};state.autoUpgrade=false;state.plotTemplate.active=false;processCityPreset();save();return null;
+    const previous=CitySystem.clone(state);
+    state.cityPreset={version:1,...CitySystem.clone(q.draft),active:true};state.autoUpgrade=false;state.plotTemplate.active=false;
+    // Commit the goal and all initially paid jobs together; no partial preset save.
+    processCityPreset(false);if(!save()){state=previous;CitySystem.capture(state);return '存档失败，请重试';}return null;
   }
-  function pauseCityPreset(){if(!domesticStrategyAvailable())return '城池模板仅在单机开放';state.cityPreset.active=false;save();return null;}
-  function processCityPreset(){
+  function pauseCityPreset(){if(!domesticStrategyAvailable())return '城池模板仅在单机开放';const previous=CitySystem.clone(state);state.cityPreset.active=false;if(!save()){state=previous;CitySystem.capture(state);return '存档失败，请重试';}return null;}
+  function processCityPreset(saveNow=true){
     if(!state.cityPreset.active||!domesticStrategyAvailable())return 0;let started=0;
     while(state.buildQueue.length<buildLimit()){
       const q=cityPresetQuote(),task=q.tasks.find(t=>!t.requirement&&AutomationSystem.canSpend(state,t.cost));if(!task)break;
-      const error=task.area==='city'?enqueueBuilding(task.index,task.id):enqueuePlot(task.index,task.id);if(error)break;started++;
+      const error=task.area==='city'?enqueueBuilding(task.index,task.id,saveNow):enqueuePlot(task.index,task.id,saveNow);if(error)break;started++;
     }return started;
   }
   function plotTemplateQuote(id=state.plotTemplate.id,mode=state.plotTemplate.mode){
