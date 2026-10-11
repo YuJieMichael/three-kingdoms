@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="78878cca7fe26c6f9fe6f9c76ca8df2624d410b6a8708a784e17401bc7529fcd";
+export const runtimeHash="e9330673f5941bb3867376b158fe46bd3fc731a04bfc093f37d51547f16e4d22";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -14014,7 +14014,7 @@ const NamedCityData=(()=>{
   const byId=new Map(definitions.map(d=>[d.id,d]));
   function nodeId(value){if(typeof value==='string')return value.replace(/^city_/,'');if(!value||typeof value!=='object'||value.capital===true)return '';return typeof value.node==='string'?value.node:typeof value.id==='string'?value.id.replace(/^city_/,''):'';}
   function definition(value){return byId.get(nodeId(value))||null;}
-  const node=(id,x,y,level,population,army,loot,time,fortification)=>{const d=byId.get(id);return Object.freeze({id,name:d.name,namedCity:true,openCity:true,terrain:'fort',faction:'local_warlord',x,y,level,population,army:Object.freeze(army),loot:Object.freeze(loot),time,...(fortification?{fortification:Object.freeze(fortification)}:{}),desc:d.district+'的'+d.tierName+'。占领须连续攻城降低民心至零以下；先控制指定辖区，再建立独立城市与补给线。',reward:'本城资源田最高 '+d.plotMax+' 级 · 黄金税收 +'+Math.round((d.goldFactor-1)*100)+'%'});};
+  const node=(id,x,y,level,population,army,loot,time,fortification)=>{const d=byId.get(id);return Object.freeze({id,name:d.name,namedCity:true,openCity:true,terrain:'fort',faction:'local_warlord',x,y,level,population,army:Object.freeze(Object.fromEntries(Object.entries(army).map(([unit,count])=>[unit,d.garrison?count:Math.max(1,Math.round(count*1.5))]))),loot:Object.freeze({...loot,gold:(loot.gold||0)*4}),time,...(fortification?{fortification:Object.freeze(fortification)}:{}),desc:d.district+'的'+d.tierName+'。占领须连续攻城降低民心至零以下；先控制指定辖区，再建立独立城市与补给线。',reward:'本城资源田最高 '+d.plotMax+' 级 · 黄金税收 +'+Math.round((d.goldFactor-1)*100)+'%'});};
   const garrisoned=(n,general)=>Object.freeze({...n,desc:byId.get(n.id).district+'的'+byId.get(n.id).tierName+'，由'+general+'镇守。'+general+'忠诚 30 以上时攻城胜利只能围困、不能占领；攻城、断粮道、劝降与离间把忠诚压到 30 以下，再赢一次即可占城并俘获'+general+'。'+(byId.get(n.id).tier==='prefecture'?'郡城须先占领三分之一的名城。':'')});
   const nodes=Object.freeze([
     node('named_hanchuan',28,20,5,500,{shield:100,spear:100,archer:110,cavalry:30},{food:2200,wood:1800,stone:1800,iron:1800,gold:1500},38),
@@ -14167,7 +14167,17 @@ const YellowCityData={
   }
 };
 // v0.34.34: yellow-turban garrisons were 50–290 men; raised five-fold so taking a city needs a real army.
-YellowCityData.armyScale=5;
+// Twelve rotating occupation targets share the established same-level troop mix.
+for(const [id,name,x,y,source] of [
+  ['xikou','溪口',29,29,'qingshi'],['shiqiao','石桥',35,29,'qingshi'],['songlin','松林',29,35,'qingshi'],['nangang','南岗',35,35,'qingshi'],
+  ['dongdu','东渡',24,29,'baisha'],['xiting','西亭',40,31,'baisha'],['changpo','长坡',30,40,'baisha'],['zhuxi','竹溪',38,25,'baisha'],
+  ['anling','安陵',20,34,'chigang'],['wangshan','望山',45,34,'chigang'],['pingyuan','平原',18,22,'yuntai'],['cangwu','苍梧',48,28,'yuntai']
+]){
+  const template=YellowCityData.nodes.find(n=>n.id==='yellow_'+source);
+  YellowCityData.nodes.push({...template,id:'yellow_'+id,name:name+'黄巾城',x,y,army:{...template.army},loot:{...template.loot},desc:'黄巾据城屯兵。占领战胜利可缴获黄金；每小时刷新，备足运输兵。',reward:'占领缴获黄金 · 每小时刷新'});
+}
+YellowCityData.armyScale=7.5;
+for(const n of YellowCityData.nodes)n.loot.gold*=4;
 for(const n of YellowCityData.nodes)for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*YellowCityData.armyScale);
 
 

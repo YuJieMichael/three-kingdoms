@@ -19,11 +19,11 @@ function missionProgress(e){const g=e.Game;return copy({next:g.nextLandmark()?.i
 
 test('open Yellow Turban cities use real map nodes and stay separate from the locked mission route',()=>{
  const e=loadGame(),g=e.Game,defs=copy(e.evaluate('YellowCityData.nodes'));
- assert.deepEqual(defs.map(n=>[n.id,n.x,n.y,n.level,n.population]),[[first,26,31,2,200],['yellow_baisha',41,38,3,300],['yellow_chigang',21,20,4,400],['yellow_liulin',37,40,2,200],['yellow_heishan',24,40,3,300],['yellow_yuntai',44,24,5,500],['yellow_tieling',48,42,5,500],['yellow_huangsha',14,28,6,600]]);
+ assert.deepEqual(defs.slice(0,8).map(n=>[n.id,n.x,n.y,n.level,n.population]),[[first,26,31,2,200],['yellow_baisha',41,38,3,300],['yellow_chigang',21,20,4,400],['yellow_liulin',37,40,2,200],['yellow_heishan',24,40,3,300],['yellow_yuntai',44,24,5,500],['yellow_tieling',48,42,5,500],['yellow_huangsha',14,28,6,600]]);
  assert.match(g.attackBlocked(first,'occupy'),/城池名额已满/);
  g.state.honors.noble=1; // A rank with one spare city slot, without unlocking campaign tasks.
  const before=JSON.stringify(g.state);assert.equal(g.countyUnlocked(),false);assert.ok(g.attackBlocked('fort','occupy'));assert.ok(g.attackBlocked('north_road','raid'));
- for(const n of defs){assert.equal(n.openCity,true);assert.equal(n.faction,'yellow_turban');assert.equal(n.terrain,'fort');assert.equal(g.nodes.some(x=>x.id===n.id),true);assert.equal(g.landmarkVisible(n.id),true);assert.equal(g.attackBlocked(n.id,'raid'),null);assert.equal(g.attackBlocked(n.id,'occupy'),null);assert.equal(g.isCity(g.getNode(n.id)),true);assert.equal(g.getWorldTile(n.x,n.y).id,n.id);assert.equal(g.getWorldTile(n.x,n.y).wild,false);assert.equal(g.getNode(`wild_${n.x}_${n.y}`),null);assert.deepEqual(copy(g.state.towns[n.id]),{morale:100,unrest:0,population:n.population});}
+ for(const n of defs){assert.equal(n.openCity,true);assert.equal(n.faction,'yellow_turban');assert.equal(n.terrain,'fort');assert.equal(g.nodes.some(x=>x.id===n.id),true);assert.equal(g.landmarkVisible(n.id),true);assert.equal(g.attackBlocked(n.id,'raid'),null);assert.equal(g.attackBlocked(n.id,'occupy'),null);assert.equal(g.isCity(g.getNode(n.id)),true);assert.equal(g.getWorldTile(g.getNode(n.id).x,g.getNode(n.id).y).id,n.id);assert.equal(g.getWorldTile(g.getNode(n.id).x,g.getNode(n.id).y).wild,false);assert.equal(g.getNode(`wild_${g.getNode(n.id).x}_${g.getNode(n.id).y}`),null);assert.deepEqual(copy(g.state.towns[n.id]),{morale:100,unrest:0,population:n.population});}
  assert.equal(g.nextLandmark().id,'field');assert.equal(JSON.stringify(g.state),before);
 });
 
@@ -34,7 +34,7 @@ test('city raids exclude gold, militia and siege; occupation adds militia and al
   assert.equal(occupy.siege,true);assert.equal(occupy.militia,Math.ceil(n.population*.1));assert.equal(occupy.army.militia,(n.army.militia||0)+occupy.militia);assert.deepEqual(copy(occupy.loot),copy(n.loot));assert.deepEqual(Object.keys(occupy.loot),resources);assert.equal(n.fortification,undefined);
   const limited=g.lootPreview(n.id,'occupy',{archer:1});assert.ok(limited.loaded<=g.carry({archer:200}));assert.ok(limited.discarded>0);assert.ok(limited.loot.gold>0);assert.equal(JSON.stringify(g.state),before);
  }
- assert.deepEqual(copy(g.attackInfo(first,'occupy').loot),{food:800,wood:800,stone:800,iron:800,gold:1500});
+ assert.deepEqual(copy(g.attackInfo(first,'occupy').loot),{food:800,wood:800,stone:800,iron:800,gold:6000});
 });
 
 test('three real occupation victories lower morale to minus five and claim the city without unlocking chapters or task landmarks',()=>{
@@ -48,9 +48,9 @@ test('three real occupation victories lower morale to minus five and claim the c
 });
 
 test('city victory immediately settles cargo over warehouse limits and return/reload cannot award it twice',()=>{
- const e=setup(),g=e.Game;arrive(e,first,'occupy',200);
+ const e=setup(),g=e.Game;arrive(e,first,'occupy',300);
  for(const id of resources)g.state.res[id]=g.capacity(id)+100;
- const stock=copy(g.state.res),quote=copy(g.lootPreview(first,'occupy',{archer:200})),r=finish(e),b=g.state.battle;
+ const stock=copy(g.state.res),quote=copy(g.lootPreview(first,'occupy',{archer:300})),r=finish(e),b=g.state.battle;
  assert.equal(r.won,true);assert.equal(r.cargoCapacity,g.carry(Object.fromEntries(b.player.map(row=>[row.id,Math.ceil(row.hp/row.stats.hp)]))));assert.ok(r.cargoCapacity<g.carry({archer:400}));assert.ok(r.wounded.archer>0);assert.equal(r.cargoCapacity,g.carry(r.back));assert.ok(r.cargoCapacity<g.carry(Object.fromEntries(Object.keys(g.units).map(id=>[id,r.back[id]+r.wounded[id]]))));assert.equal(r.woundedInHospital,true);assert.equal(g.state.warCare.wounded.archer,r.wounded.archer);assert.ok(r.lootDiscarded>0);assert.ok(r.cargoLoaded<=r.cargoCapacity);assert.equal(r.overflow,0);assert.ok(r.overCapacity>0);assert.ok(quote.storage.overCapacity>0);
  for(const id of resources){assert.equal(r.resourceReceipt.base.received[id],r.loot[id]);assert.equal(g.state.res[id],stock[id]+r.loot[id]+(r.bonusLoot[id]||0));assert.ok(g.state.res[id]>g.capacity(id));}
  const settled=copy(g.state.res),morale=g.state.towns[first].morale,reportCount=g.state.reports.length;g.battleRound();assert.deepEqual(copy(g.state.res),settled);assert.equal(g.state.towns[first].morale,morale);

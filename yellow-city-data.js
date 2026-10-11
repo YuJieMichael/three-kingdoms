@@ -44,5 +44,15 @@ const YellowCityData={
   }
 };
 // v0.34.34: yellow-turban garrisons were 50–290 men; raised five-fold so taking a city needs a real army.
-YellowCityData.armyScale=5;
+// Twelve rotating occupation targets share the established same-level troop mix.
+for(const [id,name,x,y,source] of [
+  ['xikou','溪口',29,29,'qingshi'],['shiqiao','石桥',35,29,'qingshi'],['songlin','松林',29,35,'qingshi'],['nangang','南岗',35,35,'qingshi'],
+  ['dongdu','东渡',24,29,'baisha'],['xiting','西亭',40,31,'baisha'],['changpo','长坡',30,40,'baisha'],['zhuxi','竹溪',38,25,'baisha'],
+  ['anling','安陵',20,34,'chigang'],['wangshan','望山',45,34,'chigang'],['pingyuan','平原',18,22,'yuntai'],['cangwu','苍梧',48,28,'yuntai']
+]){
+  const template=YellowCityData.nodes.find(n=>n.id==='yellow_'+source);
+  YellowCityData.nodes.push({...template,id:'yellow_'+id,name:name+'黄巾城',x,y,army:{...template.army},loot:{...template.loot},desc:'黄巾据城屯兵。占领战胜利可缴获黄金；每小时刷新，备足运输兵。',reward:'占领缴获黄金 · 每小时刷新'});
+}
+YellowCityData.armyScale=7.5;
+for(const n of YellowCityData.nodes)n.loot.gold*=4;
 for(const n of YellowCityData.nodes)for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*YellowCityData.armyScale);
