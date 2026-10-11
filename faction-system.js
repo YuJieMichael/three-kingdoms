@@ -37,8 +37,10 @@ const FactionSystem=(()=>{
       if(!c||e.finished)return true;
       // A frozen pre-camp march remains an ordinary battle. Its own city and
       // strictly earlier departure are the provenance; a live battle uses that march.
+      // Returns cannot start combat and start is reset at settlement/recall, so
+      // validate their city without treating that return time as a new departure.
       const march=e.phase?e:s.expedition;
-      return !!march&&march.node===e.node&&march.general===e.general&&march.faction===undefined&&int(march.start)&&march.start<c.createdAt&&(march.sourceCity===undefined||march.sourceCity===s.realm.activeCity)&&(e.sourceCity===undefined||e.sourceCity===s.realm.activeCity)&&!!s.realm.cities[s.realm.activeCity]&&(e.phase!==undefined||march.phase==='battle');
+      return !!march&&march.node===e.node&&march.general===e.general&&march.faction===undefined&&(march.phase==='return'||int(march.start)&&march.start<c.createdAt)&&(march.sourceCity===undefined||march.sourceCity===s.realm.activeCity)&&(e.sourceCity===undefined||e.sourceCity===s.realm.activeCity)&&!!s.realm.cities[s.realm.activeCity]&&(e.phase!==undefined||march.phase==='battle');
     }
     const q=spec(m);
     if(!q||m.startedAt!==undefined||m.node!==e.node||!s.realm.cities[m.sourceCity]||sequence(m.id)>s.realm.factions.seq)return false;

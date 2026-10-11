@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="3f71dc600c00adc39f2d5ec332405011167ac139846e850b190294075e6658ff";
+export const runtimeHash="fac7913a8ced690ad10b927ec4f593ee30bc6e2c395f41816f0690498ae33180";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","faction-system.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -13612,8 +13612,10 @@ const FactionSystem=(()=>{
       if(!c||e.finished)return true;
       // A frozen pre-camp march remains an ordinary battle. Its own city and
       // strictly earlier departure are the provenance; a live battle uses that march.
+      // Returns cannot start combat and start is reset at settlement/recall, so
+      // validate their city without treating that return time as a new departure.
       const march=e.phase?e:s.expedition;
-      return !!march&&march.node===e.node&&march.general===e.general&&march.faction===undefined&&int(march.start)&&march.start<c.createdAt&&(march.sourceCity===undefined||march.sourceCity===s.realm.activeCity)&&(e.sourceCity===undefined||e.sourceCity===s.realm.activeCity)&&!!s.realm.cities[s.realm.activeCity]&&(e.phase!==undefined||march.phase==='battle');
+      return !!march&&march.node===e.node&&march.general===e.general&&march.faction===undefined&&(march.phase==='return'||int(march.start)&&march.start<c.createdAt)&&(march.sourceCity===undefined||march.sourceCity===s.realm.activeCity)&&(e.sourceCity===undefined||e.sourceCity===s.realm.activeCity)&&!!s.realm.cities[s.realm.activeCity]&&(e.phase!==undefined||march.phase==='battle');
     }
     const q=spec(m);
     if(!q||m.startedAt!==undefined||m.node!==e.node||!s.realm.cities[m.sourceCity]||sequence(m.id)>s.realm.factions.seq)return false;
