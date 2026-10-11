@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="a7e6f389d8e757cbbcdc82e6ca0883c171e95e4b76c141a09f66685cf1b3baca";
+export const runtimeHash="ad39be9475a3b5e01267cb498ddc135a564f7efa0d01cd423ed34af41a217d35";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -14310,7 +14310,7 @@ const CityPresets=(()=>{
  function draft(id){const p=presets.find(p=>p.id===id);return p?clone({id:p.id,buildings:p.buildings,plots:p.plots}):null;}
  function plan(s,d,api){
   const tasks=[],add=(area,index,id,current)=>{const next=current+1,cost=area==='city'?api.buildCost(id,next):api.plotCost(index,id);tasks.push({area,index,id,level:next,cost,requirement:api.requirement(id,next),seconds:area==='city'?api.buildSeconds(id,next):api.plotSeconds(index,id)});};
-  for(const [id,target]of Object.entries(d.buildings)){if(!target)continue;const site=s.cityLayout.indexOf(id);if(site>=0){if(s.cityLevels[site]<target&&!s.buildQueue.some(q=>q.site===site))add('city',site,id,s.cityLevels[site]);}else if(!s.buildQueue.some(q=>q.id===id&&q.site!==undefined)){const index=s.cityLayout.indexOf(null);if(index>=0)add('city',index,id,0);}}
+  for(const [id,target]of Object.entries(d.buildings)){if(!target)continue;const site=s.cityLayout.reduce((best,value,index)=>value===id&&(best<0||s.cityLevels[index]>s.cityLevels[best])?index:best,-1);if(site>=0){if(s.cityLevels[site]<target&&!s.buildQueue.some(q=>q.site===site))add('city',site,id,s.cityLevels[site]);}else if(!s.buildQueue.some(q=>q.id===id&&q.site!==undefined)){const index=s.cityLayout.indexOf(null);if(index>=0)add('city',index,id,0);}}
   const used=Object.fromEntries(types.map(t=>[t,0]));for(let i=0;i<api.unlocked;i++){const job=s.buildQueue.find(q=>q.plot===i),p=s.plots[i],type=job?.id||p.type;if(type)used[type]++;}
   for(let i=0;i<api.unlocked;i++){const p=s.plots[i];if(s.buildQueue.some(q=>q.plot===i))continue;if(p.type){if(p.level<Math.min(d.plots.level,api.plotMax))add('plot',i,p.type,p.level);continue;}let id=null;for(const type of types)if(d.plots.counts[type]>used[type]&&(!id||d.plots.counts[type]-used[type]>d.plots.counts[id]-used[id]))id=type;if(id){used[id]++;add('plot',i,id,0);}}
   return tasks;
@@ -16736,7 +16736,7 @@ const Game = (() => {
     if(state.expedition?.phase==='return'&&state.expedition.end<=now){for(const [k,n] of Object.entries(state.expedition.army))state.army[k]+=n;state.expedition=null;}
     for(const e of [...state.expeditions])if(e.phase==='return'&&e.end<=now){for(const [k,n] of Object.entries(e.army))state.army[k]+=n;state.expeditions=state.expeditions.filter(x=>x!==e);}
     if(!state.expedition&&state.expeditions.length&&(!state.battle||state.battle.finished))state.expedition=state.expeditions.shift();
-    NPCDefense.tick(state,now);ScoutSystem.tick(state,now,scoutApi());WarCare.tick(state,now);if(allowAutomation){processPlotTemplate();processAutoUpgrade();processAutoResearch();}
+    NPCDefense.tick(state,now);ScoutSystem.tick(state,now,scoutApi());WarCare.tick(state,now);if(allowAutomation){processCityPreset();processPlotTemplate();processAutoUpgrade();processAutoResearch();}
   }
   function canPay(cost){return Object.entries(cost).every(([k,v])=>state.res[k]>=v);}
   function pay(cost){for(const [k,v] of Object.entries(cost))state.res[k]-=v;}

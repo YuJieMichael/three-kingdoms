@@ -521,7 +521,7 @@ const Game = (() => {
     if(state.expedition?.phase==='return'&&state.expedition.end<=now){for(const [k,n] of Object.entries(state.expedition.army))state.army[k]+=n;state.expedition=null;}
     for(const e of [...state.expeditions])if(e.phase==='return'&&e.end<=now){for(const [k,n] of Object.entries(e.army))state.army[k]+=n;state.expeditions=state.expeditions.filter(x=>x!==e);}
     if(!state.expedition&&state.expeditions.length&&(!state.battle||state.battle.finished))state.expedition=state.expeditions.shift();
-    NPCDefense.tick(state,now);ScoutSystem.tick(state,now,scoutApi());WarCare.tick(state,now);if(allowAutomation){processPlotTemplate();processAutoUpgrade();processAutoResearch();}
+    NPCDefense.tick(state,now);ScoutSystem.tick(state,now,scoutApi());WarCare.tick(state,now);if(allowAutomation){processCityPreset();processPlotTemplate();processAutoUpgrade();processAutoResearch();}
   }
   function canPay(cost){return Object.entries(cost).every(([k,v])=>state.res[k]>=v);}
   function pay(cost){for(const [k,v] of Object.entries(cost))state.res[k]-=v;}
