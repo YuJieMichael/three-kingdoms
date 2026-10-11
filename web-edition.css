@@ -811,3 +811,5 @@ dialog .web-plot-preview h3{
 
 .city-overview-card .guide-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.city-overview-card button{min-height:44px}.city-overview-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;font-size:12px;margin:10px 0}.city-overview-metrics span{overflow-wrap:anywhere}.city-overview-card.negative{border-color:#c4a66c}
 .city-overview-card .guide-actions .btn:last-child{grid-column:auto}
+
+.siege-targets{display:grid;gap:8px;margin:12px 0}.siege-target{display:flex;align-items:center;justify-content:space-between;gap:12px}.siege-target small{display:block;color:var(--muted)}.siege-target input{width:100px;min-height:44px}.siege-targets~.notice{margin-top:12px}
