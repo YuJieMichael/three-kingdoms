@@ -826,3 +826,10 @@ dialog .web-plot-preview h3{
 .city-preset-targets label{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0;font-size:13px}
 .city-preset-targets input{width:64px;min-width:0;flex-shrink:0;padding:7px}
 @media(max-width:420px){.city-preset-targets{grid-template-columns:1fr 1fr}.city-preset-targets label{flex-wrap:wrap}.city-preset-targets input{width:58px}}
+/* Per-city training targets and short mobile supply actions. */
+.training-target-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.training-target-grid label{display:grid;gap:5px;min-width:0}
+.training-target-grid input{width:100%;min-width:0;box-sizing:border-box;min-height:44px}
+.training-template-panel .guide-actions,.supply-lines-panel .guide-actions{display:flex;flex-wrap:wrap;gap:8px}
+.training-template-panel button,.supply-lines-panel button,.supply-line-form button{min-height:44px}
+.city-overview-supply{min-width:0;overflow-wrap:anywhere}

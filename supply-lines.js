@@ -2,6 +2,8 @@
 // Route configuration is persistent; plans are derived from current city scopes.
 // This module never advances time, switches cities, saves, or creates resources.
 const SupplyLines=(()=>{
+  const presets=[{id:'food',name:'粮草',resource:'food',targetStock:10000,sourceReserve:10000},{id:'gold',name:'黄金',resource:'gold',targetStock:5000,sourceReserve:10000},{id:'materials',name:'建材',resource:'wood',targetStock:10000,sourceReserve:10000}];
+  function presetDraft(d,id){const p=presets.find(p=>p.id===id);return p?{...clone(d),resource:p.resource,targetStock:p.targetStock,sourceReserve:p.sourceReserve}:null;}
   const resources=['food','wood','stone','iron','gold'],maxLines=12,maxStock=1000000000,maxArmy=1000000;
   const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x),clone=x=>JSON.parse(JSON.stringify(x));
   const integer=(n,max=maxStock)=>Number.isSafeInteger(n)&&n>=0&&n<=max;
@@ -44,14 +46,15 @@ const SupplyLines=(()=>{
     const result={state:'blocked',reason:'',amount:0,deficit:0,pending:0,cargo:{},quote:null};
     const stop=(state,reason)=>({...result,state,reason});
     if(!line||!resources.includes(line.resource)||!armyValid(s,line.army)||!integer(line.targetStock)||line.targetStock<1||!integer(line.sourceReserve)||typeof line.enabled!=='boolean'||!Object.hasOwn(s.realm?.cities||{},line.sourceCity)||!Object.hasOwn(s.realm.cities,line.destinationCity)||line.sourceCity===line.destinationCity)return stop('blocked','补给线配置无效');
-    const active=line.id?jobs(s,line.id):[];if(active.length)return {...stop('inflight',active[0].phase==='return'?'等待运输队返城':'运输队正在送达'),job:clone(active[0])};
-    if(!line.enabled)return stop('paused','补给线已暂停');
+    const active=line.id?jobs(s,line.id):[];
     const source=scope(api?.getCity?.(line.sourceCity)),target=scope(api?.getCity?.(line.destinationCity));
     if(!source?.res||!target?.res)return stop('blocked','来源或目的城市不存在');
     const pending=(s.realm.logistics||[]).filter(j=>j.kind==='transport'&&j.destinationCity===line.destinationCity&&j.phase==='outbound'&&!j.delivered&&!j.cancelled).reduce((v,j)=>v+(j.cargo?.[line.resource]||0),0);
     const stock=target.res[line.resource],sourceStock=source.res[line.resource],food=source.res.food;
     if(!Number.isFinite(stock)||!Number.isFinite(sourceStock)||!Number.isFinite(food)||!Number.isSafeInteger(pending))return stop('blocked','城市资源数量无效');
     result.pending=pending;result.deficit=Math.max(0,Math.floor(line.targetStock-stock-pending));
+    if(active.length)return {...stop('inflight',active[0].phase==='return'?'等待运输队返城':'运输队正在送达'),job:clone(active[0])};
+    if(!line.enabled)return stop('paused','补给线已暂停');
     if(!result.deficit)return stop('stocked','目的城库存与待到货物已达到目标');
     if(typeof api?.quoteFrom!=='function')return stop('blocked','运输报价暂不可用');
     const reserve=Math.max(line.sourceReserve,source.automation?.reserve?.[line.resource]||0),foodReserve=Math.max(source.automation?.reserve?.food||0,line.resource==='food'?line.sourceReserve:0),available=Math.max(0,Math.floor(sourceStock-reserve));
@@ -83,5 +86,5 @@ const SupplyLines=(()=>{
     if(!valid(s)||typeof api?.send!=='function')return [];
     const results=[];for(const line of s.realm.supplyLines.lines){const p=plan(s,line,api);if(p.state!=='ready'){results.push({id:line.id,...p});continue;}const error=api.send(p,line);results.push({id:line.id,...p,state:error?'blocked':'sent',reason:error||'运输队已出发'});}return results;
   }
-  return {resources,maxLines,maxStock,maxArmy,init,valid,quote,set,plan,list,status,setEnabled,remove,pauseForRecall,run};
+  return {presets,presetDraft,resources,maxLines,maxStock,maxArmy,init,valid,quote,set,plan,list,status,setEnabled,remove,pauseForRecall,run};
 })();

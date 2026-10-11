@@ -2,7 +2,7 @@
 // The top-level save remains the active-city view for old UI and saves.
 // realm.cities stores city scopes; global heroes, quests and ownership stay shared.
 const CitySystem=(()=>{
-  const fields=['last','res','buildings','cityLayout','cityLevels','tactics','plots','plotTemplate','cityPreset','army','captives','buildQueue','trainQueue','researchQueue','tech','innCandidates','governor','population','morale','unrest','tax','storageAllocation','civicCooldowns','defenses','defenseQueue','garrisons','expedition','expeditions','battle','autoUpgrade','autoResearch','automation','cityRoles','gatherings','cityDefense','scoutQueue','scoutIntel','regionalFront','heroAdministration','warCare','governance'];
+  const fields=['last','res','buildings','cityLayout','cityLevels','tactics','plots','plotTemplate','cityPreset','trainingTemplate','army','captives','buildQueue','trainQueue','researchQueue','tech','innCandidates','governor','population','morale','unrest','tax','storageAllocation','civicCooldowns','defenses','defenseQueue','garrisons','expedition','expeditions','battle','autoUpgrade','autoResearch','automation','cityRoles','gatherings','cityDefense','scoutQueue','scoutIntel','regionalFront','heroAdministration','warCare','governance'];
   const clone=value=>JSON.parse(JSON.stringify(value));
   const object=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
   const integer=n=>Number.isSafeInteger(n)&&n>=0;
@@ -11,7 +11,7 @@ const CitySystem=(()=>{
   function capture(s){if(!s.realm?.cities?.[s.realm.activeCity])return;Object.assign(s.realm.cities[s.realm.activeCity].data,pick(s));}
   function activate(s,id){const c=s.realm?.cities?.[id];if(!c)return false;for(const k of fields){if(c.data[k]!==undefined)s[k]=c.data[k];else delete s[k];}s.realm.activeCity=id;return true;}
   function empty(s,node,now){
-    const d=clone(pick(s));d.last=now;d.res=Object.fromEntries(Object.keys(s.res).map(k=>[k,0]));d.buildings=Object.fromEntries(Object.keys(s.buildings).map(k=>[k,k==='hall'?1:0]));d.cityLayout=Array.from({length:36},(_,i)=>i===14?'hall':[15,20,21].includes(i)?'reserved':null);d.cityLevels=Array.from({length:36},(_,i)=>i===14?1:0);d.plots=Array.from({length:39},()=>({type:null,level:0}));d.plotTemplate={id:null,active:false,mode:'fill'};CityPresets.init(d);d.cityPreset=CityPresets.empty();
+    const d=clone(pick(s));d.last=now;d.res=Object.fromEntries(Object.keys(s.res).map(k=>[k,0]));d.buildings=Object.fromEntries(Object.keys(s.buildings).map(k=>[k,k==='hall'?1:0]));d.cityLayout=Array.from({length:36},(_,i)=>i===14?'hall':[15,20,21].includes(i)?'reserved':null);d.cityLevels=Array.from({length:36},(_,i)=>i===14?1:0);d.plots=Array.from({length:39},()=>({type:null,level:0}));d.plotTemplate={id:null,active:false,mode:'fill'};CityPresets.init(d);d.cityPreset=CityPresets.empty();d.trainingTemplate=TrainingTemplates.empty();
     for(const k of ['army','captives','defenses','tech'])d[k]=Object.fromEntries(Object.keys(s[k]).map(id=>[id,0]));
     d.tactics=clone(s.tactics);d.governor=null;d.cityRoles={commander:'',counsellor:''};d.population=0;d.morale=60;d.unrest=0;d.tax=20;d.storageAllocation={food:25,wood:25,stone:25,iron:25};d.civicCooldowns={comfort:0,levy:0};
     for(const k of ['buildQueue','trainQueue','defenseQueue','innCandidates','expeditions','scoutQueue'])d[k]=[];
