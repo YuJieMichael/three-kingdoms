@@ -903,6 +903,17 @@
     ],
     "guanyu": false,
     "gear": {
+      "completed": false,
+      "missing": {
+        "yellow_turban": [
+          "weapon",
+          "helmet"
+        ],
+        "nanman": [
+          "armor",
+          "mount"
+        ]
+      },
       "fixture": "normal economic entry and earned daily boxes",
       "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '黄金不足，需要2500黄金'\n- null\n",
       "sets": {
@@ -1793,6 +1804,16 @@
     ],
     "guanyu": false,
     "gear": {
+      "completed": false,
+      "missing": {
+        "yellow_turban": [
+          "helmet",
+          "bracer"
+        ],
+        "nanman": [
+          "helmet"
+        ]
+      },
       "fixture": "normal economic entry and earned daily boxes",
       "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '黄金不足，需要2500黄金'\n- null\n",
       "sets": {
@@ -2788,6 +2809,17 @@
     ],
     "guanyu": false,
     "gear": {
+      "completed": false,
+      "missing": {
+        "yellow_turban": [
+          "helmet",
+          "cloak"
+        ],
+        "nanman": [
+          "bracer",
+          "mount"
+        ]
+      },
       "fixture": "normal economic entry and earned daily boxes",
       "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '黄金不足，需要2500黄金'\n- null\n",
       "sets": {
