@@ -1,0 +1,19 @@
+✔ a camp created before a famous rumor still warns its original city on schedule (247.836875ms)
+✔ real camp clearing does not capture a later rumor or grant its first box (march first=false) (208.671959ms)
+✔ real camp clearing does not capture a later rumor or grant its first box (march first=true) (196.366084ms)
+✔ a displaced active rumor avoids existing camps when choosing its next wild tile (217.816416ms)
+✔ camp creation still avoids rumors discovered before factions start (162.610667ms)
+✔ heal rolls back due faction tick, wages and city mirrors when only the final complete write fails (60.248459ms)
+✔ auto rolls back due faction tick, wages and city mirrors when only the final complete write fails (58.653541ms)
+✔ recruit rolls back due faction tick, wages and city mirrors when only the final complete write fails (61.369208ms)
+✔ heal persists due faction tick and complete operation once, with valid reload (65.413834ms)
+✔ auto persists due faction tick and complete operation once, with valid reload (61.548792ms)
+✔ recruit persists due faction tick and complete operation once, with valid reload (64.897666ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1542.567208

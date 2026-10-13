@@ -2,7 +2,7 @@
 // Identity is derived from recruitment provenance, never from the displayed name.
 const HeroIdentity=(()=>{
   const aliases=Object.freeze({warrior:'weiyan',strategist:'xushu'});
-  const garrisonKeys=Object.freeze({named_jiangling:'guanyu',named_xiaopei:'zhangfei',named_wancheng:'dianwei',named_xiapi:'lvbu',named_beihai:'taishici'});
+  const garrisonKeys=()=>Object.fromEntries(NamedGarrison.ids.map(id=>[id,NamedGarrison.identity(id)]));
   const matches=(hero,fields)=>Object.entries(fields).every(([k,v])=>hero[k]===v);
   function transferKey(g){
     const p=g?.famousSource;if(g?.origin!=='battle'||!p||typeof p!=='object'||Array.isArray(p)||Object.keys(p).length!==3||!Number.isSafeInteger(p.commandCredit)||p.commandCredit<0||p.commandCredit%10||p.commandCredit>100000)return '';
@@ -10,9 +10,9 @@ const HeroIdentity=(()=>{
       const d=HeroSystem.wild.definitions.find(d=>d.line===p.line);if(!d?.historical||!matches(g,{name:d.name,title:d.title,type:'将',level:d.level,atk:d.atk,def:d.def,pol:d.pol,wis:d.wis,lead:d.level*10,price:d.gold,bonus:d.bonus}))return '';
       return aliases[d.line]||d.line;
     }
-    if(p.kind==='city'&&Object.hasOwn(garrisonKeys,p.line)){
+    if(p.kind==='city'&&Object.hasOwn(garrisonKeys(),p.line)){
       const expected={...NamedGarrison.hero(p.line)};delete expected.id;
-      return matches(g,expected)?garrisonKeys[p.line]:'';
+      return matches(g,expected)?garrisonKeys()[p.line]:'';
     }
     return '';
   }
@@ -31,11 +31,13 @@ const HeroIdentity=(()=>{
       if(!matches(g,{name:d.name,title:d.title,type:'将',level:d.level,atk:d.atk,def:d.def,pol:d.pol,wis:d.wis,lead:d.level*10,price:d.gold,bonus:d.bonus,sourceNode:r.node}))return '';
       return Object.hasOwn(aliases,d.line)?aliases[d.line]:d.line;
     }
-    for(const [node,identity]of Object.entries(garrisonKeys)){
+    for(const [node,identity]of Object.entries(garrisonKeys())){
       const d=NamedGarrison.generals[node],r=s.realm?.namedCities?.garrisons?.[node];
       if(d?.id===id&&r?.recruited===true&&r.captive===false&&matches(g,NamedGarrison.hero(node)))return identity;
     }
     return '';
   }
-  return {key,transferKey};
+  function recruitmentKey(g){if(g?.origin==='battle')return transferKey(g);if(g?.origin==='wild')return transferKey({...g,origin:'battle',famousSource:{kind:'wild',line:g.wildLine,commandCredit:0}});const node=NamedGarrison.ids.find(id=>NamedGarrison.generals[id].id===g?.id&&matches(g,NamedGarrison.hero(id)));return node?NamedGarrison.identity(node):'';}
+  const owns=(s,identity)=>!!identity&&(s.generals||[]).some(id=>key(s,id)===identity);
+  return {key,transferKey,owns,recruitmentKey};
 })();

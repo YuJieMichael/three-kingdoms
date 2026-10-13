@@ -12,16 +12,24 @@ const NamedGarrison=(()=>{
     named_xiaopei:{id:'local_7100000000000001',name:'张飞',title:'小沛守将',type:'枪',level:20,atk:96,def:72,pol:28,wis:38,bonus:'spear',attack:1.25,defense:1.2,desc:'燕人张翼德，据小沛厉兵秣马，长枪阵势如山。'},
     named_wancheng:{id:'local_7100000000000002',name:'典韦',title:'宛城守将',type:'盾',level:20,atk:90,def:94,pol:20,wis:34,bonus:'shield',attack:1.2,defense:1.3,desc:'古之恶来，持双戟守宛城，刀盾兵难以撼动。'},
     named_xiapi:{id:'local_7100000000000003',name:'吕布',title:'下邳守将',type:'骑',level:25,atk:100,def:86,pol:24,wis:40,bonus:'cavalry',attack:1.4,defense:1.25,desc:'人中吕布，坐镇下邳，铁骑冲阵无人能挡。'},
-    named_beihai:{id:'local_7100000000000004',name:'太史慈',title:'北海守将',type:'弓',level:22,atk:92,def:78,pol:52,wis:66,bonus:'archer',attack:1.3,defense:1.2,desc:'东莱太史慈，北海城头箭不虚发。'}
+    named_beihai:{id:'local_7100000000000004',name:'太史慈',title:'北海守将',type:'弓',level:22,atk:92,def:78,pol:52,wis:66,bonus:'archer',attack:1.3,defense:1.2,desc:'东莱太史慈，北海城头箭不虚发。'},
+    named_changshan:{id:'local_7100000000000006',identity:'zhaoyun',name:'赵云',title:'常山守将',type:'骑',level:20,atk:92,def:88,pol:52,wis:70,bonus:'cavalry',attack:1.25,defense:1.2,startLevel:65,desc:'赵云守常山，护送粮车穿过山口。先夺近郊粮道，再破城门，忠诚低于30方可俘获。'},
+    named_changsha:{id:'local_7100000000000007',identity:'huangzhong',name:'黄忠',title:'长沙守将',type:'弓',level:20,atk:94,def:80,pol:48,wis:66,bonus:'archer',attack:1.25,defense:1.2,startLevel:65,desc:'黄忠守长沙，箭楼掩护粮仓。围断粮道，配攻城器械压低忠诚，再争城头。'},
+    named_xiliang:{id:'local_7100000000000008',identity:'machao',name:'马超',title:'西凉守将',type:'骑',level:20,atk:98,def:87,pol:40,wis:62,bonus:'cavalry',attack:1.25,defense:1.2,startLevel:70,desc:'马超守西凉，骑队沿粮路巡哨。切断近郊补给，离间与劝降并行，勿空手撞城门。'},
+    named_xuchang:{id:'local_7100000000000009',identity:'xunyu',name:'荀彧',title:'许昌守将',type:'盾',level:20,atk:44,def:68,pol:99,wis:96,bonus:'shield',attack:1.25,defense:1.2,startLevel:65,desc:'荀彧守许昌，按簿调粮稳住军心。先取六座名城，再断粮与劝降，破门只算围困。'},
+    named_chaisang:{id:'local_7100000000000010',identity:'zhouyu',name:'周瑜',title:'柴桑守将',type:'弓',level:20,atk:82,def:88,pol:89,wis:99,bonus:'archer',attack:1.25,defense:1.2,startLevel:70,desc:'周瑜守柴桑，粮船接济沿江营垒。先取六座名城，控制近郊粮道，待忠诚动摇再攻城。'}
   });
   const ids=Object.keys(generals);
+  const legacyKeys={named_jiangling:'guanyu',named_xiaopei:'zhangfei',named_wancheng:'dianwei',named_xiapi:'lvbu',named_beihai:'taishici'};
+  const identity=id=>generals[id]?.identity||legacyKeys[id]||'';
+  const recruitmentLevel=id=>generals[id]?.startLevel||(id==='named_wancheng'||id==='named_beihai'?65:70);
   const object=v=>!!v&&typeof v==='object'&&!Array.isArray(v),int=n=>Number.isSafeInteger(n)&&n>=0;
   const has=id=>Object.hasOwn(generals,id);
   const fullArmy=id=>{const n=NamedCityData.nodes.find(x=>x.id===id);return n?{...n.army}:{};};
   const total=a=>Object.values(a||{}).reduce((x,y)=>x+y,0);
   function fresh(id,now){return {loyalty:100,updatedAt:now,pressureAt:0,army:fullArmy(id),armyAt:now,captive:false,recruited:false,persuadeDay:-1,sowAt:0};}
-  function init(s,now=Date.now()){const n=s?.realm?.namedCities;if(!n)return;if(n.garrisons===undefined)n.garrisons={};for(const id of ids)if(!object(n.garrisons[id]))n.garrisons[id]=fresh(id,now);}
-  function valid(s){const g=s?.realm?.namedCities?.garrisons;if(g===undefined)return true;if(!object(g)||Object.keys(g).length!==ids.length||!ids.every(id=>object(g[id])))return false;return ids.every(id=>{const r=g[id],full=fullArmy(id);return Object.keys(r).length===9&&int(r.loyalty)&&r.loyalty<=100&&int(r.updatedAt)&&int(r.pressureAt)&&object(r.army)&&Object.keys(r.army).every(k=>Object.hasOwn(full,k)&&int(r.army[k])&&r.army[k]<=full[k])&&int(r.armyAt)&&typeof r.captive==='boolean'&&typeof r.recruited==='boolean'&&Number.isSafeInteger(r.persuadeDay)&&r.persuadeDay>=-1&&int(r.sowAt);});}
+  function init(s,now=Date.now()){const n=s?.realm?.namedCities;if(!n)return;if(n.garrisons===undefined)n.garrisons={};if(!object(n.garrisons))return;for(const id of ids)if(n.garrisons[id]===undefined)n.garrisons[id]=fresh(id,now);}
+  function valid(s){const g=s?.realm?.namedCities?.garrisons;if(g===undefined)return true;if((s.customGenerals||[]).some(h=>ids.some(id=>generals[id].id===h.id&&(h.origin!==undefined||h.sourceNode!==undefined||h.wildLine!==undefined||!Object.entries(hero(id)).every(([k,v])=>h[k]===v)))))return false;if(!object(g)||Object.keys(g).length!==ids.length||!ids.every(id=>object(g[id])))return false;return ids.every(id=>{const r=g[id],full=fullArmy(id);return Object.keys(r).length===9&&int(r.loyalty)&&r.loyalty<=100&&int(r.updatedAt)&&int(r.pressureAt)&&object(r.army)&&Object.keys(r.army).every(k=>Object.hasOwn(full,k)&&int(r.army[k])&&r.army[k]<=full[k])&&int(r.armyAt)&&typeof r.captive==='boolean'&&typeof r.recruited==='boolean'&&Number.isSafeInteger(r.persuadeDay)&&r.persuadeDay>=-1&&int(r.sowAt);});}
   const record=(s,id)=>s?.realm?.namedCities?.garrisons?.[id];
   const done=r=>r.captive||r.recruited;
   // Wild tiles the player owns near the city cut its supply lines.
@@ -46,7 +54,7 @@ const NamedGarrison=(()=>{
     if(o.won||before!==r.loyalty)r.pressureAt=now;
     // The general falls back into the inner city with a core of his troops after a lost siege.
     if(o.won){for(const k of Object.keys(full))r.army[k]=Math.ceil(full[k]*C.floorAfterWin);}else r.army=Object.fromEntries(Object.keys(full).map(k=>[k,Math.min(full[k],Math.max(0,Math.round(o.enemyArmyLeft?.[k]??r.army[k])))]));
-    r.armyAt=now;if(capturable){r.captive=true;const g=generals[id];HeroSystem.captureLevel(s,g.id,id==='named_wancheng'||id==='named_beihai'?65:70);}
+    r.armyAt=now;if(capturable){if(!HeroIdentity.owns(s,identity(id))){r.captive=true;const g=generals[id];HeroSystem.captureLevel(s,g.id,recruitmentLevel(id));}else r.recruited=true;}
     return {before,after:r.loyalty,capturable};}
   function persuadeQuote(s,id,now,api){const r=project(s,id,now,api),day=Math.floor(now/DAY);if(!r)return {reason:'这座城没有镇守名将'};if(done(r))return {reason:'名将已被俘'};return {cost:C.persuadeGold,loss:C.persuadeLoss,reason:r.persuadeDay===day?'今天已经送过劝降书':s.res.gold<C.persuadeGold?'黄金不足':''};}
   function persuade(s,id,now,api){const q=persuadeQuote(s,id,now,api);if(q.reason)return q.reason;const r=settleTime(s,id,now,api);s.res.gold-=q.cost;r.loyalty=Math.max(0,r.loyalty-q.loss);r.persuadeDay=Math.floor(now/DAY);r.pressureAt=now;return null;}
@@ -56,5 +64,5 @@ const NamedGarrison=(()=>{
   function hero(id){const g=generals[id];return {id:g.id,name:g.name,title:g.title,type:g.type,level:g.level,atk:g.atk,def:g.def,pol:g.pol,wis:g.wis,lead:g.level*10,price:0,bonus:g.bonus,desc:g.desc};}
   // A won assault leaves the city regrouping for 12 hours before the next attack.
   const regroupUntil=(id,now)=>now+C.regroupMs;
-  return {C,generals,ids,has,init,regroupUntil,valid,army,commander,project,settleTime,settleBattle,persuadeQuote,persuade,sowQuote,sow,status,hero,record,supplyCut};
+  return {C,generals,ids,has,identity,recruitmentLevel,init,regroupUntil,valid,army,commander,project,settleTime,settleBattle,persuadeQuote,persuade,sowQuote,sow,status,hero,record,supplyCut};
 })();

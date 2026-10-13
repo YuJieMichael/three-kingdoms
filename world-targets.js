@@ -12,13 +12,20 @@ const WorldTargets=(()=>{
     if(filter==='heroes')for(const n of api.heroes||[])add(n);
     return [...candidates.values()].filter(n=>filter!=='gold'||n.faction==='yellow_turban'||n.publicGold).map(n=>({...api.project(n),distance:Math.hypot(n.x-center.x,n.y-center.y)})).sort((a,b)=>a.distance-b.distance||a.id.localeCompare(b.id));
   }
+  const trainingStages={beginner:[1,3],advanced:[4,6],famous:[7,10]};
+  function training(s,stage,center,api){
+    if(!Object.hasOwn(trainingStages,stage)||!point(center))return [];
+    const [min,max]=trainingStages[stage],eligible=n=>n?.wild&&!n.factionCamp&&point(n)&&Math.abs(n.x-center.x)<=6&&Math.abs(n.y-center.y)<=6&&n.level>=min&&n.level<=max&&!api.blocked(n);
+    const rows=nearby(s,'training',center,{tile:(x,y)=>{const n=api.tile(x,y);return eligible(n)?n:null;},fixed:(api.fixed||[]).filter(eligible),visible:api.visible,project:n=>({id:n.id,name:n.name,level:n.level,intel:api.intel(n)})});
+    return rows.sort((a,b)=>a.level-b.level||a.distance-b.distance||a.id.localeCompare(b.id)).slice(0,5).map(r=>({...r,reason:r.intel==='unknown'?'公开等级符合阶段 · 先侦察，再配兵':'公开等级符合阶段 · 查看情报后配兵'}));
+  }
   function paths(jobs,now,api){return jobs.flatMap((j,i)=>{const target=j.target||(j.destinationCity?api.city(j.destinationCity):api.node(j.node)),origin=j.origin||api.city(j.sourceCity);if(!point(target)||!point(origin)||!Number.isFinite(j.start)||!Number.isFinite(j.end))return [];
     const returning=j.phase==='return',from=returning?(j.pathStart||target):origin,to=returning?origin:target,progress=Math.max(0,Math.min(1,(now-j.start)/Math.max(1,j.end-j.start)));
     return [{id:j.id||'march_'+i,node:j.node||target.node,kind:j.kind||'expedition',general:j.general||'',phase:j.phase,from:{x:from.x,y:from.y},to:{x:to.x,y:to.y},progress,position:{x:from.x+(to.x-from.x)*progress,y:from.y+(to.y-from.y)*progress},end:j.end}];
   });}
   function validPathStart(j){return j.pathStart===undefined||j.pathStart===null||j.phase==='return'&&point(j.pathStart)&&Object.keys(j.pathStart).length===2;}
   function turnaround(j,now,target){const origin=j.origin;if(!point(origin)||!point(target))return null;const p=Math.max(0,Math.min(1,(now-j.start)/Math.max(1,j.end-j.start)));return {x:origin.x+(target.x-origin.x)*p,y:origin.y+(target.y-origin.y)*p};}
-  return {init,valid,nearby,paths,filters,validPathStart,turnaround};
+  return {init,valid,nearby,training,paths,filters,validPathStart,turnaround};
 })();
 const HeroCatalog=(()=>{
   function roster(s,filter,api){if(!['all','march','domestic','idle','captives'].includes(filter))return [];
@@ -28,8 +35,8 @@ const HeroCatalog=(()=>{
   }
   function codex(s,api){const wild=HeroSystem.wild.activeDefinitions().map(d=>{const rumor=s.wildGenerals.rumors.find(r=>r.line===d.line),c=rumor&&s.wildGenerals.captives.find(c=>c.id===rumor.id),expired=c&&Date.now()-c.at>=GovernanceSystem.DAY,status=expired?'released':rumor?.status||'undiscovered',owned=status==='recruited'&&s.generals.includes(rumor.id),active=status==='active'&&!s.conquered[rumor.node],level=c?s.captureLevels[c.id]?.level||HeroSystem.wild.recruitmentLevel(d):HeroSystem.wild.recruitmentLevel(d),rank=HeritageSystem.recruitmentQuote(s,level);
       return {id:d.line,kind:'wild',name:d.name,title:d.title,clue:d.region+' · '+d.fieldLevel+'级野地',status,heroId:owned||status==='captive'?rumor.id:null,node:active?rumor.node:null,level,nobleName:rank.nobleName,cost:{gold:d.gold,jewels:{...d.jewels}},minInn:d.minInn||1,portraitOwned:HeroSystem.wild.portraitOwned(s,d.line),reason:rank.reason||HeroSystem.wild.unlockReason(s,d)};});
-    const cities=NamedGarrison.ids.map(id=>{const d=NamedCityData.definition(id),gen=NamedGarrison.generals[id],r=s.realm.namedCities.garrisons[id],owned=s.generals.includes(gen.id),level=s.captureLevels?.[gen.id]?.level||(id==='named_wancheng'||id==='named_beihai'?65:70),rank=HeritageSystem.recruitmentQuote(s,level);
-      return {id,kind:'city',name:gen.name,title:gen.title,clue:d.name+' · 完成第三章后发现',status:owned?'recruited':r.captive?'captive':r.recruited?'released':'garrison',heroId:owned||r.captive?gen.id:null,node:api.visible(id)?id:null,level,nobleName:rank.nobleName,cost:{gold:0,jewels:{}},reason:rank.reason,captureBelow:30};});
+    const cities=NamedGarrison.ids.map(id=>{const d=NamedCityData.definition(id),gen=NamedGarrison.generals[id],r=s.realm.namedCities.garrisons[id],ownedId=s.generals.find(hero=>HeroIdentity.key(s,hero)===NamedGarrison.identity(id)),owned=!!ownedId,level=owned?s.generalLevels[ownedId]:s.captureLevels?.[gen.id]?.level||NamedGarrison.recruitmentLevel(id),rank=HeritageSystem.recruitmentQuote(s,level);
+      return {id,kind:'city',name:gen.name,title:gen.title,clue:d.name+' · 完成第三章后发现',status:owned?'recruited':r.captive?'captive':r.recruited?'released':'garrison',story:gen.desc,heroId:owned?ownedId:r.captive?gen.id:null,node:api.visible(id)?id:null,level,nobleName:rank.nobleName,cost:{gold:0,jewels:{}},reason:rank.reason,captureBelow:30};});
     return [...wild,...cities];
   }
   return {roster,codex};

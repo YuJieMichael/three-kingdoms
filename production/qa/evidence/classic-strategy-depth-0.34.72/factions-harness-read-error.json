@@ -1,0 +1,1231 @@
+{
+  "code": {
+    "version": "0.34.71",
+    "revision": "0319d76f4c6e73a18aaed0cfd15221ec6e3e7db1",
+    "sourceHash": "ba666f4c662455959531f8f2958e6e8678d1a6039f1987b6e837381f630c76a8"
+  },
+  "normalEconomy": true,
+  "rows": [
+    {
+      "seed": 1,
+      "mode": "field",
+      "multicity": false,
+      "normalEconomy": true,
+      "hours": 6.003333888888889,
+      "initial": {
+        "army": {
+          "worker": 0,
+          "militia": 29,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 798,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 2263186.1065661097,
+          "wood": 1396905.5447223128,
+          "stone": 2190630.4471509242,
+          "iron": 2631356.2511183806,
+          "gold": 2088977.5262045655
+        }
+      },
+      "camp": {
+        "id": "faction_1",
+        "faction": "yellow",
+        "node": "wild_31_32",
+        "sourceCity": "capital",
+        "createdAt": 1791342400221,
+        "readyAt": 1791364000221,
+        "status": "camp"
+      },
+      "warning": null,
+      "result": {
+        "faction": {
+          "version": 1,
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "createdAt": 1791342400221,
+          "level": 5
+        },
+        "facts": {
+          "version": 1,
+          "endedBy": "win",
+          "hadGate": false,
+          "gateAttacks": 0,
+          "gateBroken": false,
+          "machineLost": 0,
+          "attacks": 3,
+          "rounds": 3
+        },
+        "tacticEvents": [],
+        "tacticPoints": {
+          "player": 3,
+          "enemy": 3
+        },
+        "wildGeneral": null,
+        "warOrder": null,
+        "failure": null,
+        "prestigeDelta": 650,
+        "jewelDrops": {
+          "pearl": 1,
+          "agate": 1
+        },
+        "equipmentDrops": [
+          {
+            "id": 6,
+            "slot": "helmet",
+            "tier": 2,
+            "enhance": 0,
+            "hero": ""
+          }
+        ],
+        "equipmentDiscarded": 0,
+        "won": true,
+        "mode": "raid",
+        "returnAfterOccupy": false,
+        "claimed": false,
+        "stationed": false,
+        "moraleBefore": null,
+        "moraleAfter": null,
+        "retreated": false,
+        "woundedInHospital": true,
+        "loot": {
+          "food": 5000,
+          "gold": 2500
+        },
+        "resourceReceipt": {
+          "base": {
+            "loaded": {
+              "food": 5000,
+              "gold": 2500
+            },
+            "received": {
+              "food": 5000,
+              "gold": 2500
+            },
+            "overflow": {
+              "food": 0,
+              "gold": 0
+            },
+            "overCapacity": {
+              "food": 5000,
+              "gold": 0
+            }
+          },
+          "bonus": {
+            "loaded": {},
+            "received": {},
+            "overflow": {},
+            "overCapacity": {}
+          }
+        },
+        "captures": {
+          "worker": 0,
+          "militia": 27,
+          "scout": 0,
+          "spear": 8,
+          "shield": 0,
+          "archer": 9,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "captureDiscarded": 0,
+        "itemDrops": {},
+        "bonusLoot": {},
+        "bonusDiscarded": 0,
+        "cargoCapacity": 18825,
+        "cargoLoaded": 7500,
+        "lootDiscarded": 0,
+        "lost": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 30,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 15,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "back": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 753,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "xp": 415,
+        "first": false,
+        "recruit": null,
+        "overflow": 0,
+        "overCapacity": 5000
+      },
+      "error": "",
+      "completed": true,
+      "final": {
+        "army": {
+          "worker": 0,
+          "militia": 29,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 753,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 2262665.198149597,
+          "wood": 1396905.5447223128,
+          "stone": 2190630.4471509242,
+          "iron": 2631356.2511183806,
+          "gold": 2083112.5680798376
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 77,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        }
+      },
+      "factions": {
+        "enabled": true,
+        "nextAt": 1791364000221,
+        "unlocked": true,
+        "camps": [],
+        "last": {
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "at": 1791342408222,
+          "kind": "field",
+          "won": true
+        }
+      },
+      "valid": true
+    },
+    {
+      "seed": 1,
+      "mode": "defense",
+      "multicity": false,
+      "normalEconomy": true,
+      "hours": 12.25,
+      "initial": {
+        "army": {
+          "worker": 0,
+          "militia": 29,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 798,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 2263186.1065661097,
+          "wood": 1396905.5447223128,
+          "stone": 2190630.4471509242,
+          "iron": 2631356.2511183806,
+          "gold": 2088977.5262045655
+        }
+      },
+      "camp": {
+        "id": "faction_1",
+        "faction": "yellow",
+        "node": "wild_31_32",
+        "sourceCity": "capital",
+        "createdAt": 1791342400221,
+        "readyAt": 1791364000221,
+        "status": "camp"
+      },
+      "warning": {
+        "wave": 1,
+        "level": 5,
+        "army": {
+          "militia": 400,
+          "spear": 150,
+          "archer": 200
+        },
+        "arriveAt": 1791364900221,
+        "profile": "faction_yellow",
+        "rewardSnapshot": {
+          "food": 5000,
+          "gold": 2500
+        },
+        "costSnapshot": {
+          "gold": 0,
+          "food": 0
+        },
+        "faction": {
+          "version": 1,
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "createdAt": 1791342400221,
+          "level": 5,
+          "startedAt": 1791364000221,
+          "arriveAt": 1791364900221
+        }
+      },
+      "result": null,
+      "error": "Cannot read properties of null (reading 'won')",
+      "completed": false,
+      "final": {
+        "army": {
+          "worker": 0,
+          "militia": 29,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 716,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 2253907.9565663105,
+          "wood": 1396905.5447223128,
+          "stone": 2190630.4471509242,
+          "iron": 2631356.2511183806,
+          "gold": 2074802.0079864345
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 90,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        }
+      },
+      "factions": {
+        "enabled": false,
+        "nextAt": 0,
+        "unlocked": true,
+        "camps": [],
+        "last": {
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "at": 1791364900221,
+          "kind": "defense",
+          "won": true
+        }
+      },
+      "valid": true
+    },
+    {
+      "seed": 7,
+      "mode": "field",
+      "multicity": false,
+      "normalEconomy": true,
+      "hours": 6.003333888888889,
+      "initial": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 800,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 1903131.8909418217,
+          "wood": 1260955.9441059243,
+          "stone": 2050180.8471509244,
+          "iron": 2409713.1142001585,
+          "gold": 1654469.5347272928
+        }
+      },
+      "camp": {
+        "id": "faction_1",
+        "faction": "yellow",
+        "node": "wild_31_32",
+        "sourceCity": "capital",
+        "createdAt": 1791373106167,
+        "readyAt": 1791394706167,
+        "status": "camp"
+      },
+      "warning": null,
+      "result": {
+        "faction": {
+          "version": 1,
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "createdAt": 1791373106167,
+          "level": 5
+        },
+        "facts": {
+          "version": 1,
+          "endedBy": "win",
+          "hadGate": false,
+          "gateAttacks": 0,
+          "gateBroken": false,
+          "machineLost": 0,
+          "attacks": 3,
+          "rounds": 3
+        },
+        "tacticEvents": [],
+        "tacticPoints": {
+          "player": 3,
+          "enemy": 3
+        },
+        "wildGeneral": null,
+        "warOrder": null,
+        "failure": null,
+        "prestigeDelta": 650,
+        "jewelDrops": {
+          "pearl": 1
+        },
+        "equipmentDrops": [],
+        "equipmentDiscarded": 0,
+        "won": true,
+        "mode": "raid",
+        "returnAfterOccupy": false,
+        "claimed": false,
+        "stationed": false,
+        "moraleBefore": null,
+        "moraleAfter": null,
+        "retreated": false,
+        "woundedInHospital": true,
+        "loot": {
+          "food": 5000,
+          "gold": 2500
+        },
+        "resourceReceipt": {
+          "base": {
+            "loaded": {
+              "food": 5000,
+              "gold": 2500
+            },
+            "received": {
+              "food": 5000,
+              "gold": 2500
+            },
+            "overflow": {
+              "food": 0,
+              "gold": 0
+            },
+            "overCapacity": {
+              "food": 5000,
+              "gold": 0
+            }
+          },
+          "bonus": {
+            "loaded": {},
+            "received": {},
+            "overflow": {},
+            "overCapacity": {}
+          }
+        },
+        "captures": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 0,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "captureDiscarded": 0,
+        "itemDrops": {},
+        "bonusLoot": {},
+        "bonusDiscarded": 0,
+        "cargoCapacity": 18875,
+        "cargoLoaded": 7500,
+        "lootDiscarded": 0,
+        "lost": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 30,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 15,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "back": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 755,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "xp": 415,
+        "first": false,
+        "recruit": null,
+        "overflow": 0,
+        "overCapacity": 5000
+      },
+      "error": "",
+      "completed": true,
+      "final": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 755,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 1903107.2592379083,
+          "wood": 1260955.9441059243,
+          "stone": 2050180.8471509244,
+          "iron": 2409713.1142001585,
+          "gold": 1648856.1889043115
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 2,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 36,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        }
+      },
+      "factions": {
+        "enabled": true,
+        "nextAt": 1791394706167,
+        "unlocked": true,
+        "camps": [],
+        "last": {
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "at": 1791373114168,
+          "kind": "field",
+          "won": true
+        }
+      },
+      "valid": true
+    },
+    {
+      "seed": 7,
+      "mode": "defense",
+      "multicity": false,
+      "normalEconomy": true,
+      "hours": 12.25,
+      "initial": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 800,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 1903131.8909418217,
+          "wood": 1260955.9441059243,
+          "stone": 2050180.8471509244,
+          "iron": 2409713.1142001585,
+          "gold": 1654469.5347272928
+        }
+      },
+      "camp": {
+        "id": "faction_1",
+        "faction": "yellow",
+        "node": "wild_31_32",
+        "sourceCity": "capital",
+        "createdAt": 1791373106167,
+        "readyAt": 1791394706167,
+        "status": "camp"
+      },
+      "warning": {
+        "wave": 1,
+        "level": 5,
+        "army": {
+          "militia": 400,
+          "spear": 150,
+          "archer": 200
+        },
+        "arriveAt": 1791395606167,
+        "profile": "faction_yellow",
+        "rewardSnapshot": {
+          "food": 5000,
+          "gold": 2500
+        },
+        "costSnapshot": {
+          "gold": 0,
+          "food": 0
+        },
+        "faction": {
+          "version": 1,
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "createdAt": 1791373106167,
+          "level": 5,
+          "startedAt": 1791394706167,
+          "arriveAt": 1791395606167
+        }
+      },
+      "result": null,
+      "error": "Cannot read properties of null (reading 'won')",
+      "completed": false,
+      "final": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 718,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 1894870.490941658,
+          "wood": 1260955.9441059243,
+          "stone": 2050180.8471509244,
+          "iron": 2409713.1142001585,
+          "gold": 1640785.6288109084
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 2,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 49,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        }
+      },
+      "factions": {
+        "enabled": false,
+        "nextAt": 0,
+        "unlocked": true,
+        "camps": [],
+        "last": {
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "at": 1791395606167,
+          "kind": "defense",
+          "won": true
+        }
+      },
+      "valid": true
+    },
+    {
+      "seed": 19,
+      "mode": "field",
+      "multicity": false,
+      "normalEconomy": true,
+      "hours": 6.003333888888889,
+      "initial": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 780,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 2196585.6954622664,
+          "wood": 1211155.9447223132,
+          "stone": 2174730.8471509246,
+          "iron": 2414877.2511183806,
+          "gold": 1788259.8476784928
+        }
+      },
+      "camp": {
+        "id": "faction_1",
+        "faction": "yellow",
+        "node": "wild_31_32",
+        "sourceCity": "capital",
+        "createdAt": 1791371408718,
+        "readyAt": 1791393008718,
+        "status": "camp"
+      },
+      "warning": null,
+      "result": {
+        "faction": {
+          "version": 1,
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "createdAt": 1791371408718,
+          "level": 5
+        },
+        "facts": {
+          "version": 1,
+          "endedBy": "win",
+          "hadGate": false,
+          "gateAttacks": 0,
+          "gateBroken": false,
+          "machineLost": 0,
+          "attacks": 3,
+          "rounds": 3
+        },
+        "tacticEvents": [],
+        "tacticPoints": {
+          "player": 3,
+          "enemy": 3
+        },
+        "wildGeneral": null,
+        "warOrder": null,
+        "failure": null,
+        "prestigeDelta": 650,
+        "jewelDrops": {
+          "pearl": 1,
+          "crystal": 1
+        },
+        "equipmentDrops": [],
+        "equipmentDiscarded": 0,
+        "won": true,
+        "mode": "raid",
+        "returnAfterOccupy": false,
+        "claimed": false,
+        "stationed": false,
+        "moraleBefore": null,
+        "moraleAfter": null,
+        "retreated": false,
+        "woundedInHospital": true,
+        "loot": {
+          "food": 5000,
+          "gold": 2500
+        },
+        "resourceReceipt": {
+          "base": {
+            "loaded": {
+              "food": 5000,
+              "gold": 2500
+            },
+            "received": {
+              "food": 5000,
+              "gold": 2500
+            },
+            "overflow": {
+              "food": 0,
+              "gold": 0
+            },
+            "overCapacity": {
+              "food": 5000,
+              "gold": 0
+            }
+          },
+          "bonus": {
+            "loaded": {},
+            "received": {},
+            "overflow": {},
+            "overCapacity": {}
+          }
+        },
+        "captures": {
+          "worker": 0,
+          "militia": 12,
+          "scout": 0,
+          "spear": 8,
+          "shield": 0,
+          "archer": 14,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "captureDiscarded": 0,
+        "itemDrops": {},
+        "bonusLoot": {},
+        "bonusDiscarded": 0,
+        "cargoCapacity": 18375,
+        "cargoLoaded": 7500,
+        "lootDiscarded": 0,
+        "lost": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 30,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 15,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "back": {
+          "worker": 0,
+          "militia": 0,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 735,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "xp": 415,
+        "first": false,
+        "recruit": null,
+        "overflow": 0,
+        "overCapacity": 5000
+      },
+      "error": "",
+      "completed": true,
+      "final": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 735,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 2196284.89706402,
+          "wood": 1211155.9447223132,
+          "stone": 2174730.8471509246,
+          "iron": 2414877.2511183806,
+          "gold": 1782162.540892971
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 2,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 71,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        }
+      },
+      "factions": {
+        "enabled": true,
+        "nextAt": 1791393008718,
+        "unlocked": true,
+        "camps": [],
+        "last": {
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "at": 1791371416719,
+          "kind": "field",
+          "won": true
+        }
+      },
+      "valid": true
+    },
+    {
+      "seed": 19,
+      "mode": "defense",
+      "multicity": false,
+      "normalEconomy": true,
+      "hours": 12.25,
+      "initial": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 780,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 2196585.6954622664,
+          "wood": 1211155.9447223132,
+          "stone": 2174730.8471509246,
+          "iron": 2414877.2511183806,
+          "gold": 1788259.8476784928
+        }
+      },
+      "camp": {
+        "id": "faction_1",
+        "faction": "yellow",
+        "node": "wild_31_32",
+        "sourceCity": "capital",
+        "createdAt": 1791371408718,
+        "readyAt": 1791393008718,
+        "status": "camp"
+      },
+      "warning": {
+        "wave": 1,
+        "level": 5,
+        "army": {
+          "militia": 400,
+          "spear": 150,
+          "archer": 200
+        },
+        "arriveAt": 1791393908718,
+        "profile": "faction_yellow",
+        "rewardSnapshot": {
+          "food": 5000,
+          "gold": 2500
+        },
+        "costSnapshot": {
+          "gold": 0,
+          "food": 0
+        },
+        "faction": {
+          "version": 1,
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "createdAt": 1791371408718,
+          "level": 5,
+          "startedAt": 1791393008718,
+          "arriveAt": 1791393908718
+        }
+      },
+      "result": null,
+      "error": "Cannot read properties of null (reading 'won')",
+      "completed": false,
+      "final": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 699,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 2187711.7954623303,
+          "wood": 1211155.9447223132,
+          "stone": 2174730.8471509246,
+          "iron": 2414877.2511183806,
+          "gold": 1773611.980799568
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 2,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 84,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        }
+      },
+      "factions": {
+        "enabled": false,
+        "nextAt": 0,
+        "unlocked": true,
+        "camps": [],
+        "last": {
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "at": 1791393908718,
+          "kind": "defense",
+          "won": true
+        }
+      },
+      "valid": true
+    },
+    {
+      "seed": 7,
+      "mode": "defense",
+      "multicity": true,
+      "normalEconomy": true,
+      "hours": 12.25,
+      "initial": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 800,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 1899737.7717131549,
+          "wood": 1250955.9441059243,
+          "stone": 2040180.8471509244,
+          "iron": 2399713.1142001585,
+          "gold": 1649471.087378096
+        }
+      },
+      "camp": {
+        "id": "faction_1",
+        "faction": "yellow",
+        "node": "wild_31_32",
+        "sourceCity": "capital",
+        "createdAt": 1791373144170,
+        "readyAt": 1791394744170,
+        "status": "camp"
+      },
+      "warning": {
+        "wave": 1,
+        "level": 5,
+        "army": {
+          "militia": 400,
+          "spear": 150,
+          "archer": 200
+        },
+        "arriveAt": 1791395644170,
+        "profile": "faction_yellow",
+        "rewardSnapshot": {
+          "food": 5000,
+          "gold": 2500
+        },
+        "costSnapshot": {
+          "gold": 0,
+          "food": 0
+        },
+        "faction": {
+          "version": 1,
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "createdAt": 1791373144170,
+          "level": 5,
+          "startedAt": 1791394744170,
+          "arriveAt": 1791395644170
+        }
+      },
+      "result": null,
+      "error": "Cannot read properties of null (reading 'won')",
+      "completed": false,
+      "final": {
+        "army": {
+          "worker": 0,
+          "militia": 22,
+          "scout": 1,
+          "spear": 0,
+          "shield": 0,
+          "archer": 718,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        },
+        "res": {
+          "food": 1891476.371712991,
+          "wood": 1250955.9441059243,
+          "stone": 2040180.8471509244,
+          "iron": 2399713.1142001585,
+          "gold": 1635787.4064037947
+        },
+        "wounded": {
+          "worker": 0,
+          "militia": 2,
+          "scout": 0,
+          "spear": 0,
+          "shield": 0,
+          "archer": 49,
+          "cavalry": 0,
+          "heavy": 0,
+          "wagon": 0,
+          "ballista": 0,
+          "ram": 0,
+          "catapult": 0
+        }
+      },
+      "factions": {
+        "enabled": false,
+        "nextAt": 0,
+        "unlocked": true,
+        "camps": [],
+        "last": {
+          "id": "faction_1",
+          "faction": "yellow",
+          "node": "wild_31_32",
+          "sourceCity": "capital",
+          "at": 1791395644170,
+          "kind": "defense",
+          "won": true
+        }
+      },
+      "valid": true
+    }
+  ]
+}

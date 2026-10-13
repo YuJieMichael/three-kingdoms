@@ -1,6 +1,11 @@
 'use strict';
 // Public handbook numeric tables. Unknown timings, prices, research costs and NPC populations are marked trial.
 const ManualData = {
+  "battleCounters": [
+    {"unit":"spear","target":"cavalry","multiplier":1.6,"description":"长枪攻击轻骑：伤害 ×1.6"},
+    {"unit":"cavalry","target":"archer","multiplier":1.65,"description":"轻骑攻击弓兵：伤害 ×1.65"},
+    {"unit":"archer","target":"shield","multiplier":0.5,"description":"弓兵攻击刀盾：伤害 ×0.5"}
+  ],
   "version": 1,
   "civic": {
     "cooldownSeconds": 900,

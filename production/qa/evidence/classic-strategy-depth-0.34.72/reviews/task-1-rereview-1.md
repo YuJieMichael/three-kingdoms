@@ -1,0 +1,6 @@
+- **整点结算后薪俸留金只剩23小时** — **ADDRESSED**。`engine.js:500` 先完成本次全部工资边界，`engine.js:503` 再逐城计算留金并实际治疗，然后补兵；`engine.js:515`、`engine.js:528` 已阻止恢复优先城池在付薪前走旧治疗和补兵路径。原1008黄金场景现在先付40，余968不足治疗1人；1048场景可治疗1人并留下960。`tests/recovery-training.test.cjs:65` 覆盖这两种输入、已有欠薪及助手留金；`:77` 覆盖3小时、24小时离线及重复初始化不扣费；`:83` 验证整点仍先治后招并保留旧模式消费规则。
+- **本轮差异新增问题** — None。检查固定修复范围 `6ad80b7..f39bc10`，未发现新增 Critical、Important 或 Minor 问题；生成运行时包含相同结算顺序修复（`supabase/functions/_shared/game-runtime.mjs:16836`）。
+- **范围外观察** — None。
+- **检查与证据** — 已核对追加报告中的RED：17项、14通过、3失败；GREEN明确列出 `tests/recovery-training.test.cjs`、`tests/war-care.test.cjs`、`tests/training-templates.test.cjs`、`tests/online-realm-expansion.test.cjs`、`tests/governance.test.cjs`、`tests/economy-budget.test.cjs`，实际摘要为91项全部通过、0失败、0跳过。新增断言与修复顺序一致；该结果为实现者提供的运行证据，本复审未独立重跑。
+- **检查与证据** — 从已生成差异及具名相邻调用契约核对逐城激活/捕获、最终恢复原选中城、离线不新开训练、既有工资上限与欠薪只支付一次；未生成新Git差异、未改产品代码、未运行全套或额外测试。
+- **Fix round** — **All findings addressed, no new Critical/Important breakage**。本轮无未关闭问题。

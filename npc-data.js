@@ -14,6 +14,7 @@ const NPCDefenseData={
     {id:'archer',name:'黄巾强弓',hall:5,description:'弓箭手与床弩远射，城墙和箭塔可分担火力。',army:{shield:14,archer:18,ballista:2},reward:{food:300,wood:400,gold:700},gold:500,food:200},
     {id:'siege',name:'黄巾攻城军',hall:6,description:'冲车与投石车威胁城门，需要器械与工事配合。',army:{shield:15,spear:10,ram:5,catapult:3},reward:{food:300,wood:300,iron:300,gold:900},gold:700,food:300},
     // Internal front profiles: only RegionalFront's city-bound request may create them.
+    ...[['yellow','黄巾余部'],['shanyue','山越'],['wuhuan','乌桓']].map(([id,name])=>({id:'faction_'+id,name,faction:true,hall:5,gold:0,food:0})),
     {id:'region_granary',name:'护粮战线敌军',regional:true,hall:2,gold:0,food:0},
     {id:'region_mine',name:'保矿战线敌军',regional:true,hall:2,gold:0,food:0},
     {id:'region_pass',name:'扼守战线敌军',regional:true,hall:2,gold:0,food:0}

@@ -80,7 +80,7 @@ function webRaidModal(resource){
 }
 function webFormationHTML(node,army,general,mode){
   const info=WebPlanning.formation(Game,node,army,general,mode,Date.now());
-  return `<h4>阵容取舍</h4>${info.strengths.map(s=>`<p>${esc(s)}</p>`).join('')}${info.risks.map(s=>`<p class="notice">${esc(s)}</p>`).join('')}${info.suggestions.map(s=>`<p class="hint">${esc(s)}</p>`).join('')}<p class="hint">按当前可见情报分析，不预报胜率或战损。</p>`;
+  return `${typeof tacticalRoleHintsHTML==='function'?tacticalRoleHintsHTML(node,army):''}<h4>阵容取舍</h4>${info.strengths.map(s=>`<p>${esc(s)}</p>`).join('')}${info.risks.map(s=>`<p class="notice">${esc(s)}</p>`).join('')}${info.suggestions.map(s=>`<p class="hint">${esc(s)}</p>`).join('')}<p class="hint">按当前可见情报分析，不预报胜率或战损。</p>`;
 }
 function webReplenishModal(){
   showModal('战后整备',`<p>战报记录当时损失；伤兵营显示当前仍待治疗的人数。先处理伤兵，再补充兵力，接着查看成长目标。</p><div class="settings-row">${btn('查看伤兵营','warCare','','block')}${btn('补兵训练','manualArmy','','block')}${btn('当前成长目标','guideRoute','','secondary block')}</div>`,btn('关闭','close','','secondary'));

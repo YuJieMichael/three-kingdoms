@@ -855,3 +855,22 @@ dialog .web-plot-preview h3{
 .hero-codex-entry .guide-actions button{min-width:0;min-height:44px;padding:6px 4px}
 .hero-codex-entry .guide-actions .btn{grid-column:auto}
 .hero-codex-entry details summary{min-height:44px;display:flex;align-items:center}
+
+/* 本城恢复补兵：手机可点选，四项兵数保持独立。 */
+.recovery-priority-choice{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 10px;border:1px solid var(--line,#67583a);border-radius:8px;cursor:pointer}
+.recovery-priority-choice input{width:20px;height:20px;flex-shrink:0}
+.recovery-troop-card{margin-top:8px;padding:8px;border:1px solid var(--line,#67583a);border-radius:8px}
+.recovery-figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 10px;margin-top:6px;font-variant-numeric:tabular-nums}
+
+.world-target-list .guide-actions button,.world-battle-receipt .guide-actions button,.report>[data-action="trainingRecovery"]{min-height:44px}
+
+/* Named-city income is a local passive effect, separate from development rewards. */
+.named-city-territory{padding:8px;margin:8px 0;border:1px solid var(--line,#b0b69c);border-radius:6px;overflow-wrap:anywhere}.named-city-territory .guide-actions{display:flex;flex-wrap:wrap;gap:6px}.named-city-territory .btn{min-height:44px;white-space:normal}
+
+.faction-panel{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--border);border-radius:10px}.faction-card{padding:12px;margin:10px 0;border:1px solid var(--border);border-radius:10px}.faction-panel .btn,.faction-card .btn,[data-action="factionToggle"],[data-action="factionOpen"]{min-height:44px;min-width:44px}.world-faction-mark{position:absolute;left:2px;top:2px;z-index:4;background:#693d20;color:#fff5d6;border-radius:4px;padding:2px 4px;font-size:10px;pointer-events:none}
+
+/* Practical lessons keep the three decisions visible on a narrow phone. */
+.practical-lesson{padding:8px 10px;margin:6px 0;border:1px solid #77825b55;border-radius:5px;background:#2c3827;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.practical-lesson p{margin:3px 0}
+.tactical-lesson-battle .btn,.tactical-lesson-battle select{min-height:44px}
+.tactical-role-hints{margin:8px 0;padding:8px;border:1px solid #77825b55;border-radius:5px}.tactical-role-hints h4{font-size:12px;margin:4px 0}.tactical-role-hints p{margin:4px 0}

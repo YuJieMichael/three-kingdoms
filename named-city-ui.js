@@ -32,11 +32,18 @@ function refreshNamedGarrisonUI(){
     const details=next.querySelector('details');if(details)details.open=expanded;if(focused){const target=focusSummary?next.querySelector('summary'):focusAction?next.querySelector(`[data-action="${focusAction}"]`):null;if(target&&!target.disabled)target.focus({preventScroll:true});else next.querySelector('summary')?.focus({preventScroll:true});}
   }
 }
+function namedCityTerritoryHTML(p){
+  const city=Game.cityMeta?.(p.id),income=city?Game.citySummary?.(city.id):null,active=!!city&&p.owned;
+  const bonus=CityStrategy.territory(S(),city),labels={granary:'粮食产量 +5%',mine:'木石铁产量 +5%',pass:'新增训练耗时 −5%',balanced:'黄金产量 +5%'};
+  const gain=income?Object.entries(income.territory.gains).filter(([id])=>bonus.production[id]>1).map(([id,n])=>Game.resources[id].name+' +'+num(Number(n.toFixed(2)))+' /时').join('、'):'';
+  const effect=active?gain||'新增训练用时 ×0.95，已有队列不变':'建立并控制此城后生效';
+  return `<section class="named-city-territory"><p class="hint"><strong>本城长期收益</strong> · ${esc(labels[CityStrategy.profile(p.id).id])}</p><p class="hint">${effect} · 仅本城${active&&gain?'，已计入实际产出（扣驻军消耗前）':''}</p>${p.required?`<p class="hint">下级城池 ${p.controlled}/${p.required} · 还差 ${p.missing} 座</p><div class="guide-actions">${p.children.filter(c=>!c.owned).map(c=>btn('查看'+c.name,'namedCityMap',c.id,'small secondary')).join('')}</div>`:''}</section>`;
+}
 function namedCityDetailsHTML(value){
   const p=namedCityProgress(value);if(!p||!p.visible)return '';
   const checks=p.children.map(c=>`<li>${c.owned?'✓':'○'} ${esc(c.name)} · ${c.owned?'已占领':'待占领'}</li>`).join(''),chapter=p.chapter?`<li>${p.chapter.complete?'✓':'○'} 第三章 · 河洛攻城${p.chapter.complete?'已完成':'尚未完成'}</li>`:'';
-  const garrison=namedGarrisonHTML(p.id);
-  return `${garrison}<div class="named-city-details"><p class="hint"><strong>${esc(p.tierName)} · ${esc(p.district)}</strong> · 资源田最高 ${p.plotMax} 级 · 本城黄金税收 +${Math.round((p.goldFactor-1)*100)}%</p><details class="world-tool-details" data-ui-disclosure="named-city-${esc(p.id)}"><summary>辖区与发展 · ${p.owned?'已取得城池归属':p.required?'下级城池 '+p.controlled+'/'+p.required+'，还差 '+p.missing+' 座':'县级名城'}</summary>${checks||chapter?`<ul>${checks}${chapter}</ul>`:'<p class="hint">完成黄巾史诗开放县城攻打后，可以连续进攻降低民心。</p>'}<p class="hint">掠夺只带回战利品；占领须攻城胜利使民心低于 0，并有爵位城数空位。新城仍从官府 1 级起经营。</p><p class="hint">名城高阶资源田 11–18 级为本作参数：第 10 级费用 ×1.35ⁿ、工期 ×1.25ⁿ，n=等级−10；产量、劳动、容量按等级×(等级+1)/110 放大第 10 级值。都城资源田上限暂为 18 级。高阶田需官府 10 级；城内建筑仍最高 10 级。</p>${p.owned?namedCityDevelopmentHTML(p.id):''}</details></div>`;
+  const garrison=namedGarrisonHTML(p.id),territory=namedCityTerritoryHTML(p);
+  return `${garrison}<div class="named-city-details">${territory}<p class="hint"><strong>${esc(p.tierName)} · ${esc(p.district)}</strong> · 资源田最高 ${p.plotMax} 级 · 本城黄金税收 +${Math.round((p.goldFactor-1)*100)}%</p><details class="world-tool-details" data-ui-disclosure="named-city-${esc(p.id)}"><summary>辖区与发展 · ${p.owned?'已取得城池归属':p.required?'下级城池 '+p.controlled+'/'+p.required+'，还差 '+p.missing+' 座':'县级名城'}</summary>${checks||chapter?`<ul>${checks}${chapter}</ul>`:'<p class="hint">完成黄巾史诗开放县城攻打后，可以连续进攻降低民心。</p>'}<p class="hint">掠夺只带回战利品；占领须攻城胜利使民心低于 0，并有爵位城数空位。新城仍从官府 1 级起经营。</p><p class="hint">名城高阶资源田 11–18 级为本作参数：第 10 级费用 ×1.35ⁿ、工期 ×1.25ⁿ，n=等级−10；产量、劳动、容量按等级×(等级+1)/110 放大第 10 级值。都城资源田上限暂为 18 级。高阶田需官府 10 级；城内建筑仍最高 10 级。</p>${p.owned?namedCityDevelopmentHTML(p.id):''}</details></div>`;
 }
 function namedCityDevelopmentHTML(value){
   const q=Game.namedCityDevelopmentQuote?.(value)||NamedCitySystem.developmentQuote(S(),value);if(!q)return '';

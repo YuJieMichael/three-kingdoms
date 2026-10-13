@@ -1,0 +1,2280 @@
+{
+  "code": {
+    "version": "0.34.71",
+    "revision": "a55249668a91f0ad1588989eedad6e7a000451d9",
+    "sourceHash": "1ba8470a16d04b6040b6693e37b3ea7b2ead0cc1cbf464ac1ecc0ebb08052736"
+  },
+  "normalEconomy": true,
+  "description": "Same three earned openings and nearest real plain occupation as the released multi-city diagnosis; compare treatment before automatic 800-archer refill versus treatment after 72h online refill. Actual founding/supply costs retained for winning seed 7. No grants, no enemy sorting by hidden strength; not a general balance proof.",
+  "results": [
+    {
+      "seed": 1,
+      "openingWounded": 62,
+      "target": "wild_31_31",
+      "won": false,
+      "xp": 15,
+      "lost": 679,
+      "wounded": 119,
+      "returned": 0,
+      "loot": {},
+      "bonusLoot": {},
+      "replacementMaterials": {
+        "food": 203700,
+        "wood": 237650,
+        "stone": 0,
+        "iron": 203700,
+        "gold": 0
+      },
+      "refill": [
+        {
+          "seed": 1,
+          "policy": "heal-first",
+          "target": 800,
+          "before": {
+            "hours": 0,
+            "archer": 0,
+            "wounded": 181,
+            "admitted": 181,
+            "treated": 0,
+            "queued": 0,
+            "population": 789.339000000004,
+            "workers": 250,
+            "free": 539,
+            "gold": 2088977.832346121,
+            "food": 2262208.157967554,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1560,
+              "owed": 0,
+              "goldHours": 1339.0883540680263,
+              "foodNet": -197.4,
+              "foodHours": 11460.02106366542,
+              "population": 539,
+              "salaryReserve": 37440,
+              "gold": 2088977.832346121,
+              "food": 2262208.157967554,
+              "warnings": []
+            },
+            "deficits": {
+              "shield": 300,
+              "archer": 1000
+            },
+            "blocked": {
+              "archer": "本次部分补齐，其余等待资源与人口"
+            },
+            "valid": true
+          },
+          "medicalSources": {
+            "field:capital:1791320128148:camp": {
+              "at": 1791320150149,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791320161151:wild_33_32": {
+              "at": 1791320169152,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320188157:wild_32_29": {
+              "at": 1791320200158,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791320206160:wild_35_33": {
+              "at": 1791320218161,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320267668:wild_33_32": {
+              "at": 1791320275669,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320294674:wild_32_29": {
+              "at": 1791320306675,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791320312677:wild_35_33": {
+              "at": 1791320324678,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320374185:wild_33_32": {
+              "at": 1791320382186,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320401191:wild_25_34": {
+              "at": 1791320422192,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320432694:wild_44_33": {
+              "at": 1791320462695,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791320477697:wild_41_46": {
+              "at": 1791320516698,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791320536200:wild_32_34": {
+              "at": 1791320546201,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791320551203:wild_25_34": {
+              "at": 1791320572204,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320582706:wild_44_33": {
+              "at": 1791320612707,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791320627709:wild_41_46": {
+              "at": 1791320666710,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320686212:wild_32_34": {
+              "at": 1791320696213,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320701215:wild_25_34": {
+              "at": 1791320722216,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320800221:wild_31_31": {
+              "at": 1791320809222,
+              "counts": {
+                "archer": 119
+              }
+            }
+          },
+          "treatment": {
+            "healed": 181,
+            "gold": 8688,
+            "counts": {
+              "archer": 181
+            }
+          },
+          "checkpoints": [
+            {
+              "hours": 0.016666666666666666,
+              "archer": 181,
+              "wounded": 0,
+              "admitted": 181,
+              "treated": 181,
+              "queued": 277,
+              "population": 250.33900000000403,
+              "workers": 250,
+              "free": 0,
+              "gold": 2080291.682887121,
+              "food": 2179107.8846342205,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1560,
+                "owed": 0,
+                "goldHours": 1333.5203095430263,
+                "foodNet": -16.400000000000006,
+                "foodHours": 132872.43198989145,
+                "population": 0,
+                "salaryReserve": 37440,
+                "gold": 2080291.682887121,
+                "food": 2179107.8846342205,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 342
+              },
+              "blocked": {
+                "archer": "空闲人口不足"
+              },
+              "valid": true
+            },
+            {
+              "hours": 1,
+              "archer": 181,
+              "wounded": 0,
+              "admitted": 181,
+              "treated": 181,
+              "queued": 299,
+              "population": 1091.339000000004,
+              "workers": 250,
+              "free": 841,
+              "gold": 2078820.6973950674,
+              "food": 2172491.757967548,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1560,
+                "owed": 0,
+                "goldHours": 1332.5773701250432,
+                "foodNet": -16.400000000000006,
+                "foodHours": 132469.00963216752,
+                "population": 841,
+                "salaryReserve": 37440,
+                "gold": 2078820.6973950674,
+                "food": 2172491.757967548,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 320
+              },
+              "blocked": {
+                "archer": "训练队列已满"
+              },
+              "valid": true
+            },
+            {
+              "hours": 24,
+              "archer": 800,
+              "wounded": 0,
+              "admitted": 181,
+              "treated": 181,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 2046771.4900209263,
+              "food": 2068029.1150188087,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1560,
+                "owed": 0,
+                "goldHours": 1312.0330064236707,
+                "foodNet": -635.4,
+                "foodHours": 3254.6885662870773,
+                "population": 950,
+                "salaryReserve": 37440,
+                "gold": 2046771.4900209263,
+                "food": 2068029.1150188087,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 72,
+              "archer": 800,
+              "wounded": 0,
+              "admitted": 181,
+              "treated": 181,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1979955.49002039,
+              "food": 2037529.915019238,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1560,
+                "owed": 0,
+                "goldHours": 1269.2022371925577,
+                "foodNet": -635.4,
+                "foodHours": 3206.6885662877526,
+                "population": 950,
+                "salaryReserve": 37440,
+                "gold": 1979955.49002039,
+                "food": 2037529.915019238,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            }
+          ],
+          "beforeLateHeal": {
+            "hours": 72,
+            "archer": 800,
+            "wounded": 0,
+            "admitted": 181,
+            "treated": 181,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1979955.49002039,
+            "food": 2037529.915019238,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1560,
+              "owed": 0,
+              "goldHours": 1269.2022371925577,
+              "foodNet": -635.4,
+              "foodHours": 3206.6885662877526,
+              "population": 950,
+              "salaryReserve": 37440,
+              "gold": 1979955.49002039,
+              "food": 2037529.915019238,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "after": {
+            "hours": 72,
+            "archer": 800,
+            "wounded": 0,
+            "admitted": 181,
+            "treated": 181,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1979955.49002039,
+            "food": 2037529.915019238,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1560,
+              "owed": 0,
+              "goldHours": 1269.2022371925577,
+              "foodNet": -635.4,
+              "foodHours": 3206.6885662877526,
+              "population": 950,
+              "salaryReserve": 37440,
+              "gold": 1979955.49002039,
+              "food": 2037529.915019238,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "reachedAt": 14.9,
+          "minimumGold": 1979938.690020391,
+          "minimumFood": 2037529.915019238,
+          "lostHeroes": [],
+          "overshoot": 0,
+          "newAboveTargetAndRecoverable": 0
+        },
+        {
+          "seed": 1,
+          "policy": "heal-later",
+          "target": 800,
+          "before": {
+            "hours": 0,
+            "archer": 0,
+            "wounded": 181,
+            "admitted": 181,
+            "treated": 0,
+            "queued": 0,
+            "population": 789.339000000004,
+            "workers": 250,
+            "free": 539,
+            "gold": 2088977.832346121,
+            "food": 2262208.157967554,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1560,
+              "owed": 0,
+              "goldHours": 1339.0883540680263,
+              "foodNet": -197.4,
+              "foodHours": 11460.02106366542,
+              "population": 539,
+              "salaryReserve": 37440,
+              "gold": 2088977.832346121,
+              "food": 2262208.157967554,
+              "warnings": []
+            },
+            "deficits": {
+              "shield": 300,
+              "archer": 1000
+            },
+            "blocked": {
+              "archer": "本次部分补齐，其余等待资源与人口"
+            },
+            "valid": true
+          },
+          "medicalSources": {
+            "field:capital:1791320128148:camp": {
+              "at": 1791320150149,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791320161151:wild_33_32": {
+              "at": 1791320169152,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320188157:wild_32_29": {
+              "at": 1791320200158,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791320206160:wild_35_33": {
+              "at": 1791320218161,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320267668:wild_33_32": {
+              "at": 1791320275669,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320294674:wild_32_29": {
+              "at": 1791320306675,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791320312677:wild_35_33": {
+              "at": 1791320324678,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320374185:wild_33_32": {
+              "at": 1791320382186,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320401191:wild_25_34": {
+              "at": 1791320422192,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320432694:wild_44_33": {
+              "at": 1791320462695,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791320477697:wild_41_46": {
+              "at": 1791320516698,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791320536200:wild_32_34": {
+              "at": 1791320546201,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791320551203:wild_25_34": {
+              "at": 1791320572204,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320582706:wild_44_33": {
+              "at": 1791320612707,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791320627709:wild_41_46": {
+              "at": 1791320666710,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320686212:wild_32_34": {
+              "at": 1791320696213,
+              "counts": {
+                "archer": 6
+              }
+            },
+            "field:capital:1791320701215:wild_25_34": {
+              "at": 1791320722216,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791320800221:wild_31_31": {
+              "at": 1791320809222,
+              "counts": {
+                "archer": 119
+              }
+            }
+          },
+          "treatment": {
+            "healed": 181,
+            "gold": 8688,
+            "counts": {
+              "archer": 181
+            }
+          },
+          "checkpoints": [
+            {
+              "hours": 0.016666666666666666,
+              "archer": 0,
+              "wounded": 181,
+              "admitted": 181,
+              "treated": 0,
+              "queued": 277,
+              "population": 250.33900000000403,
+              "workers": 250,
+              "free": 0,
+              "gold": 2088979.682887121,
+              "food": 2179104.867967554,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1560,
+                "owed": 0,
+                "goldHours": 1339.0895403122572,
+                "foodNet": -197.4,
+                "foodHours": 11039.031752621853,
+                "population": 0,
+                "salaryReserve": 37440,
+                "gold": 2088979.682887121,
+                "food": 2179104.867967554,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 523
+              },
+              "blocked": {
+                "archer": "空闲人口不足"
+              },
+              "valid": true
+            },
+            {
+              "hours": 1,
+              "archer": 0,
+              "wounded": 181,
+              "admitted": 181,
+              "treated": 0,
+              "queued": 299,
+              "population": 1091.339000000004,
+              "workers": 250,
+              "free": 841,
+              "gold": 2087508.6973950674,
+              "food": 2172310.7579675517,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1560,
+                "owed": 0,
+                "goldHours": 1338.146600894274,
+                "foodNet": -197.4,
+                "foodHours": 11004.613768832582,
+                "population": 841,
+                "salaryReserve": 37440,
+                "gold": 2087508.6973950674,
+                "food": 2172310.7579675517,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 501
+              },
+              "blocked": {
+                "archer": "训练队列已满"
+              },
+              "valid": true
+            },
+            {
+              "hours": 24,
+              "archer": 800,
+              "wounded": 181,
+              "admitted": 181,
+              "treated": 0,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 2055414.260687598,
+              "food": 2009620.3336084378,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1560,
+                "owed": 0,
+                "goldHours": 1317.5732440305117,
+                "foodNet": -997.4000000000001,
+                "foodHours": 2014.858966922436,
+                "population": 950,
+                "salaryReserve": 37440,
+                "gold": 2055414.260687598,
+                "food": 2009620.3336084378,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 72,
+              "archer": 800,
+              "wounded": 181,
+              "admitted": 181,
+              "treated": 0,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1988598.2606870616,
+              "food": 1961745.1336078946,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1560,
+                "owed": 0,
+                "goldHours": 1274.7424747993985,
+                "foodNet": -997.4000000000001,
+                "foodHours": 1966.8589669218914,
+                "population": 950,
+                "salaryReserve": 37440,
+                "gold": 1988598.2606870616,
+                "food": 1961745.1336078946,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            }
+          ],
+          "beforeLateHeal": {
+            "hours": 72,
+            "archer": 800,
+            "wounded": 181,
+            "admitted": 181,
+            "treated": 0,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1988598.2606870616,
+            "food": 1961745.1336078946,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1560,
+              "owed": 0,
+              "goldHours": 1274.7424747993985,
+              "foodNet": -997.4000000000001,
+              "foodHours": 1966.8589669218914,
+              "population": 950,
+              "salaryReserve": 37440,
+              "gold": 1988598.2606870616,
+              "food": 1961745.1336078946,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "after": {
+            "hours": 72,
+            "archer": 981,
+            "wounded": 0,
+            "admitted": 181,
+            "treated": 181,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1979910.2606870616,
+            "food": 1961745.1336078946,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1560,
+              "owed": 0,
+              "goldHours": 1269.1732440301678,
+              "foodNet": -816.4000000000001,
+              "foodHours": 2402.921525732355,
+              "population": 950,
+              "salaryReserve": 37440,
+              "gold": 1979910.2606870616,
+              "food": 1961745.1336078946,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "reachedAt": 19.25,
+          "minimumGold": 1988581.4606870627,
+          "minimumFood": 1961745.1336078946,
+          "lostHeroes": [],
+          "overshoot": 181,
+          "newAboveTargetAndRecoverable": 181
+        }
+      ],
+      "lowLevelProbe": {
+        "selection": "Lowest public level, then distance within nearby 6-square search; no hidden-strength sorting",
+        "target": {
+          "id": "wild_31_38",
+          "level": 1,
+          "distance": 6.0827625302982185
+        },
+        "scout": {
+          "reason": "",
+          "quote": {
+            "quality": 1,
+            "cost": {
+              "food": 14
+            },
+            "expectedLost": 0
+          },
+          "intel": {
+            "quality": 1,
+            "success": true,
+            "lost": 0,
+            "survivors": 1,
+            "at": 1791320803221,
+            "expiresAt": 1791322003221,
+            "level": 1,
+            "types": [
+              "militia",
+              "spear"
+            ],
+            "army": null,
+            "bands": null,
+            "exact": false,
+            "precision": "types"
+          }
+        },
+        "sent": 798,
+        "enemyInitial": 16,
+        "won": true,
+        "xp": 48,
+        "lost": 0,
+        "wounded": 0,
+        "returned": 798,
+        "loot": {
+          "food": 1083
+        },
+        "valid": true
+      }
+    },
+    {
+      "seed": 7,
+      "openingWounded": 21,
+      "target": "wild_32_31",
+      "won": true,
+      "xp": 156,
+      "lost": 0,
+      "wounded": 0,
+      "returned": 800,
+      "loot": {
+        "food": 7803
+      },
+      "bonusLoot": {},
+      "replacementMaterials": {
+        "food": 0,
+        "wood": 0,
+        "stone": 0,
+        "iron": 0,
+        "gold": 0
+      },
+      "refill": [
+        {
+          "seed": 7,
+          "policy": "heal-first",
+          "target": 800,
+          "before": {
+            "hours": 0,
+            "archer": 800,
+            "wounded": 21,
+            "admitted": 21,
+            "treated": 0,
+            "queued": 0,
+            "population": 1056.708250000003,
+            "workers": 250,
+            "free": 806,
+            "gold": 1649471.087378096,
+            "food": 1899737.7717131549,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1520,
+              "owed": 0,
+              "goldHours": 1085.1783469592738,
+              "foodNet": -674.3999999999999,
+              "foodHours": 2816.9302664785814,
+              "population": 806,
+              "salaryReserve": 36480,
+              "gold": 1649471.087378096,
+              "food": 1899737.7717131549,
+              "warnings": []
+            },
+            "deficits": {
+              "shield": 300,
+              "archer": 200
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "medicalSources": {
+            "field:capital:1791194614059:wild_30_31": {
+              "at": 1791194626560,
+              "counts": {
+                "militia": 2
+              }
+            },
+            "field:capital:1791350856618:camp": {
+              "at": 1791350878619,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791350889621:wild_34_32": {
+              "at": 1791350899622,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791350904624:wild_29_33": {
+              "at": 1791350916625,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791350922627:wild_27_33": {
+              "at": 1791350938628,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791351005134:wild_26_28": {
+              "at": 1791351025135,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791351035137:wild_39_22": {
+              "at": 1791351065138,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791351126642:wild_26_28": {
+              "at": 1791351146643,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791351156645:wild_39_22": {
+              "at": 1791351186646,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791351248150:wild_26_28": {
+              "at": 1791351268151,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791351278153:wild_39_22": {
+              "at": 1791351308154,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791351369658:wild_26_28": {
+              "at": 1791351389659,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791351399661:wild_39_22": {
+              "at": 1791351429662,
+              "counts": {
+                "archer": 2
+              }
+            }
+          },
+          "treatment": {
+            "healed": 21,
+            "gold": 1008,
+            "counts": {
+              "archer": 21
+            }
+          },
+          "checkpoints": [
+            {
+              "hours": 0.016666666666666666,
+              "archer": 821,
+              "wounded": 0,
+              "admitted": 21,
+              "treated": 21,
+              "queued": 0,
+              "population": 1071.708250000003,
+              "workers": 250,
+              "free": 821,
+              "gold": 1648465.5617806793,
+              "food": 1899726.8817131547,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1520,
+                "owed": 0,
+                "goldHours": 1084.5168169609733,
+                "foodNet": -653.4000000000001,
+                "foodHours": 2907.4485486886356,
+                "population": 821,
+                "salaryReserve": 36480,
+                "gold": 1648465.5617806793,
+                "food": 1899726.8817131547,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 1,
+              "archer": 821,
+              "wounded": 0,
+              "admitted": 21,
+              "treated": 21,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1647109.4064039201,
+              "food": 1899084.371713147,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1520,
+                "owed": 0,
+                "goldHours": 1083.6246094762632,
+                "foodNet": -653.4000000000001,
+                "foodHours": 2906.4652153552906,
+                "population": 950,
+                "salaryReserve": 36480,
+                "gold": 1647109.4064039201,
+                "food": 1899084.371713147,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 24,
+              "archer": 821,
+              "wounded": 0,
+              "admitted": 21,
+              "treated": 21,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1616013.4064036685,
+              "food": 1884056.171712967,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1520,
+                "owed": 0,
+                "goldHours": 1063.1667147392557,
+                "foodNet": -653.4000000000001,
+                "foodHours": 2883.465215355015,
+                "population": 950,
+                "salaryReserve": 36480,
+                "gold": 1616013.4064036685,
+                "food": 1884056.171712967,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 72,
+              "archer": 821,
+              "wounded": 0,
+              "admitted": 21,
+              "treated": 21,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1551117.4064031432,
+              "food": 1852692.9717125916,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1520,
+                "owed": 0,
+                "goldHours": 1020.4719778968048,
+                "foodNet": -653.4000000000001,
+                "foodHours": 2835.4652153544403,
+                "population": 950,
+                "salaryReserve": 36480,
+                "gold": 1551117.4064031432,
+                "food": 1852692.9717125916,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            }
+          ],
+          "beforeLateHeal": {
+            "hours": 72,
+            "archer": 821,
+            "wounded": 0,
+            "admitted": 21,
+            "treated": 21,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1551117.4064031432,
+            "food": 1852692.9717125916,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1520,
+              "owed": 0,
+              "goldHours": 1020.4719778968048,
+              "foodNet": -653.4000000000001,
+              "foodHours": 2835.4652153544403,
+              "population": 950,
+              "salaryReserve": 36480,
+              "gold": 1551117.4064031432,
+              "food": 1852692.9717125916,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "after": {
+            "hours": 72,
+            "archer": 821,
+            "wounded": 0,
+            "admitted": 21,
+            "treated": 21,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1551117.4064031432,
+            "food": 1852692.9717125916,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1520,
+              "owed": 0,
+              "goldHours": 1020.4719778968048,
+              "foodNet": -653.4000000000001,
+              "foodHours": 2835.4652153544403,
+              "population": 950,
+              "salaryReserve": 36480,
+              "gold": 1551117.4064031432,
+              "food": 1852692.9717125916,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "reachedAt": 0.016666666666666666,
+          "minimumGold": 1551008.2064031505,
+          "minimumFood": 1852692.9717125916,
+          "lostHeroes": [],
+          "overshoot": 21,
+          "newAboveTargetAndRecoverable": 0
+        },
+        {
+          "seed": 7,
+          "policy": "heal-later",
+          "target": 800,
+          "before": {
+            "hours": 0,
+            "archer": 800,
+            "wounded": 21,
+            "admitted": 21,
+            "treated": 0,
+            "queued": 0,
+            "population": 1056.708250000003,
+            "workers": 250,
+            "free": 806,
+            "gold": 1649471.087378096,
+            "food": 1899737.7717131549,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1520,
+              "owed": 0,
+              "goldHours": 1085.1783469592738,
+              "foodNet": -674.3999999999999,
+              "foodHours": 2816.9302664785814,
+              "population": 806,
+              "salaryReserve": 36480,
+              "gold": 1649471.087378096,
+              "food": 1899737.7717131549,
+              "warnings": []
+            },
+            "deficits": {
+              "shield": 300,
+              "archer": 200
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "medicalSources": {
+            "field:capital:1791194614059:wild_30_31": {
+              "at": 1791194626560,
+              "counts": {
+                "militia": 2
+              }
+            },
+            "field:capital:1791350856618:camp": {
+              "at": 1791350878619,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791350889621:wild_34_32": {
+              "at": 1791350899622,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791350904624:wild_29_33": {
+              "at": 1791350916625,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791350922627:wild_27_33": {
+              "at": 1791350938628,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791351005134:wild_26_28": {
+              "at": 1791351025135,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791351035137:wild_39_22": {
+              "at": 1791351065138,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791351126642:wild_26_28": {
+              "at": 1791351146643,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791351156645:wild_39_22": {
+              "at": 1791351186646,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791351248150:wild_26_28": {
+              "at": 1791351268151,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791351278153:wild_39_22": {
+              "at": 1791351308154,
+              "counts": {
+                "archer": 2
+              }
+            },
+            "field:capital:1791351369658:wild_26_28": {
+              "at": 1791351389659,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791351399661:wild_39_22": {
+              "at": 1791351429662,
+              "counts": {
+                "archer": 2
+              }
+            }
+          },
+          "treatment": {
+            "healed": 21,
+            "gold": 1008,
+            "counts": {
+              "archer": 21
+            }
+          },
+          "checkpoints": [
+            {
+              "hours": 0.016666666666666666,
+              "archer": 800,
+              "wounded": 21,
+              "admitted": 21,
+              "treated": 0,
+              "queued": 0,
+              "population": 1071.708250000003,
+              "workers": 250,
+              "free": 821,
+              "gold": 1649473.5617806793,
+              "food": 1899726.5317131546,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1520,
+                "owed": 0,
+                "goldHours": 1085.17997485571,
+                "foodNet": -674.3999999999999,
+                "foodHours": 2816.9135998119145,
+                "population": 821,
+                "salaryReserve": 36480,
+                "gold": 1649473.5617806793,
+                "food": 1899726.5317131546,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 1,
+              "archer": 800,
+              "wounded": 21,
+              "admitted": 21,
+              "treated": 0,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1648117.4064039201,
+              "food": 1899063.3717131417,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1520,
+                "owed": 0,
+                "goldHours": 1084.2877673710002,
+                "foodNet": -674.3999999999999,
+                "foodHours": 2815.930266478562,
+                "population": 950,
+                "salaryReserve": 36480,
+                "gold": 1648117.4064039201,
+                "food": 1899063.3717131417,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 24,
+              "archer": 800,
+              "wounded": 21,
+              "admitted": 21,
+              "treated": 0,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1617021.4064036685,
+              "food": 1883552.1717128386,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1520,
+                "owed": 0,
+                "goldHours": 1063.8298726339924,
+                "foodNet": -674.3999999999999,
+                "foodHours": 2792.930266478112,
+                "population": 950,
+                "salaryReserve": 36480,
+                "gold": 1617021.4064036685,
+                "food": 1883552.1717128386,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 72,
+              "archer": 800,
+              "wounded": 21,
+              "admitted": 21,
+              "treated": 0,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1552125.4064031432,
+              "food": 1851180.971712206,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1520,
+                "owed": 0,
+                "goldHours": 1021.1351357915415,
+                "foodNet": -674.3999999999999,
+                "foodHours": 2744.9302664771744,
+                "population": 950,
+                "salaryReserve": 36480,
+                "gold": 1552125.4064031432,
+                "food": 1851180.971712206,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            }
+          ],
+          "beforeLateHeal": {
+            "hours": 72,
+            "archer": 800,
+            "wounded": 21,
+            "admitted": 21,
+            "treated": 0,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1552125.4064031432,
+            "food": 1851180.971712206,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1520,
+              "owed": 0,
+              "goldHours": 1021.1351357915415,
+              "foodNet": -674.3999999999999,
+              "foodHours": 2744.9302664771744,
+              "population": 950,
+              "salaryReserve": 36480,
+              "gold": 1552125.4064031432,
+              "food": 1851180.971712206,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "after": {
+            "hours": 72,
+            "archer": 821,
+            "wounded": 0,
+            "admitted": 21,
+            "treated": 21,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1551117.4064031432,
+            "food": 1851180.971712206,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1520,
+              "owed": 0,
+              "goldHours": 1020.4719778968048,
+              "foodNet": -653.4000000000001,
+              "foodHours": 2833.1511657670735,
+              "population": 950,
+              "salaryReserve": 36480,
+              "gold": 1551117.4064031432,
+              "food": 1851180.971712206,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "reachedAt": 0.016666666666666666,
+          "minimumGold": 1552016.2064031505,
+          "minimumFood": 1851180.971712206,
+          "lostHeroes": [],
+          "overshoot": 21,
+          "newAboveTargetAndRecoverable": 0
+        }
+      ],
+      "lowLevelProbe": {
+        "selection": "Lowest public level, then distance within nearby 6-square search; no hidden-strength sorting",
+        "target": {
+          "id": "wild_38_38",
+          "level": 1,
+          "distance": 8.485281374238571
+        },
+        "scout": {
+          "reason": "",
+          "quote": {
+            "quality": 1,
+            "cost": {
+              "food": 15
+            },
+            "expectedLost": 0
+          },
+          "intel": {
+            "quality": 1,
+            "success": true,
+            "lost": 0,
+            "survivors": 1,
+            "at": 1791351509167,
+            "expiresAt": 1791352709167,
+            "level": 1,
+            "types": [
+              "militia",
+              "spear",
+              "archer"
+            ],
+            "army": null,
+            "bands": null,
+            "exact": false,
+            "precision": "types"
+          }
+        },
+        "sent": 800,
+        "enemyInitial": 12,
+        "won": true,
+        "xp": 47,
+        "lost": 0,
+        "wounded": 0,
+        "returned": 800,
+        "loot": {
+          "food": 913
+        },
+        "valid": true
+      }
+    },
+    {
+      "seed": 19,
+      "openingWounded": 56,
+      "target": "wild_30_31",
+      "won": false,
+      "xp": 15,
+      "lost": 663,
+      "wounded": 117,
+      "returned": 0,
+      "loot": {},
+      "bonusLoot": {},
+      "replacementMaterials": {
+        "food": 198900,
+        "wood": 232050,
+        "stone": 0,
+        "iron": 198900,
+        "gold": 0
+      },
+      "refill": [
+        {
+          "seed": 19,
+          "policy": "heal-first",
+          "target": 800,
+          "before": {
+            "hours": 0,
+            "archer": 0,
+            "wounded": 173,
+            "admitted": 173,
+            "treated": 0,
+            "queued": 0,
+            "population": 931.8382500000039,
+            "workers": 250,
+            "free": 681,
+            "gold": 1788260.2452911872,
+            "food": 2195627.633433711,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1600,
+              "owed": 0,
+              "goldHours": 1117.662653306992,
+              "foodNet": -178.4,
+              "foodHours": 12307.32978382125,
+              "population": 681,
+              "salaryReserve": 38400,
+              "gold": 1788260.2452911872,
+              "food": 2195627.633433711,
+              "warnings": []
+            },
+            "deficits": {
+              "shield": 300,
+              "archer": 1000
+            },
+            "blocked": {
+              "archer": "本次部分补齐，其余等待资源与人口"
+            },
+            "valid": true
+          },
+          "medicalSources": {
+            "field:capital:1791194614059:wild_29_31": {
+              "at": 1791194629060,
+              "counts": {
+                "militia": 2
+              }
+            },
+            "field:capital:1791348935648:camp": {
+              "at": 1791348957649,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791348968651:wild_32_34": {
+              "at": 1791348978652,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349027159:wild_29_27": {
+              "at": 1791349045160,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791349054162:wild_31_26": {
+              "at": 1791349072163,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349081165:wild_32_34": {
+              "at": 1791349091166,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349139672:wild_29_27": {
+              "at": 1791349157673,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791349166675:wild_31_26": {
+              "at": 1791349184676,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349193678:wild_32_34": {
+              "at": 1791349203679,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349249183:wild_35_22": {
+              "at": 1791349276184,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349289686:wild_41_39": {
+              "at": 1791349318687,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349373691:wild_35_22": {
+              "at": 1791349400692,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349414194:wild_41_39": {
+              "at": 1791349443195,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349498199:wild_35_22": {
+              "at": 1791349525200,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349538702:wild_41_39": {
+              "at": 1791349567703,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349622707:wild_35_22": {
+              "at": 1791349649708,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349663210:wild_41_39": {
+              "at": 1791349692211,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349747216:wild_29_49": {
+              "at": 1791349788217,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791349808718:wild_30_31": {
+              "at": 1791349818719,
+              "counts": {
+                "archer": 117
+              }
+            }
+          },
+          "treatment": {
+            "healed": 173,
+            "gold": 8304,
+            "counts": {
+              "archer": 173
+            }
+          },
+          "checkpoints": [
+            {
+              "hours": 0.016666666666666666,
+              "archer": 173,
+              "wounded": 0,
+              "admitted": 173,
+              "treated": 173,
+              "queued": 348,
+              "population": 250.83825000000388,
+              "workers": 250,
+              "free": 0,
+              "gold": 1779958.428330437,
+              "food": 2091227.543433711,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1600,
+                "owed": 0,
+                "goldHours": 1112.4740177065232,
+                "foodNet": -5.400000000000018,
+                "foodHours": 387264.3598951303,
+                "population": 0,
+                "salaryReserve": 38400,
+                "gold": 1779958.428330437,
+                "food": 2091227.543433711,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 279
+              },
+              "blocked": {
+                "archer": "空闲人口不足"
+              },
+              "valid": true
+            },
+            {
+              "hours": 1,
+              "archer": 173,
+              "wounded": 0,
+              "admitted": 173,
+              "treated": 173,
+              "queued": 370,
+              "population": 1091.8382500000039,
+              "workers": 250,
+              "free": 841,
+              "gold": 1778447.5116170924,
+              "food": 2084622.2334337195,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1600,
+                "owed": 0,
+                "goldHours": 1111.5296947606828,
+                "foodNet": -5.400000000000018,
+                "foodHours": 386041.1543395764,
+                "population": 841,
+                "salaryReserve": 38400,
+                "gold": 1778447.5116170924,
+                "food": 2084622.2334337195,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 257
+              },
+              "blocked": {
+                "archer": "训练队列已满"
+              },
+              "valid": true
+            },
+            {
+              "hours": 24,
+              "archer": 800,
+              "wounded": 0,
+              "admitted": 173,
+              "treated": 173,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1745489.6930877443,
+              "food": 1999336.9738183364,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1600,
+                "owed": 0,
+                "goldHours": 1090.9310581798402,
+                "foodNet": -632.4,
+                "foodHours": 3161.5069162212785,
+                "population": 950,
+                "salaryReserve": 38400,
+                "gold": 1745489.6930877443,
+                "food": 1999336.9738183364,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 72,
+              "archer": 800,
+              "wounded": 0,
+              "admitted": 173,
+              "treated": 173,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1676753.6930872079,
+              "food": 1968981.773818229,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1600,
+                "owed": 0,
+                "goldHours": 1047.971058179505,
+                "foodNet": -632.4,
+                "foodHours": 3113.506916221109,
+                "population": 950,
+                "salaryReserve": 38400,
+                "gold": 1676753.6930872079,
+                "food": 1968981.773818229,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            }
+          ],
+          "beforeLateHeal": {
+            "hours": 72,
+            "archer": 800,
+            "wounded": 0,
+            "admitted": 173,
+            "treated": 173,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1676753.6930872079,
+            "food": 1968981.773818229,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1600,
+              "owed": 0,
+              "goldHours": 1047.971058179505,
+              "foodNet": -632.4,
+              "foodHours": 3113.506916221109,
+              "population": 950,
+              "salaryReserve": 38400,
+              "gold": 1676753.6930872079,
+              "food": 1968981.773818229,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "after": {
+            "hours": 72,
+            "archer": 800,
+            "wounded": 0,
+            "admitted": 173,
+            "treated": 173,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1676753.6930872079,
+            "food": 1968981.773818229,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1600,
+              "owed": 0,
+              "goldHours": 1047.971058179505,
+              "foodNet": -632.4,
+              "foodHours": 3113.506916221109,
+              "population": 950,
+              "salaryReserve": 38400,
+              "gold": 1676753.6930872079,
+              "food": 1968981.773818229,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "reachedAt": 15.1,
+          "minimumGold": 1676725.6930872097,
+          "minimumFood": 1968981.773818229,
+          "lostHeroes": [],
+          "overshoot": 0,
+          "newAboveTargetAndRecoverable": 0
+        },
+        {
+          "seed": 19,
+          "policy": "heal-later",
+          "target": 800,
+          "before": {
+            "hours": 0,
+            "archer": 0,
+            "wounded": 173,
+            "admitted": 173,
+            "treated": 0,
+            "queued": 0,
+            "population": 931.8382500000039,
+            "workers": 250,
+            "free": 681,
+            "gold": 1788260.2452911872,
+            "food": 2195627.633433711,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1600,
+              "owed": 0,
+              "goldHours": 1117.662653306992,
+              "foodNet": -178.4,
+              "foodHours": 12307.32978382125,
+              "population": 681,
+              "salaryReserve": 38400,
+              "gold": 1788260.2452911872,
+              "food": 2195627.633433711,
+              "warnings": []
+            },
+            "deficits": {
+              "shield": 300,
+              "archer": 1000
+            },
+            "blocked": {
+              "archer": "本次部分补齐，其余等待资源与人口"
+            },
+            "valid": true
+          },
+          "medicalSources": {
+            "field:capital:1791194614059:wild_29_31": {
+              "at": 1791194629060,
+              "counts": {
+                "militia": 2
+              }
+            },
+            "field:capital:1791348935648:camp": {
+              "at": 1791348957649,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791348968651:wild_32_34": {
+              "at": 1791348978652,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349027159:wild_29_27": {
+              "at": 1791349045160,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791349054162:wild_31_26": {
+              "at": 1791349072163,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349081165:wild_32_34": {
+              "at": 1791349091166,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349139672:wild_29_27": {
+              "at": 1791349157673,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791349166675:wild_31_26": {
+              "at": 1791349184676,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349193678:wild_32_34": {
+              "at": 1791349203679,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349249183:wild_35_22": {
+              "at": 1791349276184,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349289686:wild_41_39": {
+              "at": 1791349318687,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349373691:wild_35_22": {
+              "at": 1791349400692,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349414194:wild_41_39": {
+              "at": 1791349443195,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349498199:wild_35_22": {
+              "at": 1791349525200,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349538702:wild_41_39": {
+              "at": 1791349567703,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349622707:wild_35_22": {
+              "at": 1791349649708,
+              "counts": {
+                "archer": 1
+              }
+            },
+            "field:capital:1791349663210:wild_41_39": {
+              "at": 1791349692211,
+              "counts": {
+                "archer": 4
+              }
+            },
+            "field:capital:1791349747216:wild_29_49": {
+              "at": 1791349788217,
+              "counts": {
+                "archer": 7
+              }
+            },
+            "field:capital:1791349808718:wild_30_31": {
+              "at": 1791349818719,
+              "counts": {
+                "archer": 117
+              }
+            }
+          },
+          "treatment": {
+            "healed": 173,
+            "gold": 8304,
+            "counts": {
+              "archer": 173
+            }
+          },
+          "checkpoints": [
+            {
+              "hours": 0.016666666666666666,
+              "archer": 0,
+              "wounded": 173,
+              "admitted": 173,
+              "treated": 0,
+              "queued": 348,
+              "population": 250.83825000000388,
+              "workers": 250,
+              "free": 0,
+              "gold": 1788262.428330437,
+              "food": 2091224.6601003772,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1600,
+                "owed": 0,
+                "goldHours": 1117.664017706523,
+                "foodNet": -178.4,
+                "foodHours": 11722.111323432608,
+                "population": 0,
+                "salaryReserve": 38400,
+                "gold": 1788262.428330437,
+                "food": 2091224.6601003772,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 452
+              },
+              "blocked": {
+                "archer": "空闲人口不足"
+              },
+              "valid": true
+            },
+            {
+              "hours": 1,
+              "archer": 0,
+              "wounded": 173,
+              "admitted": 173,
+              "treated": 0,
+              "queued": 370,
+              "population": 1091.8382500000039,
+              "workers": 250,
+              "free": 841,
+              "gold": 1786751.5116170924,
+              "food": 2084449.233433721,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1600,
+                "owed": 0,
+                "goldHours": 1116.7196947606828,
+                "foodNet": -178.4,
+                "foodHours": 11684.132474404265,
+                "population": 841,
+                "salaryReserve": 38400,
+                "gold": 1786751.5116170924,
+                "food": 2084449.233433721,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 430
+              },
+              "blocked": {
+                "archer": "训练队列已满"
+              },
+              "valid": true
+            },
+            {
+              "hours": 24,
+              "archer": 800,
+              "wounded": 173,
+              "admitted": 173,
+              "treated": 0,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1753756.5155044154,
+              "food": 1943531.5542670607,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1600,
+                "owed": 0,
+                "goldHours": 1096.0978221902596,
+                "foodNet": -978.4000000000001,
+                "foodHours": 1986.43862864581,
+                "population": 950,
+                "salaryReserve": 38400,
+                "gold": 1753756.5155044154,
+                "food": 1943531.5542670607,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            },
+            {
+              "hours": 72,
+              "archer": 800,
+              "wounded": 173,
+              "admitted": 173,
+              "treated": 0,
+              "queued": 0,
+              "population": 1200,
+              "workers": 250,
+              "free": 950,
+              "gold": 1685020.515503879,
+              "food": 1896568.3542671322,
+              "budget": {
+                "cityId": "capital",
+                "wages": 1600,
+                "owed": 0,
+                "goldHours": 1053.1378221899242,
+                "foodNet": -978.4000000000001,
+                "foodHours": 1938.4386286458832,
+                "population": 950,
+                "salaryReserve": 38400,
+                "gold": 1685020.515503879,
+                "food": 1896568.3542671322,
+                "warnings": []
+              },
+              "deficits": {
+                "archer": 0
+              },
+              "blocked": {},
+              "valid": true
+            }
+          ],
+          "beforeLateHeal": {
+            "hours": 72,
+            "archer": 800,
+            "wounded": 173,
+            "admitted": 173,
+            "treated": 0,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1685020.515503879,
+            "food": 1896568.3542671322,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1600,
+              "owed": 0,
+              "goldHours": 1053.1378221899242,
+              "foodNet": -978.4000000000001,
+              "foodHours": 1938.4386286458832,
+              "population": 950,
+              "salaryReserve": 38400,
+              "gold": 1685020.515503879,
+              "food": 1896568.3542671322,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "after": {
+            "hours": 72,
+            "archer": 973,
+            "wounded": 0,
+            "admitted": 173,
+            "treated": 173,
+            "queued": 0,
+            "population": 1200,
+            "workers": 250,
+            "free": 950,
+            "gold": 1676716.515503879,
+            "food": 1896568.3542671322,
+            "budget": {
+              "cityId": "capital",
+              "wages": 1600,
+              "owed": 0,
+              "goldHours": 1047.9478221899244,
+              "foodNet": -805.4000000000001,
+              "foodHours": 2354.8154386232086,
+              "population": 950,
+              "salaryReserve": 38400,
+              "gold": 1676716.515503879,
+              "food": 1896568.3542671322,
+              "warnings": []
+            },
+            "deficits": {
+              "archer": 0
+            },
+            "blocked": {},
+            "valid": true
+          },
+          "reachedAt": 19.25,
+          "minimumGold": 1684992.5155038808,
+          "minimumFood": 1896568.3542671322,
+          "lostHeroes": [],
+          "overshoot": 173,
+          "newAboveTargetAndRecoverable": 173
+        }
+      ],
+      "lowLevelProbe": {
+        "selection": "Lowest public level, then distance within nearby 6-square search; no hidden-strength sorting",
+        "target": {
+          "id": "wild_26_36",
+          "level": 1,
+          "distance": 7.211102550927979
+        },
+        "scout": {
+          "reason": "",
+          "quote": {
+            "quality": 1,
+            "cost": {
+              "food": 14
+            },
+            "expectedLost": 0
+          },
+          "intel": {
+            "quality": 1,
+            "success": true,
+            "lost": 0,
+            "survivors": 1,
+            "at": 1791349811718,
+            "expiresAt": 1791351011718,
+            "level": 1,
+            "types": [
+              "militia",
+              "spear",
+              "shield"
+            ],
+            "army": null,
+            "bands": null,
+            "exact": false,
+            "precision": "types"
+          }
+        },
+        "sent": 780,
+        "enemyInitial": 8,
+        "won": true,
+        "xp": 46,
+        "lost": 0,
+        "wounded": 0,
+        "returned": 780,
+        "loot": {
+          "food": 920
+        },
+        "valid": true
+      }
+    }
+  ]
+}
