@@ -7,8 +7,8 @@
 #   blocked        ↔  Blocked
 
 sprint: 5
-goal: "功能冻结，把 v0.34.72 做成可以交给陌生玩家的试玩包：第 2 章正常经济 3 天内可推进，游戏内有反馈入口，真人试玩者已招募。"
-milestone: "production/milestones/public-playtest.md"
+goal: "执行进程重做（design/quick-specs/progression-rework-2026-10-18.md）：开局、章节、晋升、攻城与兵种。公开试玩已取消。"
+milestone: "production/milestones/public-playtest.md (cancelled 2026-10-18)"
 start: "2026-10-19"
 end: "2026-10-26"
 generated: "2026-10-18"
@@ -76,5 +76,41 @@ stories:
     status: backlog
     owner: ""
     estimate_days: 0.5
+    blocker: ""
+    completed: ""
+  - id: "7-1"
+    name: "第 1 批：开局创建君主与选州"
+    file: "design/quick-specs/progression-rework-2026-10-18.md"
+    priority: must-have
+    status: backlog
+    owner: ""
+    estimate_days: 2
+    blocker: ""
+    completed: ""
+  - id: "7-2"
+    name: "第 2 批：章节重排、县城后移、晋升去珠宝"
+    file: "design/quick-specs/progression-rework-2026-10-18.md"
+    priority: must-have
+    status: backlog
+    owner: ""
+    estimate_days: 2
+    blocker: ""
+    completed: ""
+  - id: "7-3"
+    name: "第 3 批：章节任务多样化"
+    file: "design/quick-specs/progression-rework-2026-10-18.md"
+    priority: must-have
+    status: backlog
+    owner: ""
+    estimate_days: 2
+    blocker: ""
+    completed: ""
+  - id: "7-4"
+    name: "第 4 批：城池城墙城防、兵种与资源田"
+    file: "design/quick-specs/progression-rework-2026-10-18.md"
+    priority: must-have
+    status: backlog
+    owner: ""
+    estimate_days: 2
     blocker: ""
     completed: ""
