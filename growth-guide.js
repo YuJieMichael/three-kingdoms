@@ -97,9 +97,16 @@ const GrowthGuide=(()=>{
       let id,chapter=1;
       if(!s.conquered.camp)id='camp';
       else if(!s.conquered.fort){
-        if(!game.countyUnlocked()){const groups=game.progression.groups(s),group=groups.find(g=>g.progress<1);return {kind:'epic',id:group.id,title:'开放县城 · '+group.name,reason:group.detail+'。四项史诗完成后才能攻打古渡县城；捐献士兵会离队，请保留出征主力。',progress:Math.min(100,Math.floor(group.progress*100)),route:'epic',shortages:group.id==='resources'?Object.keys(game.progression.resourceDonations).filter(key=>s.epic.resources[key]<100000).map(key=>({id:key,amount:Math.max(0,100000-s.res[key])})):[]};}
+        // 县城要占一个城池名额：名额满时先晋升爵位，而不是反复出征失败。
+        if(game.landmarkVisible('fort')&&game.cityList().length>=game.cityLimit()){const q=HeritageSystem.promotionQuote(s,'noble');return {kind:'honor',id:'noble',title:'晋升爵位'+(q?.next?' · '+q.next.name:'')+'，增加城池名额',reason:'占领古渡县城需要空闲的城池名额（当前 '+game.cityList().length+' / '+game.cityLimit()+'）。'+(q?.missing?.length?'晋升还差：'+q.missing.join('、')+'。掠夺野地、完成任务可获得声望与珠宝。':'条件已满足，到爵位页确认晋升。'),ready:!q?.reason};}
         id='fort';
-      }else{chapter=ChapterData.completed(s,3)?4:ChapterData.completed(s,2)?3:2;id=ChapterData.progress(s,chapter).next?.id;}
+      }
+      else{
+        chapter=ChapterData.completed(s,3)?4:ChapterData.completed(s,2)?3:2;
+        // 黄巾史诗是第四章讨伐董卓的门槛（v0.34.73 起不再卡古渡县城）。
+        if(chapter===4&&!ChapterData.unlocked(s,4)){const groups=game.progression.groups(s),group=groups.find(g=>g.progress<1);if(group)return {kind:'epic',id:group.id,title:'开启第四章 · '+group.name,reason:group.detail+'。四项史诗完成后才能讨伐董卓；捐献士兵会离队，请保留出征主力。',progress:Math.min(100,Math.floor(group.progress*100)),route:'epic',shortages:group.id==='resources'?Object.keys(game.progression.resourceDonations).filter(key=>s.epic.resources[key]<100000).map(key=>({id:key,amount:Math.max(0,100000-s.res[key])})):[]};}
+        id=ChapterData.progress(s,chapter).next?.id;
+      }
       if(!id){
         const route=Object.keys(game.warOrders.routes).find(r=>s.warOrders.cleared[r]<10);
         if(route){const tier=s.warOrders.cleared[route]+1;return {kind:'orders',id:'order_'+route+'_'+tier,route,tier,title:'军令进阶 · '+game.warOrders.routes[route].name+'第 '+tier+' 阶',reason:'河洛已平定，继续三路军令。查看守军组成与攻城要求，补充永久损失、调整配兵；首通双倍军功可兑换加速、珠宝和装备。'};}

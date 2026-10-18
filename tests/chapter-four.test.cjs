@@ -13,7 +13,8 @@ test('each chapter 4 rule decides the battle: the right approach wins cheaply, t
 });
 test('chapter 4 opens after chapter 3, and the jade seal grants an edict, a city slot and better tax',()=>{
   const e=loadGame(),g=e.Game,s=g.state,C=e.Chapter;s.conquered.fort=true;for(const n of C.nodes)s.conquered[n.id]=true;
-  assert.equal(C.unlocked(s,4),false);for(const n of C.chapterThreeNodes)s.conquered[n.id]=true;assert.equal(C.unlocked(s,4),true);
+  assert.equal(C.unlocked(s,4),false);for(const n of C.chapterThreeNodes)s.conquered[n.id]=true;assert.equal(C.unlocked(s,4),false,'the Yellow Turban epic gates chapter four');assert.match(C.blocked(s,'c4_sishui'),/四项史诗/);
+  s.epic.kills=1500;s.epic.killRewards=3;s.epic.troops=2;s.epic.treasures=2;for(const id of Object.keys(s.epic.resources))s.epic.resources[id]=100000;assert.equal(C.unlocked(s,4),true);assert.equal(C.blocked(s,'c4_sishui'),null);
   s.population=1000;const slots=g.cityLimit(),tax=g.rates().gold;assert.ok(tax>0);assert.equal(g.edictReady(),false);
   for(const n of C.chapterFourNodes)s.conquered[n.id]=true;assert.equal(g.cityLimit(),slots+1);assert.ok(g.rates().gold>tax*1.09);
   city(g,{hall:3});const site=s.cityLayout.indexOf(null);s.res.food=s.res.wood=s.res.stone=s.res.iron=1e6;assert.equal(g.queueBuilding(site,'house'),null);

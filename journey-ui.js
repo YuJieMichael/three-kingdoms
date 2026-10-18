@@ -16,7 +16,7 @@ function journeyGo(id){
   if(id==='yellow'){battlefieldModal();return;}
   if(id==='hero'){heroCodexModal();return;}
   if(id==='cities'){citySwitchListModal();return;}
-  if(id==='expand'){if(Game.cityLimit()<=Game.cityList().length)heritageHonorModal();else if(!Game.countyUnlocked()){taskTab='epic';classicMissionModal();}else namedCityOverviewModal();return;}
+  if(id==='expand'){if(Game.cityLimit()<=Game.cityList().length)heritageHonorModal();else if(!S().conquered.fort){taskTab='chapter';classicMissionModal();}else namedCityOverviewModal();return;}
   if(id==='jiangling'){if(!Game.landmarkVisible('named_jiangling')){namedCityOverviewModal();return;}worldNodeModal('named_jiangling');}
 }
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el||el.disabled)return;if(el.dataset.action==='journeyOpen')journeyModal();if(el.dataset.action==='journeyGo')journeyGo(el.dataset.id);if(el.dataset.action==='journeyTrack'&&actResult(Game.setJourneyTarget(el.dataset.id),'追踪目标已更新')){journeyModal();render();}});

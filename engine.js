@@ -849,7 +849,7 @@ const Game = (() => {
     if(n.orderRoute)return WarOrders.blocked(state,n,mode);
     const namedBlocked=NamedCitySystem.attackBlocked(state,id);if(namedBlocked)return namedBlocked;
     const chapterBlocked=ChapterData.blocked(state,id);if(chapterBlocked)return chapterBlocked;
-    if(isCity(n)&&!n.openCity&&!Progression.countyUnlocked(state))return '黄巾之乱四项史诗尚未全部完成，县城攻打未开放';
+    
     if(state.conquered[id]&&(n.wild||isCity(n)))return '这块领地已归属你，可在领地管理中召回驻军或放弃野地';
     if(mode==='occupy'&&isCity(n)&&cityList().length>=cityLimit())return '城池名额已满';
     if(mode==='occupy'&&state.conquered[id])return '据点已占领';

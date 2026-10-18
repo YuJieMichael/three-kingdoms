@@ -63,11 +63,15 @@ test('governor advice accounts for an active politics modifier rather than promi
 // These following checkpoints only exercise the read-only planner's choices.
 // They do not establish economic affordability or normal campaign clear times.
 function prepared(e){const g=e.Game;for(const id of Object.keys(g.state.tech))g.state.tech[id]=10;city(g,{house:10,barracks:10,academy:10,smith:10});g.state.army.archer=1700;g.state.army.shield=550;g.state.army.ram=5;return g;}
-test('ten-hall guidance follows discovered sites, then explicit epic prerequisites, without re-running the first battle',()=>{
+test('ten-hall guidance follows discovered sites to the county, then asks for the epic only before chapter four',()=>{
  const e=earnedHall(),g=prepared(e);let m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'wood');assert.equal(m.phase,'campaign');
- g.state.conquered.camp=true;m=inspect(e);assert.equal(m.kind,'epic');assert.equal(m.id,'kills');assert.match(m.reason,/四项史诗/);
+ g.state.conquered.camp=true;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'mine','the county no longer waits for the epic');
+ g.state.conquered.mine=true;g.state.honors.noble=0;m=inspect(e);assert.equal(m.kind,'honor','a full city quota asks for a promotion instead of a failing march');assert.match(m.reason,/城池名额/);
+ g.state.honors.noble=1;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'fort');
+ const done=n=>{g.state.conquered[n.id]=true;g.state.missionClaims.push('chapter'+n.chapter+'_'+n.id);};g.state.conquered.mine=true;g.state.conquered.fort=true;[...e.Chapter.nodes,...e.Chapter.chapterThreeNodes].forEach(done);
+ m=inspect(e);assert.equal(m.kind,'epic');assert.equal(m.id,'kills');assert.match(m.reason,/四项史诗/);assert.match(m.title,/第四章/);
  g.state.epic.kills=1500;m=inspect(e);assert.equal(m.id,'resources');assert.ok(m.shortages.every(x=>x.amount===0));
- g.state.epic.legacyAccess=true;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'mine');
+ g.state.epic.legacyAccess=true;m=inspect(e);assert.notEqual(m.kind,'epic','a finished epic opens chapter four preparation');
 });
 
 test('campaign preparation exposes actual research, population and army shortages instead of generic completion text',()=>{
@@ -97,6 +101,6 @@ test('growth UI keeps governor training optional and campaign buttons open the c
  e.evaluate(fs.readFileSync(path.join(__dirname,'../onboarding-ui.js'),'utf8'));
  let html=e.evaluate('growthGuideHTML()');assert.match(html,/战役成长/);assert.match(html,/培养城守 · 15 点/);assert.match(html,/data-action="heroDetail"/);assert.match(html,/已开工队列不重算/);
  const before=JSON.stringify(g.state);e.evaluate('guideGo()');assert.equal(e.evaluate('opened'),'node:wood');assert.equal(e.evaluate('worldView.x'),g.getNode('wood').x);assert.equal(JSON.stringify(g.state),before);
- g.state.conquered.camp=true;e.evaluate('guideGo()');assert.equal(e.evaluate('opened'),'tasks:epic');
+ g.state.conquered.camp=true;g.state.conquered.mine=true;g.state.conquered.fort=true;for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes]){g.state.conquered[n.id]=true;g.state.missionClaims.push('chapter'+n.chapter+'_'+n.id);}e.evaluate('guideGo()');assert.equal(e.evaluate('opened'),'tasks:epic');
  g.state.conquered.fort=true;for(const n of e.Chapter.allNodes())g.state.conquered[n.id]=true;g.state.missionClaims.push(...e.Chapter.allNodes().map(n=>'chapter'+n.chapter+'_'+n.id));e.evaluate('guideGo()');assert.equal(e.evaluate('opened'),'tasks:orders');
 });
