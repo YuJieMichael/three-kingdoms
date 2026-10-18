@@ -58,7 +58,7 @@ const Progression = (() => {
     if(t.unit){const req=ManualData.units[t.unit].requires;return Object.entries(req.buildings).every(([id,n])=>s.buildings[id]>=n)&&Object.entries(req.tech).every(([id,n])=>s.tech[id]>=n);}
     if(t.researchGroup)return s.buildings.academy>=1&&researchGroups[t.researchGroup].some(id=>s.tech[id]<10);
     if(t.market)return s.buildings.market>=1;
-    if(t.worldType){if(s.buildings.drill<1||s.buildings.barracks<1)return false;if(t.worldType==='siege')return countyUnlocked(s);return !t.minLevel||s.stats.victories>=t.minLevel;}
+    if(t.worldType){if(s.buildings.drill<1||s.buildings.barracks<1)return false;if(t.worldType==='siege')return true;return !t.minLevel||s.stats.victories>=t.minLevel;}
     if(['victory','raid','kills','occupy','capture'].includes(t.id)||t.id.startsWith('raid_'))return s.buildings.drill>=1&&s.buildings.barracks>=1;
     if(t.id==='train')return s.buildings.barracks>=1;
     if(t.id==='research')return s.buildings.academy>=1;

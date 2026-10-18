@@ -7,7 +7,7 @@ const STRONG={id:'local_7199999999999001',name:'猛将',title:'测试',type:'骑
 function prepared(seed){
   const e=loadGame(seed),g=e.Game,s=g.state;
   city(g,{hall:10,house:10,drill:10,barracks:10,academy:10,smith:10,tavern:10});s.honors.noble=10;
-  for(const id of Object.keys(s.tech))s.tech[id]=10;for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes])s.conquered[n.id]=true;s.conquered.fort=true;s.conquered.camp=true;
+  for(const id of Object.keys(s.tech))s.tech[id]=10;for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes])s.conquered[n.id]=true;s.conquered.fort=true;s.conquered.camp=true;s.epic.legacyAccess=true;
   for(const id of Object.keys(g.resources))s.res[id]=9000000;s.governor=null;
   s.customGenerals.push(STRONG);s.generals.push(STRONG.id);s.generalLevels[STRONG.id]=30;s.generalXp[STRONG.id]=0;
   e.evaluate('Math.random=()=>.5');return e;

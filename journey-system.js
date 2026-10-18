@@ -16,7 +16,7 @@ const JourneySystem=(()=>{
       {id:'build',title:'发展主城',complete:built,status:built?'基础已齐':'官府3级 · 校场1级 · 一位将领5级',action:'build'},
       {id:'yellow',title:'通关黄巾',complete:!!s.battlefields.firstClears.yellow_turban,status:s.battlefields.firstClears.yellow_turban?'已完整通关':'完成黄巾之乱主线；查看参战条件',action:'yellow'},
       {id:'hero',title:'招募名将',complete:!!pastHero,status:heroStatus,action:'hero'},
-      {id:'cities',title:cities.length>=2?'经营第二城':'取得第二城',complete:cities.length>=2,status:'治下 '+cities.length+' 城 / 2 · '+(cities.length>=2?'查看粮食与补给':game.cityLimit()<=cities.length?'先晋升爵位增加城池名额':!game.countyUnlocked()?'先完成黄巾史诗开放攻城':'名额已够，查看可占城池'),action:cities.length>=2?'cities':'expand'},
+      {id:'cities',title:cities.length>=2?'经营第二城':'取得第二城',complete:cities.length>=2,status:'治下 '+cities.length+' 城 / 2 · '+(cities.length>=2?'查看粮食与补给':game.cityLimit()<=cities.length?'先晋升爵位增加城池名额':!s.conquered?.fort?'先攻下古渡县城':'名额已够，查看可占城池'),action:cities.length>=2?'cities':'expand'},
       {id:'jiangling',title:jianglingDone?'关羽归属':'筹备江陵',complete:jianglingDone,status:jianglingDone?(alive?'关羽已归顺':'关羽已解雇或离队，没有再次招募入口'):record.captive?'关羽已被俘；核对爵位与招贤馆后招降':'降低忠诚至30以下，再赢占领战俘将',action:jianglingDone?'cities':'jiangling'}
     ];
     const tracked=steps.find(r=>r.id===s.journey?.tracked),recommended=steps.find(r=>!r.complete);

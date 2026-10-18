@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="a7a8c1c691efa0469c489c9ae12a92433ed5a5502165046b9130b1231e4300ad";
+export const runtimeHash="3fd65fe1afc4f1081b2cfc521bf5e81cf6b71542195587c237c3169858c845f0";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","faction-system.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -11808,7 +11808,7 @@ const RewardData = {
     for(const level of [3,5,8])add('victoryLevel_'+level,'征战里程','攻坚克敌 · '+level+'级','战胜任意 '+level+' 级或更高等级的野地／据点','world',s=>metric(s,'win_level_'+level)>0||Object.keys(s.raided).some(id=>Math.max(s.landClaims[id]?.level||0,id.startsWith('wild_')?0:Game.getNode(id)?.level||0)>=level),supply(level*14000,level*40000),{speed_train_1h:1});
     for(const count of [3,5])add('wildClaims_'+count,'征战里程','据土守疆 · '+count,'同时拥有 '+count+' 块网格野地','world',s=>Object.keys(s.landClaims).length>=count,supply(count*15000,count*40000));
     for(const count of [10,30])add('scouted_'+count,'征战里程','斥候经略 · '+count,'累计完成 '+count+' 次侦察','world',s=>metric(s,'scout')>=count,supply(count*1000,count*3000));
-    add('countyAccess','征战里程','进军县城','完成黄巾史诗，开启县城攻打；旧档保留权限也可完成','epic',s=>Progression.countyUnlocked(s),supply(60000,180000),{speed_train_3h:1});
+    add('countyAccess','征战里程','平定黄巾','完成黄巾史诗，开启第四章讨伐董卓；旧档保留权限也可完成','epic',s=>Progression.countyUnlocked(s),supply(60000,180000),{speed_train_3h:1});
     add('raidStone50000','征战里程','缴石筑城','累计通过掠夺实际入库 50,000 石料','world',s=>metric(s,'raid_stone')>=50000,supply(40000,100000));
     // Every growth reward includes stone; construction receives extra building material.
     for(const m of missions){
@@ -11893,7 +11893,7 @@ const Progression = (() => {
     if(t.unit){const req=ManualData.units[t.unit].requires;return Object.entries(req.buildings).every(([id,n])=>s.buildings[id]>=n)&&Object.entries(req.tech).every(([id,n])=>s.tech[id]>=n);}
     if(t.researchGroup)return s.buildings.academy>=1&&researchGroups[t.researchGroup].some(id=>s.tech[id]<10);
     if(t.market)return s.buildings.market>=1;
-    if(t.worldType){if(s.buildings.drill<1||s.buildings.barracks<1)return false;if(t.worldType==='siege')return countyUnlocked(s);return !t.minLevel||s.stats.victories>=t.minLevel;}
+    if(t.worldType){if(s.buildings.drill<1||s.buildings.barracks<1)return false;if(t.worldType==='siege')return true;return !t.minLevel||s.stats.victories>=t.minLevel;}
     if(['victory','raid','kills','occupy','capture'].includes(t.id)||t.id.startsWith('raid_'))return s.buildings.drill>=1&&s.buildings.barracks>=1;
     if(t.id==='train')return s.buildings.barracks>=1;
     if(t.id==='research')return s.buildings.academy>=1;
@@ -13930,8 +13930,10 @@ const ChapterData={
   chapterNodes(chapter=2){return chapter===4?this.chapterFourNodes:chapter===3?this.chapterThreeNodes:this.nodes;},
   chapterTitle(chapter=2){return chapter===4?this.chapterFourTitle:chapter===3?this.chapterThreeTitle:this.title;},
   completed(s,chapter=2){return this.chapterNodes(chapter).every(n=>!!s.conquered[n.id]);},
-  unlocked(s,chapter=2){return !!s.conquered.fort&&(chapter===4?this.completed(s,3):chapter!==3||this.completed(s,2));},
-  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!s.conquered.fort)return '先占领古渡县城，开启第二章';if(n.chapter===3&&!this.unlocked(s,3))return '先完成第二章六关（含北境大营），开启第三章';if(n.chapter===4&&!this.unlocked(s,4))return '先完成第三章（河洛内城），开启第四章';if(!s.conquered[n.requires])return '先占领'+this.allNodes().find(row=>row.id===n.requires).name;return null;},
+  unlocked(s,chapter=2){return !!s.conquered.fort&&(chapter===4?this.completed(s,3)&&this.epicOpen(s):chapter!==3||this.completed(s,2));},
+  // 第四章需要黄巾史诗；已打下任一第四章关卡的旧档保留进度。
+  epicOpen(s){return (typeof Progression!=='undefined'&&Progression.countyUnlocked(s))||this.chapterFourNodes.some(n=>s.conquered[n.id]);},
+  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!s.conquered.fort)return '先占领古渡县城，开启第二章';if(n.chapter===3&&!this.unlocked(s,3))return '先完成第二章六关（含北境大营），开启第三章';if(n.chapter===4&&!this.completed(s,3))return '先完成第三章（河洛内城），开启第四章';if(n.chapter===4&&!this.epicOpen(s))return '先完成黄巾之乱四项史诗，开启第四章';if(!s.conquered[n.requires])return '先占领'+this.allNodes().find(row=>row.id===n.requires).name;return null;},
   progress(s,chapter=2){const nodes=this.chapterNodes(chapter);return {unlocked:this.unlocked(s,chapter),conquered:nodes.filter(n=>s.conquered[n.id]).length,claimed:nodes.filter(n=>s.missionClaims.includes('chapter'+chapter+'_'+n.id)).length,next:nodes.find(n=>!s.conquered[n.id])||null};},
   extendMissions(missions){[2,3,4].forEach(chapter=>this.chapterNodes(chapter).forEach((n,i)=>{const r=(chapter===4?this.chapterFourRewards:chapter===3?this.chapterThreeRewards:this.rewards)[i];missions.push({id:'chapter'+chapter+'_'+n.id,node:n.id,chapter,stage:this.chapterTitle(chapter),title:n.name+' · 平定',desc:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&!!s.conquered[n.id],reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items,army:r.army});}));}
 };
@@ -16438,7 +16440,7 @@ const JourneySystem=(()=>{
       {id:'build',title:'发展主城',complete:built,status:built?'基础已齐':'官府3级 · 校场1级 · 一位将领5级',action:'build'},
       {id:'yellow',title:'通关黄巾',complete:!!s.battlefields.firstClears.yellow_turban,status:s.battlefields.firstClears.yellow_turban?'已完整通关':'完成黄巾之乱主线；查看参战条件',action:'yellow'},
       {id:'hero',title:'招募名将',complete:!!pastHero,status:heroStatus,action:'hero'},
-      {id:'cities',title:cities.length>=2?'经营第二城':'取得第二城',complete:cities.length>=2,status:'治下 '+cities.length+' 城 / 2 · '+(cities.length>=2?'查看粮食与补给':game.cityLimit()<=cities.length?'先晋升爵位增加城池名额':!game.countyUnlocked()?'先完成黄巾史诗开放攻城':'名额已够，查看可占城池'),action:cities.length>=2?'cities':'expand'},
+      {id:'cities',title:cities.length>=2?'经营第二城':'取得第二城',complete:cities.length>=2,status:'治下 '+cities.length+' 城 / 2 · '+(cities.length>=2?'查看粮食与补给':game.cityLimit()<=cities.length?'先晋升爵位增加城池名额':!s.conquered?.fort?'先攻下古渡县城':'名额已够，查看可占城池'),action:cities.length>=2?'cities':'expand'},
       {id:'jiangling',title:jianglingDone?'关羽归属':'筹备江陵',complete:jianglingDone,status:jianglingDone?(alive?'关羽已归顺':'关羽已解雇或离队，没有再次招募入口'):record.captive?'关羽已被俘；核对爵位与招贤馆后招降':'降低忠诚至30以下，再赢占领战俘将',action:jianglingDone?'cities':'jiangling'}
     ];
     const tracked=steps.find(r=>r.id===s.journey?.tracked),recommended=steps.find(r=>!r.complete);
@@ -17377,7 +17379,7 @@ const Game = (() => {
     if(n.orderRoute)return WarOrders.blocked(state,n,mode);
     const namedBlocked=NamedCitySystem.attackBlocked(state,id);if(namedBlocked)return namedBlocked;
     const chapterBlocked=ChapterData.blocked(state,id);if(chapterBlocked)return chapterBlocked;
-    if(isCity(n)&&!n.openCity&&!Progression.countyUnlocked(state))return '黄巾之乱四项史诗尚未全部完成，县城攻打未开放';
+    
     if(state.conquered[id]&&(n.wild||isCity(n)))return '这块领地已归属你，可在领地管理中召回驻军或放弃野地';
     if(mode==='occupy'&&isCity(n)&&cityList().length>=cityLimit())return '城池名额已满';
     if(mode==='occupy'&&state.conquered[id])return '据点已占领';
