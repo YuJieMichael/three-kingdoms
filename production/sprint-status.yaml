@@ -6,75 +6,75 @@
 #   done           ↔  Complete
 #   blocked        ↔  Blocked
 
-sprint: 4
-goal: "无测试补给也能稳定经营多城；试玩版只露出单机必需的功能。"
+sprint: 5
+goal: "功能冻结，把 v0.34.72 做成可以交给陌生玩家的试玩包：第 2 章正常经济 3 天内可推进，游戏内有反馈入口，真人试玩者已招募。"
 milestone: "production/milestones/public-playtest.md"
-start: "2026-10-09"
-end: "2026-10-18"
-generated: "2026-10-08"
-updated: "2026-10-08"
+start: "2026-10-19"
+end: "2026-10-26"
+generated: "2026-10-18"
+updated: "2026-10-18"
 
 stories:
-  - id: "5-1"
-    name: "新城运粮引导"
-    file: "production/sprints/sprint-004.md"
+  - id: "6-1"
+    name: "第 2 章正常经济节奏（72 小时内）"
+    file: "production/sprints/sprint-005.md"
     priority: must-have
-    status: done
+    status: backlog
     owner: ""
-    estimate_days: 1
+    estimate_days: 1.5
     blocker: ""
-    completed: "2026-10-08"
-  - id: "5-2"
-    name: "长局模拟入库"
-    file: "production/sprints/sprint-004.md"
+    completed: ""
+  - id: "6-2"
+    name: "游戏内反馈入口"
+    file: "production/sprints/sprint-005.md"
     priority: must-have
-    status: done
-    owner: ""
-    estimate_days: 1
-    blocker: ""
-    completed: "2026-10-08"
-  - id: "5-3"
-    name: "图纸玩法掉落"
-    file: "production/sprints/sprint-004.md"
-    priority: must-have
-    status: done
+    status: backlog
     owner: ""
     estimate_days: 0.5
     blocker: ""
-    completed: "2026-10-08"
-  - id: "5-4"
-    name: "试玩范围隐藏"
-    file: "production/sprints/sprint-004.md"
+    completed: ""
+  - id: "6-3"
+    name: "试玩说明与已知问题"
+    file: "production/sprints/sprint-005.md"
     priority: must-have
-    status: done
+    status: backlog
     owner: ""
-    estimate_days: 1
+    estimate_days: 0.5
     blocker: ""
-    completed: "2026-10-08"
-  - id: "5-5"
-    name: "官府 2 级后补给与造价联调"
-    file: "production/sprints/sprint-004.md"
+    completed: ""
+  - id: "6-4"
+    name: "存档导出 / 导入"
+    file: "production/sprints/sprint-005.md"
     priority: should-have
-    status: done
+    status: backlog
     owner: ""
     estimate_days: 1
     blocker: ""
-    completed: "2026-10-09"
-  - id: "5-6"
-    name: "长局脚本扩展（1 倍、5 城、72 小时）"
-    file: "production/sprints/sprint-004.md"
+    completed: ""
+  - id: "6-5"
+    name: "招募 3 名非开发者试玩者"
+    file: "production/sprints/sprint-005.md"
     priority: must-have
-    status: done
-    owner: ""
-    estimate_days: 1
-    blocker: ""
-    completed: "2026-10-09"
-  - id: "5-7"
-    name: "真机清单"
-    file: "production/sprints/sprint-004.md"
-    priority: must-have
-    status: done
+    status: backlog
     owner: ""
     estimate_days: 0.5
     blocker: ""
-    completed: "2026-10-09"
+    completed: ""
+  - id: "6-6"
+    name: "真机清单补截图"
+    file: "production/sprints/sprint-005.md"
+    priority: must-have
+    status: backlog
+    owner: ""
+    estimate_days: 0.5
+    blocker: ""
+    completed: ""
+  - id: "6-7"
+    name: "旧存档检查入库"
+    file: "production/sprints/sprint-005.md"
+    priority: should-have
+    status: backlog
+    owner: ""
+    estimate_days: 0.5
+    blocker: ""
+    completed: ""
