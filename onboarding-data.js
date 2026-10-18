@@ -2,6 +2,18 @@
 // Prototype rewards: earned once by hall level, separate from recurring supplies.
 const OnboardingData={
   archerTarget:30,
+  // 开局选州（design/quick-specs/progression-rework-2026-10-18.md §1）。加成为试玩值；选州不改变出生位置。
+  provinces:[
+    {id:'jizhou',name:'冀州',desc:'粮食产量 +10%',production:{food:1.1}},
+    {id:'jingzhou',name:'荆州',desc:'木材产量 +10%',production:{wood:1.1}},
+    {id:'yizhou',name:'益州',desc:'石料产量 +10%',production:{stone:1.1}},
+    {id:'yangzhou',name:'扬州',desc:'铁锭产量 +10%',production:{iron:1.1}},
+    {id:'bingzhou',name:'并州',desc:'轻骑、铁骑训练时间 −15%',train:{cavalry:0.85}},
+    {id:'liangzhou',name:'凉州',desc:'骑兵行军速度 +10%',march:{cavalry:1.1}},
+    {id:'xuzhou',name:'徐州',desc:'枪兵、盾兵、弓兵训练时间 −10%',train:{infantry:0.9}},
+    {id:'yuzhou',name:'豫州',desc:'黄金税收 +10%',production:{gold:1.1}}
+  ],
+  founding:{ruler:[2,6],banner:[1,1],city:[2,6],defaults:{ruler:'青溪城主',banner:'青',city:'青溪城'}},
   // Prototype hall pacing before governor, construction technology and game speed.
   // The first two levels retain the reference rules used by the archer route.
   hallSeconds:[1800,3995,9000,18000,36000,72000,126000,198000,288000,396000],

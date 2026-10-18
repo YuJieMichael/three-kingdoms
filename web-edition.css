@@ -874,3 +874,17 @@ dialog .web-plot-preview h3{
 .practical-lesson p{margin:3px 0}
 .tactical-lesson-battle .btn,.tactical-lesson-battle select{min-height:44px}
 .tactical-role-hints{margin:8px 0;padding:8px;border:1px solid #77825b55;border-radius:5px}.tactical-role-hints h4{font-size:12px;margin:4px 0}.tactical-role-hints p{margin:4px 0}
+
+/* 开局创建君主：州选择卡片，手机两列。 */
+.province-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:6px 0 10px}
+.province-card{display:grid;gap:2px;padding:9px 10px;border:1px solid #5b6a52;border-radius:8px;background:#26322a;cursor:pointer}
+.province-card input{position:absolute;opacity:0;pointer-events:none}
+.province-card strong{color:#f1e6c8;font-size:15px}
+.province-card span{color:#c9bf9f;font-size:12.5px;line-height:1.45}
+.province-card:has(input:checked){border-color:#d6b56c;background:#3a4430;box-shadow:0 0 0 2px #d6b56c55 inset}
+.province-card:has(input:focus-visible){outline:2px solid #d6b56c;outline-offset:2px}
+.lord-province{color:#b9a777}
+@media (max-width:420px){.province-grid{grid-template-columns:1fr 1fr}}
+.founding-form .label{display:block;margin:10px 0 4px}
+.founding-form input:not([type=radio]){display:block;width:100%;box-sizing:border-box;font-size:16px;padding:8px 10px}
+.province-card{-webkit-tap-highlight-color:transparent}
