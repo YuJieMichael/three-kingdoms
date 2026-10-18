@@ -160,7 +160,7 @@ test('arrival display includes the calendar date and second precision across mid
 test('rendered army states distinguish travel, arrival, combat, station and gathering with correct available actions',()=>{
  const e=setup(),g=e.Game;
  e.evaluate(`globalThis.S=()=>Game.state;globalThis.esc=value=>String(value);globalThis.num=value=>String(value);globalThis.btn=(label,action,id,classes,disabled)=>'<button data-action="'+action+'"'+(disabled?' disabled':'')+'>'+label+'</button>';`);
- const html=()=>e.evaluate('armyDeploymentHTML()');
+ const html=()=>e.evaluate('armyActiveHTML()+armyDeploymentHTML()');
  assert.equal(g.dispatch('wild_31_32','lin',{archer:300},'occupy'),null);
  let output=html();assert.match(output,/抵达剩余/);assert.match(output,/预计抵达/);assert.match(output,/role="progressbar"/);assert.match(output,/召回部队/);assert.doesNotMatch(output,/进入战斗<\/button>/);
  e.advance(g.state.expedition.end-e.now()+1);
@@ -182,7 +182,7 @@ test('deployment cards label coordinate-free military orders while real wild coo
   const e=setup(),g=e.Game,n=g.getNode(id);g.state.conquered.north_keep=true;
   if(n.orderRoute){g.state.warOrders.cleared[n.orderRoute]=n.orderTier;g.state.warOrders.wins[n.orderRoute]=n.orderTier;}
   e.evaluate(`globalThis.S=()=>Game.state;globalThis.esc=value=>String(value);globalThis.num=value=>String(value);globalThis.btn=(label,action)=>'<button data-action="'+action+'">'+label+'</button>';`);
-  assert.equal(g.dispatch(id,'lin',{archer:100},'occupy'),null);const travel=clone(g.state.expedition),before=JSON.stringify(g.state),output=e.evaluate('armyDeploymentHTML()');
+  assert.equal(g.dispatch(id,'lin',{archer:100},'occupy'),null);const travel=clone(g.state.expedition),before=JSON.stringify(g.state),output=e.evaluate('armyActiveHTML()+armyDeploymentHTML()');
   assert.doesNotMatch(output,/undefined|NaN|Infinity/);assert.match(output,/抵达剩余/);assert.match(output,/预计抵达/);
   if(n.orderRoute)assert.match(output,/<small>军令战场<\/small>/);else assert.ok(output.includes(`<small>(${n.x}, ${n.y})</small>`));
   assert.equal(JSON.stringify(g.state),before);assert.deepEqual(clone(g.state.expedition),travel);assert.equal(timing(e,overview(e).rows[0]).totalMs,travel.end-travel.start);

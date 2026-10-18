@@ -65,3 +65,28 @@
   .world-command-support .landmark-links>div{grid-template-columns:repeat(2,minmax(0,1fr))}
   .world-command-support .landmark-links .btn{min-height:44px;font-size:12px}
 }
+
+/* 出征窗口：底部固定栏始终显示主将、人数与能否出征，不用翻到底才看到原因。 */
+#modal-body[data-dispatch] .modal-actions{position:sticky;bottom:-22px;z-index:3;flex-wrap:wrap;margin:14px -22px -22px;padding:10px 22px 14px;background:#222d24;border-top:1px solid #81906a;box-shadow:0 -8px 18px #0006}
+#modal-body[data-dispatch] .modal-actions .dispatch-status{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:14px;line-height:1.5;color:#e9e0c8}
+#modal-body[data-dispatch] .dispatch-status .dispatch-ok{color:#b9d58f}
+#modal-body[data-dispatch] .dispatch-status .dispatch-reason{color:#ffb38a;font-weight:600}
+#modal-body[data-dispatch] .dispatch-more{margin-top:12px;border:1px solid #4b5a45;border-radius:8px;padding:8px 12px}
+#modal-body[data-dispatch] .dispatch-more>summary{cursor:pointer;color:#d9c89a;font-weight:600}
+#modal-body[data-dispatch] .dispatch-hidden-units{margin-top:6px}
+
+/* 手机大地图：点格子后目标面板贴在地图下方可视区，可收起；页面位置不变。 */
+.map-sheet-close{display:none}
+@media (max-width:760px){
+  #main .world-layout .node-panel.map-sheet-open{position:sticky!important;bottom:0;z-index:6;max-height:38vh;overflow:auto;overscroll-behavior:contain;box-shadow:0 -10px 24px #000a;border-top:2px solid #c8a96a}
+  #main .world-layout .node-panel.map-sheet-open .map-sheet-close{display:block;float:right;margin:0 0 6px 8px;padding:4px 12px;border:1px solid #81906a;border-radius:6px;background:#2c3a2d;color:#e9e0c8;font-size:13px}
+  /* 贴底时只留目标、距离、侦察与出征按钮；规则、守军与收藏点「完整详情」后在原位查看。 */
+  #main .world-layout .node-panel.map-sheet-open>details,#main .world-layout .node-panel.map-sheet-open>.hint,#main .world-layout .node-panel.map-sheet-open>.btn{display:none}
+  #main .world-layout .node-panel.map-sheet-open .map-sheet-more{display:block;width:100%;margin-top:8px}
+}
+.map-sheet-more{display:none}
+
+/* 地图顶部出征条是浅米色底，文字改深色，保证手机上看得清。 */
+.dispatch-strip{color:#2f2615}
+.dispatch-strip strong{color:#2f2615}
+.dispatch-strip p,.dispatch-strip .hint{color:#5b4b2c}

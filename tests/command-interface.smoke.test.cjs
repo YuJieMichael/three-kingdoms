@@ -25,7 +25,7 @@ function ui(){
   function citySwitchButtonHTML(){return '';}function onlineStatusHTML(){return '';}
   function npcDefenseNoticeHTML(){return '';}function resourceIcon(){return '';}
   function generalPortrait(){return '';}function troopPortrait(){return '';}
-  function armyDeploymentHTML(){return '<section data-deployments></section>';}function cityLogisticsHTML(){return '';}function armyScoutHTML(){return '';}function captiveSummaryHTML(){return '';}
+  function armyActiveHTML(){return '';}function armyDeploymentHTML(){return '<section data-deployments></section>';}function cityLogisticsHTML(){return '';}function armyScoutHTML(){return '';}function captiveSummaryHTML(){return '';}
  `);
  for(const name of ['city-ui.js','named-city-ui.js','war-care-ui.js','governance-ui.js','mainline-ui.js','onboarding-ui.js','classic-ui.js','web-edition-ui.js','scene-ui.js','ink-map.js','layout-ui.js'])e.evaluate(read(name));
  const troopStart=app.indexOf('function troopDetailModal('),troopEnd=app.indexOf('function trainModal(');
