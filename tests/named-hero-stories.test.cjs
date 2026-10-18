@@ -21,7 +21,7 @@ test('five-garrison saves migrate to ten without resetting original records or m
  const snapshot=JSON.stringify(g.state);g.heroCodex();for(const [city]of rows)g.garrisonStatus('named_'+city);assert.equal(JSON.stringify(g.state),snapshot);
 });
 test('original and new prefecture access remains six of the original sixteen cities',()=>{
- const e=loadGame(),g=e.Game;for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes])g.state.conquered[n.id]=true;
+ const e=loadGame(),g=e.Game;for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes])g.state.conquered[n.id]=true;g.state.conquered.c4_luoyang=true; // v0.35.1: named cities appear after chapter four
  for(const id of ['named_xiapi','named_beihai','named_xuchang','named_chaisang']){
   assert.match(g.attackBlocked(id,'occupy'),/0 \/ 6/);
   const S=e.evaluate('NamedCitySystem'),owns=x=>['fort','yellow_qingshi','yellow_baisha','yellow_chigang','named_hanchuan','named_luoshui'].includes(x);

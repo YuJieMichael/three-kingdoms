@@ -25,9 +25,9 @@ const Game = (() => {
     {id:'field',name:'河畔荒田',terrain:'field',x:24,y:73,level:1,desc:'溃散的乡勇盘踞河岸，夺回粮田可增加粮食产量。',army:{spear:18,archer:7},loot:{food:330,wood:90,gold:80},bonus:{food:.2},reward:'粮食产量 +20%',time:10},
     {id:'wood',name:'青竹林',terrain:'forest',x:29,y:34,level:1,desc:'林中匪兵轻装上阵，带上弓箭兵压制敌军。',army:{spear:22,archer:8},loot:{wood:350,food:130,gold:90},bonus:{wood:.2},reward:'木材产量 +20%',time:14},
     {id:'pass',name:'白石隘口',terrain:'mountain',x:62,y:64,level:2,desc:'盾兵封锁隘口。集中兵力，避免分散攻击。',army:{shield:32,spear:20,archer:12},loot:{stone:410,iron:180,gold:170},bonus:{stone:.2},reward:'石料产量 +20%',time:18},
-    {id:'camp',name:'黄巾营寨',terrain:'camp',x:66,y:27,level:2,desc:'弓兵依托营寨防守，轻骑兵能快速绕过前排。',army:{spear:30,archer:35,shield:12},loot:{food:380,wood:240,iron:160,gold:230},reward:'解救武将 · 严秋',time:22,capture:'yan'},
     {id:'mine',name:'赤铁山',terrain:'mountain',x:83,y:49,level:3,desc:'骑兵巡守矿脉，长枪兵是攻取这里的关键。',army:{cavalry:30,shield:25,archer:25},loot:{iron:580,stone:200,gold:280},bonus:{iron:.25},reward:'铁锭产量 +25%',time:24},
-    {id:'fort',name:'古渡县城',terrain:'fort',x:49,y:13,level:4,desc:'县城守军兵种齐全。扩充兵力与武将等级后，再发起总攻。',army:{shield:70,spear:55,archer:65,cavalry:18},loot:{food:1100,wood:750,stone:600,iron:480,gold:900},reward:'占领县城 · 开启第二章',time:30},
+    {id:'camp',name:'黄巾营寨',terrain:'camp',x:66,y:27,level:2,desc:'弓兵依托营寨防守，轻骑兵能快速绕过前排。',army:{spear:30,archer:35,shield:12},loot:{food:380,wood:240,iron:160,gold:230},reward:'解救武将 · 严秋',time:22,capture:'yan'},
+    {id:'fort',name:'古渡县城',terrain:'fort',x:49,y:13,level:4,desc:'县城守军兵种齐全。扩充兵力与武将等级后，再发起总攻。',army:{shield:70,spear:55,archer:65,cavalry:18},loot:{food:1100,wood:750,stone:600,iron:480,gold:900},reward:'占领县城 · 县城与名城开放',time:30},
     ...ChapterData.allNodes(),
     ...YellowCityData.allNodes()
   ];
@@ -99,10 +99,11 @@ const Game = (() => {
     if(n.openCity)return true;
     if(state.conquered[id]||state.raided[id]||state.garrisons[id]||state.battle?.node===id||allExpeditions().some(e=>e.node===id))return true;
     if(n.chapter)return ChapterData.unlocked(state,n.chapter)&&!ChapterData.blocked(state,id);
+    if(n.id==='fort'&&!ChapterData.countyOpen(state))return false;
     const first=nodes.filter(x=>!x.chapter&&!x.openCity),farthest=first.reduce((i,x,j)=>landmarkReached(x)?j:i,-1);
     return first.indexOf(n)<=farthest+1;
   }
-  function nextLandmark(){const first=nodes.filter(n=>!n.chapter&&!n.openCity),farthest=first.reduce((i,n,j)=>landmarkReached(n)?j:i,-1);if(farthest+1<first.length)return first[farthest+1];for(const chapter of [2,3])if(ChapterData.unlocked(state,chapter)){const next=ChapterData.progress(state,chapter).next;if(next)return next;}return null;}
+  function nextLandmark(){const first=nodes.filter(n=>!n.chapter&&!n.openCity),farthest=first.reduce((i,n,j)=>landmarkReached(n)?j:i,-1);if(farthest+1<first.length&&landmarkVisible(first[farthest+1].id))return first[farthest+1];for(const chapter of [2,3,4])if(ChapterData.unlocked(state,chapter)){const next=ChapterData.progress(state,chapter).next;if(next)return next;}return !state.conquered.fort&&landmarkVisible('fort')?getNode('fort'):null;}
   const defaultCityLayout=()=>Array.from({length:36},(_,i)=>i===14?'hall':[15,20,21].includes(i)?'reserved':null);
   const starterGiftReward={...OnboardingData.gifts[0].resources};
   const supplies=(amount,gold)=>({food:amount,wood:amount,stone:amount,iron:amount,gold});

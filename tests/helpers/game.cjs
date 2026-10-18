@@ -8,7 +8,7 @@ function loadGame(seed=1){
   return {Game,Chapter,now:()=>now,advance(ms,allowAutomation=false){now+=ms;Game.tick(now,allowAutomation);},offline(ms){Game.save();now+=ms;return Game.init();},evaluate:source=>vm.runInContext(source,context)};
 }
 function city(Game,levels){const s=Game.state;for(const [id,level] of Object.entries(levels)){const site=id==='hall'?14:s.cityLayout.indexOf(id)>=0?s.cityLayout.indexOf(id):s.cityLayout.indexOf(null);s.cityLayout[site]=id;s.cityLevels[site]=level;s.buildings[id]=level;}}
-function battle(env,node,mode,army){const {Game}=env;for(const id of Object.keys(army))Game.setTactic(id,'advance','');const error=Game.dispatch(node,'lin',army,mode);if(error)throw new Error(error);env.advance(Math.ceil(Game.state.expedition.end-env.now())+1);const started=Game.startBattle();if(started)throw new Error(started);for(let i=0;i<30&&!Game.state.battle.finished;i++)Game.battleRound();return Game.state.battle.result;}
+function battle(env,node,mode,army,returnAfterOccupy=false){const {Game}=env;for(const id of Object.keys(army))Game.setTactic(id,'advance','');const error=Game.dispatch(node,'lin',army,mode,returnAfterOccupy);if(error)throw new Error(error);env.advance(Math.ceil(Game.state.expedition.end-env.now())+1);const started=Game.startBattle();if(started)throw new Error(started);for(let i=0;i<30&&!Game.state.battle.finished;i++)Game.battleRound();return Game.state.battle.result;}
 // Save fixtures keep the hydrated active projection and its city scope linked.
 function cloneActiveSave(value){const d=JSON.parse(JSON.stringify(value)),scope=d?.realm?.cities?.[d.realm.activeCity]?.data;if(scope)for(const k of Object.keys(scope))scope[k]=d[k];return d;}
 module.exports={loadGame,city,battle,cloneActiveSave};

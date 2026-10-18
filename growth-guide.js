@@ -95,18 +95,17 @@ const GrowthGuide=(()=>{
       if(s.cityDefense.battle||s.battle&&!s.battle.finished||game.allExpeditions().length){const goal=firstBattle();return {...goal,title:goal.title.replaceAll('首胜','战斗').replaceAll('首战','当前作战')};}
       const reward=game.missions.find(m=>m.chapter&&game.missionReady(m));if(reward)return {kind:'campaignReward',id:reward.id,chapter:reward.chapter,title:'领取'+reward.title+'通关补给',reason:'已占领据点，领取一次性资源、珍宝和援军，再准备下一关。奖励预览和领取状态保留。'};
       let id,chapter=1;
-      if(!s.conquered.camp)id='camp';
-      else if(!s.conquered.fort){
-        // 县城要占一个城池名额：名额满时先晋升爵位，而不是反复出征失败。
-        if(game.landmarkVisible('fort')&&game.cityList().length>=game.cityLimit()){const q=HeritageSystem.promotionQuote(s,'noble');return {kind:'honor',id:'noble',title:'晋升爵位'+(q?.next?' · '+q.next.name:'')+'，增加城池名额',reason:'占领古渡县城需要空闲的城池名额（当前 '+game.cityList().length+' / '+game.cityLimit()+'）。'+(q?.missing?.length?'晋升还差：'+q.missing.join('、')+'。掠夺野地、完成任务可获得声望与珠宝。':'条件已满足，到爵位页确认晋升。'),ready:!q?.reason};}
-        id='fort';
-      }
+      // v0.35.1: 黄巾营寨 ends chapter one; the county waits until chapter four is cleared.
+      if(!ChapterData.chapterOneDone(s))id='camp';
+      else if(ChapterData.completed(s,4)){if(!s.conquered.fort&&game.landmarkVisible('fort')){id='fort';chapter=5;}}
       else{
         chapter=ChapterData.completed(s,3)?4:ChapterData.completed(s,2)?3:2;
         // 黄巾史诗是第四章讨伐董卓的门槛（v0.34.73 起不再卡古渡县城）。
         if(chapter===4&&!ChapterData.unlocked(s,4)){const groups=game.progression.groups(s),group=groups.find(g=>g.progress<1);if(group)return {kind:'epic',id:group.id,title:'开启第四章 · '+group.name,reason:group.detail+'。四项史诗完成后才能讨伐董卓；捐献士兵会离队，请保留出征主力。',progress:Math.min(100,Math.floor(group.progress*100)),route:'epic',shortages:group.id==='resources'?Object.keys(game.progression.resourceDonations).filter(key=>s.epic.resources[key]<100000).map(key=>({id:key,amount:Math.max(0,100000-s.res[key])})):[]};}
         id=ChapterData.progress(s,chapter).next?.id;
       }
+      // 城池（北原城、古渡县城）要占一个城池名额：名额满时先晋升爵位，而不是反复出征失败。
+      if(id&&game.isCity(game.getNode(id))&&game.landmarkVisible(id)&&game.cityList().length>=game.cityLimit()){const target=game.getNode(id),q=HeritageSystem.promotionQuote(s,'noble');return {kind:'honor',id:'noble',title:'晋升爵位'+(q?.next?' · '+q.next.name:'')+'，增加城池名额',reason:'占领'+target.name+'需要空闲的城池名额（当前 '+game.cityList().length+' / '+game.cityLimit()+'）。'+(q?.missing?.length?'晋升还差：'+q.missing.join('、')+'。推进章节、掠夺野地与完成任务可获得声望与黄金。':'条件已满足，到爵位页确认晋升。'),ready:!q?.reason};}
       if(!id){
         const route=Object.keys(game.warOrders.routes).find(r=>s.warOrders.cleared[r]<10);
         if(route){const tier=s.warOrders.cleared[route]+1;return {kind:'orders',id:'order_'+route+'_'+tier,route,tier,title:'军令进阶 · '+game.warOrders.routes[route].name+'第 '+tier+' 阶',reason:'河洛已平定，继续三路军令。查看守军组成与攻城要求，补充永久损失、调整配兵；首通双倍军功可兑换加速、珠宝和装备。'};}
@@ -114,7 +113,7 @@ const GrowthGuide=(()=>{
         return {kind:'orders',id:'repeat',title:'军令循环 · 选择补给与战术目标',reason:'三路十阶与全部战术挑战已达成。按军功兑换需求选择复战路线；培养将领、强化装备，并留意补兵资源与耗粮。'};
       }
       if(!game.landmarkVisible(id))id=game.nextLandmark()?.id||id;
-      const n=game.getNode(id),archers=chapter===1?(id==='fort'?300:n.level<=1?60:n.level===2?100:160):chapter===2?910:chapter===4?3000:1650,front=chapter===1?(id==='fort'?60:id==='pass'||id==='mine'?30:0):chapter===2?325:chapter===4?1500:525,technology=chapter===1?(id==='fort'?3:n.level<=1?1:2):5;
+      const n=game.getNode(id),archers=chapter===5?300:chapter===1?(n.level<=1?60:n.level===2?100:160):chapter===2?910:chapter===4?3000:1650,front=chapter===5?60:chapter===1?(id==='pass'||id==='mine'?30:0):chapter===2?325:chapter===4?1500:525,technology=chapter===5?3:chapter===1?(n.level<=1?1:2):5;
       for(const [tech,level]of [['combat',technology],['shooting',technology],...(front?[['protection',technology]]:[])]){const goal=resolve('tech',tech,level);if(goal)return {...goal,reason:'准备'+n.name+'：提升弓兵输出与前排防护；'+goal.reason};}
       for(const [unit,count]of [['archer',archers],...(front?[['shield',front]]:[]),...(n.fortification?[['ram',5]]:[])]){
         if(s.army[unit]<count){const away=Object.entries(s.garrisons).find(([,g])=>g.army[unit]>0);if(away)return {kind:'garrison',id:away[0],title:'查看外驻'+game.units[unit].name+'，准备'+n.name,reason:'该兵种已有部队在外驻守；可先收获采集并召回，或保留驻军另行练兵。不要将驻军误当成损失。'};}
@@ -123,7 +122,9 @@ const GrowthGuide=(()=>{
         for(const [tech,level]of Object.entries(game.units[unit].requires.tech)){const goal=resolve('tech',tech,level);if(goal)return goal;}
         const goal=train(unit,count,'准备'+n.name+'：建议驻城'+game.units[unit].name+' '+count+' 名，当前 '+s.army[unit]+' 名。这是配兵准备参考，胜负还取决于指令、科技、将领和战场。');if(goal)return goal;
       }
-      return {kind:'campaign',id,chapter,title:'占领'+n.name+'，推进'+(chapter===1?'第一章':ChapterData.chapterTitle(chapter)),reason:n.desc+'查看敌军、配兵与预计战利品，再自行确认占领；掠夺不推进章节。'+(n.fortification?'必须破城并歼敌，器械需要前排保护。':'弓兵为主力，按敌军组成安排前排。'),army:{archer:archers,...(front?{shield:front}:{})}};
+      // 城池要连打几场占领战：两次之间据点恢复，先等待而不是重复出征。
+      if(s.cooldowns[id]>Date.now())return {kind:'battleCooldown',id,end:s.cooldowns[id],title:n.name+'正在恢复',reason:'上一场占领战已降低民心；等待据点恢复后再战，期间可以补兵或发展城池。'};
+      return {kind:'campaign',id,chapter,title:'占领'+n.name+'，'+(chapter===5?'开启县城与名城':'推进'+(chapter===1?'第一章':ChapterData.chapterTitle(chapter))),reason:n.desc+'查看敌军、配兵与预计战利品，再自行确认占领；掠夺不推进章节。'+(n.fortification?'必须破城并歼敌，器械需要前排保护。':'弓兵为主力，按敌军组成安排前排。'),army:{archer:archers,...(front?{shield:front}:{})}};
     }
     // Resource fields produce in proportion to population / required workers; staff them before more upgrades.
     function staffing(){

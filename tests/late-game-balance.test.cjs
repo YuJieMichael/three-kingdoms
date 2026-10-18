@@ -12,15 +12,16 @@ test('missing promotion jewels are covered by spare jewels at twice their presti
   g.state.jewels.pearl=5;const q=H.jewelPayment(g.state,{agate:5});assert.equal(q.covered,false);
   g.state.jewels.pearl=20;const full=H.jewelPayment(g.state,{agate:2});assert.equal(JSON.stringify(full.substitute),'{}');
 });
-test('promotion spends the substituted jewels and refuses when even substitution falls short',()=>{
+// v0.35.1: ranks no longer take jewels, so spare jewels are never spent on a promotion.
+test('promotion leaves every jewel untouched and waits on chapter one instead',()=>{
   const e=loadGame(),g=e.Game,H=e.evaluate('HeritageSystem');
-  const q0=H.promotionQuote(g.state,'noble'),rule=q0.next.promotion,need=Object.entries(rule.jewels)[0];assert.ok(need,'first noble rank needs jewels');
+  const rule=H.promotionQuote(g.state,'noble').next.promotion;
   g.state.prestige=rule.prestige;g.state.res.gold=rule.gold+1;city(g,{hall:rule.hall||1});
-  for(const id of Object.keys(g.state.jewels))g.state.jewels[id]=0;
-  assert.match(H.promotionQuote(g.state,'noble').reason,/折算也不足/);
-  g.state.jewels.nightPearl=50;const q=H.promotionQuote(g.state,'noble');assert.equal(q.reason,'');
-  const before=g.state.jewels.nightPearl;assert.equal(e.evaluate("HeritageSystem.promote('noble')"),null);
-  assert.equal(before-g.state.jewels.nightPearl,q.jewels.total.nightPearl);assert.equal(g.state.honors.noble,1);
+  for(const id of Object.keys(g.state.jewels))g.state.jewels[id]=0;g.state.jewels.nightPearl=50;
+  assert.match(H.promotionQuote(g.state,'noble').reason,/第一章通关/);
+  g.state.conquered.camp=true;assert.equal(H.promotionQuote(g.state,'noble').reason,'');
+  assert.equal(e.evaluate("HeritageSystem.promote('noble')"),null);
+  assert.equal(g.state.jewels.nightPearl,50);assert.equal(g.state.honors.noble,1);assert.equal(g.state.res.gold,1);
 });
 test('inn candidates in one refresh never share a name, also against hired generals',()=>{
   for(let seed=1;seed<=30;seed++){const e=loadGame(seed),g=e.Game;city(g,{inn:10});g.state.customGenerals.push({name:'魏衡'});

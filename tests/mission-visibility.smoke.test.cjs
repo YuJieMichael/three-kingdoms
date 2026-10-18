@@ -5,9 +5,10 @@ const visible=g=>copy(g.nodes.filter(n=>!n.openCity&&g.landmarkVisible(n.id)).ma
 test('task landmarks reveal the next visit while retaining veteran progress and deployments',()=>{
  const e=loadGame(),g=e.Game,s=g.state;
  assert.deepEqual(visible(g),['field']);s.raided.field=true;assert.deepEqual(visible(g),['field','wood']);
- s.conquered.camp=true;assert.deepEqual(visible(g),['field','wood','pass','camp','mine']);
- s.expeditions.push({node:'fort'});assert.equal(g.landmarkVisible('fort'),true);s.expeditions=[];
- assert.equal(g.nextLandmark().id,'mine');
+ // v0.35.1: 赤铁山 comes before 黄巾营寨, which opens chapter two; the county stays hidden until chapter four.
+ s.conquered.camp=true;assert.deepEqual(visible(g),['field','wood','pass','mine','camp','north_road']);
+ s.expeditions.push({node:'fort'});assert.equal(g.landmarkVisible('fort'),true);s.expeditions=[];assert.equal(g.landmarkVisible('fort'),false);
+ assert.equal(g.nextLandmark().id,'north_road');
 });
 test('chapter visibility follows occupation and preserves the complete-second-chapter gate',()=>{
  const e=loadGame(),g=e.Game,s=g.state;s.conquered.fort=true;

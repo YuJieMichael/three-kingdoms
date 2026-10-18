@@ -9,7 +9,7 @@ function copy(x){return JSON.parse(JSON.stringify(x));}
 
 test('optional challenges preserve chapter, normal-tier, mode, recovery and same-route gates',()=>{
  const e=loadGame(),g=e.Game;city(g,{drill:10});g.state.army.archer=1000;g.state.res.food=1000000;
- assert.match(g.attackBlocked(ids.loss,'occupy'),/北境大营/);g.state.conquered.north_keep=true;
+ assert.match(g.attackBlocked(ids.loss,'occupy'),/北原城/);g.state.conquered.north_keep=true;
  assert.match(g.attackBlocked(ids.loss,'occupy'),/普通第 5 阶/);g.state.warOrders.cleared.field=4;g.state.warOrders.wins.field=4;
  assert.match(g.dispatch(ids.loss,'lin',{archer:100},'occupy'),/普通第 5 阶/);g.state.warOrders.cleared.field=5;g.state.warOrders.wins.field=5;
  assert.equal(g.attackBlocked(ids.loss,'occupy'),null);assert.match(g.dispatch(ids.loss,'lin',{archer:100},'raid'),/讨伐/);
