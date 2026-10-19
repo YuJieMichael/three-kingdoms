@@ -97,3 +97,10 @@
 .chapter-task-type{display:inline-block;font-size:11px;font-weight:700;color:#fff8e4;background:#8b6a2e;border-radius:3px;padding:0 6px}
 .chapter-task.is-done .chapter-task-type{background:#5f8a5a}
 .quest-card .chapter-task{grid-column:1 / -1;flex:1 1 100%;width:100%;box-sizing:border-box}
+.dispatch-advice{border:1px solid #b29a62;border-radius:4px;padding:4px 8px;margin:6px 0;background:#f4ecd4;color:#3c3424}
+.dispatch-advice summary{font-weight:700;cursor:pointer}
+.dispatch-advice ul{margin:4px 0;padding-left:18px}
+.dispatch-advice li{margin:2px 0;font-size:13px}
+.unit-stats{width:100%;border-collapse:collapse;font-size:13px}
+.unit-stats th,.unit-stats td{padding:3px 4px;text-align:right;border-bottom:1px solid #b29a6244}
+.unit-stats th:first-child,.unit-stats td:first-child{text-align:left}

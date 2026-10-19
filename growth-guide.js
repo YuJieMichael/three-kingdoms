@@ -146,7 +146,7 @@ const GrowthGuide=(()=>{
       // v0.35.3: each chapter stage has its own task; the guide gives that task's next concrete step.
       const task=game.chapterTask?.(id),def=task&&!task.done?ChapterTasks.def(id):null;
       if(def){const early=taskStep(id,n,task,def,'before');if(early)return early;}
-      const plan=def?.guideArmy||{archer:archers,...(front?{shield:front}:{}),...(n.fortification?{ram:5}:{})};
+      const plan=def?.guideArmy||{archer:archers,...(front?{shield:front}:{}),...(n.fortification&&!n.fortification.cityWall?{ram:5}:{})};
       for(const [tech,level]of [['combat',technology],['shooting',technology],...(front?[['protection',technology]]:[])]){const goal=resolve('tech',tech,level);if(goal)return {...goal,reason:'准备'+n.name+'：提升弓兵输出与前排防护；'+goal.reason};}
       for(const [unit,count]of Object.entries(plan)){
         if(s.army[unit]<count){const away=Object.entries(s.garrisons).find(([,g])=>g.army[unit]>0);if(away)return {kind:'garrison',id:away[0],title:'查看外驻'+game.units[unit].name+'，准备'+n.name,reason:'该兵种已有部队在外驻守；可先收获采集并召回，或保留驻军另行练兵。不要将驻军误当成损失。'};}
