@@ -120,7 +120,49 @@ function inkWorldGroundSVG(start,span,read){
     <rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="url(#ink-paper)" style="mix-blend-mode:multiply"/>
     </svg>`;
 }
-webWorldGroundSVG=inkWorldGroundSVG;
+// v0.35.2: the ground's SVG filters re-ran on every frame of a map drag (about 30–50 ms a frame at 2× pixel density).
+// Each view is drawn once into an image instead, so a drag only moves pixels; the live SVG stays until the image is ready.
+const InkGround={images:new Map(),urls:new Map(),loading:null,sources:'',last:''};
+function inkGroundImageSources(){return typeof PaintedArt==='undefined'?[]:[...new Set([...Object.keys(PaintedArt.map),'lake','grass'].map(id=>PaintedArt.src('map',id)))];}
+// Pure: the standalone SVG an <img> can draw. An SVG image may not load other files, so every image is inlined, and the
+// page CSS the ground relied on is copied in. Returns null while an image is still missing.
+function inkGroundStandalone(svg,images,aspect){
+  let missing=false;
+  const out=svg.replace(/<image href="([^"]+)"/g,(match,src)=>{if(src.startsWith('data:'))return match;const data=images.get(src);if(!data){missing=true;return match;}return `<image href="${data}"`;});
+  if(missing||!out.startsWith('<svg '))return null;
+  return out.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ').replace('<defs>',`<defs><style>.ink-mountain-body,.ink-pine-body{transform:scaleY(${aspect});transform-origin:50% 100%;transform-box:fill-box}.ink-mountain-body .ink-pine-body{transform:none}</style>`);
+}
+function inkGroundPreload(){
+  const sources=inkGroundImageSources(),key=sources.join('|');
+  if(InkGround.loading&&InkGround.sources===key)return InkGround.loading;
+  InkGround.sources=key;
+  if(typeof fetch!=='function'||typeof FileReader!=='function'||typeof Blob!=='function'||typeof URL?.createObjectURL!=='function')return InkGround.loading=Promise.resolve(false);
+  const read=blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});
+  return InkGround.loading=Promise.all(sources.filter(src=>!InkGround.images.has(src)).map(src=>fetch(src).then(r=>r.ok?r.blob():Promise.reject(new Error(src))).then(read).then(data=>InkGround.images.set(src,data)))).then(()=>true,()=>false);
+}
+function inkGroundSwap(map){
+  const svg=map?.querySelector('svg.ink-world-ground');if(!svg||!InkGround.last)return;
+  const aspect=map.style.getPropertyValue('--ink-aspect')||'1',key=InkGround.last+'|'+aspect;
+  let url=InkGround.urls.get(key);
+  if(!url){
+    const doc=inkGroundStandalone(InkGround.last,InkGround.images,aspect);
+    if(!doc){inkGroundPreload().then(ok=>{if(ok&&svg.isConnected&&inkGroundStandalone(InkGround.last,InkGround.images,aspect))inkGroundSwap(map);});return;}
+    url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));InkGround.urls.set(key,url);
+    if(InkGround.urls.size>8){const [oldKey,oldUrl]=InkGround.urls.entries().next().value;URL.revokeObjectURL(oldUrl);InkGround.urls.delete(oldKey);}
+  }
+  // Chrome redraws an SVG <img> from vectors (filters included) whenever it moves, so the image is painted once into a canvas.
+  const img=new Image();img.decoding='async';img.src=url;
+  (img.decode?img.decode():new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;})).then(()=>{
+    if(!svg.isConnected)return;
+    const rect=svg.getBoundingClientRect(),scale=Math.min(3,Math.max(1,globalThis.devicePixelRatio||1)),canvas=document.createElement('canvas'),context=canvas.getContext?.('2d');
+    if(!context||rect.width<1||rect.height<1)return;
+    canvas.width=Math.round(rect.width*scale);canvas.height=Math.round(rect.height*scale);
+    context.drawImage(img,0,0,canvas.width,canvas.height);
+    canvas.className='web-world-ground ink-world-ground ink-ground-image';canvas.setAttribute('aria-hidden','true');
+    svg.replaceWith(canvas);
+  },()=>{});
+}
+webWorldGroundSVG=(...args)=>InkGround.last=inkWorldGroundSVG(...args);
 webTerrainArt=inkWorldSiteArt;
 function installInkMapUI(){
  let watched=null;
@@ -131,9 +173,13 @@ function installInkMapUI(){
  const observer=typeof ResizeObserver==='function'?new ResizeObserver(entries=>entries.forEach(entry=>fit(entry.target))):null;
  const refresh=()=>{
    const map=document.querySelector('.ink-map');if(map!==watched){observer?.disconnect();watched=map;if(map)observer?.observe(map);}
-   if(map)fit(map);
+   if(map){fit(map);inkGroundSwap(map);}
  };
  const originalRender=render;
  render=function(...args){const result=originalRender(...args);refresh();return result;};
+ // Panning replaces only the map board (centerWorld), without a full render.
+ const originalCenter=centerWorld;
+ centerWorld=function(...args){const result=originalCenter(...args);refresh();return result;};
  refresh();
+ inkGroundPreload().then(ok=>{if(ok)refresh();});
 }
