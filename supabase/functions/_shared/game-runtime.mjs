@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="b0a7c119e2cfe3e15be92546257a08c8b5f56652940d3821cc52fd9e13cb5795";
+export const runtimeHash="0342d82cb619b0def414adf8ed66372f9c06935d65a988812015441190e65408";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","faction-system.js","npc-defense.js","chapter-tasks.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -11740,6 +11740,12 @@ const RewardData = {
   // Growth tasks complement the ten hall gifts. Early prerequisites no longer
   // each pay another full development budget; later hall rewards fund trade.
   missionTuning:{opening:{gold:.15,resources:.04},hall:{gold:1,resources:1},advanced:{gold:.8,resources:1}},
+  // v0.37.1: the third and last stage of each chapter add an equipment box, so taking them changes something you can
+  // see (design/quick-specs/pacing-rework-2026-10-19.md §3). Resource totals are unchanged.
+  chapterBoxes:{camp:'starterEquipmentBasic',north_ford:'starterEquipmentBasic',north_keep:'starterEquipmentBasic',luo_cavalry:'starterEquipmentFine',luo_citadel:'starterEquipmentFine',c4_xingyang:'starterEquipmentFine',c4_luoyang:'starterEquipmentFine'},
+  addChapterBoxes(missions){
+    for(const m of missions){const box=this.chapterBoxes[m.node||m.id];if(box&&(m.chapter||m.id==='camp'))m.items={...(m.items||{}),[box]:(m.items?.[box]||0)+1};}
+  },
   goldBricks:[
     {id:'goldBrick',name:'金砖',price:50,gold:50000},
     {id:'goldBrickLarge',name:'大金砖',price:180,gold:200000}
@@ -16825,6 +16831,7 @@ const Game = (() => {
   ChapterData.extendMissions(missions);
   // Final values, after legacy reward scaling. Existing claims remain one-time.
   for(const [id,reward]of Object.entries({firstVictory:{food:6000,wood:6000,stone:6000,iron:6000,gold:6000},field:{food:4000,wood:3000,stone:4000,iron:3000,gold:8000},wildGeneral:{food:3000,wood:3000,stone:3000,iron:3000}}))missions.find(m=>m.id===id).reward=reward;
+  RewardData.addChapterBoxes(missions);
   const missionClaimed=(id,s=state)=>s.missionClaims.includes(id);
   const missionReady=(m,s=state)=>!missionClaimed(m.id,s)&&m.check(s);
   const currentMission=()=>missions.find(m=>missionReady(m))||missions.find(m=>!missionClaimed(m.id));

@@ -21,9 +21,18 @@ document.addEventListener('click',event=>{
   if(S().battle&&!S().battle.finished){toast('请先结束当前出征战斗');return;}
   if(S().battle?.finished)Game.dismissBattle();modal.close();page='world';selectedNode=n.id;worldView={x:n.x,y:n.y};render();
 });
+// v0.37.1: what taking the stage changes, shown before the attack (design/quick-specs/pacing-rework-2026-10-19.md §3).
+const CHAPTER_STAGE_UNLOCKS={camp:'第二章与野地采集',north_keep:'第二座城、军令、势力营地与第三章',luo_citadel:'历史战场与史诗（第四章门槛）',c4_luoyang:'县城与名城'};
+function chapterGainText(id){
+  const n=Game.getNode(id),m=Game.missions.find(x=>x.node===id||x.id===id&&id==='camp'),parts=[];if(!n)return '';
+  if(n.reward)parts.push(n.reward);
+  for(const [item,count] of Object.entries(m?.items||{}))if(/EquipmentBox|starterEquipment/.test(item))parts.push((Game.manual.shop.find(x=>x.id===item)?.name||item)+(count>1?' ×'+count:''));
+  if(CHAPTER_STAGE_UNLOCKS[id])parts.push('开放'+CHAPTER_STAGE_UNLOCKS[id]);
+  return parts.length?'打下后得到：'+parts.join('；'):'';
+}
 // v0.35.3: the stage's own task, its progress and (for delivery stages) the delivery button.
 function chapterTaskHTML(id){
   const v=Game.chapterTask?.(id);if(!v)return '';const safe=typeof esc==='function'?esc:value=>String(value).replace(/[&<>"']/g,'');
   const cost=v.cost?Object.entries(v.cost).map(([k,n])=>Game.resources[k].name+' '+num(n)).join('、'):'';
-  return `<div class="chapter-task ${v.done?'is-done':''}"><span class="chapter-task-type">${safe(v.type)}</span>${v.hall?`<span class="chapter-task-hall ${(S().buildings.hall||0)>=v.hall?'is-ready':''}">建议官府 ${v.hall} 级</span>`:''}<p>${safe(v.text)}</p>${v.done?'<p class="hint">✓ 任务已完成</p>':v.progress?`<p class="hint">进度：${safe(v.progress)}</p>`:''}${v.deliver?btn('运送 '+cost,'chapterDeliver',id,'small',!!ChapterTasks.deliverQuote(S(),id).reason):''}</div>`;
+  return `<div class="chapter-task ${v.done?'is-done':''}"><span class="chapter-task-type">${safe(v.type)}</span>${v.hall?`<span class="chapter-task-hall ${(S().buildings.hall||0)>=v.hall?'is-ready':''}">建议官府 ${v.hall} 级</span>`:''}<p>${safe(v.text)}</p>${!v.done&&chapterGainText(id)?`<p class="chapter-task-gain">${safe(chapterGainText(id))}</p>`:''}${v.done?'<p class="hint">✓ 任务已完成</p>':v.progress?`<p class="hint">进度：${safe(v.progress)}</p>`:''}${v.deliver?btn('运送 '+cost,'chapterDeliver',id,'small',!!ChapterTasks.deliverQuote(S(),id).reason):''}</div>`;
 }

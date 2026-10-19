@@ -7,6 +7,12 @@ const RewardData = {
   // Growth tasks complement the ten hall gifts. Early prerequisites no longer
   // each pay another full development budget; later hall rewards fund trade.
   missionTuning:{opening:{gold:.15,resources:.04},hall:{gold:1,resources:1},advanced:{gold:.8,resources:1}},
+  // v0.37.1: the third and last stage of each chapter add an equipment box, so taking them changes something you can
+  // see (design/quick-specs/pacing-rework-2026-10-19.md §3). Resource totals are unchanged.
+  chapterBoxes:{camp:'starterEquipmentBasic',north_ford:'starterEquipmentBasic',north_keep:'starterEquipmentBasic',luo_cavalry:'starterEquipmentFine',luo_citadel:'starterEquipmentFine',c4_xingyang:'starterEquipmentFine',c4_luoyang:'starterEquipmentFine'},
+  addChapterBoxes(missions){
+    for(const m of missions){const box=this.chapterBoxes[m.node||m.id];if(box&&(m.chapter||m.id==='camp'))m.items={...(m.items||{}),[box]:(m.items?.[box]||0)+1};}
+  },
   goldBricks:[
     {id:'goldBrick',name:'金砖',price:50,gold:50000},
     {id:'goldBrickLarge',name:'大金砖',price:180,gold:200000}
