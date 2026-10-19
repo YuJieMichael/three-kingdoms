@@ -82,34 +82,34 @@ stories:
     name: "第 1 批：开局创建君主与选州"
     file: "design/quick-specs/progression-rework-2026-10-18.md"
     priority: must-have
-    status: backlog
+    status: done
     owner: ""
     estimate_days: 2
     blocker: ""
-    completed: ""
+    completed: "2026-10-19"
   - id: "7-2"
     name: "第 2 批：章节重排、县城后移、晋升去珠宝"
     file: "design/quick-specs/progression-rework-2026-10-18.md"
     priority: must-have
-    status: backlog
+    status: done
     owner: ""
     estimate_days: 2
     blocker: ""
-    completed: ""
+    completed: "2026-10-19"
   - id: "7-3"
     name: "第 3 批：章节任务多样化"
     file: "design/quick-specs/progression-rework-2026-10-18.md"
     priority: must-have
-    status: backlog
+    status: done
     owner: ""
     estimate_days: 2
     blocker: ""
-    completed: ""
+    completed: "2026-10-19"
   - id: "7-4"
     name: "第 4 批：城池城墙城防、兵种与资源田"
     file: "design/quick-specs/progression-rework-2026-10-18.md"
     priority: must-have
-    status: backlog
+    status: review
     owner: ""
     estimate_days: 2
     blocker: ""
