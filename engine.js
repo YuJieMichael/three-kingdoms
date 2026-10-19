@@ -146,6 +146,7 @@ const Game = (() => {
   ChapterData.extendMissions(missions);
   // Final values, after legacy reward scaling. Existing claims remain one-time.
   for(const [id,reward]of Object.entries({firstVictory:{food:6000,wood:6000,stone:6000,iron:6000,gold:6000},field:{food:4000,wood:3000,stone:4000,iron:3000,gold:8000},wildGeneral:{food:3000,wood:3000,stone:3000,iron:3000}}))missions.find(m=>m.id===id).reward=reward;
+  RewardData.addChapterBoxes(missions);
   const missionClaimed=(id,s=state)=>s.missionClaims.includes(id);
   const missionReady=(m,s=state)=>!missionClaimed(m.id,s)&&m.check(s);
   const currentMission=()=>missions.find(m=>missionReady(m))||missions.find(m=>!missionClaimed(m.id));
