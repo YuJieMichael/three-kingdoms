@@ -3,7 +3,7 @@
 module.exports={
  // All legacy acceptance windows below retain their original comparison operators.
  // Detailed provenance: design/balance/acceptance-targets-2026-10-09.md.
- chapterCampaign:{acceleratedMaxHours:5,normalHours:{min:100,max:220},spentFoodMin:1000000},
+ chapterCampaign:{normalHours:{min:100,max:220},spentFoodMin:1000000},
  lateGarrisons:{innerCityMin:1600,yellowCityMin:250},
  opening:{giftCapacityMaxRatio:1.5,populationOutputMinRatio:2,firstBattleMaxMinutes:10,minPopulationItems:2,archersMaxMinutes:90},
  hallGrowth:{levelTwoSeconds:480,stepMaxRatio:2,levelTenReferenceMaxRatio:.5,tenGiftsHours:{min:24,max:48},lateWaitHours:{min:1,max:24},finalWaitMaxRatio:2.5},

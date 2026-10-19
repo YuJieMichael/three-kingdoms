@@ -14,6 +14,7 @@ test('chapter landmarks resolve on the map with unique coordinates and valid tro
 });
 test('actual raid victory does not unlock next chapter stage; actual occupation does',()=>{
   const env=loadGame(),{Game,Chapter}=env,s=Game.state;city(Game,{hall:4,drill:10,house:10,barracks:10});s.conquered.fort=true;s.army.archer=2500;s.res.food=1000000;
+  assert.equal(Game.deliverChapterTask('north_road'),null); // v0.35.3: 北原驿道 takes 5,000 food before any march
   const raid=battle(env,'north_road','raid',{archer:2500});assert.equal(raid.won,true);assert.equal(s.conquered.north_road,undefined);assert.ok(Game.attackBlocked('north_granary','raid'));assert.equal(Game.claimMission('chapter2_north_road'),'目标尚未达成');
   env.advance(90001);Game.dismissBattle();const occupation=battle(env,'north_road','occupy',{archer:s.army.archer});assert.equal(occupation.won,true);assert.equal(s.conquered.north_road,true);assert.equal(Game.attackBlocked('north_granary','occupy'),null);assert.equal(Chapter.progress(s).conquered,1);
 });
@@ -31,11 +32,14 @@ test('old saves keep existing claims and unlock chapter from county ownership on
 });
 // v0.35.1: the finale 北原城 is an ordinary city, so it takes three occupation wins (morale 100 → 65 → 30 → −5) and a second city slot.
 test('a mixed army can fight all six successive stages and restore the finished chapter',()=>{
-  const env=loadGame(123),{Game,Chapter}=env;city(Game,{hall:4,house:10,drill:10,barracks:10});Game.state.conquered.camp=true;Game.state.honors.noble=1;Game.state.res.food=10000000;
-  Object.assign(Game.state.army,{shield:600,spear:800,archer:2200,cavalry:400});
+  // v0.35.3: each stage's task: food for 北原驿道, a counter-attack at 北原粮仓, gathering for 寒川渡口 (fixture: the 3,000 is
+  // recorded directly), 40% spears at 朔风骑营 and a level-5 workshop with five rams at 玄石关.
+  const env=loadGame(123),{Game,Chapter}=env,T=env.evaluate('ChapterTasks');city(Game,{hall:4,house:10,drill:10,barracks:10,workshop:5});Game.state.conquered.camp=true;Game.state.honors.noble=1;Game.state.res.food=10000000;
+  Object.assign(Game.state.army,{shield:600,spear:800,archer:2200,cavalry:400,ram:5});
   for(const n of Chapter.nodes){
-    for(let attempt=0;!Game.state.conquered[n.id];attempt++){assert.ok(attempt<4,n.name);if(attempt)env.advance(Math.max(1,(Game.state.cooldowns[n.id]||0)-env.now()+1)+4*3600000);const army=Object.fromEntries(['shield','spear','archer','cavalry'].map(id=>[id,Game.state.army[id]]));const result=battle(env,n.id,'occupy',army,true);assert.equal(result.won,true,n.name);if(!Game.state.conquered[n.id]){env.advance(90001);Game.dismissBattle();}}
+    const d=T.def(n.id);if(d.kind==='deliver')assert.equal(Game.deliverChapterTask(n.id),null);if(d.kind==='gather')Game.state.stageTasks[n.id]={gathered:d.need};
+    for(let attempt=0;!Game.state.conquered[n.id];attempt++){assert.ok(attempt<4,n.name);if(attempt)env.advance(Math.max(1,(Game.state.cooldowns[n.id]||0)-env.now()+1)+4*3600000);const army=Object.fromEntries(['shield','spear','archer','cavalry',...(d.engines?['ram']:[])].map(id=>[id,Game.state.army[id]]));if(d.share?.spear){army.archer=Math.min(army.archer,Math.floor(army.spear*1.5)-army.shield-army.cavalry);}const result=battle(env,n.id,'occupy',army,true);assert.equal(result.won,true,n.name);if(!Game.state.conquered[n.id]){env.advance(90001);Game.dismissBattle();}}
     assert.equal(Game.claimMission('chapter2_'+n.id),null);env.advance(90001);Game.dismissBattle();assert.equal(Game.validSave(Game.state),true);Game.init();
   }
-  assert.equal(Chapter.progress(Game.state).conquered,6);assert.equal(Chapter.progress(Game.state).claimed,6);assert.equal(Chapter.progress(Game.state).next,null);assert.equal(Game.state.stats.victories,8);assert.equal(Game.cityList().length,2);
+  assert.equal(Chapter.progress(Game.state).conquered,6);assert.equal(Chapter.progress(Game.state).claimed,6);assert.equal(Chapter.progress(Game.state).next,null);assert.equal(Game.state.stats.victories,9);assert.equal(Game.cityList().length,2);
 });
