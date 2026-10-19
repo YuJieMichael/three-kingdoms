@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="b0a7c119e2cfe3e15be92546257a08c8b5f56652940d3821cc52fd9e13cb5795";
+export const runtimeHash="5edc115b24f86173ce8c23582561e34bf04f7baef3b5da964f79ceb8556111f9";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","faction-system.js","npc-defense.js","chapter-tasks.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -11740,6 +11740,18 @@ const RewardData = {
   // Growth tasks complement the ten hall gifts. Early prerequisites no longer
   // each pay another full development budget; later hall rewards fund trade.
   missionTuning:{opening:{gold:.15,resources:.04},hall:{gold:1,resources:1},advanced:{gold:.8,resources:1}},
+  // v0.37.0: fewer but weightier rewards (design/quick-specs/pacing-rework-2026-10-19.md §3). Chapter stages keep 30% of
+  // their resources and gold and the third and last stage of each chapter add an equipment box; every other mission keeps
+  // 50%. Jewels, speed-ups and troops are unchanged; claimed rewards stay claimed.
+  rewardScale:{chapter:.3,mission:.5},
+  chapterBoxes:{camp:'starterEquipmentBasic',north_ford:'starterEquipmentBasic',north_keep:'starterEquipmentBasic',luo_cavalry:'starterEquipmentFine',luo_citadel:'starterEquipmentFine',c4_xingyang:'starterEquipmentFine',c4_luoyang:'starterEquipmentFine'},
+  applyRewardScale(missions){
+    for(const m of missions){
+      const f=m.chapter||m.id==='camp'?this.rewardScale.chapter:this.rewardScale.mission;
+      m.reward=Object.fromEntries(Object.entries(m.reward).map(([id,n])=>[id,Math.round(n*f/10)*10]));
+      const box=this.chapterBoxes[m.node||m.id];if(box&&(m.chapter||m.id==='camp'))m.items={...(m.items||{}),[box]:(m.items?.[box]||0)+1};
+    }
+  },
   goldBricks:[
     {id:'goldBrick',name:'金砖',price:50,gold:50000},
     {id:'goldBrickLarge',name:'大金砖',price:180,gold:200000}
@@ -12042,18 +12054,19 @@ const OnboardingData={
   // Hall 2 is 8 minutes so the second starter supply arrives early (design/balance/opening-pace-2026-10-08.md).
   hallBuildSeconds(level,referenceSeconds){return level===2?480:level<=2?referenceSeconds:this.hallSeconds[level-1]??referenceSeconds;},
   jewels:{min:2,max:5,weights:{pearl:40,coral:25,glass:15,amber:8,agate:5,crystal:3,jadeite:2,jade:1,nightPearl:1}},
+  // v0.37.0: gifts 5–10 give half their former resources; 1–4 fund the archer opening and stay (design/quick-specs/pacing-rework-2026-10-19.md §3).
   gifts:[
     {level:1,title:'开府建衙',resources:{food:8000,wood:8000,stone:8000,iron:8000,gold:10000},items:{speed_build_15m:6,speed_build_1h:2,population:2}},
     {level:2,title:'筹备弓营',resources:{food:26000,wood:92000,stone:76000,iron:76000,gold:20000},items:{speed_build_1h:12,speed_build_3h:2,speed_research_1h:8,speed_research_3h:2,speed_train_1h:3,population:3}},
     {level:3,title:'步弓协同',resources:{food:80000,wood:80000,stone:120000,iron:80000,gold:30000},items:{speed_build_3h:2,speed_research_3h:3,speed_train_1h:4,population:2}},
     {level:4,title:'整军经略',resources:{food:120000,wood:120000,stone:180000,iron:120000,gold:40000},items:{speed_build_3h:1,speed_research_3h:4,speed_train_3h:3}},
     // Pearl 10 and coral 5 match the jewels needed for the 公士 noble rank, which 伍长 now requires.
-    {level:5,title:'百工兴盛',resources:{food:180000,wood:180000,stone:270000,iron:180000,gold:60000},items:{speed_build_8h:2,speed_research_8h:2,speed_train_3h:4,starterJewelBox:1},jewels:{pearl:10,coral:5}},
-    {level:6,title:'将才初成',resources:{food:260000,wood:260000,stone:390000,iron:260000,gold:90000},items:{speed_build_8h:2,speed_build_3h:1,speed_research_8h:3,speed_train_8h:2,starterJewelBox:1,starterEquipmentBasic:1}},
-    {level:7,title:'城坚兵锐',resources:{food:360000,wood:360000,stone:540000,iron:360000,gold:120000},items:{speed_build_8h:5,speed_research_8h:4,speed_train_8h:3,starterJewelBox:1}},
-    {level:8,title:'良将精装',resources:{food:480000,wood:480000,stone:720000,iron:480000,gold:160000},items:{speed_build_8h:8,speed_research_8h:5,speed_train_8h:4,starterJewelBox:1,starterEquipmentFine:1}},
-    {level:9,title:'进军州县',resources:{food:620000,wood:620000,stone:930000,iron:620000,gold:200000},items:{speed_build_15_30h:1,speed_build_8h:11,speed_build_15m:1,speed_research_8h:6,speed_train_8h:5,starterJewelBox:2,blueprint:2}},
-    {level:10,title:'经略一方',resources:{food:800000,wood:800000,stone:1200000,iron:800000,gold:270000},items:{speed_build_15_30h:4,speed_research_15_30h:2,speed_train_15_30h:2,starterJewelBox:2,starterEquipmentFine:1,blueprint:2}}
+    {level:5,title:'百工兴盛',resources:{food:90000,wood:90000,stone:135000,iron:90000,gold:30000},items:{speed_build_8h:2,speed_research_8h:2,speed_train_3h:4,starterJewelBox:1},jewels:{pearl:10,coral:5}},
+    {level:6,title:'将才初成',resources:{food:130000,wood:130000,stone:195000,iron:130000,gold:45000},items:{speed_build_8h:2,speed_build_3h:1,speed_research_8h:3,speed_train_8h:2,starterJewelBox:1,starterEquipmentBasic:1}},
+    {level:7,title:'城坚兵锐',resources:{food:180000,wood:180000,stone:270000,iron:180000,gold:60000},items:{speed_build_8h:5,speed_research_8h:4,speed_train_8h:3,starterJewelBox:1}},
+    {level:8,title:'良将精装',resources:{food:240000,wood:240000,stone:360000,iron:240000,gold:80000},items:{speed_build_8h:8,speed_research_8h:5,speed_train_8h:4,starterJewelBox:1,starterEquipmentFine:1}},
+    {level:9,title:'进军州县',resources:{food:310000,wood:310000,stone:465000,iron:310000,gold:100000},items:{speed_build_15_30h:1,speed_build_8h:11,speed_build_15m:1,speed_research_8h:6,speed_train_8h:5,starterJewelBox:2,blueprint:2}},
+    {level:10,title:'经略一方',resources:{food:400000,wood:400000,stone:600000,iron:400000,gold:135000},items:{speed_build_15_30h:4,speed_research_15_30h:2,speed_train_15_30h:2,starterJewelBox:2,starterEquipmentFine:1,blueprint:2}}
   ]
 };
 ManualData.shop.push(
@@ -16825,6 +16838,7 @@ const Game = (() => {
   ChapterData.extendMissions(missions);
   // Final values, after legacy reward scaling. Existing claims remain one-time.
   for(const [id,reward]of Object.entries({firstVictory:{food:6000,wood:6000,stone:6000,iron:6000,gold:6000},field:{food:4000,wood:3000,stone:4000,iron:3000,gold:8000},wildGeneral:{food:3000,wood:3000,stone:3000,iron:3000}}))missions.find(m=>m.id===id).reward=reward;
+  RewardData.applyRewardScale(missions);
   const missionClaimed=(id,s=state)=>s.missionClaims.includes(id);
   const missionReady=(m,s=state)=>!missionClaimed(m.id,s)&&m.check(s);
   const currentMission=()=>missions.find(m=>missionReady(m))||missions.find(m=>!missionClaimed(m.id));

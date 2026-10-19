@@ -7,6 +7,18 @@ const RewardData = {
   // Growth tasks complement the ten hall gifts. Early prerequisites no longer
   // each pay another full development budget; later hall rewards fund trade.
   missionTuning:{opening:{gold:.15,resources:.04},hall:{gold:1,resources:1},advanced:{gold:.8,resources:1}},
+  // v0.37.0: fewer but weightier rewards (design/quick-specs/pacing-rework-2026-10-19.md §3). Chapter stages keep 30% of
+  // their resources and gold and the third and last stage of each chapter add an equipment box; every other mission keeps
+  // 50%. Jewels, speed-ups and troops are unchanged; claimed rewards stay claimed.
+  rewardScale:{chapter:.3,mission:.5},
+  chapterBoxes:{camp:'starterEquipmentBasic',north_ford:'starterEquipmentBasic',north_keep:'starterEquipmentBasic',luo_cavalry:'starterEquipmentFine',luo_citadel:'starterEquipmentFine',c4_xingyang:'starterEquipmentFine',c4_luoyang:'starterEquipmentFine'},
+  applyRewardScale(missions){
+    for(const m of missions){
+      const f=m.chapter||m.id==='camp'?this.rewardScale.chapter:this.rewardScale.mission;
+      m.reward=Object.fromEntries(Object.entries(m.reward).map(([id,n])=>[id,Math.round(n*f/10)*10]));
+      const box=this.chapterBoxes[m.node||m.id];if(box&&(m.chapter||m.id==='camp'))m.items={...(m.items||{}),[box]:(m.items?.[box]||0)+1};
+    }
+  },
   goldBricks:[
     {id:'goldBrick',name:'金砖',price:50,gold:50000},
     {id:'goldBrickLarge',name:'大金砖',price:180,gold:200000}
