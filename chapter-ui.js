@@ -25,5 +25,5 @@ document.addEventListener('click',event=>{
 function chapterTaskHTML(id){
   const v=Game.chapterTask?.(id);if(!v)return '';const safe=typeof esc==='function'?esc:value=>String(value).replace(/[&<>"']/g,'');
   const cost=v.cost?Object.entries(v.cost).map(([k,n])=>Game.resources[k].name+' '+num(n)).join('、'):'';
-  return `<div class="chapter-task ${v.done?'is-done':''}"><span class="chapter-task-type">${safe(v.type)}</span><p>${safe(v.text)}</p>${v.done?'<p class="hint">✓ 任务已完成</p>':v.progress?`<p class="hint">进度：${safe(v.progress)}</p>`:''}${v.deliver?btn('运送 '+cost,'chapterDeliver',id,'small',!!ChapterTasks.deliverQuote(S(),id).reason):''}</div>`;
+  return `<div class="chapter-task ${v.done?'is-done':''}"><span class="chapter-task-type">${safe(v.type)}</span>${v.hall?`<span class="chapter-task-hall ${(S().buildings.hall||0)>=v.hall?'is-ready':''}">建议官府 ${v.hall} 级</span>`:''}<p>${safe(v.text)}</p>${v.done?'<p class="hint">✓ 任务已完成</p>':v.progress?`<p class="hint">进度：${safe(v.progress)}</p>`:''}${v.deliver?btn('运送 '+cost,'chapterDeliver',id,'small',!!ChapterTasks.deliverQuote(S(),id).reason):''}</div>`;
 }

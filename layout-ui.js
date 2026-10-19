@@ -38,12 +38,21 @@ function layoutLordPanelHTML(){
 // New players start with a few entries; the rest appear as the city grows (then stay).
 function layoutFeatureOpen(id){
   const s=S(),hall=s.buildings.hall||0,fought=s.stats.victories>0||s.reports.length>0||(s.cityDefense?.reports?.length||0)>0;
-  return ({inventory:Object.values(s.inventory||{}).some(n=>n>0)||Object.values(s.jewels||{}).some(n=>n>0)||hall>=2,queues:true,reports:fought,shop:true,research:(s.buildings.academy||0)>=1,market:(s.buildings.market||0)>=1,warCare:fought,territory:hall>=3||Object.keys(s.conquered||{}).length>0,defense:hall>=3||(s.buildings.wall||0)>=1,automation:hall>=3})[id]??true;
+  // v0.37.0: later systems open with the chapters (design/quick-specs/pacing-rework-2026-10-19.md §2); anything already used stays open.
+  const C=typeof ChapterData!=='undefined'?ChapterData:null,cities=Game.cityList?.().length||1;
+  return ({inventory:Object.values(s.inventory||{}).some(n=>n>0)||Object.values(s.jewels||{}).some(n=>n>0)||hall>=2,queues:true,reports:fought,shop:true,research:(s.buildings.academy||0)>=1,market:(s.buildings.market||0)>=1,warCare:fought,territory:hall>=3||Object.keys(s.conquered||{}).length>0,defense:hall>=3||(s.buildings.wall||0)>=1,automation:hall>=3,
+    daily:fought,gather:!!C?.chapterOneDone(s)||Object.keys(s.gatherings||{}).length>0||(s.heritageHistory||[]).some(r=>r.kind==='gather'),
+    cities:cities>1,governance:hall>=3,orders:!!s.conquered?.north_keep||Object.values(s.warOrders?.cleared||{}).some(n=>n>0),
+    factions:!!C?.completed(s,2)||!!s.realm?.factions?.enabled,battlefield:!!C?.completed(s,3)||!!s.battlefields?.run,
+    epic:!!C?.completed(s,3)||!!s.epic?.legacyAccess||(s.epic?.kills||0)>0||(s.epic?.troops||0)>0||(s.epic?.treasures||0)>0,
+    named:!!C?.countyOpen(s)||(Game.cityList?.()||[]).some(c=>c.node&&c.node.startsWith('named_')),legend:!!C?.countyOpen(s)||!!s.legendary?.qinglong?.obtainedAt})[id]??true;
 }
 let layoutOpenedFeatures=null;
 function layoutAnnounceFeatures(){
-  const names={inventory:'宝物',queues:'营造',reports:'报告',shop:'商城',research:'科技',market:'交易',warCare:'伤兵',territory:'领地',defense:'城防',automation:'自动助手'},open=Object.keys(names).filter(layoutFeatureOpen);
-  if(layoutOpenedFeatures){const fresh=open.filter(id=>!layoutOpenedFeatures.includes(id));if(fresh.length&&typeof toast==='function')setTimeout(()=>toast('新功能开放：'+fresh.map(id=>names[id]).join('、')),0);}
+  const names={inventory:'宝物',queues:'营造',reports:'报告',shop:'商城',research:'科技',market:'交易',warCare:'伤兵',territory:'领地',defense:'城防',automation:'自动助手',daily:'每日任务',gather:'野地采集',cities:'治下城市',governance:'城务与薪俸',orders:'战役军令',factions:'周边势力',battlefield:'历史战场',epic:'黄巾史诗',named:'名城版图'},open=Object.keys(names).filter(layoutFeatureOpen);
+  // One line on what each newly opened system is for.
+  const intro={daily:'每天 05:00 刷新任务板，完成换资源与珍宝',gather:'占领野地并留守部队，可在野地采集资源与珠宝',cities:'可切换城市、运输资源与调兵',orders:'三路十阶讨伐，赚军功换装备与加速',factions:'周边势力营地会来袭，也可主动讨伐',battlefield:'黄巾之乱、南蛮入侵的连战战场',epic:'完成四项史诗开启第四章讨伐董卓',named:'县城、郡城与名将城池出现在地图上'};
+  if(layoutOpenedFeatures){const fresh=open.filter(id=>!layoutOpenedFeatures.includes(id));if(fresh.length&&typeof toast==='function')setTimeout(()=>toast('新功能开放：'+fresh.map(id=>names[id]+(intro[id]?'（'+intro[id]+'）':'')).join('；')),0);}
   layoutOpenedFeatures=open;
 }
 function layoutShell(){
@@ -75,8 +84,8 @@ const LAYOUT_MORE_TABS=[['war','征战'],['city','城务'],['tools','辅助']];
 function layoutMoreModal(){
   const unread=Game.automation.unread(S());
   const groups={
-    war:btn('征程','journeyOpen','','secondary')+btn('战场','battlefieldOpen','','secondary')+btn('征战与成长','webEditionHub','','secondary')+btn('掠夺找资源','webRaids','','secondary',WebEdition.shared())+btn('名城版图','namedCities','','secondary')+btn('新手补给 · '+S().onboarding.claims.length+'/10','onboardingGifts','','secondary'),
-    city:btn('治下城市','citySwitchList','','secondary')+btn('领地与驻军','classicTerritory','','secondary')+btn('来袭与守城','npcDefense','','secondary')+btn('城务与薪俸','governance','','secondary')+btn('伤兵营','warCare','','secondary')+btn('城池详情','classicInfo','','secondary'),
+    war:btn('征程','journeyOpen','','secondary')+(layoutFeatureOpen('battlefield')?btn('战场','battlefieldOpen','','secondary'):'')+btn('征战与成长','webEditionHub','','secondary')+btn('掠夺找资源','webRaids','','secondary',WebEdition.shared())+(layoutFeatureOpen('named')?btn('名城版图','namedCities','','secondary'):'')+btn('新手补给 · '+S().onboarding.claims.length+'/10','onboardingGifts','','secondary'),
+    city:(layoutFeatureOpen('cities')?btn('治下城市','citySwitchList','','secondary'):'')+btn('领地与驻军','classicTerritory','','secondary')+(layoutFeatureOpen('defense')?btn('来袭与守城','npcDefense','','secondary'):'')+(layoutFeatureOpen('governance')?btn('城务与薪俸','governance','','secondary'):'')+btn('伤兵营','warCare','','secondary')+btn('城池详情','classicInfo','','secondary'),
     tools:(layoutFeatureOpen('automation')?btn('自动助手'+(unread?' · '+unread+' 未读':''),'automationOpen','','secondary'):'')+btn('消息记录','webMessages','','secondary')+btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','secondary')
   };
   const tabs=LAYOUT_MORE_TABS.map(([id,label])=>`<button role="tab" id="more-tab-${id}" aria-controls="more-category-panel" aria-selected="${layoutMoreCategory===id}" tabindex="${layoutMoreCategory===id?0:-1}" data-action="layoutMoreTab" data-id="${id}">${label}${id==='tools'&&unread?'<i aria-label="有未读记录"></i>':''}</button>`).join('');

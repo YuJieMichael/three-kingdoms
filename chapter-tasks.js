@@ -17,10 +17,14 @@ const ChapterTasks=(()=>{
     north_keep:{kind:'city',type:'攻城',text:'攻取北原城：每次占领胜利民心 −35，低于 0 易主'},
     luo_outpost:{kind:'deliver',type:'招降',cost:{gold:50000},army:{spear:150,shield:100},text:'先以黄金 50,000 招降孟衡麾下一部（枪兵 150、盾兵 100 归队），再占领洛水前哨'},
     luo_gate:{kind:'siege',type:'器械破门',engines:5,guideArmy:{archer:1650,shield:525,ram:5},text:'带冲车或投石车至少 5 辆（洛水前哨的盟军冲车）攻破城门，占领河洛东门'},
-    luo_cavalry:{kind:'army',type:'兵种',share:{cavalry:.5},rounds:6,guideArmy:{cavalry:1100,archer:800,shield:300},text:'骑兵（轻骑+铁骑）占出征士兵 ≥ 50%，6 回合内攻下赤垒外营'},
+    luo_cavalry:{kind:'army',type:'兵种',share:{cavalry:.5},rounds:6,guideArmy:{cavalry:900,archer:600,shield:250},text:'骑兵（轻骑+铁骑）占出征士兵 ≥ 50%，6 回合内攻下赤垒外营'},
     luo_wall:{kind:'deliver',type:'委托',cost:{iron:20000},text:'先向城外工坊送去铁锭 20,000 打造攻城器具，再占领白石城垣'},
     luo_citadel:{kind:'occupy',type:'攻城',text:'破城并占领河洛内城'}
   };
+  // v0.37.0: suggested hall level per stage; the growth guide fights a stage as soon as the hall reaches it
+  // (design/quick-specs/pacing-rework-2026-10-19.md §1). Guidance only, never a gate.
+  const hallTargets={field:1,wood:2,pass:3,mine:4,camp:5,north_road:5,north_granary:6,north_ford:6,north_camp:7,north_pass:7,north_keep:8,luo_outpost:8,luo_gate:8,luo_cavalry:8,luo_wall:9,luo_citadel:9};
+  const hallTarget=id=>hallTargets[id]??10;
   const ids=Object.keys(defs),def=id=>defs[id]||null;
   const object=v=>!!v&&typeof v==='object'&&!Array.isArray(v),int=n=>Number.isSafeInteger(n)&&n>=0;
   const soldiers=army=>Object.entries(army||{}).filter(([id])=>!['scout','worker','wagon'].includes(id)).reduce((n,[,v])=>n+(v||0),0);
@@ -89,11 +93,11 @@ const ChapterTasks=(()=>{
     else if(d.kind==='defend')progress=r.pending?'反扑来袭，待守城':'';
     else if(d.kind==='build')progress='工匠作坊 '+(s.buildings?.[d.building]||0)+' / '+d.level+' 级';
     else if(d.kind==='scout')progress=apiArg.intel?.(id)?.exact?'已有精确报告':'未取得精确报告';
-    return {id,kind:d.kind,type:d.type,text:d.text,progress,done:cleared,pending:!!r.pending,deliver:d.kind==='deliver'&&!r.delivered&&!cleared&&!blocked(s,id),cost:d.cost?{...d.cost}:null,guideArmy:d.guideArmy?{...d.guideArmy}:null};
+    return {id,hall:hallTarget(id),kind:d.kind,type:d.type,text:d.text,progress,done:cleared,pending:!!r.pending,deliver:d.kind==='deliver'&&!r.delivered&&!cleared&&!blocked(s,id),cost:d.cost?{...d.cost}:null,guideArmy:d.guideArmy?{...d.guideArmy}:null};
   }
   function valid(s){
     const t=s?.stageTasks;if(!object(t))return false;
     return Object.entries(t).every(([id,r])=>Object.hasOwn(defs,id)&&object(r)&&Object.keys(r).every(k=>['done','count','delivered','pending','gathered'].includes(k))&&(r.done===undefined||r.done===true)&&(r.delivered===undefined||r.delivered===true)&&(r.pending===undefined||r.pending===true)&&(r.count===undefined||int(r.count)&&r.count<=(defs[id].need||0))&&(r.gathered===undefined||int(r.gathered)&&r.gathered<=(defs[id].need||0)));
   }
-  return {prerequisite,defs,ids,def,init,done,dispatchBlocked,counterArmy,victory,deliverQuote,deliver,onGather,view,valid,soldiers,groupCount,engines,plotLevel};
+  return {hallTargets,hallTarget,prerequisite,defs,ids,def,init,done,dispatchBlocked,counterArmy,victory,deliverQuote,deliver,onGather,view,valid,soldiers,groupCount,engines,plotLevel};
 })();

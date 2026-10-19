@@ -23,7 +23,8 @@ const GrowthGuide=(()=>{
     const hours=hungry.food/-hungry.rate,left=hungry.food<=0?'已经断粮，断粮 1 小时后驻军每小时逃散 1%':'存粮约 '+(hours<1?Math.max(1,Math.round(hours*60))+' 分钟':hours.toFixed(1)+' 小时')+'后耗尽，之后驻军每小时逃散 1%';
     return {kind:'supply',id:hungry.id,source:source?.id||'',rate:Math.round(hungry.rate),title:'为'+hungry.name+'建立运粮线',reason:hungry.name+'每小时耗粮 '+Math.round(-hungry.rate)+'，'+left+'。'+(source?'官府自动调粮赶不上消耗时，可从'+source.name+'（每小时 +'+Math.round(source.rate)+'）另建运粮线（需要辎重车），或召回部队、在新城开垦农田。':'各城都没有富余粮食，官府无法自动调粮。请召回部队、多建农田，或减少驻军。')};
   }
-  function model(game){
+  // opts.hallFirst keeps the pre-v0.37 hall-to-10 route for the hall-growth economy measurements only.
+  function model(game,opts={}){
     const s=game.state,gift=OnboardingSystem.available(s)[0];
     if(gift)return {kind:'gift',id:gift.level,title:'领取新手补给 · 第 '+gift.level+' 阶',reason:'官府等级已达标，领取这一阶新手补给的资源和道具'+(gift.level===1?'；领取后任务「奉诏立城」即可完成。':'，为下一段成长备齐补给。')};
     const hungry=supplyGoal(game);if(hungry)return hungry;
@@ -142,7 +143,10 @@ const GrowthGuide=(()=>{
         return {kind:'orders',id:'repeat',title:'军令循环 · 选择补给与战术目标',reason:'三路十阶与全部战术挑战已达成。按军功兑换需求选择复战路线；培养将领、强化装备，并留意补兵资源与耗粮。'};
       }
       if(!game.landmarkVisible(id))id=game.nextLandmark()?.id||id;
-      const n=game.getNode(id),archers=chapter===5?300:chapter===1?(n.level<=1?60:n.level===2?100:160):chapter===2?910:chapter===4?3000:1650,front=chapter===5?60:chapter===1?(id==='pass'||id==='mine'?30:0):chapter===2?325:chapter===4?1500:525,technology=chapter===5?3:chapter===1?(n.level<=1?1:2):5;
+      const n=game.getNode(id);let archers=chapter===5?300:chapter===1?(n.level<=1?60:n.level===2?100:160):chapter===2?910:chapter===4?3000:1650,front=chapter===5?60:chapter===1?(id==='pass'||id==='mine'?30:0):chapter===2?325:chapter===4?1500:525,technology=chapter===5?3:chapter===1?(n.level<=1?1:2):5;
+      // v0.37.0: chapters two and three prepare for each stage's own garrison and suggested hall, so the early stages of
+      // a chapter are not held back by the army and research its last stage needs (pacing-rework-2026-10-19.md §1).
+      if((chapter===2||chapter===3)&&!opts.hallFirst){const foes=Object.entries(game.attackInfo(id,'occupy').army||{}).filter(([k])=>!['ballista','militia'].includes(k)).reduce((t,[,v])=>t+v,0);archers=Math.min(archers,Math.ceil(foes*1.3/10)*10);front=Math.min(front,Math.ceil(foes*.45/5)*5);technology=Math.min(5,Math.max(2,ChapterTasks.hallTarget(id)-3));}
       // v0.35.3: each chapter stage has its own task; the guide gives that task's next concrete step.
       const task=game.chapterTask?.(id),def=task&&!task.done?ChapterTasks.def(id):null;
       if(def){const early=taskStep(id,n,task,def,'before');if(early)return early;}
@@ -183,7 +187,9 @@ const GrowthGuide=(()=>{
       return {kind:'dispatch',id:target.id,general,count:30,army:{militia:30},warmup:true,title:'派 30 名义兵掠夺 '+target.name,reason:'这块 1 级野地守军很少，30 名义兵足以取胜。确认主将、人数和行军粮食后出发；掠夺不占领，打完部队自动返城。'};
     }
     if(phase==='battle')return {...firstBattle(),phase};
-    if(phase==='hall'){if(s.buildings.hall<10){const staff=staffing();if(staff)return {...staff,phase};const goal=resolve('building','hall',s.buildings.hall+1);if(goal)return {...goal,phase,reason:'弓兵已经成队。推进官府 '+(s.buildings.hall+1)+' 级，解锁下一阶补给；'+goal.reason};}return {...campaign(),phase:'campaign'};}
+    // v0.37.0: build and fight in turns — once the hall reaches the next stage's suggested level, go fight it.
+    // A hall already being raised to the suggested level counts: fight the stage while it builds.
+    if(phase==='hall'){const next=game.nextLandmark?.(),hallSoon=s.buildings.hall+(s.buildQueue.some(q=>q.id==='hall')?1:0),ready=!opts.hallFirst&&next&&hallSoon>=ChapterTasks.hallTarget(next.id);if(s.buildings.hall<10&&!ready){const staff=staffing();if(staff)return {...staff,phase};const goal=resolve('building','hall',s.buildings.hall+1);if(goal)return {...goal,phase,reason:'弓兵已经成队。推进官府 '+(s.buildings.hall+1)+' 级，解锁下一阶补给；'+goal.reason};}return {...campaign(),phase:'campaign'};}
     const staff=staffing();if(staff)return staff;
     for(const [id,level]of [['house',2],['farm',1],['lumber',2],['quarry',2],['mine',3],['hall',2],['drill',1],['barracks',1]]){const goal=resolve('building',id,level);if(goal)return goal;}
     const drill=warmup();if(drill)return drill;

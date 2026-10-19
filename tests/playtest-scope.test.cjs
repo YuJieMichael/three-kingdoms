@@ -21,12 +21,20 @@ test('playtest build hides online entries, the test-supply tool and unusable sho
   assert.deepEqual([plain.online,plain.testSupplies,plain.unavailableShopItems],[false,false,false]);assert.deepEqual([dev.online,dev.testSupplies,dev.unavailableShopItems],[true,true,true]);
   assert.doesNotMatch(fs.readFileSync(path.join(root,'index.html'),'utf8'),/PvP/);
 });
+// v0.37.0: daily tasks open after the first fight, war orders after 北原城, the epic after chapter three.
 test('task tabs and growth routes open with progress; automation from hall 3',()=>{
-  const e=loadGame(),g=e.Game;e.evaluate('var S=()=>Game.state;'+line('progression-ui.js','function taskTabOpen')+line('classic-ui.js','function growthStageOpen')+line('layout-ui.js','function layoutFeatureOpen').replace(/$/,'')+fs.readFileSync(path.join(root,'layout-ui.js'),'utf8').split('\n').slice(fs.readFileSync(path.join(root,'layout-ui.js'),'utf8').split('\n').findIndex(l=>l.startsWith('function layoutFeatureOpen'))+1).slice(0,3).join('\n'));
+  const e=loadGame(),g=e.Game,block=(file,start)=>{const lines=fs.readFileSync(path.join(root,file),'utf8').split('\n'),from=lines.findIndex(l=>l.startsWith(start));return lines.slice(from,lines.findIndex((l,k)=>k>=from&&l==='}')+1).join('\n');};
+  e.evaluate('var S=()=>Game.state;'+line('progression-ui.js','function taskTabOpen')+line('classic-ui.js','function growthStageOpen')+block('layout-ui.js','function layoutFeatureOpen'));
   const open=id=>e.evaluate(`taskTabOpen(${JSON.stringify(id)})`),stage=id=>e.evaluate(`growthStageOpen(${JSON.stringify(id)})`);
-  assert.deepEqual(['growth','daily','chapter','honors','epic','orders'].map(open),[true,true,true,false,false,false]);
+  assert.deepEqual(['growth','daily','chapter','honors','epic','orders'].map(open),[true,false,true,false,false,false]);
   assert.deepEqual(['立城补给','城池经营','书院研习','整军出征','征战里程'].map(stage),[true,true,false,false,false]);
   assert.equal(e.evaluate("layoutFeatureOpen('automation')"),false);
-  city(g,{hall:3,academy:1,barracks:1,drill:1});g.state.conquered.camp=true;g.state.conquered.fort=true;
-  assert.ok(['honors','epic','orders'].every(open));assert.ok(['书院研习','整军出征','征战里程'].every(stage));assert.equal(e.evaluate("layoutFeatureOpen('automation')"),true);
+  // v0.37.0: later systems stay hidden until their chapter (pacing-rework-2026-10-19.md §2).
+  const feature=id=>e.evaluate(`layoutFeatureOpen(${JSON.stringify(id)})`),later=['gather','factions','battlefield','named'];
+  assert.deepEqual(later.map(feature),[false,false,false,false]);
+  city(g,{hall:3,academy:1,barracks:1,drill:1});g.state.stats.victories=1;g.state.conquered.camp=true;
+  assert.ok(['daily','honors'].every(open));assert.ok(['书院研习','整军出征','征战里程'].every(stage));assert.equal(e.evaluate("layoutFeatureOpen('automation')"),true);
+  assert.equal(open('orders'),false);g.state.conquered.north_keep=true;assert.equal(open('orders'),true);
+  assert.equal(open('epic'),false);for(const n of [...e.Chapter.nodes,...e.Chapter.chapterThreeNodes])g.state.conquered[n.id]=true;assert.equal(open('epic'),true);
+  assert.deepEqual(later.map(feature),[true,true,true,false],'gathering, factions and battlefields open by chapter three; named cities wait for the county');
 });
