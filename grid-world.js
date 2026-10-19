@@ -174,6 +174,12 @@ document.addEventListener('click',event=>{
   if(action==='mapLandmark'){if(!Game.landmarkVisible(id)){toast('据点尚未发现');return;}const n=Game.getNode(id);if(!n)return;if(n.orderRoute){selectedNode=n.id;render();return;}centerWorld(n.x,n.y);}
   if(action==='mapJump'){const x=Number(document.getElementById('map-x').value),y=Number(document.getElementById('map-y').value);if(!Number.isInteger(x)||!Number.isInteger(y)||x<0||y<0||x>63||y>63){toast('坐标请输入 0–63 的整数');return;}centerWorld(x,y);}
 });
+function mapSettle(x,y){
+  const grid=document.querySelector('.world-grid');if(!grid||!(Math.abs(x)>=1||Math.abs(y)>=1))return;
+  grid.classList.remove('map-settling');grid.style.transform=`translate3d(${x}px,${y}px,0)`;void grid.offsetWidth;
+  grid.classList.add('map-settling');grid.style.transform='';
+  const done=()=>grid.classList.remove('map-settling');grid.addEventListener('transitionend',done,{once:true});setTimeout(done,300);
+}
 document.addEventListener('pointerdown',event=>{
   const grid=event.target.closest('.world-grid');if(!grid||event.button>0)return;
   const cell=grid.querySelector('.world-cell')?.getBoundingClientRect(),fallback=grid.getBoundingClientRect().width/(worldSpan()+.4);
@@ -188,7 +194,10 @@ document.addEventListener('pointerup',event=>{
   if(!mapDrag||event.pointerId!==mapDrag.pointer)return;
   const drag=mapDrag;mapDrag=null;drag.grid.classList.remove('dragging');drag.grid.style.transform='';
   const dx=Math.round((event.clientX-drag.x)/drag.cellX),dy=Math.round((event.clientY-drag.y)/drag.cellY);
-  if(drag.moved&&(dx||dy)){suppressMapClick=true;centerWorld(drag.start.x-dx,drag.start.y-dy,false,true);setTimeout(()=>suppressMapClick=false,300);}
+  if(drag.moved&&(dx||dy)){suppressMapClick=true;centerWorld(drag.start.x-dx,drag.start.y-dy,false,true);setTimeout(()=>suppressMapClick=false,300);
+    // v0.35.2: the view moves by whole cells; the new map starts where the finger left it and glides the leftover part of a cell.
+    mapSettle(event.clientX-drag.x-dx*drag.cellX,event.clientY-drag.y-dy*drag.cellY);}
+  else if(drag.moved)mapSettle(event.clientX-drag.x,event.clientY-drag.y);
 });
 document.addEventListener('pointercancel',()=>{if(mapDrag){mapDrag.grid.classList.remove('dragging');mapDrag.grid.style.transform='';}mapDrag=null;});
 document.addEventListener('click',event=>{if(suppressMapClick){event.preventDefault();event.stopImmediatePropagation();}},{capture:true});
