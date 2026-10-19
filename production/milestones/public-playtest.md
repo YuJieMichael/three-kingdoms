@@ -1,6 +1,7 @@
 # Milestone: 公开试玩版（Public Playtest）
 
-> **Status**: Approved（负责人 2026-10-08 批准；同时选定隐藏范围检查建议的功能、图纸改为玩法掉落）
+> **Status**: Cancelled（负责人 2026-10-18 取消：先完成开局、章节、晋升、攻城与兵种重做，见 `design/quick-specs/progression-rework-2026-10-18.md`；之后另定试玩日期）
+> 原状态：Approved（负责人 2026-10-08 批准；同时选定隐藏范围检查建议的功能、图纸改为玩法掉落）
 > **提出**: 2026-10-08（依据 `production/retrospectives/retro-sprint-001-003-2026-10-08.md`）
 > **范围评估**: `production/scope-checks/scope-check-public-playtest-2026-10-08.md`
 

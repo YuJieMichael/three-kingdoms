@@ -131,12 +131,20 @@ function webUpdateMusic(){
 function webAudioModal(){
   showModal('音乐设置',`<p>城内：Temple of the Manes<br>战斗：Five Armies</p><label for="web-volume">音量</label><input id="web-volume" type="range" min="0" max="100" value="${Math.round(webAudioVolume*100)}"><p class="hint">Kevin MacLeod（incompetech.com） · CC BY 4.0，完整曲目。<a href="assets/migrated/audio/CREDITS.txt" target="_blank" rel="noopener">曲目与授权</a></p>`,btn('关闭','close','','secondary')+btn(webAudioEnabled?'关闭音乐':'开启音乐','webAudioToggle'));
 }
+// 开局创建君主：君主名、旗号、城名与州（design/quick-specs/progression-rework-2026-10-18.md §1）。
+function provinceChoicesHTML(selected){return `<div class="province-grid" role="radiogroup" aria-label="选择州">${OnboardingData.provinces.map(p=>`<label class="province-card"><input type="radio" name="founding-province" value="${p.id}" ${p.id===selected?'checked':''}><strong>${esc(p.name)}</strong><span>${esc(p.desc)}</span></label>`).join('')}</div>`;}
+function foundingModal(error=''){
+  const d=OnboardingData.founding.defaults,keep=id=>document.getElementById(id)?.value;
+  showModal('创建君主',`<div class="founding-form"><p class="sub">乱世将起。先定下你的名号与根据地，再领兵迎击黄巾。</p>${error?`<p class="notice">${esc(error)}</p>`:''}<label class="label" for="founding-ruler">君主名（2–6 字）</label><input id="founding-ruler" maxlength="6" value="${esc(keep('founding-ruler')??d.ruler)}"><label class="label" for="founding-banner">旗号（1 字）</label><input id="founding-banner" maxlength="1" value="${esc(keep('founding-banner')??d.banner)}"><label class="label" for="founding-city">主城名（2–6 字）</label><input id="founding-city" maxlength="6" value="${esc(keep('founding-city')??d.city)}"><p class="label">选择州 · 开局加成永久生效</p>${provinceChoicesHTML(document.querySelector('[name="founding-province"]:checked')?.value||'jizhou')}<p class="hint">选州不改变出生位置。名字之后可用改名令修改。</p></div>`,btn('确认，迎击黄巾','foundRealmConfirm'));
+}
+function provinceChooseModal(){showModal('选择州',`<p class="sub">旧存档可补选一次州，加成立即生效、之后不能更改。</p>${provinceChoicesHTML('')}`,btn('取消','close','','secondary')+btn('确认选择','provinceChooseConfirm'));}
 function webFinishOpening(){Game.endTacticalLesson();modal.close();page='city';render();guideGo();}
 function webOpeningModal(){
   const error=Game.startTacticalLesson('opening_battle');if(error){toast(error);return;}
   tacticalLessonModal();
 }
 function webOpeningAuto(){
+  if(!modal.open&&!WebEdition.shared()&&S().founding&&!S().founding.done&&!S().battle&&!Game.allExpeditions().length&&!S().stats.victories){foundingModal();return;}
   if(modal.open||WebEdition.shared()||Game.lessonInfo()||S().stats.victories>0||S().onboarding.firstBattle==='complete'||S().battle||Game.allExpeditions().length)return;
   const key='shanhe-opening-v1';
   try{if(localStorage.getItem(key)==='seen')return;localStorage.setItem(key,'seen');}catch{return;}
@@ -208,6 +216,9 @@ showModal=function(...args){if(webBattleWindowOpen&&!String(args[1]).includes('d
 document.addEventListener('click',event=>{
   const el=event.target.closest('[data-action]');if(!el||el.disabled)return;
   const action=el.dataset.action,id=el.dataset.id;
+  if(action==='foundRealmConfirm'){const v=id=>document.getElementById(id)?.value||'',error=Game.foundRealm({ruler:v('founding-ruler'),banner:v('founding-banner'),city:v('founding-city'),province:document.querySelector('[name="founding-province"]:checked')?.value});if(error){foundingModal(error);return;}modal.close();render();webOpeningModal();}
+  if(action==='provinceChoose')provinceChooseModal();
+  if(action==='provinceChooseConfirm'){const error=Game.chooseProvince(document.querySelector('[name="founding-province"]:checked')?.value);if(actResult(error,'已选择州，加成生效'))modal.close();}
   if(action==='webBattleWindow'){webClosedBattle=null;webBattleWindowOpen=true;webRenderedRounds.delete(S().battle);webScrollToRound=false;render();}
   if(action==='webBattleClose'){webBattleWindowOpen=false;webClosedBattle=S().battle;modal.close();render();}
   if(action==='webEditionHub')showModal('征战与成长',`<div class="settings-row">${btn('首战教学','webOpening','','block',WebEdition.shared())}${btn('工程与军需','webSupplies','','block',WebEdition.shared())}${btn('晋升材料筹备','webGrowth','','block',WebEdition.shared())}${btn('征战补给模式','webConquest','','block',WebEdition.shared())}${btn('战后整备','webReplenish','','secondary block')}</div><p class="hint">本机扩展用于自己的征战进度。共享世界的资源与行动由原在线服务处理。</p>`,btn('关闭','close','','secondary'));
