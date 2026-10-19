@@ -56,7 +56,10 @@ test('scene switch and command dock keep city areas and reports/shop one tap awa
  for(const action of ['classicQueues','manualInventory','classicMission'])assert.match(html,new RegExp('data-action="'+action+'"'));
  const more=JSON.parse(e.evaluate("JSON.stringify(LAYOUT_MORE_TABS.map(([id])=>{layoutSelectMoreCategory(id);return document.getElementById('modal-body').innerHTML;}))")).join('');
  for(const page of ['reports','shop']){assert.match(dock,new RegExp('data-action="classicNav" data-id="'+page+'"'));assert.doesNotMatch(more,new RegExp('data-action="classicNav" data-id="'+page+'"'));}
- for(const action of ['namedCities','governance','warCare'])assert.match(more,new RegExp('data-action="'+action+'"'));
+ for(const action of ['governance','warCare'])assert.match(more,new RegExp('data-action="'+action+'"'));
+ // v0.37.0: 名城版图 stays hidden until the county era (pacing-rework-2026-10-19.md §2).
+ assert.doesNotMatch(more,/data-action="namedCities"/);e.evaluate('ChapterData.countyOpen=()=>true');
+ assert.match(e.evaluate("layoutSelectMoreCategory('war');document.getElementById('modal-body').innerHTML"),/data-action="namedCities"/);
  assert.equal(JSON.stringify(e.g.state),before,'navigation views must not change game progress');
 });
 // v0.34.7 (7e75183) moved the gift shortcut into the lord panel (layout-gift-button); the More entry lost "已领" in v0.34.2 (4ea959e)
