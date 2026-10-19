@@ -91,6 +91,35 @@ const GrowthGuide=(()=>{
       if(s.tactics.archer.command!=='advance')return {kind:'tactics',id:'archer',title:'设置弓兵向前，进入射程再坚守',reason:'出征战术中为弓箭兵选择「向前」。战场内可随时改令；「坚守」适合敌军已在射程内时保持距离。不会替你修改保存的战术。'};
       return {kind:'dispatch',id:target,general:free[0],count:OnboardingData.archerTarget,cost:{food:Math.ceil(OnboardingData.archerTarget*1.2+n.time*2)},title:'选择主将与弓兵，确认河畔荒田首战',reason:'查看情报后先掠夺练习：选空闲主将与 30 弓兵，斥候留城。已有枪兵可少量保护前排；确认人数、行军粮食和实际入库预览后开始行军。'};
     }
+    function taskStep(id,n,task,def,phase){
+      if(phase==='before'){
+        if(def.kind==='deliver'&&task.deliver){const q=ChapterTasks.deliverQuote(s,id);return {kind:'chapterDeliver',id,chapter:n.chapter,cost:q.cost,ready:!q.reason,title:'【'+def.type+'】'+n.name+' · '+Object.entries(q.cost).map(([k,v])=>game.resources[k].name+' '+v).join('、'),reason:def.text+'。'+(q.reason?'当前'+q.reason+'，先积攒或到市场补足。':'资源已够，到任务册确认运送，然后出征。')};}
+        if(def.kind==='gather'&&ChapterTasks.prerequisite(s,id))return gatherStep(id,n,task,def);
+        if(def.plot){const goal=resolve('building',def.plot,def.level);if(goal)return {...goal,reason:'章节任务「'+n.name+'」：'+def.text+'。'+goal.reason};}
+        if(def.kind==='build'&&def.building){const goal=resolve('building',def.building,def.level);if(goal)return {...goal,reason:'章节任务「'+n.name+'」：'+def.text+'。'+goal.reason};}
+        return null;
+      }
+      if(def.kind==='scout'&&!game.intel(id)?.exact){
+        const mission=s.scoutQueue.find(m=>m.node===id);
+        if(mission)return {kind:'scoutMarch',id,end:mission.end,title:mission.phase==='out'?'斥候正在前往'+n.name:'等待斥候返城',reason:'章节任务要求精确侦察报告；返城后若精度不够，增加斥候再派。'};
+        let count=1;for(;count<64&&(game.scoutQuote(id,count)?.quality||0)<3;count++);
+        const scouts=train('scout',count,'精确侦察'+n.name+'需要斥候 '+count+' 名（侦察科技越高需要越少）。');if(scouts)return scouts;
+        return {kind:'scout',id,count,cost:game.scoutQuote(id,count)?.cost,title:'【侦察】派 '+count+' 名斥候精确侦察'+n.name,reason:def.text+'。报告有一段有效期，取得后尽快出征占领。'};
+      }
+      return null;
+    }
+    // A gather stage: occupy a gatherable wild tile, station troops there, gather, and collect.
+    function gatherStep(id,n,task,def){
+      const active=Object.keys(s.gatherings||{})[0];
+      if(active){const q=HeritageSystem.gatherQuote(s,active);if(q?.ready&&(q.received>=def.need-(s.stageTasks?.[id]?.gathered||0)||q.cap||q.received>=q.carry))return {kind:'gatherCollect',id:active,title:'【采集】收获'+game.getNode(active).name+'的采集',reason:def.text+'。进度：'+task.progress+'。收获后计入任务。'};return {kind:'gatherWait',id:active,end:Date.now()+(q?.ready?3600000:Math.max(60000,3600000-(q?.elapsed||0))),title:'【采集】'+game.getNode(active).name+'正在采集',reason:def.text+'。进度：'+task.progress+'。采集满 1 小时后可收获，越久越多（最多 24 小时、受负重限制）。'};}
+      const stationed=Object.entries(s.garrisons).find(([key,g])=>g.phase==='stationed'&&!HeritageSystem.gatherReason(s,key));
+      if(stationed)return {kind:'gatherStart',id:stationed[0],title:'【采集】在'+game.getNode(stationed[0]).name+'开始采集',reason:def.text+'。驻军越多、野地等级越高，采集越快。'};
+      if(game.allExpeditions().some(e=>e.mode==='occupy'&&game.getNode(e.node)?.wild))return {kind:'battleMarch',id:game.allExpeditions()[0].node,end:game.allExpeditions()[0].end,title:'驻军正在前往野地',reason:'抵达并获胜后留守，再开始采集。'};
+      const home=game.currentHome?.()||game.home,targets=[];for(let y=home.y-6;y<=home.y+6;y++)for(let x=home.x-6;x<=home.x+6;x++){const t=game.getNode('wild_'+x+'_'+y);if(t?.wild&&!s.conquered[t.id]&&t.level>=2&&t.level<=4&&['forest','lake','grass','swamp'].includes(t.type))targets.push(t);}
+      targets.sort((a,b)=>Math.abs(a.x-home.x)+Math.abs(a.y-home.y)-Math.abs(b.x-home.x)-Math.abs(b.y-home.y));const target=targets[0];
+      if(!target)return {kind:'blocked',title:'【采集】附近没有可采集的野地',reason:'林地、湖泊、草地或沼泽 2–4 级野地才能采集；移动视野寻找目标。'};
+      return {kind:'gatherOccupy',id:target.id,army:{archer:Math.min(s.army.archer,600),shield:Math.min(s.army.shield,200)},title:'【采集】占领'+target.name+'并留守',reason:def.text+'。占领 2–4 级林地或湖泊野地并让部队留守（不勾选占领后返回），之后在那里采集。'};
+    }
     function campaign(){
       if(s.cityDefense.battle||s.battle&&!s.battle.finished||game.allExpeditions().length){const goal=firstBattle();return {...goal,title:goal.title.replaceAll('首胜','战斗').replaceAll('首战','当前作战')};}
       const reward=game.missions.find(m=>m.chapter&&game.missionReady(m));if(reward)return {kind:'campaignReward',id:reward.id,chapter:reward.chapter,title:'领取'+reward.title+'通关补给',reason:'已占领据点，领取一次性资源、珍宝和援军，再准备下一关。奖励预览和领取状态保留。'};
@@ -114,8 +143,12 @@ const GrowthGuide=(()=>{
       }
       if(!game.landmarkVisible(id))id=game.nextLandmark()?.id||id;
       const n=game.getNode(id),archers=chapter===5?300:chapter===1?(n.level<=1?60:n.level===2?100:160):chapter===2?910:chapter===4?3000:1650,front=chapter===5?60:chapter===1?(id==='pass'||id==='mine'?30:0):chapter===2?325:chapter===4?1500:525,technology=chapter===5?3:chapter===1?(n.level<=1?1:2):5;
+      // v0.35.3: each chapter stage has its own task; the guide gives that task's next concrete step.
+      const task=game.chapterTask?.(id),def=task&&!task.done?ChapterTasks.def(id):null;
+      if(def){const early=taskStep(id,n,task,def,'before');if(early)return early;}
+      const plan=def?.guideArmy||{archer:archers,...(front?{shield:front}:{}),...(n.fortification?{ram:5}:{})};
       for(const [tech,level]of [['combat',technology],['shooting',technology],...(front?[['protection',technology]]:[])]){const goal=resolve('tech',tech,level);if(goal)return {...goal,reason:'准备'+n.name+'：提升弓兵输出与前排防护；'+goal.reason};}
-      for(const [unit,count]of [['archer',archers],...(front?[['shield',front]]:[]),...(n.fortification?[['ram',5]]:[])]){
+      for(const [unit,count]of Object.entries(plan)){
         if(s.army[unit]<count){const away=Object.entries(s.garrisons).find(([,g])=>g.army[unit]>0);if(away)return {kind:'garrison',id:away[0],title:'查看外驻'+game.units[unit].name+'，准备'+n.name,reason:'该兵种已有部队在外驻守；可先收获采集并召回，或保留驻军另行练兵。不要将驻军误当成损失。'};}
         if(s.army[unit]>=count)continue;
         for(const [building,level]of Object.entries(game.units[unit].requires.buildings)){const goal=resolve('building',building,level);if(goal)return goal;}
@@ -124,7 +157,8 @@ const GrowthGuide=(()=>{
       }
       // 城池要连打几场占领战：两次之间据点恢复，先等待而不是重复出征。
       if(s.cooldowns[id]>Date.now())return {kind:'battleCooldown',id,end:s.cooldowns[id],title:n.name+'正在恢复',reason:'上一场占领战已降低民心；等待据点恢复后再战，期间可以补兵或发展城池。'};
-      return {kind:'campaign',id,chapter,title:'占领'+n.name+'，'+(chapter===5?'开启县城与名城':'推进'+(chapter===1?'第一章':ChapterData.chapterTitle(chapter))),reason:n.desc+'查看敌军、配兵与预计战利品，再自行确认占领；掠夺不推进章节。'+(n.fortification?'必须破城并歼敌，器械需要前排保护。':'弓兵为主力，按敌军组成安排前排。'),army:{archer:archers,...(front?{shield:front}:{})}};
+      if(def){const late=taskStep(id,n,task,def,'after');if(late)return late;}
+      return {kind:'campaign',id,chapter,title:(def?'【'+def.type+'】':'')+(task?.pending?'守住'+n.name+'反扑，':'占领'+n.name+'，')+(chapter===5?'开启县城与名城':'推进'+(chapter===1?'第一章':ChapterData.chapterTitle(chapter))),reason:(def?'章节任务：'+def.text+'。'+(task.progress?'进度：'+task.progress+'。':''):'')+n.desc+'查看敌军、配兵与预计战利品，再自行确认占领；掠夺不推进章节。'+(n.fortification?'必须破城并歼敌，器械需要前排保护。':'弓兵为主力，按敌军组成安排前排。'),army:def?.guideArmy||{archer:archers,...(front?{shield:front}:{}),...(def?.kind==='build'&&def.engines?{ram:def.engines}:{})}};
     }
     // Resource fields produce in proportion to population / required workers; staff them before more upgrades.
     function staffing(){

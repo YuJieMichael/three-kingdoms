@@ -56,22 +56,24 @@ const ChapterData={
   allNodes(){return [...this.nodes,...this.chapterThreeNodes,...this.chapterFourNodes];},
   chapterNodes(chapter=2){return chapter===4?this.chapterFourNodes:chapter===3?this.chapterThreeNodes:this.nodes;},
   chapterTitle(chapter=2){return chapter===4?this.chapterFourTitle:chapter===3?this.chapterThreeTitle:this.title;},
-  completed(s,chapter=2){return this.chapterNodes(chapter).every(n=>!!s.conquered[n.id]);},
+  // v0.35.3: a stage counts once its own task is done (ChapterTasks), not merely occupied.
+  stageDone(s,id){return typeof ChapterTasks!=='undefined'?ChapterTasks.done(s,id):!!s?.conquered?.[id];},
+  completed(s,chapter=2){return this.chapterNodes(chapter).every(n=>this.stageDone(s,n.id));},
   unlocked(s,chapter=2){return this.chapterOneDone(s)&&(chapter===4?this.completed(s,3)&&this.epicOpen(s):chapter!==3||this.completed(s,2));},
   // 第一章以黄巾营寨收尾；已占领古渡县城的旧档同样算通关。
   chapterOneIds:['field','wood','pass','mine','camp'],
-  chapterOneDone(s){return !!(s?.conquered?.camp||s?.conquered?.fort);},
+  chapterOneDone(s){return !!s?.conquered?.fort||this.stageDone(s,'camp');},
   // 县城与名城在第四章通关后出现；已持有古渡县城的旧档保持开放。
   countyOpen(s){return this.hasSeal(s)||!!s?.conquered?.fort;},
-  stagesDone(s,chapter){return chapter===1?this.chapterOneIds.filter(id=>s.conquered[id]).length:this.chapterNodes(chapter).filter(n=>s.conquered[n.id]).length;},
+  stagesDone(s,chapter){return chapter===1?this.chapterOneIds.filter(id=>this.stageDone(s,id)).length:this.chapterNodes(chapter).filter(n=>this.stageDone(s,n.id)).length;},
   // 爵位晋升的章节条件（设计第 4 节）：键为目标爵位序号，未列出的高爵沿用最后一行。
   nobleGates:{1:{chapter:1,stages:'all'},2:{chapter:2,stages:3},3:{chapter:2,stages:'all'},4:{chapter:3,stages:3},5:{chapter:3,stages:'all'},6:{chapter:4,stages:1},7:{chapter:4,stages:2},8:{chapter:4,stages:3},9:{chapter:4,stages:4},10:{chapter:4,stages:5},11:{chapter:4,stages:'all'}},
   nobleGate(s,rank){const key=Math.min(rank,11),gate=this.nobleGates[key];if(!gate)return null;const total=gate.chapter===1?this.chapterOneIds.length:this.chapterNodes(gate.chapter).length,need=gate.stages==='all'?total:gate.stages,done=gate.chapter===1?(this.chapterOneDone(s)?total:this.stagesDone(s,1)):this.stagesDone(s,gate.chapter),name=['','第一章','第二章','第三章','第四章'][gate.chapter];return {...gate,need,done,met:done>=need,text:gate.stages==='all'?name+'通关':name+'前 '+need+' 关'};},
   // 第四章需要黄巾史诗；已打下任一第四章关卡的旧档保留进度。
   epicOpen(s){return (typeof Progression!=='undefined'&&Progression.countyUnlocked(s))||this.chapterFourNodes.some(n=>s.conquered[n.id]);},
-  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!this.chapterOneDone(s))return '先占领黄巾营寨，完成第一章';if(n.chapter===3&&!this.unlocked(s,3))return '先完成第二章六关（含北原城），开启第三章';if(n.chapter===4&&!this.completed(s,3))return '先完成第三章（河洛内城），开启第四章';if(n.chapter===4&&!this.epicOpen(s))return '先完成黄巾之乱四项史诗，开启第四章';if(n.requires!=='camp'&&!s.conquered[n.requires])return '先占领'+this.allNodes().find(row=>row.id===n.requires).name;return null;},
-  progress(s,chapter=2){const nodes=this.chapterNodes(chapter);return {unlocked:this.unlocked(s,chapter),conquered:nodes.filter(n=>s.conquered[n.id]).length,claimed:nodes.filter(n=>s.missionClaims.includes('chapter'+chapter+'_'+n.id)).length,next:nodes.find(n=>!s.conquered[n.id])||null};},
-  extendMissions(missions){[2,3,4].forEach(chapter=>this.chapterNodes(chapter).forEach((n,i)=>{const r=(chapter===4?this.chapterFourRewards:chapter===3?this.chapterThreeRewards:this.rewards)[i];missions.push({id:'chapter'+chapter+'_'+n.id,node:n.id,chapter,stage:this.chapterTitle(chapter),title:n.name+' · 平定',desc:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&!!s.conquered[n.id],reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items,army:r.army});}));}
+  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!this.chapterOneDone(s))return '先占领黄巾营寨，完成第一章';if(n.chapter===3&&!this.unlocked(s,3))return '先完成第二章六关（含北原城），开启第三章';if(n.chapter===4&&!this.completed(s,3))return '先完成第三章（河洛内城），开启第四章';if(n.chapter===4&&!this.epicOpen(s))return '先完成黄巾之乱四项史诗，开启第四章';if(n.requires!=='camp'&&!this.stageDone(s,n.requires)){const req=this.allNodes().find(row=>row.id===n.requires);return s.conquered[n.requires]?'先完成'+req.name+'的章节任务':'先占领'+req.name;}return null;},
+  progress(s,chapter=2){const nodes=this.chapterNodes(chapter);return {unlocked:this.unlocked(s,chapter),conquered:nodes.filter(n=>this.stageDone(s,n.id)).length,claimed:nodes.filter(n=>s.missionClaims.includes('chapter'+chapter+'_'+n.id)).length,next:nodes.find(n=>!this.stageDone(s,n.id))||null};},
+  extendMissions(missions){[2,3,4].forEach(chapter=>this.chapterNodes(chapter).forEach((n,i)=>{const r=(chapter===4?this.chapterFourRewards:chapter===3?this.chapterThreeRewards:this.rewards)[i];missions.push({id:'chapter'+chapter+'_'+n.id,node:n.id,chapter,stage:this.chapterTitle(chapter),title:n.name+' · 平定',desc:typeof ChapterTasks!=='undefined'&&ChapterTasks.def(n.id)?ChapterTasks.def(n.id).text:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&this.stageDone(s,n.id),reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items,army:r.army});}));}
 };
 // v0.34.34: late battles were too easy in the 4-day playtest, so garrisons are raised by a fixed factor (not tied to player strength). Higher factors starve the unaccelerated campaign of food (design/balance/late-battle-difficulty-2026-10-08.md).
 ChapterData.armyScale={2:1.3,3:1.5,4:1};

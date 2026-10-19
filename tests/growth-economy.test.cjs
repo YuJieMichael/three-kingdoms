@@ -66,10 +66,15 @@ function prepared(e){const g=e.Game;for(const id of Object.keys(g.state.tech))g.
 // v0.35.1: chapter one ends at 黄巾营寨, chapter two at the city 北原城, and the county comes after chapter four.
 test('ten-hall guidance follows chapter one to 黄巾营寨, asks for a city slot before 北原城 and the epic only before chapter four',()=>{
  const e=earnedHall(),g=prepared(e),C=e.Chapter;let m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'wood');assert.equal(m.phase,'campaign');
- g.state.raided.wood=true;g.state.raided.pass=true;m=inspect(e);assert.equal(m.id,'mine','赤铁山 now comes before 黄巾营寨');
- g.state.raided.mine=true;m=inspect(e);assert.equal(m.id,'camp');
+ g.state.raided.wood=true;g.state.conquered.pass=true;m=inspect(e);assert.equal(m.id,'mine','赤铁山 now comes before 黄巾营寨');
+ // v0.35.3: each stage's task drives the next step.
+ for(const p of g.state.plots)if(p.type==='mine')p.level=Math.min(p.level,2);m=inspect(e);
+ assert.equal(m.kind,'building');assert.equal(m.id,'mine');assert.match(m.reason,/章节任务/,'赤铁山 first needs a level-3 iron mine');
+ g.state.plots[g.state.plots.findIndex(p=>!p.type)]={type:'mine',level:3};m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'mine');assert.match(m.title,/冶铁搜集/);assert.match(m.reason,/军械残图/);
+ g.state.stageTasks.mine={count:3};m=inspect(e);assert.equal(m.id,'camp');assert.equal(JSON.stringify(m.army),'{"archer":160}','黄巾营寨 is an archer-led battle');
  const done=n=>{g.state.conquered[n.id]=true;g.state.missionClaims.push('chapter'+n.chapter+'_'+n.id);};
- g.state.conquered.camp=true;m=inspect(e);assert.equal(m.id,'north_road','chapter two opens without any county');assert.equal(m.chapter,2);
+ g.state.conquered.camp=true;m=inspect(e);assert.equal(m.kind,'chapterDeliver','chapter two opens without any county and starts with the food delivery');assert.equal(m.id,'north_road');
+ g.state.stageTasks.north_road={delivered:true};m=inspect(e);assert.equal(m.id,'north_road');assert.equal(m.chapter,2);
  C.nodes.slice(0,-1).forEach(done);g.state.honors.noble=0;m=inspect(e);assert.equal(m.kind,'honor','a full city quota asks for a promotion before 北原城');assert.match(m.reason,/北原城/);
  g.state.honors.noble=1;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'north_keep');
  g.state.cooldowns.north_keep=e.now()+600000;m=inspect(e);assert.equal(m.kind,'battleCooldown','between occupation wins the guide waits for 北原城 to recover');assert.equal(m.id,'north_keep');delete g.state.cooldowns.north_keep;
@@ -94,7 +99,7 @@ test('chapter guidance preserves second-chapter gates, claims ally rewards and o
  m=inspect(e);assert.equal(m.kind,'campaignReward');assert.equal(m.id,'chapter2_north_road');
  g.state.missionClaims.push(...c.nodes.map(n=>'chapter2_'+n.id));m=inspect(e);assert.equal(m.id,'luo_outpost');assert.equal(m.chapter,3);
  g.state.conquered.luo_outpost=true;m=inspect(e);assert.equal(m.kind,'campaignReward');assert.equal(m.id,'chapter3_luo_outpost');
- g.state.missionClaims.push('chapter3_luo_outpost');m=inspect(e);assert.equal(m.id,'luo_gate');
+ g.state.missionClaims.push('chapter3_luo_outpost');m=inspect(e);assert.equal(m.id,'luo_gate');assert.equal(m.army.ram,5,'v0.35.3: 河洛东门 takes five siege engines');assert.match(m.title,/器械破门/);
  for(const n of c.chapterThreeNodes)g.state.conquered[n.id]=true;
  g.state.missionClaims.push(...c.chapterThreeNodes.slice(1).map(n=>'chapter3_'+n.id));m=inspect(e);assert.notEqual(m.kind,'orders','chapter 4 comes before war orders');
  for(const n of c.chapterFourNodes)g.state.conquered[n.id]=true;g.state.missionClaims.push(...c.chapterFourNodes.map(n=>'chapter4_'+n.id));m=inspect(e);assert.equal(m.kind,'orders');assert.equal(m.id,'order_field_1');

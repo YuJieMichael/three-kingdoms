@@ -90,3 +90,10 @@
 .dispatch-strip{color:#2f2615}
 .dispatch-strip strong{color:#2f2615}
 .dispatch-strip p,.dispatch-strip .hint{color:#5b4b2c}
+/* v0.35.3: chapter stage task card */
+.chapter-task{border:1px solid #b29a62;border-left:4px solid #a8823a;border-radius:4px;padding:6px 8px;margin:6px 0;background:#f4ecd4;color:#3c3424}
+.chapter-task.is-done{border-left-color:#5f8a5a;opacity:.85}
+.chapter-task p{margin:2px 0}
+.chapter-task-type{display:inline-block;font-size:11px;font-weight:700;color:#fff8e4;background:#8b6a2e;border-radius:3px;padding:0 6px}
+.chapter-task.is-done .chapter-task-type{background:#5f8a5a}
+.quest-card .chapter-task{grid-column:1 / -1;flex:1 1 100%;width:100%;box-sizing:border-box}

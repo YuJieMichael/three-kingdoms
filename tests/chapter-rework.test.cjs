@@ -6,9 +6,9 @@ const conquer=(s,ids)=>{for(const id of ids)s.conquered[id]=true;};
 const chapterIds=(C,chapter)=>C.chapterNodes(chapter).map(n=>n.id);
 test('chapter one runs 荒田 → 竹林 → 隘口 → 赤铁山 → 黄巾营寨 and the county stays hidden',()=>{
   const {Game:g}=loadGame(),s=g.state;
-  s.raided.field=true;s.raided.wood=true;s.raided.pass=true;
+  s.raided.field=true;s.raided.wood=true;s.conquered.pass=true; // v0.35.3: 白石隘口 must be occupied after a precise scout
   assert.equal(g.landmarkVisible('mine'),true);assert.equal(g.landmarkVisible('camp'),false);assert.equal(g.nextLandmark().id,'mine');
-  s.raided.mine=true;assert.equal(g.landmarkVisible('camp'),true);assert.equal(g.landmarkVisible('fort'),false);
+  s.raided.mine=true;assert.equal(g.landmarkVisible('camp'),false,'v0.35.3: 赤铁山 needs three 军械残图');s.stageTasks.mine={count:3};assert.equal(g.landmarkVisible('camp'),true);assert.equal(g.landmarkVisible('fort'),false);
   s.conquered.camp=true;assert.equal(g.landmarkVisible('fort'),false);assert.match(g.attackBlocked('fort','occupy'),/尚未发现/);
 });
 test('taking 黄巾营寨 opens chapter two without any county',()=>{
