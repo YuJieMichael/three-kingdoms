@@ -2,8 +2,11 @@ const {test}=require('node:test'),assert=require('node:assert/strict');
 const {loadGame,city}=require('./helpers/game.cjs');
 // v0.34.73: the Yellow Turban epic gates chapter four (讨伐董卓), not the first county.
 function finishEpic(s){s.epic.kills=1500;s.epic.killRewards=3;s.epic.troops=2;s.epic.treasures=2;for(const id of Object.keys(s.epic.resources))s.epic.resources[id]=100000;}
-test('the first county can be attacked without the epic',()=>{
-  const e=loadGame(),g=e.Game,s=g.state;city(g,{hall:4,drill:1,barracks:1});s.honors.noble=1;s.conquered.mine=true;s.army.archer=500;
+// v0.35.1: the county waits for chapter four to be cleared; the epic itself never gates it.
+test('the first county can be attacked without the epic once chapter four is cleared',()=>{
+  const e=loadGame(),g=e.Game,s=g.state;city(g,{hall:4,drill:1,barracks:1});s.honors.noble=1;s.conquered.mine=true;s.conquered.camp=true;s.army.archer=500;
+  assert.match(g.attackBlocked('fort','occupy'),/尚未发现/);
+  s.conquered.c4_luoyang=true;
   assert.equal(g.countyUnlocked(),false);
   assert.ok(!g.attackBlocked('fort','occupy'));
   assert.equal(g.dispatch('fort','lin',{archer:500},'occupy'),null);

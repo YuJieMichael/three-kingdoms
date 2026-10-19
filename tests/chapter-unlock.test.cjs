@@ -68,11 +68,18 @@ test('winning a normal raid on the last stage does not finish chapter two or unl
  assert.equal(g.validSave(g.state),true);g.save();g.init();assertThirdLocked(e);
 });
 
-test('the normal final occupation unlocks chapter three immediately before any chapter reward is claimed',()=>{
- const e=setup(),g=e.Game,c=e.Chapter;own(e,c.nodes.slice(0,-1));
+// v0.35.1: 北原城 is an ordinary city; it changes hands on the occupation win that drops its morale below zero.
+test('the city occupation that takes 北原城 unlocks chapter three immediately before any chapter reward is claimed',()=>{
+ const e=setup(),g=e.Game,c=e.Chapter;own(e,c.nodes.slice(0,-1));g.state.honors.noble=1;
  assertThirdLocked(e);
- const result=battle(e,'north_keep','occupy',{shield:600,spear:800,archer:2200,cavalry:400});
- assert.equal(result.won,true);assert.equal(g.state.conquered.north_keep,true);
+ let result;
+ for(let i=0;i<3;i++){
+  if(i){e.advance(90001);g.dismissBattle();e.advance(Math.max(1,(g.state.cooldowns.north_keep||0)-e.now()+1)+4*3600000);}
+  Object.assign(g.state.army,{shield:600,spear:800,archer:2200,cavalry:400});result=battle(e,'north_keep','occupy',{shield:600,spear:800,archer:2200,cavalry:400},true);
+  assert.equal(result.won,true);
+  if(i<2){assert.equal(g.state.conquered.north_keep,undefined);assertThirdLocked(e);}
+ }
+ assert.equal(g.state.conquered.north_keep,true);assert.ok(g.state.towns.north_keep.morale<0);
  assert.equal(c.completed(g.state,2),true);assert.equal(c.progress(g.state,2).conquered,6);
  assert.equal(c.unlocked(g.state,3),true);assert.equal(c.progress(g.state,3).unlocked,true);
  assert.equal(c.progress(g.state,2).claimed,0);assert.equal(c.progress(g.state,3).claimed,0);

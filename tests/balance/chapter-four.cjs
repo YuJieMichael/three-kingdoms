@@ -22,10 +22,12 @@ function fight(seed,node,army,generalId,orders={}){
   const b=s.battle,r=b.result;return {won:r.won,rounds:b.round,lost:total(r.lost),sent:total(army),gate:b.gate?Math.round(b.gate.hp):null,validSave:g.validSave(s)};
 }
 const BIG={archer:9000,shield:5500,spear:4500,cavalry:3500,ram:40,catapult:25};
+// v0.35.1: 汜水关 holds 4,800 (×0.3, design §2 smoothing), so its army is sized to that garrison.
+const SISHUI={archer:3000,shield:1800,spear:1500,cavalry:1200,ram:15,catapult:10};
 const CASES=[
-  ['c4_sishui','武力 96 主将',BIG,STRONG.id],['c4_sishui','武力 64 主将',BIG,'lin'],
+  ['c4_sishui','武力 96 主将',SISHUI,STRONG.id],['c4_sishui','武力 64 主将',SISHUI,'lin'],
   ['c4_hulao','6,000 精兵',{archer:2600,shield:1500,spear:1000,cavalry:850,ram:30,catapult:20},STRONG.id],['c4_hulao','超出上限',BIG,STRONG.id],
-  ['c4_xingyang','大军速攻',{archer:12000,shield:6000,spear:8000,cavalry:6000},STRONG.id],['c4_xingyang','兵力不足',{archer:6000,shield:3000,spear:2500,cavalry:2000},STRONG.id],
+  ['c4_xingyang','大军速攻',{archer:12000,shield:6000,spear:8000,cavalry:6000},STRONG.id],['c4_xingyang','兵力不足',{archer:5000,shield:2500,spear:2000,cavalry:1700},STRONG.id],
   ['c4_meiwu','步骑趁夜',BIG,STRONG.id],['c4_meiwu','弓兵固守',BIG,STRONG.id,{archer:'hold',ram:'hold',catapult:'hold',shield:'hold',spear:'hold',cavalry:'hold'}],
   ['c4_lianying','智 85 主将',BIG,STRONG.id],['c4_lianying','智 58 主将',BIG,'lin'],
   ['c4_luoyang','器械主力',{archer:12000,shield:7000,spear:6000,cavalry:5000,ram:80,catapult:60},STRONG.id],['c4_luoyang','缺器械',{archer:12000,shield:7000,spear:6000,cavalry:5000},STRONG.id]

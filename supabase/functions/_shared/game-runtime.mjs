@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="701bc51e5d301630c269e5a419a542c224176ac4d5be7b78dbbd7cdc3f29f100";
+export const runtimeHash="78c6f7b874a0c7b76747aa7b0e426699f61e6ec3e264f27a6060e08c30f70ff3";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","faction-system.js","npc-defense.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -13459,9 +13459,11 @@ const HeritageSystem=(()=>{
   if(r.noble&&s.honors.noble<r.noble)missing.push('爵位 '+HeritageData.nobles[r.noble].name);
   if(s.buildings.hall<r.hall)missing.push('官府 '+r.hall+' 级');
   if(s.res.gold<r.gold)missing.push('黄金 '+r.gold);
-  const jewels=jewelPayment(s,r.jewels);if(!jewels.covered)for(const [id,n] of Object.entries(jewels.short))missing.push(Progression.jewels[id].name+' ×'+n+'（其他珠宝按 '+jewels.rate+' 倍价值折算也不足）');
+  // v0.35.1: ranks no longer take jewels; nobles need chapter progress instead (ChapterData.nobleGates).
+  const jewels=jewelPayment(s,{});
+  const gate=kind==='noble'&&typeof ChapterData!=='undefined'?ChapterData.nobleGate(s,next.id):null;if(gate&&!gate.met)missing.push(gate.text+'（'+gate.done+' / '+gate.need+'）');
   if(r.county&&!ownedCounties(s).length)missing.push('持有至少一座县城（须占领，掠夺不算）');
-  return {next,rule:r,jewels,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
+  return {next,rule:r,jewels,chapter:gate,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
  }
  function promote(kind){const s=live(),q=promotionQuote(s,kind);if(!q?.next)return q?.reason||'请选择晋升类型';if(q.reason)return q.reason;s.res.gold-=q.rule.gold;for(const [id,n] of Object.entries(q.jewels.total))s.jewels[id]-=n;s.honors[kind]=q.next.id;return save();}
  function salaryQuote(s,kind){const row=kind==='office'?office(s):kind==='noble'?noble(s):null;if(!row)return null;return {row,claimed:s.honors.salaryClaims[kind]===Progression.period(Date.now()),reward:kind==='office'?{gold:row.salary}:{food:row.salary,wood:row.salary,stone:row.salary,iron:row.salary}};}
@@ -13888,12 +13890,12 @@ const NPCDefense=(()=>{
 const ChapterData={
   title:'第二章 · 平定北境',
   nodes:[
-    {id:'north_road',name:'北原驿道',terrain:'grass',x:34,y:19,level:5,chapter:2,requires:'fort',desc:'古渡以北商路断绝。先清除步弓混编的路匪，重新打通粮道。',army:{shield:90,spear:110,archer:100,cavalry:25},loot:{food:1800,wood:1000,iron:700,gold:1600},reward:'粮道恢复 · 粮食产量 +10%',bonus:{food:.1},time:36},
+    {id:'north_road',name:'北原驿道',terrain:'grass',x:34,y:19,level:5,chapter:2,requires:'camp',desc:'黄巾营寨既破，北方商路仍断绝。先清除步弓混编的路匪，重新打通粮道。',army:{shield:90,spear:110,archer:100,cavalry:25},loot:{food:1800,wood:1000,iron:700,gold:1600},reward:'粮道恢复 · 粮食产量 +10%',bonus:{food:.1},time:36},
     {id:'north_granary',name:'北原粮仓',terrain:'camp',x:30,y:16,level:5,chapter:2,requires:'north_road',desc:'夺回粮仓前须控制北原驿道。敌军弓兵众多，准备前排护卫与运输部队。',army:{shield:120,spear:90,archer:150,cavalry:30},loot:{food:3200,wood:1200,stone:700,gold:2000},reward:'夺回军粮 · 木材产量 +10%',bonus:{wood:.1},time:40},
     {id:'north_ford',name:'寒川渡口',terrain:'lake',x:35,y:12,level:6,chapter:2,requires:'north_granary',desc:'粮仓供给稳固后才能进军渡口。枪兵守住桥头，骑兵巡逻两岸。',army:{spear:160,shield:110,archer:130,cavalry:60},loot:{food:2200,wood:1800,iron:1100,gold:2400},reward:'控制渡口 · 石料产量 +10%',bonus:{stone:.1},time:44},
     {id:'north_camp',name:'朔风骑营',terrain:'camp',x:39,y:10,level:6,chapter:2,requires:'north_ford',desc:'渡河后遭遇敌军骑营。用长枪兵抵挡冲阵，注意弓兵与运输队安全。',army:{cavalry:130,heavy:25,spear:110,archer:100},loot:{food:2600,wood:1300,iron:2000,gold:3000},reward:'拔除骑营 · 铁锭产量 +10%',bonus:{iron:.1},time:48},
-    {id:'north_pass',name:'玄石关',terrain:'mountain',x:35,y:7,level:7,chapter:2,requires:'north_camp',desc:'北境大营的门户，由刀盾兵与床弩联合封锁。先侦察，再选择射程与兵种搭配。',army:{shield:220,spear:150,archer:170,ballista:20},loot:{food:3000,stone:2600,iron:2400,gold:4000},reward:'攻克关隘 · 北境大营开放',time:54},
-    {id:'north_keep',name:'北境大营',terrain:'camp',x:40,y:5,level:8,chapter:2,requires:'north_pass',desc:'北境叛军的最终据点。混编重兵与远程器械守营，准备充足兵力与运输能力再发动决战。',army:{shield:260,spear:200,archer:220,cavalry:100,heavy:35,ballista:30},loot:{food:4500,wood:3000,stone:3000,iron:3000,gold:6000},reward:'平定北境 · 第二章完成',time:60}
+    {id:'north_pass',name:'玄石关',terrain:'mountain',x:35,y:7,level:7,chapter:2,requires:'north_camp',desc:'北原城的门户，由刀盾兵与床弩联合封锁。先侦察，再选择射程与兵种搭配。',army:{shield:220,spear:150,archer:170,ballista:20},loot:{food:3000,stone:2600,iron:2400,gold:4000},reward:'攻克关隘 · 北境大营开放',time:54},
+    {id:'north_keep',name:'北原城',terrain:'fort',x:40,y:5,level:6,population:600,chapter:2,requires:'north_pass',desc:'北境叛军据守的普通城池。按城池规则攻打：每次占领战胜利降低民心，民心低于 0 时易主，并占用一个城池名额。',army:{shield:150,spear:120,archer:140,cavalry:60,heavy:15,ballista:10},loot:{food:4500,wood:3000,stone:3000,iron:3000,gold:6000},reward:'攻取北原城 · 第二章完成',time:60}
   ],
   rewards:[
     {resources:12000,gold:40000,jewels:{pearl:3},items:{speed_train_1h:1}},
@@ -13905,7 +13907,7 @@ const ChapterData={
   ],
   chapterThreeTitle:'第三章 · 河洛攻城',
   chapterThreeNodes:[
-    {id:'luo_outpost',name:'洛水前哨',terrain:'camp',x:43,y:9,level:8,chapter:3,requires:'north_keep',desc:'北境平定后南下河洛。孟衡率枪兵守住前哨；先在野外交锋，领取盟军试作冲车。',commander:{name:'孟衡',title:'前哨守将',attack:1.08,defense:1.06,order:'advance'},army:{shield:180,spear:220,archer:180,cavalry:70},loot:{food:4000,wood:4000,iron:2500,gold:6000},reward:'前哨肃清 · 盟军支援 5 辆试作冲车',time:60},
+    {id:'luo_outpost',name:'洛水前哨',terrain:'camp',x:43,y:9,level:8,chapter:3,requires:'north_keep',desc:'北原城既下，南下河洛。孟衡率枪兵守住前哨；先在野外交锋，领取盟军试作冲车。',commander:{name:'孟衡',title:'前哨守将',attack:1.08,defense:1.06,order:'advance'},army:{shield:180,spear:220,archer:180,cavalry:70},loot:{food:4000,wood:4000,iron:2500,gold:6000},reward:'前哨肃清 · 盟军支援 5 辆试作冲车',time:60},
     {id:'luo_gate',name:'河洛东门',terrain:'mountain',x:46,y:12,level:8,chapter:3,requires:'luo_outpost',desc:'石峤坚守城门，步军依托门墙。冲车推进至门前可迅速破门；破门前守军不会出城。',commander:{name:'石峤',title:'东门守将',attack:1,defense:1.18,order:'hold'},fortification:{name:'包铁城门',hp:18000,protection:1.5,tower:700,range:1100},army:{shield:240,spear:220,archer:200,ballista:12},loot:{food:5000,wood:4000,stone:3500,gold:8000},reward:'攻破东门 · 盟军支援 2 辆投石车',time:66},
     {id:'luo_cavalry',name:'赤垒外营',terrain:'camp',x:49,y:15,level:9,chapter:3,requires:'luo_gate',desc:'韩骁带骑兵主动迎战，外围木栅虽弱但骑兵冲击凌厉。枪兵护住器械，避免弓兵先行接敌。',commander:{name:'韩骁',title:'突骑统领',attack:1.2,defense:1.03,order:'advance'},fortification:{name:'外营木栅',hp:10000,protection:1.2,tower:300,range:800},army:{cavalry:180,heavy:40,spear:170,archer:140},loot:{food:5500,wood:4500,iron:4000,gold:9000},reward:'击退突骑 · 战线补给',time:70},
     {id:'luo_wall',name:'白石城垣',terrain:'mountain',x:51,y:11,level:9,chapter:3,requires:'luo_cavalry',desc:'严岑以弓弩据守厚墙。投石车能在远处轰击城垣，冲车需要护卫靠近。破墙后箭楼停止射击。',commander:{name:'严岑',title:'弩阵都督',attack:1.12,defense:1.18,order:'hold'},fortification:{name:'白石重墙',hp:30000,protection:1.65,tower:1000,range:1400},army:{shield:280,spear:180,archer:260,ballista:30},loot:{food:6000,wood:5000,stone:5000,iron:4500,gold:12000},reward:'攻克城垣 · 河洛内城开放',time:76},
@@ -13942,16 +13944,27 @@ const ChapterData={
   chapterNodes(chapter=2){return chapter===4?this.chapterFourNodes:chapter===3?this.chapterThreeNodes:this.nodes;},
   chapterTitle(chapter=2){return chapter===4?this.chapterFourTitle:chapter===3?this.chapterThreeTitle:this.title;},
   completed(s,chapter=2){return this.chapterNodes(chapter).every(n=>!!s.conquered[n.id]);},
-  unlocked(s,chapter=2){return !!s.conquered.fort&&(chapter===4?this.completed(s,3)&&this.epicOpen(s):chapter!==3||this.completed(s,2));},
+  unlocked(s,chapter=2){return this.chapterOneDone(s)&&(chapter===4?this.completed(s,3)&&this.epicOpen(s):chapter!==3||this.completed(s,2));},
+  // 第一章以黄巾营寨收尾；已占领古渡县城的旧档同样算通关。
+  chapterOneIds:['field','wood','pass','mine','camp'],
+  chapterOneDone(s){return !!(s?.conquered?.camp||s?.conquered?.fort);},
+  // 县城与名城在第四章通关后出现；已持有古渡县城的旧档保持开放。
+  countyOpen(s){return this.hasSeal(s)||!!s?.conquered?.fort;},
+  stagesDone(s,chapter){return chapter===1?this.chapterOneIds.filter(id=>s.conquered[id]).length:this.chapterNodes(chapter).filter(n=>s.conquered[n.id]).length;},
+  // 爵位晋升的章节条件（设计第 4 节）：键为目标爵位序号，未列出的高爵沿用最后一行。
+  nobleGates:{1:{chapter:1,stages:'all'},2:{chapter:2,stages:3},3:{chapter:2,stages:'all'},4:{chapter:3,stages:3},5:{chapter:3,stages:'all'},6:{chapter:4,stages:1},7:{chapter:4,stages:2},8:{chapter:4,stages:3},9:{chapter:4,stages:4},10:{chapter:4,stages:5},11:{chapter:4,stages:'all'}},
+  nobleGate(s,rank){const key=Math.min(rank,11),gate=this.nobleGates[key];if(!gate)return null;const total=gate.chapter===1?this.chapterOneIds.length:this.chapterNodes(gate.chapter).length,need=gate.stages==='all'?total:gate.stages,done=gate.chapter===1?(this.chapterOneDone(s)?total:this.stagesDone(s,1)):this.stagesDone(s,gate.chapter),name=['','第一章','第二章','第三章','第四章'][gate.chapter];return {...gate,need,done,met:done>=need,text:gate.stages==='all'?name+'通关':name+'前 '+need+' 关'};},
   // 第四章需要黄巾史诗；已打下任一第四章关卡的旧档保留进度。
   epicOpen(s){return (typeof Progression!=='undefined'&&Progression.countyUnlocked(s))||this.chapterFourNodes.some(n=>s.conquered[n.id]);},
-  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!s.conquered.fort)return '先占领古渡县城，开启第二章';if(n.chapter===3&&!this.unlocked(s,3))return '先完成第二章六关（含北境大营），开启第三章';if(n.chapter===4&&!this.completed(s,3))return '先完成第三章（河洛内城），开启第四章';if(n.chapter===4&&!this.epicOpen(s))return '先完成黄巾之乱四项史诗，开启第四章';if(!s.conquered[n.requires])return '先占领'+this.allNodes().find(row=>row.id===n.requires).name;return null;},
+  blocked(s,id){const n=this.allNodes().find(n=>n.id===id);if(!n)return null;if(!this.chapterOneDone(s))return '先占领黄巾营寨，完成第一章';if(n.chapter===3&&!this.unlocked(s,3))return '先完成第二章六关（含北原城），开启第三章';if(n.chapter===4&&!this.completed(s,3))return '先完成第三章（河洛内城），开启第四章';if(n.chapter===4&&!this.epicOpen(s))return '先完成黄巾之乱四项史诗，开启第四章';if(n.requires!=='camp'&&!s.conquered[n.requires])return '先占领'+this.allNodes().find(row=>row.id===n.requires).name;return null;},
   progress(s,chapter=2){const nodes=this.chapterNodes(chapter);return {unlocked:this.unlocked(s,chapter),conquered:nodes.filter(n=>s.conquered[n.id]).length,claimed:nodes.filter(n=>s.missionClaims.includes('chapter'+chapter+'_'+n.id)).length,next:nodes.find(n=>!s.conquered[n.id])||null};},
   extendMissions(missions){[2,3,4].forEach(chapter=>this.chapterNodes(chapter).forEach((n,i)=>{const r=(chapter===4?this.chapterFourRewards:chapter===3?this.chapterThreeRewards:this.rewards)[i];missions.push({id:'chapter'+chapter+'_'+n.id,node:n.id,chapter,stage:this.chapterTitle(chapter),title:n.name+' · 平定',desc:'占领'+n.name+'，掠夺胜利不算通关',route:'world',check:s=>!this.blocked(s,n.id)&&!!s.conquered[n.id],reward:{food:r.resources,wood:r.resources,stone:r.resources,iron:r.resources,gold:r.gold},jewels:r.jewels,items:r.items,army:r.army});}));}
 };
 // v0.34.34: late battles were too easy in the 4-day playtest, so garrisons are raised by a fixed factor (not tied to player strength). Higher factors starve the unaccelerated campaign of food (design/balance/late-battle-difficulty-2026-10-08.md).
 ChapterData.armyScale={2:1.3,3:1.5,4:1};
-for(const n of ChapterData.allNodes())for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*ChapterData.armyScale[n.chapter]);
+// v0.35.1: neighbouring stages from chapter 3 into chapter 4 stay within 3× of each other; chapter 3 is left as is because the scripted campaign already wins 河洛内城 only narrowly (design §2 change log).
+ChapterData.stageScale={c4_sishui:.3,c4_xingyang:.85};
+for(const n of ChapterData.allNodes())for(const id of Object.keys(n.army))n.army[id]=Math.round(n.army[id]*ChapterData.armyScale[n.chapter]*(ChapterData.stageScale[n.id]||1));
 
 
 // SOURCE: siege-data.js
@@ -14040,7 +14053,7 @@ const WarOrders=(()=>{
   function unlocked(s){return !!s.conquered.north_keep;}
   function maxTier(s,route){return Math.min(MAX_TIER,s.warOrders.cleared[route]+1);}
   function blocked(s,n,mode,now=Date.now()){
-    if(!unlocked(s))return '先平定北境大营，开放战役军令';
+    if(!unlocked(s))return '先攻取北原城，开放战役军令';
     if(mode!=='occupy')return '军令需要讨伐，战胜守军并破坏城防';
     if(n.challengeId&&s.warOrders.cleared[n.orderRoute]<n.orderTier)return '先完成此路线普通第 '+n.orderTier+' 阶，再开启战术挑战';
     if(n.orderTier>maxTier(s,n.orderRoute))return '先完成此路线第 '+(n.orderTier-1)+' 阶';
@@ -14066,7 +14079,7 @@ const WarOrders=(()=>{
     if(!a)w.cleared[n.orderRoute]=Math.max(w.cleared[n.orderRoute],n.orderTier);w.wins[n.orderRoute]++;w.merit+=receipt.points;w.earned+=receipt.points;w.last=receipt;
     return receipt;
   }
-  function exchange(id){Game.tick(Date.now(),false);const s=Game.state,offer=offers.find(o=>o.id===id);if(!unlocked(s))return '先平定北境大营，开放军功兑换';if(!offer)return '兑换物品不存在';if(s.warOrders.merit<offer.cost)return '军功不足';s.warOrders.merit-=offer.cost;s.warOrders.spent+=offer.cost;s.inventory[id]=(s.inventory[id]||0)+1;Game.save();return null;}
+  function exchange(id){Game.tick(Date.now(),false);const s=Game.state,offer=offers.find(o=>o.id===id);if(!unlocked(s))return '先攻取北原城，开放军功兑换';if(!offer)return '兑换物品不存在';if(s.warOrders.merit<offer.cost)return '军功不足';s.warOrders.merit-=offer.cost;s.warOrders.spent+=offer.cost;s.inventory[id]=(s.inventory[id]||0)+1;Game.save();return null;}
   return {MAX_TIER,RECOVERY,routes,offers,challenges,encounters,challenge,encounterConfig,init,valid,validReceipt,getNode,points,unlocked,maxTier,blocked,settle,exchange};
 })();
 
@@ -14234,7 +14247,7 @@ const NamedCitySystem=(()=>{
   function profile(value){const d=NamedCityData.definition(value);return d||{id:NamedCityData.nodeId(value),tier:'ordinary',tierName:'普通城池',district:'',parent:null,children:[],plotMax:10,goldFactor:1,development:null};}
   function init(s){if(s?.realm&&s.realm.namedCities===undefined)s.realm.namedCities={version:1,developed:[]};if(s?.realm?.namedCities&&typeof NamedGarrison!=='undefined')NamedGarrison.init(s,typeof s.last==='number'?s.last:Date.now());}
   function valid(s){try{const n=s?.realm?.namedCities;return (keys(n,['version','developed'])||keys(n,['version','developed','garrisons'])&&(typeof NamedGarrison==='undefined'||NamedGarrison.valid(s)))&&n.version===1&&Array.isArray(n.developed)&&n.developed.length<=NamedCityData.definitions.length&&new Set(n.developed).size===n.developed.length&&n.developed.every(id=>typeof id==='string'&&!!NamedCityData.definition(id));}catch{return false;}}
-  function visible(s,id){const d=NamedCityData.definition(id);if(!d)return true;if(owned(s,d.id)||s?.raided?.[d.id]||s?.garrisons?.[d.id])return true;const deployed=scope=>scope?.battle?.node===d.id||[scope?.expedition,...(scope?.expeditions||[])].some(e=>e?.node===d.id);if(deployed(s)||Object.values(s?.realm?.cities||{}).some(c=>deployed(c.data)))return true;if(d.id==='fort')return !!(s?.raided?.mine||s?.conquered?.mine);if(!d.id.startsWith('named_'))return true;if(d.children.length)return d.children.some(child=>owned(s,child));if(d.discover)return owned(s,d.discover);if(d.discoverChapter)return chapterDone(s,d.discoverChapter);return false;}
+  function visible(s,id){const d=NamedCityData.definition(id);if(!d)return true;if(owned(s,d.id)||s?.raided?.[d.id]||s?.garrisons?.[d.id])return true;const deployed=scope=>scope?.battle?.node===d.id||[scope?.expedition,...(scope?.expeditions||[])].some(e=>e?.node===d.id);if(deployed(s)||Object.values(s?.realm?.cities||{}).some(c=>deployed(c.data)))return true;if(!d.id.startsWith('named_')&&d.id!=='fort')return true;if(typeof ChapterData!=='undefined'&&!ChapterData.countyOpen(s))return false;if(d.id==='fort')return true;if(d.children.length)return d.children.some(child=>owned(s,child));if(d.discover)return owned(s,d.discover);if(d.discoverChapter)return chapterDone(s,d.discoverChapter);return false;}
   function progress(s,value,api={}){const d=NamedCityData.definition(value);if(!d)return null;const has=api.owns||((id)=>owned(s,id)),children=d.children.map(id=>({id,name:NamedCityData.definition(id)?.name||id,owned:!!has(id)})),missing=children.filter(c=>!c.owned),chapter=d.requiresChapter?{chapter:d.requiresChapter,complete:chapterDone(s,d.requiresChapter)}:null;return {id:d.id,name:d.name,tier:d.tier,tierName:d.tierName,district:d.district,parent:d.parent,plotMax:d.plotMax,goldFactor:d.goldFactor,children,controlled:children.length-missing.length,required:children.length,missing:missing.length,chapter,owned:!!has(d.id),visible:visible(s,d.id),ready:missing.length===0&&(!chapter||chapter.complete)};}
   function attackBlocked(s,value,api={}){const p=progress(s,value,api);if(!p||p.owned)return '';if(!p.visible)return '此名城尚未发现，请推进当前辖区';if(p.missing)return '先占领辖区 '+p.children.filter(c=>!c.owned).map(c=>c.name).join('、')+'（还差 '+p.missing+' 座）';if(p.chapter&&!p.chapter.complete)return '先完成第三章 · 河洛攻城，再攻打洛阳都城';const d=NamedCityData.definition(value);if(d?.garrison&&d.tier==='prefecture'){const need=6 /* frozen ceil(16/3), before the five-city expansion */,have=NamedCityData.definitions.filter(x=>(api.owns||((id)=>owned(s,id)))(x.id)).length;if(have<need)return '郡城须先占领三分之一的名城（'+have+' / '+need+'）';}return '';}
   function fieldRecord(id,level,table){if(!['farm','lumber','quarry','mine'].includes(id)||!Number.isInteger(level)||level<1||level>18)return null;const rows=table?.rows||table;if(!Array.isArray(rows))return null;if(level<=10)return rows[level-1]||null;const base=rows[9];if(!base?.cost||!Number.isFinite(base.seconds)||!Number.isFinite(base.output)||!Number.isFinite(base.workers)||!Number.isFinite(base.capacity))return null;const extra=level-10,triangle=level*(level+1);return {level,cost:Object.fromEntries(Object.entries(base.cost).map(([key,n])=>[key,Math.ceil(n*1.35**extra)])),seconds:Math.ceil(base.seconds*1.25**extra),confirmedTime:false,trialTime:true,workers:Math.ceil(base.workers*triangle/110),output:Math.ceil(base.output*triangle/110),capacity:Math.ceil(base.capacity*triangle/110)};}
@@ -16567,9 +16580,9 @@ const Game = (() => {
     {id:'field',name:'河畔荒田',terrain:'field',x:24,y:73,level:1,desc:'溃散的乡勇盘踞河岸，夺回粮田可增加粮食产量。',army:{spear:18,archer:7},loot:{food:330,wood:90,gold:80},bonus:{food:.2},reward:'粮食产量 +20%',time:10},
     {id:'wood',name:'青竹林',terrain:'forest',x:29,y:34,level:1,desc:'林中匪兵轻装上阵，带上弓箭兵压制敌军。',army:{spear:22,archer:8},loot:{wood:350,food:130,gold:90},bonus:{wood:.2},reward:'木材产量 +20%',time:14},
     {id:'pass',name:'白石隘口',terrain:'mountain',x:62,y:64,level:2,desc:'盾兵封锁隘口。集中兵力，避免分散攻击。',army:{shield:32,spear:20,archer:12},loot:{stone:410,iron:180,gold:170},bonus:{stone:.2},reward:'石料产量 +20%',time:18},
-    {id:'camp',name:'黄巾营寨',terrain:'camp',x:66,y:27,level:2,desc:'弓兵依托营寨防守，轻骑兵能快速绕过前排。',army:{spear:30,archer:35,shield:12},loot:{food:380,wood:240,iron:160,gold:230},reward:'解救武将 · 严秋',time:22,capture:'yan'},
     {id:'mine',name:'赤铁山',terrain:'mountain',x:83,y:49,level:3,desc:'骑兵巡守矿脉，长枪兵是攻取这里的关键。',army:{cavalry:30,shield:25,archer:25},loot:{iron:580,stone:200,gold:280},bonus:{iron:.25},reward:'铁锭产量 +25%',time:24},
-    {id:'fort',name:'古渡县城',terrain:'fort',x:49,y:13,level:4,desc:'县城守军兵种齐全。扩充兵力与武将等级后，再发起总攻。',army:{shield:70,spear:55,archer:65,cavalry:18},loot:{food:1100,wood:750,stone:600,iron:480,gold:900},reward:'占领县城 · 开启第二章',time:30},
+    {id:'camp',name:'黄巾营寨',terrain:'camp',x:66,y:27,level:2,desc:'弓兵依托营寨防守，轻骑兵能快速绕过前排。',army:{spear:30,archer:35,shield:12},loot:{food:380,wood:240,iron:160,gold:230},reward:'解救武将 · 严秋',time:22,capture:'yan'},
+    {id:'fort',name:'古渡县城',terrain:'fort',x:49,y:13,level:4,desc:'县城守军兵种齐全。扩充兵力与武将等级后，再发起总攻。',army:{shield:70,spear:55,archer:65,cavalry:18},loot:{food:1100,wood:750,stone:600,iron:480,gold:900},reward:'占领县城 · 县城与名城开放',time:30},
     ...ChapterData.allNodes(),
     ...YellowCityData.allNodes()
   ];
@@ -16641,10 +16654,11 @@ const Game = (() => {
     if(n.openCity)return true;
     if(state.conquered[id]||state.raided[id]||state.garrisons[id]||state.battle?.node===id||allExpeditions().some(e=>e.node===id))return true;
     if(n.chapter)return ChapterData.unlocked(state,n.chapter)&&!ChapterData.blocked(state,id);
+    if(n.id==='fort'&&!ChapterData.countyOpen(state))return false;
     const first=nodes.filter(x=>!x.chapter&&!x.openCity),farthest=first.reduce((i,x,j)=>landmarkReached(x)?j:i,-1);
     return first.indexOf(n)<=farthest+1;
   }
-  function nextLandmark(){const first=nodes.filter(n=>!n.chapter&&!n.openCity),farthest=first.reduce((i,n,j)=>landmarkReached(n)?j:i,-1);if(farthest+1<first.length)return first[farthest+1];for(const chapter of [2,3])if(ChapterData.unlocked(state,chapter)){const next=ChapterData.progress(state,chapter).next;if(next)return next;}return null;}
+  function nextLandmark(){const first=nodes.filter(n=>!n.chapter&&!n.openCity),farthest=first.reduce((i,n,j)=>landmarkReached(n)?j:i,-1);if(farthest+1<first.length&&landmarkVisible(first[farthest+1].id))return first[farthest+1];for(const chapter of [2,3,4])if(ChapterData.unlocked(state,chapter)){const next=ChapterData.progress(state,chapter).next;if(next)return next;}return !state.conquered.fort&&landmarkVisible('fort')?getNode('fort'):null;}
   const defaultCityLayout=()=>Array.from({length:36},(_,i)=>i===14?'hall':[15,20,21].includes(i)?'reserved':null);
   const starterGiftReward={...OnboardingData.gifts[0].resources};
   const supplies=(amount,gold)=>({food:amount,wood:amount,stone:amount,iron:amount,gold});

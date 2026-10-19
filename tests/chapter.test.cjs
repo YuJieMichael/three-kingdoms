@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict');
 const {loadGame,city,battle}=require('./helpers/game.cjs');
 test('chapter gates protect both direct dispatch and occupation rewards',()=>{
   const {Game,Chapter}=loadGame();Game.state.army.militia=500;city(Game,{drill:2});
-  for(const n of Chapter.nodes){assert.match(Game.dispatch(n.id,'lin',{militia:100},'raid'),/古渡县城/);assert.equal(Game.claimMission('chapter2_'+n.id),'目标尚未达成');}
+  for(const n of Chapter.nodes){assert.match(Game.dispatch(n.id,'lin',{militia:100},'raid'),/黄巾营寨/);assert.equal(Game.claimMission('chapter2_'+n.id),'目标尚未达成');}
   Game.state.conquered.fort=true;assert.equal(Game.attackBlocked(Chapter.nodes[0].id,'raid'),null);
   assert.match(Game.attackBlocked(Chapter.nodes[1].id,'occupy'),/北原驿道/);
 });
@@ -29,9 +29,13 @@ test('old saves keep existing claims and unlock chapter from county ownership on
   const {Game,Chapter}=loadGame(),old=JSON.parse(JSON.stringify(Game.state));old.missionClaims=['gift','hall2'];old.mission=2;old.starterGiftClaimed=true;old.starterGiftVersion=2;old.conquered.fort=true;
   Game.importSave(old);assert.equal(Chapter.progress(Game.state).unlocked,true);assert.equal(Chapter.progress(Game.state).claimed,0);assert.equal(Game.missionClaimed('gift'),true);assert.equal(Game.missionClaimed('hall2'),true);assert.equal(Game.state.res.food,old.res.food);
 });
+// v0.35.1: the finale 北原城 is an ordinary city, so it takes three occupation wins (morale 100 → 65 → 30 → −5) and a second city slot.
 test('a mixed army can fight all six successive stages and restore the finished chapter',()=>{
-  const env=loadGame(123),{Game,Chapter}=env;city(Game,{hall:4,house:10,drill:10,barracks:10});Game.state.conquered.fort=true;Game.state.res.food=10000000;
+  const env=loadGame(123),{Game,Chapter}=env;city(Game,{hall:4,house:10,drill:10,barracks:10});Game.state.conquered.camp=true;Game.state.honors.noble=1;Game.state.res.food=10000000;
   Object.assign(Game.state.army,{shield:600,spear:800,archer:2200,cavalry:400});
-  for(const n of Chapter.nodes){const army=Object.fromEntries(['shield','spear','archer','cavalry'].map(id=>[id,Game.state.army[id]]));const result=battle(env,n.id,'occupy',army);assert.equal(result.won,true,n.name);assert.equal(Game.claimMission('chapter2_'+n.id),null);env.advance(90001);Game.dismissBattle();assert.equal(Game.validSave(Game.state),true);Game.init();}
-  assert.equal(Chapter.progress(Game.state).conquered,6);assert.equal(Chapter.progress(Game.state).claimed,6);assert.equal(Chapter.progress(Game.state).next,null);assert.equal(Game.state.stats.victories,6);
+  for(const n of Chapter.nodes){
+    for(let attempt=0;!Game.state.conquered[n.id];attempt++){assert.ok(attempt<4,n.name);if(attempt)env.advance(Math.max(1,(Game.state.cooldowns[n.id]||0)-env.now()+1)+4*3600000);const army=Object.fromEntries(['shield','spear','archer','cavalry'].map(id=>[id,Game.state.army[id]]));const result=battle(env,n.id,'occupy',army,true);assert.equal(result.won,true,n.name);if(!Game.state.conquered[n.id]){env.advance(90001);Game.dismissBattle();}}
+    assert.equal(Game.claimMission('chapter2_'+n.id),null);env.advance(90001);Game.dismissBattle();assert.equal(Game.validSave(Game.state),true);Game.init();
+  }
+  assert.equal(Chapter.progress(Game.state).conquered,6);assert.equal(Chapter.progress(Game.state).claimed,6);assert.equal(Chapter.progress(Game.state).next,null);assert.equal(Game.state.stats.victories,8);assert.equal(Game.cityList().length,2);
 });

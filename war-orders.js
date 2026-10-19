@@ -69,7 +69,7 @@ const WarOrders=(()=>{
   function unlocked(s){return !!s.conquered.north_keep;}
   function maxTier(s,route){return Math.min(MAX_TIER,s.warOrders.cleared[route]+1);}
   function blocked(s,n,mode,now=Date.now()){
-    if(!unlocked(s))return '先平定北境大营，开放战役军令';
+    if(!unlocked(s))return '先攻取北原城，开放战役军令';
     if(mode!=='occupy')return '军令需要讨伐，战胜守军并破坏城防';
     if(n.challengeId&&s.warOrders.cleared[n.orderRoute]<n.orderTier)return '先完成此路线普通第 '+n.orderTier+' 阶，再开启战术挑战';
     if(n.orderTier>maxTier(s,n.orderRoute))return '先完成此路线第 '+(n.orderTier-1)+' 阶';
@@ -95,6 +95,6 @@ const WarOrders=(()=>{
     if(!a)w.cleared[n.orderRoute]=Math.max(w.cleared[n.orderRoute],n.orderTier);w.wins[n.orderRoute]++;w.merit+=receipt.points;w.earned+=receipt.points;w.last=receipt;
     return receipt;
   }
-  function exchange(id){Game.tick(Date.now(),false);const s=Game.state,offer=offers.find(o=>o.id===id);if(!unlocked(s))return '先平定北境大营，开放军功兑换';if(!offer)return '兑换物品不存在';if(s.warOrders.merit<offer.cost)return '军功不足';s.warOrders.merit-=offer.cost;s.warOrders.spent+=offer.cost;s.inventory[id]=(s.inventory[id]||0)+1;Game.save();return null;}
+  function exchange(id){Game.tick(Date.now(),false);const s=Game.state,offer=offers.find(o=>o.id===id);if(!unlocked(s))return '先攻取北原城，开放军功兑换';if(!offer)return '兑换物品不存在';if(s.warOrders.merit<offer.cost)return '军功不足';s.warOrders.merit-=offer.cost;s.warOrders.spent+=offer.cost;s.inventory[id]=(s.inventory[id]||0)+1;Game.save();return null;}
   return {MAX_TIER,RECOVERY,routes,offers,challenges,encounters,challenge,encounterConfig,init,valid,validReceipt,getNode,points,unlocked,maxTier,blocked,settle,exchange};
 })();

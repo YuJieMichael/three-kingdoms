@@ -37,9 +37,11 @@ const HeritageSystem=(()=>{
   if(r.noble&&s.honors.noble<r.noble)missing.push('爵位 '+HeritageData.nobles[r.noble].name);
   if(s.buildings.hall<r.hall)missing.push('官府 '+r.hall+' 级');
   if(s.res.gold<r.gold)missing.push('黄金 '+r.gold);
-  const jewels=jewelPayment(s,r.jewels);if(!jewels.covered)for(const [id,n] of Object.entries(jewels.short))missing.push(Progression.jewels[id].name+' ×'+n+'（其他珠宝按 '+jewels.rate+' 倍价值折算也不足）');
+  // v0.35.1: ranks no longer take jewels; nobles need chapter progress instead (ChapterData.nobleGates).
+  const jewels=jewelPayment(s,{});
+  const gate=kind==='noble'&&typeof ChapterData!=='undefined'?ChapterData.nobleGate(s,next.id):null;if(gate&&!gate.met)missing.push(gate.text+'（'+gate.done+' / '+gate.need+'）');
   if(r.county&&!ownedCounties(s).length)missing.push('持有至少一座县城（须占领，掠夺不算）');
-  return {next,rule:r,jewels,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
+  return {next,rule:r,jewels,chapter:gate,missing,reason:missing.length?'条件未满足：'+missing.join('、'):''};
  }
  function promote(kind){const s=live(),q=promotionQuote(s,kind);if(!q?.next)return q?.reason||'请选择晋升类型';if(q.reason)return q.reason;s.res.gold-=q.rule.gold;for(const [id,n] of Object.entries(q.jewels.total))s.jewels[id]-=n;s.honors[kind]=q.next.id;return save();}
  function salaryQuote(s,kind){const row=kind==='office'?office(s):kind==='noble'?noble(s):null;if(!row)return null;return {row,claimed:s.honors.salaryClaims[kind]===Progression.period(Date.now()),reward:kind==='office'?{gold:row.salary}:{food:row.salary,wood:row.salary,stone:row.salary,iron:row.salary}};}

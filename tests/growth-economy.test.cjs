@@ -63,15 +63,22 @@ test('governor advice accounts for an active politics modifier rather than promi
 // These following checkpoints only exercise the read-only planner's choices.
 // They do not establish economic affordability or normal campaign clear times.
 function prepared(e){const g=e.Game;for(const id of Object.keys(g.state.tech))g.state.tech[id]=10;city(g,{house:10,barracks:10,academy:10,smith:10});g.state.army.archer=1700;g.state.army.shield=550;g.state.army.ram=5;return g;}
-test('ten-hall guidance follows discovered sites to the county, then asks for the epic only before chapter four',()=>{
- const e=earnedHall(),g=prepared(e);let m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'wood');assert.equal(m.phase,'campaign');
- g.state.conquered.camp=true;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'mine','the county no longer waits for the epic');
- g.state.conquered.mine=true;g.state.honors.noble=0;m=inspect(e);assert.equal(m.kind,'honor','a full city quota asks for a promotion instead of a failing march');assert.match(m.reason,/城池名额/);
- g.state.honors.noble=1;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'fort');
- const done=n=>{g.state.conquered[n.id]=true;g.state.missionClaims.push('chapter'+n.chapter+'_'+n.id);};g.state.conquered.mine=true;g.state.conquered.fort=true;[...e.Chapter.nodes,...e.Chapter.chapterThreeNodes].forEach(done);
+// v0.35.1: chapter one ends at 黄巾营寨, chapter two at the city 北原城, and the county comes after chapter four.
+test('ten-hall guidance follows chapter one to 黄巾营寨, asks for a city slot before 北原城 and the epic only before chapter four',()=>{
+ const e=earnedHall(),g=prepared(e),C=e.Chapter;let m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'wood');assert.equal(m.phase,'campaign');
+ g.state.raided.wood=true;g.state.raided.pass=true;m=inspect(e);assert.equal(m.id,'mine','赤铁山 now comes before 黄巾营寨');
+ g.state.raided.mine=true;m=inspect(e);assert.equal(m.id,'camp');
+ const done=n=>{g.state.conquered[n.id]=true;g.state.missionClaims.push('chapter'+n.chapter+'_'+n.id);};
+ g.state.conquered.camp=true;m=inspect(e);assert.equal(m.id,'north_road','chapter two opens without any county');assert.equal(m.chapter,2);
+ C.nodes.slice(0,-1).forEach(done);g.state.honors.noble=0;m=inspect(e);assert.equal(m.kind,'honor','a full city quota asks for a promotion before 北原城');assert.match(m.reason,/北原城/);
+ g.state.honors.noble=1;m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'north_keep');
+ g.state.cooldowns.north_keep=e.now()+600000;m=inspect(e);assert.equal(m.kind,'battleCooldown','between occupation wins the guide waits for 北原城 to recover');assert.equal(m.id,'north_keep');delete g.state.cooldowns.north_keep;
+ [...C.nodes,...C.chapterThreeNodes].forEach(done);
  m=inspect(e);assert.equal(m.kind,'epic');assert.equal(m.id,'kills');assert.match(m.reason,/四项史诗/);assert.match(m.title,/第四章/);
  g.state.epic.kills=1500;m=inspect(e);assert.equal(m.id,'resources');assert.ok(m.shortages.every(x=>x.amount===0));
  g.state.epic.legacyAccess=true;m=inspect(e);assert.notEqual(m.kind,'epic','a finished epic opens chapter four preparation');
+ assert.equal(g.landmarkVisible('fort'),false);
+ C.chapterFourNodes.forEach(done);m=inspect(e);assert.equal(m.id,'fort','the county appears after chapter four: '+JSON.stringify(m));assert.match(m.title,/县城与名城/);
 });
 
 test('campaign preparation exposes actual research, population and army shortages instead of generic completion text',()=>{
