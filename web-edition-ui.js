@@ -138,7 +138,7 @@ function foundingModal(error=''){
   showModal('创建君主',`<div class="founding-form"><p class="sub">乱世将起。先定下你的名号与根据地，再领兵迎击黄巾。</p>${error?`<p class="notice">${esc(error)}</p>`:''}<label class="label" for="founding-ruler">君主名（2–6 字）</label><input id="founding-ruler" maxlength="6" value="${esc(keep('founding-ruler')??d.ruler)}"><label class="label" for="founding-banner">旗号（1 字）</label><input id="founding-banner" maxlength="1" value="${esc(keep('founding-banner')??d.banner)}"><label class="label" for="founding-city">主城名（2–6 字）</label><input id="founding-city" maxlength="6" value="${esc(keep('founding-city')??d.city)}"><p class="label">选择州 · 开局加成永久生效</p>${provinceChoicesHTML(document.querySelector('[name="founding-province"]:checked')?.value||'jizhou')}<p class="hint">选州不改变出生位置。名字之后可用改名令修改。</p></div>`,btn('确认，迎击黄巾','foundRealmConfirm'));
 }
 function provinceChooseModal(){showModal('选择州',`<p class="sub">旧存档可补选一次州，加成立即生效、之后不能更改。</p>${provinceChoicesHTML('')}`,btn('取消','close','','secondary')+btn('确认选择','provinceChooseConfirm'));}
-function webFinishOpening(){Game.endTacticalLesson();modal.close();page='city';render();guideGo();}
+function webFinishOpening(){Game.endTacticalLesson();modal.close();page='world';render();toast('回到沙盘。下方成长目标会指引建设、侦察与出征。');}
 function webOpeningModal(){
   const error=Game.startTacticalLesson('opening_battle');if(error){toast(error);return;}
   tacticalLessonModal();

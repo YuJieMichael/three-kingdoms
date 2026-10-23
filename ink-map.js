@@ -2,7 +2,7 @@
 // Phones (coarse pointer) redraw the whole map on every pan; lighter filters keep that fast on mobile Safari.
 const INK_MAP_LITE=typeof matchMedia==='function'&&matchMedia('(pointer:coarse)').matches;
 // One coordinate-anchored painting. No terrain sprites or per-cell island bases.
-const InkMapArt={paper:'#ddd3ae',ink:'#334943',water:'#88a5a5',forest:'#809782',earth:'#b3ae8d'};
+const InkMapArt={paper:'#a9bb87',ink:'#284f43',water:'#649e9d',forest:'#527e57',earth:'#b5af7c'};
 function inkMapRandom(seed,salt){return ((Math.imul(seed^Math.imul(salt+1,2654435761),1597334677)>>>0)%10000)/10000;}
 function inkMapWash(cx,cy,rx,ry,seed){
   const points=Array.from({length:8},(_,i)=>{const a=i*Math.PI/4,r=.86+inkMapRandom(seed,i)*.25;return {x:cx+Math.cos(a)*rx*r,y:cy+Math.sin(a)*ry*r};});
@@ -45,7 +45,13 @@ function inkMapMountain(x,y,height,seed){
 }
 function inkWorldSiteArt(tile){
   if(tile.hidden||tile.wild)return '';
-  if(typeof PaintedArt!=='undefined'){const city=tile.id==='home'||tile.type==='fort'||Game.isCity(tile),id=tile.faction==='yellow_turban'&&!city?'yellow-camp':tile.faction==='yellow_turban'?'county':tile.id==='home'||tile.namedCity?'commandery':city?'county':'yellow-camp';return `<img class="painted-site" src="${PaintedArt.src('map',id)}" alt="" decoding="async" draggable="false">`;}
+  if(typeof PaintedArt!=='undefined'){
+    const kind=typeof worldSandboxSiteType==='function'?worldSandboxSiteType(tile):'',city=tile.id==='home'||tile.type==='fort'||Game.isCity(tile);
+    if(kind==='渡口')return '<svg class="ink-site-art sandbox-ford-art" viewBox="0 0 100 100" aria-hidden="true"><path d="M6 67Q48 54 95 66M9 75Q53 64 91 77" fill="none" stroke="#d8ebcf" stroke-width="2"/><path d="M8 44L70 29 93 38 30 54Z" fill="#ac9567" stroke="#625b40" stroke-width="2"/><path d="M13 45V72m16-22v19m39-39v22m18-17v22" stroke="#655b3d" stroke-width="4"/><path d="M38 72q17 15 36-2l-3-5-34 1Z" fill="#855a34" stroke="#e4c78d" stroke-width="1.4"/><path d="M58 64V42l17 19Z" fill="#e4d4b1" stroke="#775e3d" stroke-width="1"/></svg>';
+    const tier=typeof NamedCityData!=='undefined'?NamedCityData.definition(tile)?.tier:'',id=tile.id==='home'?'capital':kind==='关隘'?'pass':tier==='capital'||tier==='province'?'capital':tier==='prefecture'?'commandery':city?'county':'yellow-camp';
+    const resource={field:'farm',forest:'lumber',mountain:'mine'}[tile.terrain],src=!city&&kind!=='关隘'&&resource?PaintedArt.src('buildings',resource):PaintedArt.src('map',id);
+    return `<img class="painted-site sandbox-site-${city||kind==='关隘'?id:resource||'camp'}" src="${src}" alt="" decoding="async" draggable="false">`;
+  }
   const city=tile.id==='home'||tile.type==='fort'||Game.isCity(tile),owned=tile.id==='home'||!!S().conquered[tile.id],flag=owned?'#4c7770':tile.faction==='yellow_turban'?'#aa8a3f':'#a6654d';
   const cityBody='<path d="M11 44L45 32 79 44V64L46 79 11 65Z" fill="#d8cfb3" stroke="#606957"/><path d="M11 44L46 58 79 44M46 58V78" fill="none" stroke="#7b7b66"/><path d="M15 41v8m13-14v8m12-13v8m14-7v8m13-4v8m10-3v8" stroke="#687264" stroke-width="4"/><path d="M36 75V62q9-14 19 0v13" fill="#53665c"/><path d="M29 30h33v22H29Z" fill="#d9d0b4"/><path d="M21 32Q34 28 44 17Q57 28 69 31L62 36H29Z" fill="#566c60"/><path d="M20 32Q43 35 69 31M35 41h5m10 0h5" fill="none" stroke="#384e47"/>';
   const campBody='<path d="M19 58L46 31 72 57H19Z" fill="#c3b899" stroke="#6f7460"/><path d="M46 33v25m-8 0 8-18 9 18" fill="#667360" stroke="#737864"/><path d="M16 61q29 7 60-2M26 65l-7 6m43-6 9 5" fill="none" stroke="#7c8069" stroke-width="1"/>';
@@ -66,13 +72,13 @@ function inkWorldGroundSVG(start,span,read){
       for(const [dx,dy] of [[1,0],[0,1]])if(['mountain','hill'].includes(read(x+dx,y+dy)?.type)){
         ridges.push(`<path d="M${cx} ${cy-24}Q${cx+dx*40-dy*21} ${cy+dy*40-31} ${cx+dx*100} ${cy+dy*100-22}" fill="none" stroke="#799083" stroke-width="24" stroke-linecap="round" opacity=".18"/>`);
       }
-      const mx=cx+(r(4)-.5)*36,my=cy+15+(r(7)-.5)*18;details.push({y:my,html:P?P.mapImage(r(13)>.5?'mountain-a':'mountain-b',cx+(r(4)-.5)*8,cy+40,84+r(5)*12):inkMapMountain(mx,my,58+r(5)*48,seed)});
+      const mx=cx+(r(4)-.5)*36,my=cy+15+(r(7)-.5)*18;details.push({y:my,html:P?P.mapImage(r(13)>.5?'mountain-a':'mountain-b',cx+(r(4)-.5)*12,cy+46,102+r(5)*15,'class="sandbox-map-sprite"'):inkMapMountain(mx,my,58+r(5)*48,seed)});
       if(!P&&r(8)>.55){const sx=cx+(r(9)>.5?1:-1)*(30+r(10)*14),sy=cy+30+r(11)*10;details.push({y:sy,html:P?P.mapImage('mountain-b',sx,sy+14,60+r(12)*24):inkMapMountain(sx,sy,30+r(12)*20,seed+3)});}
     }else if(t.type==='hill'){
       const h=17+r(6)*23;
-      if(P)details.push({y:cy+14,html:P.mapImage('hill',cx+(r(6)-.5)*8,cy+40,80+r(7)*10)});else details.push({y:cy,html:`<path d="M${cx-65} ${cy+13}Q${cx-18} ${cy-h-28} ${cx+61} ${cy+13}Q${cx+12} ${cy+29} ${cx-65} ${cy+13}Z" fill="#96a78b" opacity=".23"/><path d="M${cx-62} ${cy+10}Q${cx-6} ${cy-h} ${cx+58} ${cy+9}" fill="none" stroke="#6c8067" stroke-width="1.2" opacity=".5"/>${inkMapPine(cx-15,cy+4,15,seed)}`});
+      if(P)details.push({y:cy+14,html:P.mapImage('hill',cx+(r(6)-.5)*8,cy+40,92+r(7)*10,'class="sandbox-map-sprite"')});else details.push({y:cy,html:`<path d="M${cx-65} ${cy+13}Q${cx-18} ${cy-h-28} ${cx+61} ${cy+13}Q${cx+12} ${cy+29} ${cx-65} ${cy+13}Z" fill="#96a78b" opacity=".23"/><path d="M${cx-62} ${cy+10}Q${cx-6} ${cy-h} ${cx+58} ${cy+9}" fill="none" stroke="#6c8067" stroke-width="1.2" opacity=".5"/>${inkMapPine(cx-15,cy+4,15,seed)}`});
     }else if(t.type==='forest'){
-      if(P)details.push({y:cy+20,html:P.mapImage(r(28)>.5?'forest-a':'forest-b',cx+(r(26)-.5)*8,cy+40,82+r(25)*12)});
+      if(P)details.push({y:cy+20,html:P.mapImage(r(28)>.5?'forest-a':'forest-b',cx+(r(26)-.5)*12,cy+44,106+r(25)*13,'class="sandbox-map-sprite"')});
       else{const n=4+Math.floor(r(29)*4);for(let i=0;i<n;i++){const tx=cx-50+r(i+10)*100,ty=cy-38+r(i+30)*82;details.push({y:ty,html:inkMapPine(tx,ty,20+r(i+40)*30,seed+i*17)});}}
     }else if(t.type==='lake'||t.type==='swamp'){
       for(let i=0;i<3;i++){
@@ -93,12 +99,8 @@ function inkWorldGroundSVG(start,span,read){
     }
     if(t.type==='mountain'||t.type==='hill')mist.push(`<ellipse cx="${cx}" cy="${cy+36}" rx="75" ry="12" fill="#eeead9" opacity=".28"/>`);
   }
-  const roads=[],stops=['field','home','wood','camp','mine','pass','home','fort'].map(id=>id==='home'?Game.home:Game.landmarkVisible(id)?Game.getNode(id):null);
-  for(let i=1;i<stops.length;i++){
-    const a=stops[i-1],b=stops[i];if(!a||!b)continue;
-    const ax=(a.x+.5)*100,ay=(a.y+.5)*100,bx=(b.x+.5)*100,by=(b.y+.5)*100,dx=bx-ax,dy=by-ay,seed=worldLandscapeSeed(a.x+b.x,a.y+b.y),bend=(inkMapRandom(seed,1)-.5)*Math.min(75,Math.hypot(dx,dy)*.18);
-    roads.push(`<path d="M${ax} ${ay}C${ax+dx*.32-dy*.06} ${ay+dy*.32+bend} ${ax+dx*.68+dy*.04} ${ay+dy*.68-bend} ${bx} ${by}"/>`);
-  }
+  // Route previews and moving armies are drawn from their real rule paths above the ground.
+  // The painting deliberately adds no decorative roads that could be mistaken for traversable routes.
   details.sort((a,b)=>a.y-b.y);
   const box=`x="${originX-60}" y="${originY-60}" width="${size+120}" height="${size+120}"`;
   const region=(id,fill,opacity,pattern)=>washes[id].length?`<g opacity="${opacity}" filter="url(#ink-goo)"><path fill="${fill}" d="${washes[id].join('')}"/></g>${pattern&&P?`<g opacity=".9" filter="url(#ink-goo)"><path fill="url(#painted-${id})" d="${washes[id].join('')}"/></g>`:''}`:'';
@@ -114,8 +116,7 @@ function inkWorldGroundSVG(start,span,read){
     <linearGradient id="ink-mountain-wash" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#4d6c63" stop-opacity=".75"/><stop offset=".58" stop-color="#7d978b" stop-opacity=".62"/><stop offset="1" stop-color="#b9c4ab" stop-opacity=".1"/></linearGradient>
     <radialGradient id="ink-foot-mist"><stop stop-color="#e8e5d1" stop-opacity=".9"/><stop offset="1" stop-color="#e8e5d1" stop-opacity="0"/></radialGradient>
     </defs><rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="${InkMapArt.paper}"/>${P?`<rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="url(#painted-grass)" opacity=".62"/>`:''}
-    ${P?'':region('grass','#8fae5f','.34')}${region('hill','#b9a06a','.34')}${region('forest','#4f7d4c','.36')}${region('swamp','#7f9a6c',P?'.22':'.38')}${P&&washes.lake.length?`<g opacity=".55" filter="url(#ink-sand)"><path fill="#e6d3a2" d="${washes.lake.join('')}"/></g>`:''}${region('lake','#5f9c9d',P?'.6':'.55',true)}${shore('lake')}${P?'':shore('swamp')}${territory.length?`<g opacity=".16" filter="url(#ink-goo)"><path fill="#3f7f74" d="${territory.join('')}"/></g><g opacity=".7" filter="url(#ink-shore)"><path fill="#2f6b62" d="${territory.join('')}"/></g>`:''}
-    <g fill="none" stroke="#aca180" stroke-width="2.2" stroke-dasharray="2 6" stroke-linecap="round" opacity=".52">${roads.join('')}</g>
+    ${region('grass','#90b563',P?'.2':'.34')}${region('hill','#b7a36a','.35')}${region('forest','#3f7147','.42')}${region('swamp','#628b6c',P?'.3':'.38')}${P&&washes.lake.length?`<g opacity=".55" filter="url(#ink-sand)"><path fill="#d3c899" d="${washes.lake.join('')}"/></g>`:''}${region('lake','#477f88',P?'.72':'.6',true)}${shore('lake')}${P?'':shore('swamp')}${territory.length?`<g opacity=".14" filter="url(#ink-goo)"><path fill="#4daba0" d="${territory.join('')}"/></g><g opacity=".85" filter="url(#ink-shore)"><path fill="#1b7167" d="${territory.join('')}"/></g>`:''}
     ${ridges.join('')}${waterLines.join('')}${details.map(d=>d.html).join('')}<g filter="url(#ink-wash-soft)">${mist.join('')}</g>
     <rect x="${originX}" y="${originY}" width="${size}" height="${size}" fill="url(#ink-paper)" style="mix-blend-mode:multiply"/>
     </svg>`;
@@ -123,14 +124,14 @@ function inkWorldGroundSVG(start,span,read){
 // v0.35.2: the ground's SVG filters re-ran on every frame of a map drag (about 30–50 ms a frame at 2× pixel density).
 // Each view is drawn once into an image instead, so a drag only moves pixels; the live SVG stays until the image is ready.
 const InkGround={images:new Map(),urls:new Map(),loading:null,sources:'',last:''};
-function inkGroundImageSources(){return typeof PaintedArt==='undefined'?[]:[...new Set([...Object.keys(PaintedArt.map),'lake','grass'].map(id=>PaintedArt.src('map',id)))];}
+function inkGroundImageSources(){return typeof PaintedArt==='undefined'?[]:[...new Set([...Object.keys(PaintedArt.map),...Object.keys(PaintedArt.sandbox?.map||{}),'lake','grass'].map(id=>PaintedArt.src('map',id)))];}
 // Pure: the standalone SVG an <img> can draw. An SVG image may not load other files, so every image is inlined, and the
 // page CSS the ground relied on is copied in. Returns null while an image is still missing.
 function inkGroundStandalone(svg,images,aspect){
   let missing=false;
   const out=svg.replace(/<image href="([^"]+)"/g,(match,src)=>{if(src.startsWith('data:'))return match;const data=images.get(src);if(!data){missing=true;return match;}return `<image href="${data}"`;});
   if(missing||!out.startsWith('<svg '))return null;
-  return out.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ').replace('<defs>',`<defs><style>.ink-mountain-body,.ink-pine-body{transform:scaleY(${aspect});transform-origin:50% 100%;transform-box:fill-box}.ink-mountain-body .ink-pine-body{transform:none}</style>`);
+  return out.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ').replace('<defs>',`<defs><style>.ink-mountain-body,.ink-pine-body{transform:scaleY(${aspect});transform-origin:50% 100%;transform-box:fill-box}.sandbox-map-sprite{transform:scaleY(${aspect});transform-origin:50% 100%;transform-box:fill-box}.ink-mountain-body .ink-pine-body{transform:none}</style>`);
 }
 function inkGroundPreload(){
   const sources=inkGroundImageSources(),key=sources.join('|');

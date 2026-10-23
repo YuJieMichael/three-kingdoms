@@ -1,0 +1,26 @@
+{
+  "mountain": {
+    "width": 510,
+    "height": 463
+  },
+  "forest": {
+    "width": 500,
+    "height": 405
+  },
+  "pass": {
+    "width": 512,
+    "height": 424
+  },
+  "county": {
+    "width": 509,
+    "height": 371
+  },
+  "commandery": {
+    "width": 512,
+    "height": 417
+  },
+  "capital": {
+    "width": 512,
+    "height": 445
+  }
+}
