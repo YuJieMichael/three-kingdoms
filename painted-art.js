@@ -11,9 +11,10 @@ const PaintedArt={
     'mountain-a':{file:'mountain.webp',aspect:463/510},'mountain-b':{file:'mountain.webp',aspect:463/510},
     'forest-a':{file:'forest.webp',aspect:405/500},'forest-b':{file:'forest.webp',aspect:405/500},
     pass:{file:'pass.webp',aspect:424/512},county:{file:'county.webp',aspect:371/509},
-    commandery:{file:'commandery.webp',aspect:417/512},capital:{file:'capital.webp',aspect:445/512}
+    commandery:{file:'commandery.webp',aspect:417/512},capital:{file:'capital.webp',aspect:445/512},
+    lake:{file:'water-v2.webp',aspect:1,version:'2'},grass:{file:'grass-v2.webp',aspect:1,version:'2'}
   }},
-  src(kind,id){const file=kind==='map'&&this.sandbox.map[id]?.file;return file?`assets/sandbox/${file}?v=${this.sandbox.version}`:`assets/painted/${kind}/${id}.${this.format}?v=${this.version}`;},
+  src(kind,id){const entry=kind==='map'&&this.sandbox.map[id];return entry?.file?`assets/sandbox/${entry.file}?v=${entry.version||this.sandbox.version}`:`assets/painted/${kind}/${id}.${this.format}?v=${this.version}`;},
   detect(onFallback){if(typeof Image==='undefined')return;const img=new Image();const fail=()=>{if(this.format==='png')return;this.format='png';onFallback?.();};img.onload=()=>{if(!(img.width>0))fail();};img.onerror=fail;img.src=this.probe;},
   // height/width of each trimmed map sprite, so they keep their proportions on the world map
   map:{'mountain-a':1.113,'mountain-b':.823,hill:.922,'forest-a':.893,'forest-b':.815,pine:.924,reeds:.815,county:.794,commandery:.786,'yellow-camp':.828},

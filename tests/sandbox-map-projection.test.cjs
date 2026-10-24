@@ -44,9 +44,21 @@ test('transparent art is connected to city tiers and terrain using the trimmed s
   assert.match(e.evaluate("PaintedArt.mapImage('mountain-a',50,80,100)"),/height="90\.8"/);
   const sources=e.evaluate('inkGroundImageSources()');
   for(const name of ['mountain','forest','county','commandery','capital','pass'])assert.ok(sources.includes(`assets/sandbox/${name}.webp?v=1`));
+  for(const name of ['water','grass']){const src=`assets/sandbox/${name}-v2.webp?v=2`;assert.ok(sources.includes(src));assert.ok(fs.existsSync(path.join(root,src.split('?')[0])));}
   e.evaluate(`var testGround=inkWorldGroundSVG({x:0,y:0},1,(x,y)=>x===0&&y===0?{id:'wild_0_0',x,y,type:'mountain',wild:true}:null);
     var testImages=new Map(inkGroundImageSources().map(src=>[src,'data:image/webp;base64,TEST']));
     var testStandalone=inkGroundStandalone(testGround,testImages,'1.200');`);
   assert.match(e.evaluate('testStandalone'),/data:image\/webp;base64,TEST/);
   assert.doesNotMatch(e.evaluate('testStandalone'),/href="assets\//,'the pre-rendered terrain must not depend on external SVG images');
+});
+test('water uses a joined world-coordinate coastline and the same anchored texture in overlapping views',()=>{
+  const e=map();
+  const shapes=e.evaluate(`(()=>{const cells=[{x:12,y:20},{x:12,y:21},{x:12,y:22}],joined=inkMapWaterOutline(cells);return {joined,diagonal:inkMapWaterOutline([{x:12,y:20},{x:13,y:21}])};})()`);
+  assert.equal((shapes.joined.match(/M/g)||[]).length,1,'a continuous channel has one shoreline, not one pond per tile');
+  assert.equal((shapes.diagonal.match(/M/g)||[]).length,2,'diagonal cells do not invent a water connection');
+  const before=JSON.stringify(e.Game.state),render=e.evaluate(`(start)=>inkWorldGroundSVG(start,6,(x,y)=>({id:'wild_'+x+'_'+y,x,y,type:x===12?'lake':'grass',wild:true}))`);
+  const a=render({x:10,y:20}),b=render({x:11,y:20});
+  for(const svg of [a,b]){assert.match(svg,/mask id="ink-water-mask"/);assert.match(svg,/id="ink-water-depth"/);assert.match(svg,/id="painted-lake" x="0" y="0" width="560" height="560" patternUnits="userSpaceOnUse"/);assert.match(svg,/id="painted-grass" x="0" y="0" width="768" height="768" patternUnits="userSpaceOnUse"/);}
+  const coastline=svg=>svg.match(/<mask id="ink-water-mask"[^>]+><path d="([^"]+)"/)[1];assert.equal(coastline(a),coastline(b),'the same coast stays fixed while the viewport shifts');
+  assert.equal(JSON.stringify(e.Game.state),before);
 });

@@ -1,6 +1,6 @@
 'use strict';
 // A read-only overview. Coordinates and visibility come from the existing world API.
-const WorldAtlasColors={plain:'#a9bb87',grass:'#9ab476',forest:'#5d825d',mountain:'#798779',hill:'#b0aa79',lake:'#609b9d',swamp:'#7a9d78',camp:'#c1b18b',fort:'#c1b18b'};
+const WorldAtlasColors={plain:'#a2af79',grass:'#98a86e',forest:'#5d825d',mountain:'#798779',hill:'#b0aa79',lake:'#397d79',swamp:'#738e68',camp:'#c1b18b',fort:'#c1b18b'};
 let worldAtlasView=null;
 function worldAtlasRead(x,y){
   const tile=Game.getWorldTile(x,y);
@@ -26,7 +26,7 @@ function worldAtlasPaint(){
   const size=view.size,cell=canvas.width/size,base=document.createElement('canvas');base.width=base.height=size;
   const wash=base.getContext('2d');if(!wash)return;
   view.tiles.forEach(t=>{wash.fillStyle=WorldAtlasColors[t.type]||WorldAtlasColors.plain;wash.fillRect(t.x,t.y,1,1);});
-  ctx.fillStyle='#a9bb87';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=true;ctx.globalAlpha=.85;ctx.drawImage(base,0,0,canvas.width,canvas.height);ctx.globalAlpha=1;
+  ctx.fillStyle='#a2af79';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=true;ctx.globalAlpha=.85;ctx.drawImage(base,0,0,canvas.width,canvas.height);ctx.globalAlpha=1;
   if(typeof WorldSandboxRegions!=='undefined')for(const r of WorldSandboxRegions){
     ctx.strokeStyle='#d9dec080';ctx.lineWidth=1;ctx.setLineDash([4,8]);ctx.strokeRect(r.x*cell,r.y*cell,r.w*cell,r.h*cell);ctx.setLineDash([]);
     const x=(r.x+r.w/2)*cell,y=(r.y+r.h/2)*cell;ctx.textAlign='center';ctx.font='25px "Songti SC","SimSun",serif';ctx.strokeStyle='#d8dfbd90';ctx.lineWidth=4;ctx.strokeText(r.name,x,y);ctx.fillStyle='#35584488';ctx.fillText(r.name,x,y);
