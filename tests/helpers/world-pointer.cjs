@@ -26,6 +26,8 @@ function worldPointerHarness() {
     setTimeout: (fn, delay) => timers.push({fn, delay})
   });
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../../grid-world.js'), 'utf8'), context, {filename: 'grid-world.js'});
+  // Gesture geometry is tested from a known center, independently of the new-game framing.
+  vm.runInContext('worldView={...Game.home}',context);
   function dispatch(type, values = {}) {
     const event = {target, button: 0, pointerId: 1, pointerType: 'touch', clientX: 200, clientY: 200,
       defaultPrevented: false, stopped: false,
