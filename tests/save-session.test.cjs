@@ -208,3 +208,8 @@ test('three-page queued takeovers retarget each current writer and preserve FIFO
   assert.equal(cFinished,true,'a queued third page must retain a live request after a preceding page is granted');assert.equal(await toC,null);assert.equal(c.g.state.tax,29);assert.equal(c.g.saveSessionInfo().writable,true);
   assert.equal(a.g.save(),false);assert.equal(b.g.save(),false);assert.equal(c.g.setTax(37),undefined);assert.equal(JSON.parse(a.store.get(KEY)).tax,37);c.g.releaseSaveSession();await microtasks();
 });
+test('real-time checkpoint cannot overwrite a page that took ownership',()=>{
+ const a=page(),G=a.g;G.state.buildings.drill=1;G.state.cityLayout[0]='drill';G.state.cityLevels[0]=1;G.state.army.shield=24;G.state.governor=null;
+ assert.equal(G.startSiegeRT({generalId:'lin'}).ok,true);const run=G.siegeRTView().active;const b=page(a.store);assert.equal(b.g.canRunSiegeRT().ok,false);
+ G.releaseSaveSession();assert.equal(b.g.takeOverSaveSession(),null);const saved=a.store.get(KEY);run.simulation.tick=150;assert.equal(G.checkpointSiegeRT(run.battleId,run.simulation).ok,false);assert.equal(a.store.get(KEY),saved);assert.equal(b.g.state.realtimeSiege.active.checkpointTick,0);
+});
