@@ -1,0 +1,4 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+function api(){const c=vm.createContext({});if(fs.existsSync('siege-rt-view.js'))vm.runInContext(fs.readFileSync('siege-rt-view.js','utf8'),c);return vm.runInContext('typeof SiegeRTView!=="undefined"?SiegeRTView:null',c);}
+test('pointer mapping accounts for canvas CSS scaling and camera',()=>{const V=api();assert.ok(V);const p=V.mapPointer({clientX:150,clientY:100},{left:50,top:50,width:400,height:200},{x:300,y:200,scale:.5});assert.equal(p.x,500);assert.equal(p.y,300);});
+test('movement normalization prevents faster diagonal running',()=>{const V=api();assert.ok(V);const c=V.mapKeys(new Set(['KeyW','KeyD']));assert.ok(Math.abs(Math.hypot(c.x,c.y)-1)<1e-10);assert.equal(V.mapKeys(new Set()).x,0);});

@@ -1,0 +1,33 @@
+{
+  "idle": {
+    "policy": "idle",
+    "result": {
+      "won": false,
+      "reason": "timeout",
+      "endedTick": 18000
+    },
+    "seconds": 600,
+    "survivors": 24,
+    "heroHP": 1200,
+    "wallMs": 63811.5125,
+    "p50Ms": 1.6647499999962747,
+    "p95Ms": 9.769209000000046,
+    "maxMs": 486.87041699999827
+  },
+  "follow": {
+    "policy": "follow",
+    "result": {
+      "won": true,
+      "reason": "captured",
+      "endedTick": 14370
+    },
+    "seconds": 479,
+    "survivors": 24,
+    "heroHP": 476,
+    "wallMs": 66727.986708,
+    "p50Ms": 1.0898339999985183,
+    "p95Ms": 14.320542000001296,
+    "maxMs": 375.382666000005
+  },
+  "note": "Node simulation timings are not browser FPS or real-device performance."
+}
