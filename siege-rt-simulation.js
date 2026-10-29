@@ -8,7 +8,7 @@ const SiegeRTSimulation=(()=>{
     for(let i=0;i<12;i++)add('o'+i,'enemy','melee',750+(i%3)*36,680+Math.floor(i/3)*65,130,90,14,36,28);
     for(let t=0;t<2;t++)for(let i=0;i<4;i++)add('a'+t+i,'enemy','archer',990+(i%2)*30, D.map.towers[t].y+Math.floor(i/2)*30,90,0,12,60,350);
     for(let i=0;i<16;i++)add('c'+i,'enemy','melee',1700+(i%4)*45,690+Math.floor(i/4)*65,130,90,14,36,28);
-    return {version:1,mode,seed:seed>>>0,tick:0,units,projectiles:[],gate:{hp:4000,maxHP:4000},capture:0,result:null,input:{x:0,y:0,aim:0,attack:false},squad:{order:'follow',target:null,facing:0,chargeReady:0,chargeUntil:0,chargeHits:[]},hero:{skillReady:0,dodgeReady:0,dodgeUntil:0,immuneUntil:0,dodgeX:0,dodgeY:0},nextProjectile:0,tutorial:{}};
+    return {version:1,checkpointRevision:0,mode,seed:seed>>>0,tick:0,units,projectiles:[],gate:{hp:4000,maxHP:4000},capture:0,result:null,input:{x:0,y:0,aim:0,attack:false},squad:{order:'follow',target:null,facing:0,chargeReady:0,chargeUntil:0,chargeHits:[]},hero:{skillReady:0,dodgeReady:0,dodgeUntil:0,immuneUntil:0,dodgeX:0,dodgeY:0},nextProjectile:0,tutorial:{}};
   }
 
   const N=SiegeRTNavigation,dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),angleDiff=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
@@ -52,13 +52,13 @@ const SiegeRTSimulation=(()=>{
     let center=squad.order==='follow'?{x:h.x-Math.cos(s.input.aim)*100,y:h.y-Math.sin(s.input.aim)*100}:squad.target||squad.center||h;
     const slots=N.slots(center,squad.facing,ps.map(u=>u.id));
     function moveToward(u,target,speed){if(!point(target)||dist(u,target)<3)return;let goal=target;
-      if(!N.clear(nav,u,target,u.r)){if(u.path===undefined||s.tick>=(u.pathTick||0)){u.path=N.path(nav,u,target);u.pathTick=s.tick+15;}if(!u.path?.length)return;while(u.path.length>1&&dist(u,u.path[0])<16)u.path.shift();goal=u.path[0];}
+      if(!N.clear(nav,u,target,u.r)){if(u.path===undefined||s.tick>=(u.pathTick||0)){u.path=N.path(nav,u,target,u.r);u.pathTick=s.tick+15;}if(!u.path?.length)return;while(u.path.length>1&&dist(u,u.path[0])<16)u.path.shift();goal=u.path[0];}
       const d=dist(u,goal);if(!d)return;const a=Math.atan2(goal.y-u.y,goal.x-u.x);u.facing=a;const m=Math.min(speed/30,d),p=N.move(nav,u,{x:Math.cos(a)*m,y:Math.sin(a)*m});if(squad.order==='charge'&&u.team==='player')u.chargeDistance=(u.chargeDistance||0)+dist(u,p);Object.assign(u,p);
     }
     for(const u of s.units){if(!alive(u)||u.kind==='hero')continue;const foes=s.units.filter(v=>v.team!==u.team&&alive(v)&&dist(u,v)<=400&&N.clear(nav,u,v)).sort((a,b)=>dist(u,a)-dist(u,b)||a.id.localeCompare(b.id));const nearest=foes[0];
       if(u.team==='player'){
         const slot=slots.find(v=>v.id===u.id)||center;const anchor=squad.order==='hold'?squad.center||center:center;
-        if(squad.order==='charge'&&s.tick<squad.chargeUntil&&(u.chargeDistance||0)<360){moveToward(u,squad.target,220);for(const v of foes)if(dist(u,v)<u.r+v.r+12&&!squad.chargeHits.includes(u.id+':'+v.id)){damage(v,32,u);squad.chargeHits.push(u.id+':'+v.id);const a=Math.atan2(v.y-u.y,v.x-u.x);Object.assign(v,N.move(nav,v,{x:Math.cos(a)*20,y:Math.sin(a)*20}));}if(gateDistance(u)<30&&!squad.chargeHits.includes(u.id+':gate')){hitGate(u,32);squad.chargeHits.push(u.id+':gate');}continue;}
+        if(squad.order==='charge'){if(s.tick>=squad.chargeUntil||(u.chargeDistance||0)>=360)continue;moveToward(u,squad.target,Math.min(220,(360-(u.chargeDistance||0))*30));for(const v of foes)if(dist(u,v)<u.r+v.r+12&&!squad.chargeHits.includes(u.id+':'+v.id)){damage(v,32,u);squad.chargeHits.push(u.id+':'+v.id);const a=Math.atan2(v.y-u.y,v.x-u.x);Object.assign(v,N.move(nav,v,{x:Math.cos(a)*20,y:Math.sin(a)*20}));}if(gateDistance(u)<30&&!squad.chargeHits.includes(u.id+':gate')){hitGate(u,32);squad.chargeHits.push(u.id+':gate');}continue;}
         const engage=nearest&&dist(u,nearest)<140&&((squad.order==='hold'&&dist(nearest,anchor)<=70)||(squad.order==='follow'&&dist(u,anchor)<=150));
         if(engage)moveToward(u,nearest,u.speed);else moveToward(u,slot,u.speed);
         if(squad.order==='hold')u.facing=squad.facing;

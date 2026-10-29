@@ -213,3 +213,8 @@ test('real-time checkpoint cannot overwrite a page that took ownership',()=>{
  assert.equal(G.startSiegeRT({generalId:'lin'}).ok,true);const run=G.siegeRTView().active;const b=page(a.store);assert.equal(b.g.canRunSiegeRT().ok,false);
  G.releaseSaveSession();assert.equal(b.g.takeOverSaveSession(),null);const saved=a.store.get(KEY);run.simulation.tick=150;assert.equal(G.checkpointSiegeRT(run.battleId,run.simulation).ok,false);assert.equal(a.store.get(KEY),saved);assert.equal(b.g.state.realtimeSiege.active.checkpointTick,0);
 });
+test('reacquiring writer cannot commit a stale higher tick over a new owner checkpoint',()=>{
+ const a=page(),G=a.g;G.state.buildings.drill=1;G.state.cityLayout[0]='drill';G.state.cityLevels[0]=1;G.state.army.shield=24;G.state.governor=null;assert.equal(G.startSiegeRT({generalId:'lin'}).ok,true);
+ const stale=G.siegeRTView().active;stale.simulation.tick=200;G.releaseSaveSession();const b=page(a.store);assert.equal(b.g.saveSessionInfo().writable,true);const live=b.g.siegeRTView().active;live.simulation.tick=150;live.simulation.units[1].hp=0;assert.equal(b.g.checkpointSiegeRT(live.battleId,live.simulation).ok,true);b.g.releaseSaveSession();assert.equal(G.takeOverSaveSession(),null);
+ const before=a.store.get(KEY);assert.equal(G.checkpointSiegeRT(stale.battleId,stale.simulation).ok,false);assert.equal(a.store.get(KEY),before);assert.equal(G.siegeRTView().active.simulation.units[1].hp,0);
+});
