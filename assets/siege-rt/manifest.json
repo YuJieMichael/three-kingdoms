@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "source": "Original procedural vector artwork and synthesized audio, authored for this project",
+  "terrain": {"renderer":"siege-rt-view.js#drawTerrain","units":"world pixels","map":[2400,1600]},
+  "wall": {"renderer":"siege-rt-view.js#drawTerrain"},
+  "gate": {"renderer":"siege-rt-view.js#drawTerrain","states":["closed","destroyed"]},
+  "tower": {"renderer":"siege-rt-view.js#drawTerrain"},
+  "hero": {"renderer":"siege-rt-view.js#drawUnit","directions":"continuous radians"},
+  "shield": {"renderer":"siege-rt-view.js#drawUnit","directions":"continuous radians"},
+  "melee": {"renderer":"siege-rt-view.js#drawUnit","directions":"continuous radians"},
+  "archer": {"renderer":"siege-rt-view.js#drawUnit","directions":"continuous radians"},
+  "effects": {"renderer":"siege-rt-view.js","limit":128},
+  "audio": {"renderer":"siege-rt-audio.js","type":"Web Audio triangle oscillator","maxVoices":8}
+}
