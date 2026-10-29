@@ -5,3 +5,4 @@
 @media(orientation:portrait){.srt-dialog{padding:25px}.srt-dialog-actions{flex-direction:column}.srt-brand{display:none}.srt-clock{font-size:17px}.srt-bottom{display:none}.srt-objective{padding-left:0;border:0}.srt-notice{max-width:95%;white-space:normal;text-align:center}.srt-stick{display:none}}
 
 .srt-overlay .srt-sound{display:block;border:0;background:none;font-size:11px;color:#a4b8a5;margin:0 auto;padding:4px 12px;min-height:30px}
+@media(max-height:480px) and (orientation:landscape){.srt-stick{display:block}.srt-skills .srt-attack{display:block;background:#ad905a;color:#1d3027;font-weight:700}.srt-overlay kbd{display:none}.srt-bottom{padding-left:140px;justify-content:flex-end}.srt-controls-help{display:none}}

@@ -5,7 +5,7 @@ const SiegeRTNavigation=(()=>{
   function clear(n,a,b,r=0){if(!finite(a)||!finite(b))return false;const d=Math.hypot(b.x-a.x,b.y-a.y),steps=Math.max(1,Math.ceil(d/8));for(let i=0;i<=steps;i++)if(!free(n,{x:a.x+(b.x-a.x)*i/steps,y:a.y+(b.y-a.y)*i/steps},r))return false;return true;}
   function move(n,b,d){if(!finite(b)||!finite(d))return {x:b.x,y:b.y};let p={x:b.x,y:b.y};const steps=Math.max(1,Math.ceil(Math.hypot(d.x,d.y)/6));for(let i=0;i<steps;i++){const q={x:p.x+d.x/steps,y:p.y+d.y/steps};if(free(n,q,b.r||12))p=q;else{const x={x:q.x,y:p.y},y={x:p.x,y:q.y};if(free(n,x,b.r||12))p=x;if(free(n,y,b.r||12))p=y;}}return p;}
   function path(n,a,b){
-    if(!free(n,a)||!free(n,b))return null;if(clear(n,a,b,12))return [{x:b.x,y:b.y}];
+    if(!free(n,a)||!free(n,b))return null;if(!n.gateOpen&&(a.x<1130&&b.x>1220||b.x<1130&&a.x>1220))return null;if(clear(n,a,b,12))return [{x:b.x,y:b.y}];
     const idx=p=>Math.floor(p.y/size)*n.cols+Math.floor(p.x/size),point=i=>({x:(i%n.cols+.5)*size,y:(Math.floor(i/n.cols)+.5)*size});
     const start=idx(a),end=idx(b),open=[start],cost=new Map([[start,0]]),prev=new Map(),closed=new Set();
     while(open.length){let at=0;for(let i=1;i<open.length;i++)if(cost.get(open[i])+Math.hypot(point(open[i]).x-b.x,point(open[i]).y-b.y)/size<cost.get(open[at])+Math.hypot(point(open[at]).x-b.x,point(open[at]).y-b.y)/size)at=i;
