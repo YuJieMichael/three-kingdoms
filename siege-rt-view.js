@@ -1,0 +1,73 @@
+/* Canvas guest viewport. Owns input, RAF, clock and renderer; never writes Game.state. */
+const SiegeRTView=(()=>{
+  function mapPointer(e,rect,camera){return {x:camera.x+(e.clientX-rect.left)/camera.scale,y:camera.y+(e.clientY-rect.top)/camera.scale};}
+  function mapKeys(keys){let x=(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0),y=(keys.has('KeyS')?1:0)-(keys.has('KeyW')?1:0),l=Math.max(1,Math.hypot(x,y));return {type:'moveHero',x:x/l,y:y/l};}
+  function advanceClock(c,now,paused){if(paused||c.last===null)return {steps:0,clock:{...c,last:now,remainder:0}};const sum=c.remainder+Math.max(0,now-c.last),total=Math.floor((sum+1e-7)/(1000/30));return {steps:Math.min(5,total),clock:{last:now,remainder:sum-total*1000/30,dropped:c.dropped+Math.max(0,total-5)}};}
+  function mount(container,options){
+    const canvas=container.querySelector('canvas'),ctx=canvas.getContext('2d'),listeners=[],keys=new Set(),pointers=new Map();let sim=SiegeRTSimulation.clone(options.getState()),paused=true,dead=false,queue=[],raf=0,clock={last:null,remainder:0,dropped:0},width=1000,height=600,mode='',effects=[],lastCheckpoint=sim.tick,stick=null;
+    const camera={x:0,y:0,scale:1};
+    const send=c=>queue.push(c),listen=(el,name,fn,opts)=>{el.addEventListener(name,fn,opts);listeners.push(()=>el.removeEventListener(name,fn,opts));};
+    function resetInput(){keys.clear();pointers.clear();stick=null;queue=[];sim.input.x=sim.input.y=0;sim.input.attack=false;container.querySelector('.srt-stick-knob')?.style.setProperty('transform','translate(0,0)');}
+    function resize(){const r=canvas.getBoundingClientRect();width=r.width;height=r.height;const dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);camera.scale=Math.min(1.1,Math.max(.45,width/1250));if(width<height)pause('请将手机横过来，战斗已暂停');}
+    function checkpoint(){if(sim.mode!=='formal')return true;const r=options.onCheckpoint?.(sim);if(r&&r.ok===false){paused=true;resetInput();options.onPause?.(r.error);return false;}lastCheckpoint=sim.tick;return true;}
+    function pause(reason='战斗已暂停'){if(dead)return;paused=true;resetInput();clock.last=null;checkpoint();options.onPause?.(reason);}
+    function resume(){if(dead||sim.result)return false;if(width<height){options.onPause?.('请将手机横过来');return false;}if(options.canRun){const r=options.canRun();if(!r.ok){options.onPause?.(r.error);return false;}}resetInput();paused=false;clock.last=null;options.onResume?.();return true;}
+    function command(c){if(dead)return;if(c.type==='retreat'){sim=SiegeRTSimulation.step(sim,[c]).state;paused=true;resetInput();checkpoint();options.onUpdate?.(sim,[]);options.onResult?.(sim);return;}if(paused)return;send(c);}
+    function world(e){return mapPointer(e,canvas.getBoundingClientRect(),camera);}
+    function aim(p){const h=sim.units[0];send({type:'aim',angle:Math.atan2(p.y-h.y,p.x-h.x)});}
+    listen(canvas,'contextmenu',e=>e.preventDefault());
+    listen(canvas,'pointermove',e=>{if(paused)return;if(e.pointerType==='mouse')aim(world(e));});
+    listen(canvas,'pointerdown',e=>{if(paused)return;e.preventDefault();const p=world(e);if(mode){if(e.button===2){mode='';options.onMode?.('');return;}send({type:mode==='charge'?'charge':'moveSquad',target:p});mode='';options.onMode?.('');return;}if(e.pointerType==='mouse'){aim(p);if(e.button===2)send({type:'moveSquad',target:p});else{send({type:'attack',held:true});canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,'mouse');}}else if(!e.target.closest('[data-srt]'))aim(p);});
+    listen(canvas,'pointerup',e=>{if(pointers.get(e.pointerId)==='mouse')send({type:'attack',held:false});pointers.delete(e.pointerId);});
+    listen(window,'pointercancel',()=>resetInput());
+    listen(window,'keydown',e=>{if(dead||!container.isConnected)return;if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;if(['KeyW','KeyA','KeyS','KeyD','Space','KeyQ','Digit1','Digit2','Digit3','Escape'].includes(e.code)){e.preventDefault();e.stopPropagation();if(e.repeat)return;if(e.code==='Escape'){pause();return;}if(paused)return;keys.add(e.code);if(e.code==='Space')send({type:'dodge'});if(e.code==='KeyQ')send({type:'skill'});if(e.code==='Digit1')send({type:'follow'});if(e.code==='Digit2')send({type:'hold'});if(e.code==='Digit3'){mode='charge';options.onMode?.('charge');}}},true);
+    listen(window,'keyup',e=>{keys.delete(e.code);});
+    listen(window,'blur',()=>pause('离开窗口，战斗已暂停'));
+    listen(document,'visibilitychange',()=>{if(document.hidden)pause('已暂停，回来后可继续');});
+    listen(window,'pagehide',()=>pause('已保存战场检查点'));
+    listen(window,'resize',resize);
+    const joystick=container.querySelector('.srt-stick');
+    if(joystick){listen(joystick,'pointerdown',e=>{if(paused)return;e.preventDefault();joystick.setPointerCapture(e.pointerId);stick={id:e.pointerId,x:e.clientX,y:e.clientY};});listen(joystick,'pointermove',e=>{if(!stick||stick.id!==e.pointerId)return;const x=e.clientX-stick.x,y=e.clientY-stick.y,l=Math.max(38,Math.hypot(x,y));send({type:'moveHero',x:x/l,y:y/l});joystick.querySelector('span').style.transform=`translate(${x/l*32}px,${y/l*32}px)`;});const end=()=>{stick=null;send({type:'moveHero',x:0,y:0});joystick.querySelector('span').style.transform='translate(0,0)';};listen(joystick,'pointerup',end);listen(joystick,'pointercancel',end);}
+    for(const b of container.querySelectorAll('[data-srt-control]')){const type=b.dataset.srtControl;listen(b,'pointerdown',e=>{if(paused)return;e.preventDefault();b.setPointerCapture(e.pointerId);if(type==='attack'){pointers.set(e.pointerId,'attack');send({type:'attack',held:true});}else if(type==='charge'||type==='moveSquad'){mode=type==='charge'?'charge':'move';options.onMode?.(mode);}else send({type});});listen(b,'pointerup',e=>{if(pointers.get(e.pointerId)==='attack')send({type:'attack',held:false});pointers.delete(e.pointerId);});}
+    function animate(now){if(dead)return;const r=advanceClock(clock,now,paused);clock=r.clock;
+      if(!paused&&options.canRun&&!options.canRun().ok)pause('存档写入权已变化，请重新读取');
+      for(let i=0;i<r.steps&&!paused;i++){if(!stick)send(mapKeys(keys));if([...pointers.values()].includes('attack')){const h=sim.units[0],near=sim.units.filter(u=>u.team==='enemy'&&u.hp>0&&Math.hypot(u.x-h.x,u.y-h.y)<=110).sort((a,b)=>Math.hypot(a.x-h.x,a.y-h.y)-Math.hypot(b.x-h.x,b.y-h.y))[0];if(near)aim(near);else if(sim.input.x||sim.input.y)send({type:'aim',angle:Math.atan2(sim.input.y,sim.input.x)});}
+        const result=SiegeRTSimulation.step(sim,queue);queue=[];sim=result.state;effects.push(...result.events.filter(e=>e.pos).map(e=>({...e,until:now+250})));effects=effects.slice(-128);options.onEvents?.(result.events);options.onUpdate?.(sim,result.events);
+        if(sim.tick-lastCheckpoint>=150&&!checkpoint())break;if(sim.result){paused=true;resetInput();checkpoint();options.onResult?.(sim);break;}}
+      effects=effects.filter(e=>e.until>now);draw(now);raf=requestAnimationFrame(animate);
+    }
+    function draw(now){
+      const dpr=canvas.width/Math.max(1,width);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+      const h=sim.units[0],scale=camera.scale;camera.x=Math.max(0,Math.min(2400-width/scale,h.x-width/scale*.45));camera.y=Math.max(0,Math.min(1600-height/scale,h.y-height/scale*.5));
+      ctx.save();ctx.scale(scale,scale);ctx.translate(-camera.x,-camera.y);
+      drawTerrain(ctx,sim);
+      for(const u of sim.units.filter(u=>u.hp>0).sort((a,b)=>a.y-b.y))drawUnit(ctx,u,sim.tick);
+      for(const p of sim.projectiles){ctx.strokeStyle='#f4d79a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(p.x-p.dx*14,p.y-p.dy*14);ctx.lineTo(p.x,p.y);ctx.stroke();}
+      for(const e of effects){const a=(e.until-now)/250;ctx.globalAlpha=a;if(['swing','skill'].includes(e.type)){const u=sim.units.find(u=>u.id===e.entityId);ctx.strokeStyle=e.type==='skill'?'#f8d481':'#eee5bd';ctx.lineWidth=e.type==='skill'?6:3;ctx.beginPath();ctx.arc(e.pos.x,e.pos.y,e.amount||55,(u?.facing||0)-.8,(u?.facing||0)+.8);ctx.stroke();}if(e.type==='hit'){ctx.fillStyle='#e7b56d';ctx.font='bold 15px serif';ctx.fillText(Math.round(e.amount),e.pos.x,e.pos.y-35-(1-a)*20);}}
+      ctx.globalAlpha=1;
+      if(sim.squad.target){ctx.strokeStyle='#dfbd79';ctx.lineWidth=2;ctx.beginPath();ctx.arc(sim.squad.target.x,sim.squad.target.y,24,0,Math.PI*2);ctx.stroke();}
+      ctx.restore();
+      // Compact tactical overview, always visible even when the hero is outside the gate.
+      const mx=width-163,my=18;ctx.fillStyle='rgba(13,22,22,.85)';ctx.fillRect(mx-8,my-8,153,108);ctx.strokeStyle='#8a7952';ctx.strokeRect(mx-8,my-8,153,108);ctx.strokeStyle='#aa9570';ctx.beginPath();ctx.moveTo(mx+65,my);ctx.lineTo(mx+65,my+90);ctx.stroke();for(const u of sim.units)if(u.hp>0){ctx.fillStyle=u.kind==='hero'?'#ffe1a1':u.team==='player'?'#87b8ab':'#cf7763';ctx.beginPath();ctx.arc(mx+u.x/2400*135,my+u.y/1600*90,u.kind==='hero'?3:1.5,0,Math.PI*2);ctx.fill();}
+    }
+    resize();raf=requestAnimationFrame(animate);
+    return {resume,pause,command,setMode(value){mode=value;options.onMode?.(mode);},getState:()=>SiegeRTSimulation.clone(sim),resetClock(){clock.last=null;},destroy(){if(dead)return;dead=true;cancelAnimationFrame(raf);listeners.forEach(f=>f());resetInput();effects=[];},render:()=>draw(performance.now()),metrics:()=>({droppedTicks:clock.dropped})};
+  }
+  function drawTerrain(c,s){
+    c.fillStyle='#485349';c.fillRect(0,0,2400,1600);
+    // Deterministic ground texture; no network assets or random gameplay state.
+    for(let i=0;i<450;i++){const x=(i*197)%2400,y=(i*313)%1600;c.fillStyle=i%3?'#526052':'#3e4c42';c.fillRect(x,y,18+i%11,3);}
+    c.fillStyle='#7d7660';c.beginPath();c.moveTo(0,690);c.lineTo(1130,720);c.lineTo(1130,910);c.lineTo(0,940);c.fill();
+    c.fillStyle='#777460';c.fillRect(1220,0,1180,1600);
+    c.strokeStyle='#85816b';c.lineWidth=1;for(let x=1240;x<2400;x+=80){c.beginPath();c.moveTo(x,0);c.lineTo(x,1600);c.stroke();}for(let y=0;y<1600;y+=80){c.beginPath();c.moveTo(1220,y);c.lineTo(2400,y);c.stroke();}
+    c.fillStyle='#9a9272';c.fillRect(1220,720,1000,190);
+    for(const [x,y]of [[170,650],[170,940],[350,620]]){c.fillStyle='#263a37';c.beginPath();c.moveTo(x-45,y+30);c.lineTo(x,y-35);c.lineTo(x+45,y+30);c.fill();c.strokeStyle='#a39672';c.lineWidth=3;c.stroke();c.fillStyle='#1e302f';c.fillRect(x-9,y+4,18,27);}
+    for(const w of SiegeRTData.map.walls){c.fillStyle='rgba(0,0,0,.25)';c.fillRect(w.x+12,w.y+15,w.w+18,w.h);c.fillStyle='#434b49';c.fillRect(w.x,w.y,w.w,w.h);c.strokeStyle='#68716b';c.lineWidth=2;for(let y=w.y;y<w.y+w.h;y+=45){c.strokeRect(w.x,y,w.w,45);c.fillStyle='#7a8072';c.fillRect(w.x-9,y,20,22);c.fillRect(w.x+w.w-10,y,20,22);}}
+    if(s.gate.hp>0){c.fillStyle='#312d24';c.fillRect(1130,690,90,220);for(let y=700;y<905;y+=22){c.fillStyle=y%44?'#816248':'#70523c';c.fillRect(1136,y,78,17);}c.strokeStyle='#baa472';c.lineWidth=7;c.strokeRect(1136,695,78,210);c.fillStyle='#1a2220';c.fillRect(1120,660,110,8);c.fillStyle='#cda460';c.fillRect(1120,660,110*s.gate.hp/4000,8);}else{for(let i=0;i<12;i++){c.fillStyle='#5e4d3c';c.fillRect(1135+i%3*25,700+Math.floor(i/3)*49,18,8);}}
+    for(const t of SiegeRTData.map.towers){c.fillStyle='rgba(0,0,0,.25)';c.fillRect(t.x-23,t.y-15,105,98);c.fillStyle='#6a6047';c.fillRect(t.x-32,t.y-32,96,96);c.strokeStyle='#b3a176';c.lineWidth=5;c.strokeRect(t.x-32,t.y-32,96,96);for(const dx of [-32,64])for(const dy of [-32,64]){c.fillStyle='#9b8862';c.fillRect(t.x+dx-5,t.y+dy-5,10,10);}}
+    const p=SiegeRTData.map.capture;c.fillStyle='rgba(214,186,122,.12)';c.beginPath();c.arc(p.x,p.y,p.r,0,Math.PI*2);c.fill();c.strokeStyle='#c8b17b';c.setLineDash([12,10]);c.lineWidth=3;c.stroke();c.setLineDash([]);c.strokeStyle='#f7d58e';c.lineWidth=7;c.beginPath();c.arc(p.x,p.y,p.r,-Math.PI/2,-Math.PI/2+Math.PI*2*s.capture/600);c.stroke();c.fillStyle='#343d37';c.fillRect(p.x-5,p.y-75,7,90);c.fillStyle=s.result?.won?'#83b39e':'#a95747';c.beginPath();c.moveTo(p.x+2,p.y-75);c.lineTo(p.x+60,p.y-60);c.lineTo(p.x+2,p.y-38);c.fill();
+    c.fillStyle='#e6d7b3';c.font='18px serif';c.textAlign='center';c.fillText('进攻营地',290,570);c.fillText(s.gate.hp?'击破城门':'城门已破',1175,630);c.fillText('城内据点',p.x,p.y+170);
+  }
+  function drawUnit(c,u,tick){c.save();c.translate(u.x,u.y);const hero=u.kind==='hero';c.fillStyle='rgba(8,16,14,.35)';c.beginPath();c.ellipse(2,9,u.r+4,7,0,0,Math.PI*2);c.fill();c.rotate(u.facing);const team=u.team==='player'?'#518f88':'#ae5f4c';c.fillStyle=hero?'#c1a66c':team;c.beginPath();c.ellipse(0,0,hero?16:11,hero?12:9,0,0,Math.PI*2);c.fill();c.strokeStyle='#1c302e';c.lineWidth=2;c.stroke();c.fillStyle='#c2b48e';c.beginPath();c.arc(3,0,hero?7:5,0,Math.PI*2);c.fill();c.fillStyle='#303d3b';c.fillRect(2,-6,5,12);c.strokeStyle='#d9d0ac';c.lineWidth=hero?3:2;c.beginPath();c.moveTo(5,8);c.lineTo(hero?30:20,8+Math.sin(tick/5)*2);c.stroke();if(u.kind==='shield'){c.fillStyle=team;c.fillRect(10,-12,5,24);c.strokeStyle='#c1ae77';c.strokeRect(10,-12,5,24);}if(u.kind==='archer'){c.strokeStyle='#c4a069';c.beginPath();c.arc(12,0,10,-1,1);c.stroke();}if(hero){c.fillStyle='#dfc681';c.beginPath();c.moveTo(-12,-10);c.lineTo(-25,0);c.lineTo(-12,10);c.fill();}c.restore();if(u.hp<u.maxHP||hero){c.fillStyle='#242c27';c.fillRect(u.x-16,u.y-27,32,4);c.fillStyle=u.team==='player'?'#a5c9a6':'#d58a6a';c.fillRect(u.x-16,u.y-27,32*u.hp/u.maxHP,4);}if(hero){c.strokeStyle='#e7cf8e';c.lineWidth=1;c.beginPath();c.arc(u.x,u.y,23,0,Math.PI*2);c.stroke();}}
+  return {mount,mapPointer,mapKeys,advanceClock};
+})();
