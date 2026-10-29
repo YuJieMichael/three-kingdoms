@@ -93,7 +93,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 
 快照里的 generalSnapshot 使用规范化字段 valor、leadership；引擎适配层读取现有 general() 字段后转换，不能要求旧存档新增同名武将属性。重复 settle 返回已保存的 receipt 并且不再次 tick 经济或保存。
 
-### 任务 1：规则与快照契约
+### Task 1: 规则与快照契约
 
 **Files:** 新增 siege-rt-data.js、siege-rt-simulation.js、tests/helpers/siege-rt.cjs、tests/siege-rt-data.test.cjs；本任务暂不修改页面加载。
 
@@ -105,7 +105,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-data.test.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: define real-time siege rules and snapshots"`；不包含工作区其他变动。
 
-### 任务 2：可达路径、阵位与碰撞
+### Task 2: 可达路径、阵位与碰撞
 
 **Files:** 新增 siege-rt-navigation.js、tests/siege-rt-navigation.test.cjs。
 
@@ -117,7 +117,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-navigation.test.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: add siege navigation and formation slots"`；不包含工作区其他变动。
 
-### 任务 3：主将与士兵实时交战
+### Task 3: 主将与士兵实时交战
 
 **Files:** 修改 siege-rt-simulation.js；新增 tests/siege-rt-combat.test.cjs。
 
@@ -129,7 +129,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-combat.test.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: implement hero combat and squad commands"`；不包含工作区其他变动。
 
-### 任务 4：攻城目标与可重复战斗验证
+### Task 4: 攻城目标与可重复战斗验证
 
 **Files:** 修改 siege-rt-simulation.js、siege-rt-navigation.js；新增 tests/siege-rt-objectives.test.cjs、tests/balance/realtime-siege.cjs。
 
@@ -141,7 +141,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-objectives.test.cjs && node tests/balance/realtime-siege.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: complete siege gate capture and battle outcomes"`；不包含工作区其他变动。
 
-### 任务 5：正式出征与后方资源事务
+### Task 5: 正式出征与后方资源事务
 
 **Files:** 新增 siege-rt-system.js、tests/siege-rt-integration.test.cjs；修改 engine.js 的迁移、validSave、generalBusy、rates、原城作用域与公开 API；修改六处测试脚本清单及 index.html 的规则加载段。
 
@@ -153,7 +153,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-integration.test.cjs tests/cities-logistics.smoke.test.cjs tests/city-defense.test.cjs tests/battlefield-state.test.cjs tests/battlefield-combat.test.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: connect siege deployment and settlement to cities"`；不包含工作区其他变动。
 
-### 任务 6：检查点、去重结算和锁恢复
+### Task 6: 检查点、去重结算和锁恢复
 
 **Files:** 修改 siege-rt-system.js、engine.js；新增 tests/siege-rt-save.test.cjs；扩展 tests/save-session.test.cjs。
 
@@ -165,7 +165,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-save.test.cjs tests/save-session.test.cjs tests/siege-rt-integration.test.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: persist siege checkpoints and idempotent results"`；不包含工作区其他变动。
 
-### 任务 7：Canvas 战场与桌面、触控输入
+### Task 7: Canvas 战场与桌面、触控输入
 
 **Files:** 新增 siege-rt-view.js、tests/siege-rt-input.test.cjs、tests/siege-rt-loop.test.cjs。
 
@@ -177,7 +177,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-input.test.cjs tests/siege-rt-loop.test.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: render siege battlefield and normalize player input"`；不包含工作区其他变动。
 
-### 任务 8：入口、HUD 与完整试玩闭环
+### Task 8: 入口、HUD 与完整试玩闭环
 
 **Files:** 新增 siege-rt-ui.js、siege-rt.css、tests/siege-rt-ui.test.cjs；修改 manual-ui.js 的 manualDrill、app.js 导航及 index.html 样式/界面加载。
 
@@ -189,7 +189,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-ui.test.cjs tests/siege-rt-input.test.cjs tests/siege-rt-save.test.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: add playable siege entry HUD and result flow"`；不包含工作区其他变动。
 
-### 任务 9：战场素材、声音与反馈
+### Task 9: 战场素材、声音与反馈
 
 **Files:** 新增 assets/siege-rt/manifest.json、素材文件及来源说明；修改 siege-rt-view.js、siege-rt-ui.js；新增 tests/siege-rt-assets.test.cjs。
 
@@ -201,7 +201,7 @@ assert.equal(JSON.stringify(Game.state), saved);
 - [ ] **步骤 4：运行同一命令确认通过。** `node --test tests/siege-rt-assets.test.cjs tests/siege-rt-loop.test.cjs`；预期全部通过、退出码 0。对修改的 JS 另运行 `node --check <实际文件>`。
 - [ ] **步骤 5：提交本任务。** 只暂存本节列出的文件与必要生成物，先 `git diff --cached --check`，再 `git commit -m "feat: add readable siege art audio and impact feedback"`；不包含工作区其他变动。
 
-### 任务 10：回归、性能与交付验收
+### Task 10: 回归、性能与交付验收
 
 **Files:** 新增 production/qa/realtime-siege-first-battle.md 及 evidence/realtime-siege-first-battle/；修改 README.md 功能说明；重建 supabase/functions/_shared/game-runtime.mjs 及构建器实际生成文件。
 
