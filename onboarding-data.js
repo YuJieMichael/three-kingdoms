@@ -2,6 +2,14 @@
 // Prototype rewards: earned once by hall level, separate from recurring supplies.
 const OnboardingData={
   archerTarget:30,
+  // First-chapter preparation uses the same costs and prerequisites. Only newly
+  // queued early work is shortened; the end times in existing saves are retained.
+  openingPace:{factor:.03,buildLevel:5,researchLevel:4,units:['militia','scout','spear','shield','archer']},
+  openingFactor(s,kind,id,level){
+    if(!s||s.buildings.hall>5||Object.keys(s.realm?.cities||{}).length>1||typeof ChapterData!=='undefined'&&ChapterData.chapterOneDone(s))return 1;
+    const p=this.openingPace;
+    return (kind==='build'&&level<=p.buildLevel||kind==='research'&&level<=p.researchLevel||kind==='train'&&p.units.includes(id))?p.factor:1;
+  },
   // 开局选州（design/quick-specs/progression-rework-2026-10-18.md §1）。加成为试玩值；选州不改变出生位置。
   provinces:[
     {id:'jizhou',name:'冀州',desc:'粮食产量 +10%',production:{food:1.1}},

@@ -1,0 +1,64 @@
+{
+  "contract": "design/quick-specs/first-chapter-2026-11-03.md: actual map first; read-only five-stage progress and normal confirmation screens; 44px controls; no overflow; keyboard focus; 390x844, 440x956, 1280x900",
+  "targetViewports": [
+    "390x844",
+    "440x956",
+    "1280x900"
+  ],
+  "accessibility": {
+    "status": "pass",
+    "evidence": "Actual Tab and Shift+Tab navigation focuses the primary button with a solid outline; Enter opens the real gift dialog. All six new strip buttons measure at least 44px high; stages have names and current-step semantics; no animation is added."
+  },
+  "responsive": {
+    "status": "pass",
+    "evidence": "All three real viewports have document scrollWidth at or below viewport width and all strip controls at least 44px high; screenshots visually inspected. Five-stage strip uses one row on phone and splits beside the heading on desktop."
+  },
+  "contentStates": {
+    "loading": {
+      "status": "not-applicable",
+      "reason": "The new strip synchronously projects the already loaded local engine; it has no fetch or asynchronous loading step."
+    },
+    "empty": {
+      "status": "not-applicable",
+      "reason": "The strip has five fixed chapter stages. After the legitimate completion reward is claimed, it is intentionally removed; no empty list is rendered."
+    },
+    "error": {
+      "status": "not-applicable",
+      "reason": "The new strip only reads state and opens existing navigation/confirmation dialogs. It introduces no data loader or write/error transaction; existing engine validation is covered separately."
+    },
+    "partial": {
+      "status": "pass",
+      "evidence": "New game shows zero completed stages, unknown garrison and disabled unavailable stage buttons. First-victory checkpoint shows Qingzhu as the next stage; clicking it opens its real unknown-intel dialog without changing the saved state."
+    },
+    "success": {
+      "status": "pass",
+      "evidence": "A legitimately earned five-stage completion save is loaded with its original simulation clock; after its normal reward collection the strip is removed and the continuing game is shown."
+    },
+    "permission": {
+      "status": "not-applicable",
+      "reason": "No account, sharing, device or storage permission is added by the read-only strip. Mutating actions remain in the existing save-session-controlled confirmation screens."
+    }
+  },
+  "renderedEvidence": [
+    {
+      "viewport": "390x844",
+      "artifact": "mobile-390.png",
+      "observation": "Phone map with opening objective, useful reward text and five 44px stage controls; no horizontal overflow."
+    },
+    {
+      "viewport": "440x956",
+      "artifact": "mobile-440.png",
+      "observation": "Larger phone retains map and target actions under the compact progress strip."
+    },
+    {
+      "viewport": "1280x900",
+      "artifact": "desktop.png",
+      "observation": "Desktop chapter heading and five-stage row fit beside each other above the map."
+    },
+    {
+      "viewport": "440x956",
+      "artifact": "success.png",
+      "observation": "Legitimate completed first chapter continues to existing game screens without a stale opening strip."
+    }
+  ]
+}

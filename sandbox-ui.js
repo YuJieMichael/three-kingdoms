@@ -40,10 +40,26 @@ function sandboxTargetQuickHTML(n){
   const summary=friendly?'己方领地 · 查看驻军与城务':known?'情报已取得 · 配兵查看实际缴获与路线':'守军未知 · 先侦察，再按情报配兵';
   return `<div class="sandbox-target-quick"><p>${esc(summary)}</p><div class="sandbox-quick-actions">${friendly?btn('领地详情','sandboxTargetExpand','','secondary'):btn(S().army.scout?'侦察':'侦察 · 缺斥候','scoutPlan',n.id,'secondary',!S().army.scout)+btn('配兵出征','campaignDispatch',n.id+':'+mode,'',!!reason)}${btn(mapSheetOpen?'收起详情':'目标详情',mapSheetOpen?'mapSheetClose':'sandboxTargetExpand','','secondary')}</div></div>`;
 }
+function sandboxOpeningHTML(){
+  const s=S(),complete=ChapterData.chapterOneDone(s);
+  if(complete&&s.missionClaims.includes('camp'))return '';
+  const stages=ChapterData.chapterOneIds.map(id=>({id,node:Game.getNode(id),done:Game.chapterTaskDone(id),visible:Game.landmarkVisible(id)})),cleared=stages.filter(t=>t.done).length;
+  const next=stages.find(t=>!t.done),benefits={field:'夺回粮田，为出征提供补给',wood:'打通林道，增加建城木材',pass:'查清守军，夺下通往矿山的隘口',mine:'用枪兵对付巡山骑兵，一战夺取军械',camp:'攻下营寨，解救将领严秋'};
+  const goal=GrowthGuide.model(Game),label=complete?'领取通关奖励':goal.kind==='queue'?'查看整备进度':goal.kind==='population'&&goal.item?'补充兵源':goal.kind==='gift'?'领取整备补给':goal.kind==='battle'?'继续指挥':goal.kind==='battleArrival'?'进入战斗':'继续战役';
+  return `<section class="sandbox-opening" aria-label="第一章战役"><div class="sandbox-opening-heading"><div><span class="sandbox-overline">第一章 · 收复青溪</span><strong>${complete?'严秋归队':esc(next?.node.name||'整军出发')}</strong></div>${btn(label,complete?'guideRewards':'guideGo','','small')}</div><p>${esc(complete?'第一章完成，领取战果后向北原推进。':benefits[next?.id]||'经营城池，整备出征。')}</p><details class="sandbox-opening-route"><summary><span class="modern-progress" aria-hidden="true">${stages.map(t=>`<i class="${t.done?'done':''}"></i>`).join('')}</span><span>战线 ${cleared} / 5</span></summary><ol class="sandbox-opening-stages">${stages.map((t,i)=>`<li class="${t.done?'is-complete':t.id===next?.id?'is-current':'is-locked'}"><button type="button" data-action="worldTargetGo" data-id="${esc(t.id)}" ${t.visible?'':'disabled'} ${t.id===next?.id?'aria-current="step"':''} aria-label="${esc(t.node.name)} · ${t.done?'已完成':t.visible?'查看目标':'尚未开放'}"><span aria-hidden="true">${t.done?'✓':i+1}</span>${esc(['粮田','竹林','隘口','矿山','营寨'][i])}</button></li>`).join('')}</ol></details></section>`;
+}
 function sandboxWorldPage(){
   if(S().battle&&!S().battle.finished)return battlePage();
   const n=cityViewNode(Game.getNode(Game.landmarkVisible(selectedNode)?selectedNode:'field')||Game.getNode('field'));
-  return `<section class="world-command-page sandbox-world"><div class="sandbox-map-heading"><div><span class="sandbox-overline">山河策 · 沙盘征战</span><h2>青溪战区</h2></div><span class="sandbox-region-note">试玩战区 · 64 × 64</span></div>${expeditionStrip()}<div class="layout world-layout"><div class="world-map-main">${worldMap()}</div><aside class="panel node-panel world-target-panel sandbox-target${mapSheetOpen?' map-sheet-open':''}" aria-label="当前地图目标"><div class="section-title"><div><span class="sandbox-overline">${S().conquered[n.id]?'己方领地':'当前目标'}</span><h3>${esc(n.name)}</h3></div><span class="sandbox-level">${n.level}级</span></div>${sandboxTargetQuickHTML(n)}<div class="sandbox-target-full">${sandboxTargetHTML(n)}</div></aside></div>${sandboxTasksHTML()}${worldBattleReceiptHTML()}${worldMarchPathsHTML()}<details class="world-tool-details sandbox-map-reference" data-ui-disclosure="sandbox-map-guide"><summary>战区导航与势力</summary>${yellowCityLinksHTML()}${typeof landmarkLinks==='function'?landmarkLinks():''}<p class="hint">拖动查看周边。军队按出发时路线行进；已在途队伍保留原定抵达时间。</p></details></section>`;
+  const opening=sandboxOpeningHTML(),tasks=(Game.sandboxTasks?.()||[]).filter(t=>t.status==='ready').length;
+  return `<section class="world-command-page sandbox-world modern-world">
+    <div class="layout world-layout"><div class="world-map-main">${worldMap()}</div>
+      <div class="modern-left-rail">${opening||`<section class="modern-objective" aria-label="当前成长目标">${currentObjectiveHTML()}</section>`}<div class="modern-marches" aria-label="行军动态">${expeditionStrip()}</div></div>
+      <div class="sandbox-map-heading"><span class="sandbox-overline">青溪战区</span><span class="sandbox-region-note">64 × 64</span></div>
+      <nav class="modern-map-actions" aria-label="战区功能">${btn(layoutNavIcon('tasks')+'<span>军务'+(tasks?` <b>${tasks}</b>`:'')+'</span>','sandboxTasks','','secondary modern-map-action')}${btn(layoutNavIcon('world')+'<span>总览</span>','worldAtlas','','secondary modern-map-action')}${btn(layoutNavIcon('more')+'<span>附近</span>','worldTargets','','secondary modern-map-action')}</nav>
+      <aside class="panel node-panel world-target-panel sandbox-target${mapSheetOpen?' map-sheet-open':''}" aria-label="当前地图目标"><div class="section-title"><div><span class="sandbox-overline">${S().conquered[n.id]?'我方控制':'选中据点'} · ${Number.isFinite(n.x)?`${n.x}, ${n.y}`:'战区目标'}</span><h3>${esc(n.name)}</h3></div><span class="sandbox-level">Lv.${n.level}</span></div>${sandboxTargetQuickHTML(n)}<div class="sandbox-target-full">${sandboxTargetHTML(n)}</div></aside>
+    </div>
+  </section>`;
 }
 function sandboxNextTarget(){
   const next=Game.nextLandmark?.();if(next&&Game.landmarkVisible(next.id))return next;
@@ -89,7 +105,7 @@ function sandboxDecorateDispatch(){
   document.getElementById('campaign-march-preview').before(library,Object.assign(document.createElement('section'),{id:'sandbox-dispatch-routes'}));
   sandboxDispatchRefresh();
 }
-function sandboxTasksModal(){showModal('沙盘军务',`<p class="hint">从军务卡配兵，战胜对应守军后领取补给。各项次数与重置见任务说明；战利品照常按战斗结算。</p>${sandboxTaskCardsHTML(Game.sandboxTasks?.()||[],true)}`,btn('返回地图','close','','secondary'));manualModalContext=sandboxTasksModal;}
+function sandboxTasksModal(){const tasks=Game.sandboxTasks?.()||[];showModal('沙盘军务',tasks.length?`<p class="hint">从军务卡配兵，战胜对应守军后领取补给。各项次数与重置见任务说明；战利品照常按战斗结算。</p>${sandboxTaskCardsHTML(tasks,true)}`:`<div class="modern-empty">${layoutNavIcon('tasks')}<h3>军务尚未开放</h3><p>取得首场胜利后开启护粮，第一章通关后开启讨贼。</p>${btn('查看当前目标','classicObjectives','','secondary')}</div>`,btn('返回地图','close','','secondary'));manualModalContext=sandboxTasksModal;}
 function installSandboxUI(){
   if(typeof document==='undefined'||typeof document.querySelector!=='function')return;
   worldPage=sandboxWorldPage;

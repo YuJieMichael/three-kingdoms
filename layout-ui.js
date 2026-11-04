@@ -67,12 +67,12 @@ function layoutShell(){
     <header class="classic-header">
       <div class="classic-brand"><span class="brand-mark">三</span><h1>山河策</h1><span class="classic-edition">${OnlineClient.shared()?'共享世界':'单机'}</span></div>
       <nav class="layout-scene-nav" aria-label="场景导航">${scenes.map(([id,label,icon])=>{const active=id==='world'?page==='world':page==='city'&&cityArea===id;return `<button data-action="classicNav" data-id="${id}" class="${active?'active':''}" ${active?'aria-current="page"':''} aria-label="${label}">${layoutNavIcon(icon)}<span>${label}</span></button>`;}).join('')}</nav>
-      <div class="classic-header-meta">${citySwitchButtonHTML()}<button data-action="classicMore" aria-label="更多城务与功能">更多</button><button data-action="settings" aria-label="设置与帮助">设置</button></div>
+      <div class="classic-header-meta">${citySwitchButtonHTML()}<button data-action="classicMore" aria-label="更多城务与功能">${layoutNavIcon('more')}<span class="header-action-label">更多</span></button><button data-action="settings" aria-label="设置与帮助"><svg class="layout-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m9 3-1 3-3 1-2 3 2 2-1 3 3 2 1 3h4l1-3 3-1 2-3-2-2 1-3-3-2-1-3z"/></svg><span class="header-action-label">设置</span></button></div>
     </header>
     <div class="online-bar-host" data-online-status>${onlineStatusHTML()}</div>
     ${classicResourceRibbon()}
     <div class="classic-workspace">${layoutLordPanelHTML()}${classicInfoOpen?'<button class="rail-backdrop" data-action="classicInfo" aria-label="关闭城池详情"></button>':''}${classicSidebar()}
-      <main id="main" class="classic-content screen-${page}" aria-label="游戏主界面">${npcDefenseNoticeHTML()}${typeof otherRegionalFrontNoticeHTML==='function'?otherRegionalFrontNoticeHTML():''}${view}</main>
+      <main id="main" class="classic-content screen-${page}" aria-label="游戏主界面"><div class="scene-notices">${npcDefenseNoticeHTML()}${typeof otherRegionalFrontNoticeHTML==='function'?otherRegionalFrontNoticeHTML():''}</div>${view}</main>
     </div>
     <footer class="classic-footer"><div class="layout-status-strip">${bulletin}${focus?'':currentObjectiveHTML()}</div>
       <nav class="classic-primary layout-command-dock" aria-label="常用功能" style="--dock-count:${commands.length}">${commands.map(([icon,label,action,id,badge])=>`<button data-action="${action}" data-id="${id}" class="${commandActive(id)?'active':''}" ${commandActive(id)?'aria-current="page"':''} aria-label="${label}"><span class="layout-dock-emblem">${layoutNavIcon(icon)}</span><span class="layout-nav-label">${label}</span>${badge?`<i>${badge}</i>`:''}</button>`).join('')}</nav>

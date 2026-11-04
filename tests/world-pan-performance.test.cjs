@@ -25,7 +25,7 @@ test('panning updates visible map and coordinates without rebuilding the page or
  const e=mapUI(),before=JSON.stringify(e.Game.state);e.evaluate('centerWorld(35,34,false,true)');
  assert.equal(e.evaluate('fullRenders'),0);assert.equal(e.evaluate('replacements'),1);
  assert.ok(e.reads()<=100,'pan should only read visible map, not all 4096 world tiles');
- assert.match(e.evaluate('boardHTML'),/32–37 \/ 31–36/);assert.match(e.evaluate('boardHTML'),/data-x="32" data-y="31"/);
+ assert.match(e.evaluate('boardHTML'),/31–38 \/ 30–37/);assert.match(e.evaluate('boardHTML'),/data-x="31" data-y="30"/);
  assert.equal(e.evaluate('mapX.value'),35);assert.equal(e.evaluate('mapY.value'),34);
  assert.equal(e.evaluate('selectedNode'),'field');assert.equal(JSON.stringify(e.Game.state),before);
 });

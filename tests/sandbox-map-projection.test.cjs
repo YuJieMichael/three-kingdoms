@@ -15,13 +15,15 @@ function map(){
 test('the map projects task flags and real coordinates without changing the save or reading the entire world',()=>{
   const e=map();e.Game.state.stats.victories=1;
   const before=JSON.stringify(e.Game.state);let reads=0;
-  assert.equal(e.evaluate('worldView.x'),31);assert.equal(e.evaluate('worldView.y'),33);
+  assert.equal(e.evaluate('worldView.x'),31);assert.equal(e.evaluate('worldView.y'),34);assert.equal(e.evaluate('worldSpan()'),8);
   const read=e.Game.getWorldTile;e.Game.getWorldTile=(...args)=>{reads++;return read(...args);};
   const html=e.evaluate('worldMap()');
   assert.match(html,/试玩分区/);assert.match(html,/data-id="home" data-x="32" data-y="32"/);
   assert.match(html,/data-id="field" data-x="29" data-y="35"/);assert.match(html,/world-task-pin/);
   assert.match(html,/flag-allied/);assert.match(html,/flag-enemy/);assert.match(html,/assets\/sandbox\/capital\.webp/);
-  assert.ok(reads<=110,`a visible map read ${reads} tiles`);assert.equal(JSON.stringify(e.Game.state),before);
+  // Eight visible cells plus the existing two-cell ground-cache border cover
+  // 12x12 tiles; route metadata may read a few additional cells, never 4096.
+  assert.ok(reads<=160,`a visible map read ${reads} tiles`);assert.equal(JSON.stringify(e.Game.state),before);
   assert.doesNotMatch(html,/寒川渡口|北原关隘/,'undiscovered later targets cannot leak into the local map');
 });
 test('the displayed route uses the chosen rule path and never previews an undiscovered target',()=>{

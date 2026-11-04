@@ -4,11 +4,12 @@ const {loadGame,city,battle}=require('./helpers/game.cjs');
 function ready(seed=1){const e=loadGame(seed),g=e.Game,s=g.state;city(g,{hall:10,house:10,drill:10,barracks:10,academy:10,workshop:5});for(const id of Object.keys(s.tech))s.tech[id]=10;s.res.food=1e7;s.res.gold=1e7;s.res.iron=1e7;e.evaluate('Math.random=()=>.5');return {e,g,s,C:e.Chapter};}
 const fight=(e,id,army,mode='occupy')=>{const r=battle(e,id,mode,army,true);e.advance(Math.max(90001,(e.Game.state.cooldowns[id]||0)-e.now()+1)+6*3600000);e.Game.dismissBattle();return r;};
 const conquer=(s,ids)=>{for(const id of ids){s.conquered[id]=true;s.raided[id]=true;}};
-test('赤铁山 needs three wins, each one a 军械残图; raids count and only the third clears it',()=>{
-  const {e,g,s}=ready();conquer(s,['field','wood','pass']);s.plots[0]={type:'mine',level:3};
-  for(let i=1;i<=3;i++){Object.assign(s.army,{archer:600,spear:300,shield:200});assert.equal(fight(e,'mine',{archer:600,spear:300,shield:200},i===2?'raid':'occupy').won,true);
-    assert.equal(g.chapterTaskDone('mine'),i===3,'win '+i);assert.equal(!!s.conquered.mine,i===3);}
-  assert.equal(s.stageTasks.mine.count,3);assert.equal(g.landmarkVisible('camp'),true);assert.equal(g.validSave(s),true);
+test('赤铁山 is cleared by one real victory, whether raiding or occupying',()=>{
+  for(const mode of ['raid','occupy']){
+    const {e,g,s}=ready();conquer(s,['field','wood','pass']);s.plots[0]={type:'mine',level:3};Object.assign(s.army,{archer:600,spear:300,shield:200});
+    assert.equal(fight(e,'mine',{archer:600,spear:300,shield:200},mode).won,true);
+    assert.equal(g.chapterTaskDone('mine'),true);assert.equal(s.conquered.mine,true);assert.equal(s.stageTasks.mine.count,1);assert.equal(g.landmarkVisible('camp'),true);assert.equal(g.validSave(s),true);
+  }
 });
 test('白石隘口 cannot be occupied without a precise scout report',()=>{
   const {g,s}=ready();conquer(s,['field','wood']);s.plots[0]={type:'mine',level:3};s.army.archer=300;
@@ -68,8 +69,8 @@ test('an old save keeps every stage it already reached, with no task to redo',()
   assert.equal(g.chapterTaskDone('north_camp'),false);assert.equal(g.validSave(s),true);
 });
 test('a stage task view tells the player the type, the rule and the progress',()=>{
-  const {g,s}=ready();s.plots[0]={type:'mine',level:3};s.stageTasks.mine={count:2};const v=g.chapterTask('mine');
-  assert.equal(v.type,'冶铁搜集');assert.match(v.text,/军械残图/);assert.equal(v.progress,'2 / 3 份军械残图');assert.equal(v.done,false);
+  const {g,s}=ready();s.plots[0]={type:'mine',level:3};s.stageTasks.mine={count:0};const v=g.chapterTask('mine');
+  assert.equal(v.type,'夺取军械');assert.match(v.text,/军械残图/);assert.equal(v.progress,'0 / 1 份军械残图');assert.equal(v.done,false);
   assert.equal(g.chapterTask('north_road').deliver,false,'chapter two is not open yet');s.conquered.camp=true;assert.equal(g.chapterTask('north_road').deliver,true);
 });
 test('赤铁山 waits for a level-3 iron mine before any march',()=>{

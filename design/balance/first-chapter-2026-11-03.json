@@ -1,0 +1,2393 @@
+[
+  {
+    "seed": 7,
+    "speed": 1,
+    "accelerate": false,
+    "target": "chapter-one",
+    "hall": 5,
+    "gifts": 5,
+    "minutes": 46.006566666666664,
+    "archers": 0,
+    "victories": 6,
+    "office": 0,
+    "firstBattle": "complete",
+    "guideKind": "battleReturn",
+    "used": {
+      "population": 6
+    },
+    "spent": {
+      "food": 164249,
+      "wood": 291530,
+      "stone": 223250,
+      "iron": 163930,
+      "gold": 85490
+    },
+    "log": [
+      {
+        "target": "开垦第一块农田",
+        "minutes": 0
+      },
+      {
+        "target": "建设民房至 1 级",
+        "minutes": 0.000016666666666666667
+      },
+      {
+        "target": "升级民房至 2 级",
+        "minutes": 0.000033333333333333335
+      },
+      {
+        "target": "建设伐木场至 1 级",
+        "minutes": 0.00005
+      },
+      {
+        "target": "升级伐木场至 2 级",
+        "minutes": 0.00006666666666666667
+      },
+      {
+        "target": "建设采石场至 1 级",
+        "minutes": 0.00008333333333333333
+      },
+      {
+        "target": "升级采石场至 2 级",
+        "minutes": 0.0001
+      },
+      {
+        "target": "建设铁矿至 1 级",
+        "minutes": 0.00011666666666666667
+      },
+      {
+        "target": "升级铁矿至 2 级",
+        "minutes": 0.00013333333333333334
+      },
+      {
+        "target": "升级铁矿至 3 级",
+        "minutes": 0.00015
+      },
+      {
+        "target": "升级官府至 2 级",
+        "minutes": 0.00016666666666666666
+      },
+      {
+        "target": "建设校场至 1 级",
+        "minutes": 0.00018333333333333334
+      },
+      {
+        "target": "建设军营至 1 级",
+        "minutes": 0.0002
+      },
+      {
+        "target": "训练 30 名义兵",
+        "minutes": 0.00021666666666666666
+      },
+      {
+        "target": "派 30 名义兵掠夺 草原野地 (30,31)",
+        "minutes": 0.19761666666666666
+      },
+      {
+        "target": "义兵正在行军",
+        "minutes": 0.40596666666666664
+      },
+      {
+        "target": "义兵已抵达野地，进入战斗",
+        "minutes": 0.40596666666666664
+      },
+      {
+        "target": "练兵出征结束，义兵正在返城",
+        "minutes": 1.51015
+      },
+      {
+        "target": "升级军营至 2 级",
+        "minutes": 1.51015
+      },
+      {
+        "target": "升级军营至 3 级",
+        "minutes": 1.5101666666666667
+      },
+      {
+        "target": "升级军营至 4 级",
+        "minutes": 1.5101833333333334
+      },
+      {
+        "target": "建设书院至 1 级",
+        "minutes": 1.5102
+      },
+      {
+        "target": "升级书院至 2 级",
+        "minutes": 1.5102166666666668
+      },
+      {
+        "target": "升级书院至 3 级",
+        "minutes": 1.5102333333333333
+      },
+      {
+        "target": "升级书院至 4 级",
+        "minutes": 1.51025
+      },
+      {
+        "target": "建设铁匠铺至 1 级",
+        "minutes": 1.5102666666666666
+      },
+      {
+        "target": "研究练兵技巧至 1 级",
+        "minutes": 1.5102833333333334
+      },
+      {
+        "target": "升级铁匠铺至 2 级",
+        "minutes": 2.0269666666666666
+      },
+      {
+        "target": "研究练兵技巧至 2 级",
+        "minutes": 2.0269833333333334
+      },
+      {
+        "target": "升级铁匠铺至 3 级",
+        "minutes": 3.177
+      },
+      {
+        "target": "研究练兵技巧至 3 级",
+        "minutes": 3.177016666666667
+      },
+      {
+        "target": "升级铁匠铺至 4 级",
+        "minutes": 5.6603666666666665
+      },
+      {
+        "target": "研究练兵技巧至 4 级",
+        "minutes": 5.660383333333334
+      },
+      {
+        "target": "研究抛射技巧至 1 级",
+        "minutes": 10.927066666666667
+      },
+      {
+        "target": "升级民房至 3 级",
+        "minutes": 12.310416666666667
+      },
+      {
+        "target": "训练 30 名弓箭兵",
+        "minutes": 12.310433333333334
+      },
+      {
+        "target": "研究侦察技巧至 1 级",
+        "minutes": 13.66045
+      },
+      {
+        "target": "训练 1 名斥候",
+        "minutes": 13.827133333333334
+      },
+      {
+        "target": "侦察河畔荒田，查看敌军情报",
+        "minutes": 13.843816666666667
+      },
+      {
+        "target": "斥候正在前往河畔荒田",
+        "minutes": 13.877166666666668
+      },
+      {
+        "target": "选择主将与弓兵，确认河畔荒田首战",
+        "minutes": 13.877166666666668
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 14.04385
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 14.04385
+      },
+      {
+        "target": "查看首胜收获，等待部队返城",
+        "minutes": 16.1272
+      },
+      {
+        "target": "首战闭环完成，查看收获与官职晋升",
+        "minutes": 16.1272
+      },
+      {
+        "target": "研究战斗技巧至 1 级",
+        "minutes": 16.1272
+      },
+      {
+        "target": "训练 30 名弓箭兵",
+        "minutes": 16.81055
+      },
+      {
+        "target": "【清剿】占领青竹林，推进第一章",
+        "minutes": 18.160566666666668
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 18.393916666666666
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 18.393916666666666
+      },
+      {
+        "target": "建设工匠作坊至 1 级",
+        "minutes": 19.893916666666666
+      },
+      {
+        "target": "建设城墙至 1 级",
+        "minutes": 19.893933333333333
+      },
+      {
+        "target": "升级官府至 3 级",
+        "minutes": 19.89395
+      },
+      {
+        "target": "查看战斗收获，等待部队返城",
+        "minutes": 20.0106
+      },
+      {
+        "target": "研究战斗技巧至 2 级",
+        "minutes": 20.0106
+      },
+      {
+        "target": "研究抛射技巧至 2 级",
+        "minutes": 21.54395
+      },
+      {
+        "target": "研究防护技巧至 1 级",
+        "minutes": 24.610633333333332
+      },
+      {
+        "target": "研究防护技巧至 2 级",
+        "minutes": 25.477316666666667
+      },
+      {
+        "target": "训练 40 名弓箭兵",
+        "minutes": 27.394
+      },
+      {
+        "target": "训练 30 名刀盾兵",
+        "minutes": 29.194016666666666
+      },
+      {
+        "target": "训练 30 名斥候",
+        "minutes": 30.094033333333332
+      },
+      {
+        "target": "【侦察】派 31 名斥候精确侦察白石隘口",
+        "minutes": 30.54405
+      },
+      {
+        "target": "斥候正在前往白石隘口",
+        "minutes": 30.5774
+      },
+      {
+        "target": "【侦察】占领白石隘口，推进第一章",
+        "minutes": 30.5774
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 30.877416666666665
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 30.877416666666665
+      },
+      {
+        "target": "升级城墙至 2 级",
+        "minutes": 32.87741666666667
+      },
+      {
+        "target": "升级官府至 4 级",
+        "minutes": 32.877433333333336
+      },
+      {
+        "target": "查看战斗收获，等待部队返城",
+        "minutes": 33.027433333333335
+      },
+      {
+        "target": "训练 40 名长枪兵",
+        "minutes": 33.027433333333335
+      },
+      {
+        "target": "【夺取军械】占领赤铁山，推进第一章",
+        "minutes": 33.92745
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 34.327466666666666
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 34.327466666666666
+      },
+      {
+        "target": "升级城墙至 3 级",
+        "minutes": 36.327466666666666
+      },
+      {
+        "target": "升级官府至 5 级",
+        "minutes": 36.32748333333333
+      },
+      {
+        "target": "训练 60 名弓箭兵",
+        "minutes": 41.43986666666667
+      },
+      {
+        "target": "【兵种】占领黄巾营寨，推进第一章",
+        "minutes": 44.13988333333333
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 44.506566666666664
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 44.506566666666664
+      }
+    ],
+    "queueLog": [
+      {
+        "kind": "build",
+        "id": "farm",
+        "level": 1,
+        "rawSeconds": 1.01123583984375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.000016666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 1,
+        "rawSeconds": 2.52808984375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.000033333333333333335
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 2,
+        "rawSeconds": 5.6460673828125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00005
+      },
+      {
+        "kind": "build",
+        "id": "lumber",
+        "level": 1,
+        "rawSeconds": 1.51685400390625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00006666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "lumber",
+        "level": 2,
+        "rawSeconds": 3.45505615234375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00008333333333333333
+      },
+      {
+        "kind": "build",
+        "id": "quarry",
+        "level": 1,
+        "rawSeconds": 2.022471923828125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.0001
+      },
+      {
+        "kind": "build",
+        "id": "quarry",
+        "level": 2,
+        "rawSeconds": 4.63483154296875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00011666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 1,
+        "rawSeconds": 3.033707763671875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00013333333333333334
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 2,
+        "rawSeconds": 6.9101123046875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00015
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 3,
+        "rawSeconds": 15.421348388671875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00016666666666666666
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 2,
+        "rawSeconds": 8.0898876953125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00018333333333333334
+      },
+      {
+        "kind": "build",
+        "id": "drill",
+        "level": 1,
+        "rawSeconds": 5.0561796875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.0002
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 1,
+        "rawSeconds": 10.112359619140625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00021666666666666666
+      },
+      {
+        "kind": "train",
+        "id": "militia",
+        "count": 30,
+        "rawSeconds": 11.842105224609375,
+        "waitSeconds": 11.844,
+        "finishedMinutes": 0.19761666666666666
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 2,
+        "rawSeconds": 22.415730224609376,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5101666666666667
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 3,
+        "rawSeconds": 48.707865234375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5101833333333334
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 4,
+        "rawSeconds": 103.31460668945313,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 1,
+        "rawSeconds": 16.179775390625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102166666666668
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 2,
+        "rawSeconds": 35.89887646484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102333333333333
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 3,
+        "rawSeconds": 77.94943823242187,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.51025
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 4,
+        "rawSeconds": 165.25280908203126,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102666666666666
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 1,
+        "rawSeconds": 6.067415771484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102833333333334
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 1,
+        "rawSeconds": 31,
+        "waitSeconds": 31.001,
+        "finishedMinutes": 2.0269666666666666
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 2,
+        "rawSeconds": 13.48314599609375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.0269833333333334
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 2,
+        "rawSeconds": 69,
+        "waitSeconds": 69.001,
+        "finishedMinutes": 3.177
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 3,
+        "rawSeconds": 29.241572998046873,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 3.177016666666667
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 3,
+        "rawSeconds": 149,
+        "waitSeconds": 149.001,
+        "finishedMinutes": 5.6603666666666665
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 4,
+        "rawSeconds": 61.9382021484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 5.660383333333334
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 4,
+        "rawSeconds": 316,
+        "waitSeconds": 316.001,
+        "finishedMinutes": 10.927066666666667
+      },
+      {
+        "kind": "research",
+        "id": "shooting",
+        "level": 1,
+        "rawSeconds": 83,
+        "waitSeconds": 83.001,
+        "finishedMinutes": 12.310416666666667
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 3,
+        "rawSeconds": 12.21910107421875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 12.310433333333334
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 30,
+        "rawSeconds": 81,
+        "waitSeconds": 81.001,
+        "finishedMinutes": 13.66045
+      },
+      {
+        "kind": "research",
+        "id": "scouting",
+        "level": 1,
+        "rawSeconds": 10,
+        "waitSeconds": 10.001,
+        "finishedMinutes": 13.827133333333334
+      },
+      {
+        "kind": "train",
+        "id": "scout",
+        "count": 1,
+        "rawSeconds": 1,
+        "waitSeconds": 1.001,
+        "finishedMinutes": 13.843816666666667
+      },
+      {
+        "kind": "research",
+        "id": "combat",
+        "level": 1,
+        "rawSeconds": 41,
+        "waitSeconds": 41.001,
+        "finishedMinutes": 16.81055
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 30,
+        "rawSeconds": 81,
+        "waitSeconds": 81.001,
+        "finishedMinutes": 18.160566666666668
+      },
+      {
+        "kind": "build",
+        "id": "workshop",
+        "level": 1,
+        "rawSeconds": 18.2022470703125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 19.893933333333333
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 1,
+        "rawSeconds": 40.449438232421876,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 19.89395
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 3,
+        "rawSeconds": 151.68539331054689,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 19.893966666666667
+      },
+      {
+        "kind": "research",
+        "id": "combat",
+        "level": 2,
+        "rawSeconds": 92,
+        "waitSeconds": 92.001,
+        "finishedMinutes": 21.54395
+      },
+      {
+        "kind": "research",
+        "id": "shooting",
+        "level": 2,
+        "rawSeconds": 184,
+        "waitSeconds": 184.001,
+        "finishedMinutes": 24.610633333333332
+      },
+      {
+        "kind": "research",
+        "id": "protection",
+        "level": 1,
+        "rawSeconds": 52,
+        "waitSeconds": 52.001,
+        "finishedMinutes": 25.477316666666667
+      },
+      {
+        "kind": "research",
+        "id": "protection",
+        "level": 2,
+        "rawSeconds": 115,
+        "waitSeconds": 115.001,
+        "finishedMinutes": 27.394
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 40,
+        "rawSeconds": 108,
+        "waitSeconds": 108.001,
+        "finishedMinutes": 29.194016666666666
+      },
+      {
+        "kind": "train",
+        "id": "shield",
+        "count": 30,
+        "rawSeconds": 54,
+        "waitSeconds": 54.001,
+        "finishedMinutes": 30.094033333333332
+      },
+      {
+        "kind": "train",
+        "id": "scout",
+        "count": 30,
+        "rawSeconds": 27,
+        "waitSeconds": 27.001,
+        "finishedMinutes": 30.54405
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 2,
+        "rawSeconds": 89.83146069335938,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 32.877433333333336
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 4,
+        "rawSeconds": 303.37078662109377,
+        "waitSeconds": 3.372,
+        "finishedMinutes": 32.93363333333333
+      },
+      {
+        "kind": "train",
+        "id": "spear",
+        "count": 40,
+        "rawSeconds": 54,
+        "waitSeconds": 54.001,
+        "finishedMinutes": 33.92745
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 3,
+        "rawSeconds": 194.83146069335936,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 36.32748333333333
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 5,
+        "rawSeconds": 606.7415729980469,
+        "waitSeconds": 306.743,
+        "finishedMinutes": 41.43986666666667
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 60,
+        "rawSeconds": 162,
+        "waitSeconds": 162.001,
+        "finishedMinutes": 44.13988333333333
+      }
+    ],
+    "stock": {
+      "food": 480178,
+      "wood": 410097.1336958896,
+      "stone": 703910.0007915563,
+      "iron": 521536.70075522305,
+      "gold": 860109.2612776228
+    },
+    "generals": [
+      "lin",
+      "su",
+      "yan"
+    ],
+    "chapter": [
+      {
+        "id": "field",
+        "done": true
+      },
+      {
+        "id": "wood",
+        "done": true
+      },
+      {
+        "id": "pass",
+        "done": true
+      },
+      {
+        "id": "mine",
+        "done": true
+      },
+      {
+        "id": "camp",
+        "done": true
+      }
+    ],
+    "validSave": true,
+    "method": "fresh save; ordinary API costs, losses and earned gifts; no time speedups; 30 seconds per combat round; free building completion within five minutes",
+    "longestQueueWaitMinutes": 5.266683333333333
+  },
+  {
+    "seed": 123,
+    "speed": 1,
+    "accelerate": false,
+    "target": "chapter-one",
+    "hall": 5,
+    "gifts": 5,
+    "minutes": 46.006566666666664,
+    "archers": 0,
+    "victories": 6,
+    "office": 0,
+    "firstBattle": "complete",
+    "guideKind": "battleReturn",
+    "used": {
+      "population": 6
+    },
+    "spent": {
+      "food": 164249,
+      "wood": 291530,
+      "stone": 223250,
+      "iron": 163930,
+      "gold": 85490
+    },
+    "log": [
+      {
+        "target": "开垦第一块农田",
+        "minutes": 0
+      },
+      {
+        "target": "建设民房至 1 级",
+        "minutes": 0.000016666666666666667
+      },
+      {
+        "target": "升级民房至 2 级",
+        "minutes": 0.000033333333333333335
+      },
+      {
+        "target": "建设伐木场至 1 级",
+        "minutes": 0.00005
+      },
+      {
+        "target": "升级伐木场至 2 级",
+        "minutes": 0.00006666666666666667
+      },
+      {
+        "target": "建设采石场至 1 级",
+        "minutes": 0.00008333333333333333
+      },
+      {
+        "target": "升级采石场至 2 级",
+        "minutes": 0.0001
+      },
+      {
+        "target": "建设铁矿至 1 级",
+        "minutes": 0.00011666666666666667
+      },
+      {
+        "target": "升级铁矿至 2 级",
+        "minutes": 0.00013333333333333334
+      },
+      {
+        "target": "升级铁矿至 3 级",
+        "minutes": 0.00015
+      },
+      {
+        "target": "升级官府至 2 级",
+        "minutes": 0.00016666666666666666
+      },
+      {
+        "target": "建设校场至 1 级",
+        "minutes": 0.00018333333333333334
+      },
+      {
+        "target": "建设军营至 1 级",
+        "minutes": 0.0002
+      },
+      {
+        "target": "训练 30 名义兵",
+        "minutes": 0.00021666666666666666
+      },
+      {
+        "target": "派 30 名义兵掠夺 草原野地 (32,34)",
+        "minutes": 0.19761666666666666
+      },
+      {
+        "target": "义兵正在行军",
+        "minutes": 0.40596666666666664
+      },
+      {
+        "target": "义兵已抵达野地，进入战斗",
+        "minutes": 0.40596666666666664
+      },
+      {
+        "target": "练兵出征结束，义兵正在返城",
+        "minutes": 1.51015
+      },
+      {
+        "target": "升级军营至 2 级",
+        "minutes": 1.51015
+      },
+      {
+        "target": "升级军营至 3 级",
+        "minutes": 1.5101666666666667
+      },
+      {
+        "target": "升级军营至 4 级",
+        "minutes": 1.5101833333333334
+      },
+      {
+        "target": "建设书院至 1 级",
+        "minutes": 1.5102
+      },
+      {
+        "target": "升级书院至 2 级",
+        "minutes": 1.5102166666666668
+      },
+      {
+        "target": "升级书院至 3 级",
+        "minutes": 1.5102333333333333
+      },
+      {
+        "target": "升级书院至 4 级",
+        "minutes": 1.51025
+      },
+      {
+        "target": "建设铁匠铺至 1 级",
+        "minutes": 1.5102666666666666
+      },
+      {
+        "target": "研究练兵技巧至 1 级",
+        "minutes": 1.5102833333333334
+      },
+      {
+        "target": "升级铁匠铺至 2 级",
+        "minutes": 2.0269666666666666
+      },
+      {
+        "target": "研究练兵技巧至 2 级",
+        "minutes": 2.0269833333333334
+      },
+      {
+        "target": "升级铁匠铺至 3 级",
+        "minutes": 3.177
+      },
+      {
+        "target": "研究练兵技巧至 3 级",
+        "minutes": 3.177016666666667
+      },
+      {
+        "target": "升级铁匠铺至 4 级",
+        "minutes": 5.6603666666666665
+      },
+      {
+        "target": "研究练兵技巧至 4 级",
+        "minutes": 5.660383333333334
+      },
+      {
+        "target": "研究抛射技巧至 1 级",
+        "minutes": 10.927066666666667
+      },
+      {
+        "target": "升级民房至 3 级",
+        "minutes": 12.310416666666667
+      },
+      {
+        "target": "训练 30 名弓箭兵",
+        "minutes": 12.310433333333334
+      },
+      {
+        "target": "研究侦察技巧至 1 级",
+        "minutes": 13.66045
+      },
+      {
+        "target": "训练 1 名斥候",
+        "minutes": 13.827133333333334
+      },
+      {
+        "target": "侦察河畔荒田，查看敌军情报",
+        "minutes": 13.843816666666667
+      },
+      {
+        "target": "斥候正在前往河畔荒田",
+        "minutes": 13.877166666666668
+      },
+      {
+        "target": "选择主将与弓兵，确认河畔荒田首战",
+        "minutes": 13.877166666666668
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 14.04385
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 14.04385
+      },
+      {
+        "target": "查看首胜收获，等待部队返城",
+        "minutes": 16.1272
+      },
+      {
+        "target": "首战闭环完成，查看收获与官职晋升",
+        "minutes": 16.1272
+      },
+      {
+        "target": "研究战斗技巧至 1 级",
+        "minutes": 16.1272
+      },
+      {
+        "target": "训练 30 名弓箭兵",
+        "minutes": 16.81055
+      },
+      {
+        "target": "【清剿】占领青竹林，推进第一章",
+        "minutes": 18.160566666666668
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 18.393916666666666
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 18.393916666666666
+      },
+      {
+        "target": "建设工匠作坊至 1 级",
+        "minutes": 19.893916666666666
+      },
+      {
+        "target": "建设城墙至 1 级",
+        "minutes": 19.893933333333333
+      },
+      {
+        "target": "升级官府至 3 级",
+        "minutes": 19.89395
+      },
+      {
+        "target": "查看战斗收获，等待部队返城",
+        "minutes": 20.0106
+      },
+      {
+        "target": "研究战斗技巧至 2 级",
+        "minutes": 20.0106
+      },
+      {
+        "target": "研究抛射技巧至 2 级",
+        "minutes": 21.54395
+      },
+      {
+        "target": "研究防护技巧至 1 级",
+        "minutes": 24.610633333333332
+      },
+      {
+        "target": "研究防护技巧至 2 级",
+        "minutes": 25.477316666666667
+      },
+      {
+        "target": "训练 40 名弓箭兵",
+        "minutes": 27.394
+      },
+      {
+        "target": "训练 30 名刀盾兵",
+        "minutes": 29.194016666666666
+      },
+      {
+        "target": "训练 30 名斥候",
+        "minutes": 30.094033333333332
+      },
+      {
+        "target": "【侦察】派 31 名斥候精确侦察白石隘口",
+        "minutes": 30.54405
+      },
+      {
+        "target": "斥候正在前往白石隘口",
+        "minutes": 30.5774
+      },
+      {
+        "target": "【侦察】占领白石隘口，推进第一章",
+        "minutes": 30.5774
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 30.877416666666665
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 30.877416666666665
+      },
+      {
+        "target": "升级城墙至 2 级",
+        "minutes": 32.87741666666667
+      },
+      {
+        "target": "升级官府至 4 级",
+        "minutes": 32.877433333333336
+      },
+      {
+        "target": "查看战斗收获，等待部队返城",
+        "minutes": 33.027433333333335
+      },
+      {
+        "target": "训练 40 名长枪兵",
+        "minutes": 33.027433333333335
+      },
+      {
+        "target": "【夺取军械】占领赤铁山，推进第一章",
+        "minutes": 33.92745
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 34.327466666666666
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 34.327466666666666
+      },
+      {
+        "target": "升级城墙至 3 级",
+        "minutes": 36.327466666666666
+      },
+      {
+        "target": "升级官府至 5 级",
+        "minutes": 36.32748333333333
+      },
+      {
+        "target": "训练 60 名弓箭兵",
+        "minutes": 41.43986666666667
+      },
+      {
+        "target": "【兵种】占领黄巾营寨，推进第一章",
+        "minutes": 44.13988333333333
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 44.506566666666664
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 44.506566666666664
+      }
+    ],
+    "queueLog": [
+      {
+        "kind": "build",
+        "id": "farm",
+        "level": 1,
+        "rawSeconds": 1.01123583984375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.000016666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 1,
+        "rawSeconds": 2.52808984375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.000033333333333333335
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 2,
+        "rawSeconds": 5.6460673828125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00005
+      },
+      {
+        "kind": "build",
+        "id": "lumber",
+        "level": 1,
+        "rawSeconds": 1.51685400390625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00006666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "lumber",
+        "level": 2,
+        "rawSeconds": 3.45505615234375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00008333333333333333
+      },
+      {
+        "kind": "build",
+        "id": "quarry",
+        "level": 1,
+        "rawSeconds": 2.022471923828125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.0001
+      },
+      {
+        "kind": "build",
+        "id": "quarry",
+        "level": 2,
+        "rawSeconds": 4.63483154296875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00011666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 1,
+        "rawSeconds": 3.033707763671875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00013333333333333334
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 2,
+        "rawSeconds": 6.9101123046875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00015
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 3,
+        "rawSeconds": 15.421348388671875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00016666666666666666
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 2,
+        "rawSeconds": 8.0898876953125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00018333333333333334
+      },
+      {
+        "kind": "build",
+        "id": "drill",
+        "level": 1,
+        "rawSeconds": 5.0561796875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.0002
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 1,
+        "rawSeconds": 10.112359619140625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00021666666666666666
+      },
+      {
+        "kind": "train",
+        "id": "militia",
+        "count": 30,
+        "rawSeconds": 11.842105224609375,
+        "waitSeconds": 11.844,
+        "finishedMinutes": 0.19761666666666666
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 2,
+        "rawSeconds": 22.415730224609376,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5101666666666667
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 3,
+        "rawSeconds": 48.707865234375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5101833333333334
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 4,
+        "rawSeconds": 103.31460668945313,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 1,
+        "rawSeconds": 16.179775390625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102166666666668
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 2,
+        "rawSeconds": 35.89887646484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102333333333333
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 3,
+        "rawSeconds": 77.94943823242187,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.51025
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 4,
+        "rawSeconds": 165.25280908203126,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102666666666666
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 1,
+        "rawSeconds": 6.067415771484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 1.5102833333333334
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 1,
+        "rawSeconds": 31,
+        "waitSeconds": 31.001,
+        "finishedMinutes": 2.0269666666666666
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 2,
+        "rawSeconds": 13.48314599609375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.0269833333333334
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 2,
+        "rawSeconds": 69,
+        "waitSeconds": 69.001,
+        "finishedMinutes": 3.177
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 3,
+        "rawSeconds": 29.241572998046873,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 3.177016666666667
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 3,
+        "rawSeconds": 149,
+        "waitSeconds": 149.001,
+        "finishedMinutes": 5.6603666666666665
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 4,
+        "rawSeconds": 61.9382021484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 5.660383333333334
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 4,
+        "rawSeconds": 316,
+        "waitSeconds": 316.001,
+        "finishedMinutes": 10.927066666666667
+      },
+      {
+        "kind": "research",
+        "id": "shooting",
+        "level": 1,
+        "rawSeconds": 83,
+        "waitSeconds": 83.001,
+        "finishedMinutes": 12.310416666666667
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 3,
+        "rawSeconds": 12.21910107421875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 12.310433333333334
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 30,
+        "rawSeconds": 81,
+        "waitSeconds": 81.001,
+        "finishedMinutes": 13.66045
+      },
+      {
+        "kind": "research",
+        "id": "scouting",
+        "level": 1,
+        "rawSeconds": 10,
+        "waitSeconds": 10.001,
+        "finishedMinutes": 13.827133333333334
+      },
+      {
+        "kind": "train",
+        "id": "scout",
+        "count": 1,
+        "rawSeconds": 1,
+        "waitSeconds": 1.001,
+        "finishedMinutes": 13.843816666666667
+      },
+      {
+        "kind": "research",
+        "id": "combat",
+        "level": 1,
+        "rawSeconds": 41,
+        "waitSeconds": 41.001,
+        "finishedMinutes": 16.81055
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 30,
+        "rawSeconds": 81,
+        "waitSeconds": 81.001,
+        "finishedMinutes": 18.160566666666668
+      },
+      {
+        "kind": "build",
+        "id": "workshop",
+        "level": 1,
+        "rawSeconds": 18.2022470703125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 19.893933333333333
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 1,
+        "rawSeconds": 40.449438232421876,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 19.89395
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 3,
+        "rawSeconds": 151.68539331054689,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 19.893966666666667
+      },
+      {
+        "kind": "research",
+        "id": "combat",
+        "level": 2,
+        "rawSeconds": 92,
+        "waitSeconds": 92.001,
+        "finishedMinutes": 21.54395
+      },
+      {
+        "kind": "research",
+        "id": "shooting",
+        "level": 2,
+        "rawSeconds": 184,
+        "waitSeconds": 184.001,
+        "finishedMinutes": 24.610633333333332
+      },
+      {
+        "kind": "research",
+        "id": "protection",
+        "level": 1,
+        "rawSeconds": 52,
+        "waitSeconds": 52.001,
+        "finishedMinutes": 25.477316666666667
+      },
+      {
+        "kind": "research",
+        "id": "protection",
+        "level": 2,
+        "rawSeconds": 115,
+        "waitSeconds": 115.001,
+        "finishedMinutes": 27.394
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 40,
+        "rawSeconds": 108,
+        "waitSeconds": 108.001,
+        "finishedMinutes": 29.194016666666666
+      },
+      {
+        "kind": "train",
+        "id": "shield",
+        "count": 30,
+        "rawSeconds": 54,
+        "waitSeconds": 54.001,
+        "finishedMinutes": 30.094033333333332
+      },
+      {
+        "kind": "train",
+        "id": "scout",
+        "count": 30,
+        "rawSeconds": 27,
+        "waitSeconds": 27.001,
+        "finishedMinutes": 30.54405
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 2,
+        "rawSeconds": 89.83146069335938,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 32.877433333333336
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 4,
+        "rawSeconds": 303.37078662109377,
+        "waitSeconds": 3.372,
+        "finishedMinutes": 32.93363333333333
+      },
+      {
+        "kind": "train",
+        "id": "spear",
+        "count": 40,
+        "rawSeconds": 54,
+        "waitSeconds": 54.001,
+        "finishedMinutes": 33.92745
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 3,
+        "rawSeconds": 194.83146069335936,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 36.32748333333333
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 5,
+        "rawSeconds": 606.7415729980469,
+        "waitSeconds": 306.743,
+        "finishedMinutes": 41.43986666666667
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 60,
+        "rawSeconds": 162,
+        "waitSeconds": 162.001,
+        "finishedMinutes": 44.13988333333333
+      }
+    ],
+    "stock": {
+      "food": 492660.35649333324,
+      "wood": 424166.5711663207,
+      "stone": 716560.0007915563,
+      "iron": 533705.4173449741,
+      "gold": 889779.2612776228
+    },
+    "generals": [
+      "lin",
+      "su",
+      "yan"
+    ],
+    "chapter": [
+      {
+        "id": "field",
+        "done": true
+      },
+      {
+        "id": "wood",
+        "done": true
+      },
+      {
+        "id": "pass",
+        "done": true
+      },
+      {
+        "id": "mine",
+        "done": true
+      },
+      {
+        "id": "camp",
+        "done": true
+      }
+    ],
+    "validSave": true,
+    "method": "fresh save; ordinary API costs, losses and earned gifts; no time speedups; 30 seconds per combat round; free building completion within five minutes",
+    "longestQueueWaitMinutes": 5.266683333333333
+  },
+  {
+    "seed": 456,
+    "speed": 1,
+    "accelerate": false,
+    "target": "chapter-one",
+    "hall": 5,
+    "gifts": 5,
+    "minutes": 47.006566666666664,
+    "archers": 0,
+    "victories": 6,
+    "office": 0,
+    "firstBattle": "complete",
+    "guideKind": "battleReturn",
+    "used": {
+      "population": 6
+    },
+    "spent": {
+      "food": 164249,
+      "wood": 291530,
+      "stone": 223250,
+      "iron": 163930,
+      "gold": 85490
+    },
+    "log": [
+      {
+        "target": "开垦第一块农田",
+        "minutes": 0
+      },
+      {
+        "target": "建设民房至 1 级",
+        "minutes": 0.000016666666666666667
+      },
+      {
+        "target": "升级民房至 2 级",
+        "minutes": 0.000033333333333333335
+      },
+      {
+        "target": "建设伐木场至 1 级",
+        "minutes": 0.00005
+      },
+      {
+        "target": "升级伐木场至 2 级",
+        "minutes": 0.00006666666666666667
+      },
+      {
+        "target": "建设采石场至 1 级",
+        "minutes": 0.00008333333333333333
+      },
+      {
+        "target": "升级采石场至 2 级",
+        "minutes": 0.0001
+      },
+      {
+        "target": "建设铁矿至 1 级",
+        "minutes": 0.00011666666666666667
+      },
+      {
+        "target": "升级铁矿至 2 级",
+        "minutes": 0.00013333333333333334
+      },
+      {
+        "target": "升级铁矿至 3 级",
+        "minutes": 0.00015
+      },
+      {
+        "target": "升级官府至 2 级",
+        "minutes": 0.00016666666666666666
+      },
+      {
+        "target": "建设校场至 1 级",
+        "minutes": 0.00018333333333333334
+      },
+      {
+        "target": "建设军营至 1 级",
+        "minutes": 0.0002
+      },
+      {
+        "target": "训练 30 名义兵",
+        "minutes": 0.00021666666666666666
+      },
+      {
+        "target": "派 30 名义兵掠夺 平地野地 (30,32)",
+        "minutes": 0.19761666666666666
+      },
+      {
+        "target": "义兵正在行军",
+        "minutes": 0.40596666666666664
+      },
+      {
+        "target": "义兵已抵达野地，进入战斗",
+        "minutes": 0.40596666666666664
+      },
+      {
+        "target": "练兵出征结束，义兵正在返城",
+        "minutes": 2.51015
+      },
+      {
+        "target": "升级军营至 2 级",
+        "minutes": 2.51015
+      },
+      {
+        "target": "升级军营至 3 级",
+        "minutes": 2.5101666666666667
+      },
+      {
+        "target": "升级军营至 4 级",
+        "minutes": 2.5101833333333334
+      },
+      {
+        "target": "建设书院至 1 级",
+        "minutes": 2.5102
+      },
+      {
+        "target": "升级书院至 2 级",
+        "minutes": 2.5102166666666665
+      },
+      {
+        "target": "升级书院至 3 级",
+        "minutes": 2.5102333333333333
+      },
+      {
+        "target": "升级书院至 4 级",
+        "minutes": 2.51025
+      },
+      {
+        "target": "建设铁匠铺至 1 级",
+        "minutes": 2.510266666666667
+      },
+      {
+        "target": "研究练兵技巧至 1 级",
+        "minutes": 2.510283333333333
+      },
+      {
+        "target": "升级铁匠铺至 2 级",
+        "minutes": 3.0269666666666666
+      },
+      {
+        "target": "研究练兵技巧至 2 级",
+        "minutes": 3.0269833333333334
+      },
+      {
+        "target": "升级铁匠铺至 3 级",
+        "minutes": 4.177
+      },
+      {
+        "target": "研究练兵技巧至 3 级",
+        "minutes": 4.177016666666667
+      },
+      {
+        "target": "升级铁匠铺至 4 级",
+        "minutes": 6.6603666666666665
+      },
+      {
+        "target": "研究练兵技巧至 4 级",
+        "minutes": 6.660383333333334
+      },
+      {
+        "target": "研究抛射技巧至 1 级",
+        "minutes": 11.927066666666667
+      },
+      {
+        "target": "升级民房至 3 级",
+        "minutes": 13.310416666666667
+      },
+      {
+        "target": "训练 30 名弓箭兵",
+        "minutes": 13.310433333333334
+      },
+      {
+        "target": "研究侦察技巧至 1 级",
+        "minutes": 14.66045
+      },
+      {
+        "target": "训练 1 名斥候",
+        "minutes": 14.827133333333334
+      },
+      {
+        "target": "侦察河畔荒田，查看敌军情报",
+        "minutes": 14.843816666666667
+      },
+      {
+        "target": "斥候正在前往河畔荒田",
+        "minutes": 14.877166666666668
+      },
+      {
+        "target": "选择主将与弓兵，确认河畔荒田首战",
+        "minutes": 14.877166666666668
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 15.04385
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 15.04385
+      },
+      {
+        "target": "查看首胜收获，等待部队返城",
+        "minutes": 17.1272
+      },
+      {
+        "target": "首战闭环完成，查看收获与官职晋升",
+        "minutes": 17.1272
+      },
+      {
+        "target": "研究战斗技巧至 1 级",
+        "minutes": 17.1272
+      },
+      {
+        "target": "训练 30 名弓箭兵",
+        "minutes": 17.81055
+      },
+      {
+        "target": "【清剿】占领青竹林，推进第一章",
+        "minutes": 19.160566666666668
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 19.393916666666666
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 19.393916666666666
+      },
+      {
+        "target": "建设工匠作坊至 1 级",
+        "minutes": 20.893916666666666
+      },
+      {
+        "target": "建设城墙至 1 级",
+        "minutes": 20.893933333333333
+      },
+      {
+        "target": "升级官府至 3 级",
+        "minutes": 20.89395
+      },
+      {
+        "target": "查看战斗收获，等待部队返城",
+        "minutes": 21.0106
+      },
+      {
+        "target": "研究战斗技巧至 2 级",
+        "minutes": 21.0106
+      },
+      {
+        "target": "研究抛射技巧至 2 级",
+        "minutes": 22.54395
+      },
+      {
+        "target": "研究防护技巧至 1 级",
+        "minutes": 25.610633333333332
+      },
+      {
+        "target": "研究防护技巧至 2 级",
+        "minutes": 26.477316666666667
+      },
+      {
+        "target": "训练 40 名弓箭兵",
+        "minutes": 28.394
+      },
+      {
+        "target": "训练 30 名刀盾兵",
+        "minutes": 30.194016666666666
+      },
+      {
+        "target": "训练 30 名斥候",
+        "minutes": 31.094033333333332
+      },
+      {
+        "target": "【侦察】派 31 名斥候精确侦察白石隘口",
+        "minutes": 31.54405
+      },
+      {
+        "target": "斥候正在前往白石隘口",
+        "minutes": 31.5774
+      },
+      {
+        "target": "【侦察】占领白石隘口，推进第一章",
+        "minutes": 31.5774
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 31.877416666666665
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 31.877416666666665
+      },
+      {
+        "target": "升级城墙至 2 级",
+        "minutes": 33.87741666666667
+      },
+      {
+        "target": "升级官府至 4 级",
+        "minutes": 33.877433333333336
+      },
+      {
+        "target": "查看战斗收获，等待部队返城",
+        "minutes": 34.027433333333335
+      },
+      {
+        "target": "训练 40 名长枪兵",
+        "minutes": 34.027433333333335
+      },
+      {
+        "target": "【夺取军械】占领赤铁山，推进第一章",
+        "minutes": 34.92745
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 35.327466666666666
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 35.327466666666666
+      },
+      {
+        "target": "升级城墙至 3 级",
+        "minutes": 37.327466666666666
+      },
+      {
+        "target": "升级官府至 5 级",
+        "minutes": 37.32748333333333
+      },
+      {
+        "target": "训练 60 名弓箭兵",
+        "minutes": 42.43986666666667
+      },
+      {
+        "target": "【兵种】占领黄巾营寨，推进第一章",
+        "minutes": 45.13988333333333
+      },
+      {
+        "target": "部队正在行军",
+        "minutes": 45.506566666666664
+      },
+      {
+        "target": "部队已抵达，进入战斗",
+        "minutes": 45.506566666666664
+      }
+    ],
+    "queueLog": [
+      {
+        "kind": "build",
+        "id": "farm",
+        "level": 1,
+        "rawSeconds": 1.01123583984375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.000016666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 1,
+        "rawSeconds": 2.52808984375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.000033333333333333335
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 2,
+        "rawSeconds": 5.6460673828125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00005
+      },
+      {
+        "kind": "build",
+        "id": "lumber",
+        "level": 1,
+        "rawSeconds": 1.51685400390625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00006666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "lumber",
+        "level": 2,
+        "rawSeconds": 3.45505615234375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00008333333333333333
+      },
+      {
+        "kind": "build",
+        "id": "quarry",
+        "level": 1,
+        "rawSeconds": 2.022471923828125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.0001
+      },
+      {
+        "kind": "build",
+        "id": "quarry",
+        "level": 2,
+        "rawSeconds": 4.63483154296875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00011666666666666667
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 1,
+        "rawSeconds": 3.033707763671875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00013333333333333334
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 2,
+        "rawSeconds": 6.9101123046875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00015
+      },
+      {
+        "kind": "build",
+        "id": "mine",
+        "level": 3,
+        "rawSeconds": 15.421348388671875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00016666666666666666
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 2,
+        "rawSeconds": 8.0898876953125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00018333333333333334
+      },
+      {
+        "kind": "build",
+        "id": "drill",
+        "level": 1,
+        "rawSeconds": 5.0561796875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.0002
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 1,
+        "rawSeconds": 10.112359619140625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 0.00021666666666666666
+      },
+      {
+        "kind": "train",
+        "id": "militia",
+        "count": 30,
+        "rawSeconds": 11.842105224609375,
+        "waitSeconds": 11.844,
+        "finishedMinutes": 0.19761666666666666
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 2,
+        "rawSeconds": 22.415730224609376,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.5101666666666667
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 3,
+        "rawSeconds": 48.707865234375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.5101833333333334
+      },
+      {
+        "kind": "build",
+        "id": "barracks",
+        "level": 4,
+        "rawSeconds": 103.31460668945313,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.5102
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 1,
+        "rawSeconds": 16.179775390625,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.5102166666666665
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 2,
+        "rawSeconds": 35.89887646484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.5102333333333333
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 3,
+        "rawSeconds": 77.94943823242187,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.51025
+      },
+      {
+        "kind": "build",
+        "id": "academy",
+        "level": 4,
+        "rawSeconds": 165.25280908203126,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.510266666666667
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 1,
+        "rawSeconds": 6.067415771484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 2.510283333333333
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 1,
+        "rawSeconds": 31,
+        "waitSeconds": 31.001,
+        "finishedMinutes": 3.0269666666666666
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 2,
+        "rawSeconds": 13.48314599609375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 3.0269833333333334
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 2,
+        "rawSeconds": 69,
+        "waitSeconds": 69.001,
+        "finishedMinutes": 4.177
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 3,
+        "rawSeconds": 29.241572998046873,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 4.177016666666667
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 3,
+        "rawSeconds": 149,
+        "waitSeconds": 149.001,
+        "finishedMinutes": 6.6603666666666665
+      },
+      {
+        "kind": "build",
+        "id": "smith",
+        "level": 4,
+        "rawSeconds": 61.9382021484375,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 6.660383333333334
+      },
+      {
+        "kind": "research",
+        "id": "training",
+        "level": 4,
+        "rawSeconds": 316,
+        "waitSeconds": 316.001,
+        "finishedMinutes": 11.927066666666667
+      },
+      {
+        "kind": "research",
+        "id": "shooting",
+        "level": 1,
+        "rawSeconds": 83,
+        "waitSeconds": 83.001,
+        "finishedMinutes": 13.310416666666667
+      },
+      {
+        "kind": "build",
+        "id": "house",
+        "level": 3,
+        "rawSeconds": 12.21910107421875,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 13.310433333333334
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 30,
+        "rawSeconds": 81,
+        "waitSeconds": 81.001,
+        "finishedMinutes": 14.66045
+      },
+      {
+        "kind": "research",
+        "id": "scouting",
+        "level": 1,
+        "rawSeconds": 10,
+        "waitSeconds": 10.001,
+        "finishedMinutes": 14.827133333333334
+      },
+      {
+        "kind": "train",
+        "id": "scout",
+        "count": 1,
+        "rawSeconds": 1,
+        "waitSeconds": 1.001,
+        "finishedMinutes": 14.843816666666667
+      },
+      {
+        "kind": "research",
+        "id": "combat",
+        "level": 1,
+        "rawSeconds": 41,
+        "waitSeconds": 41.001,
+        "finishedMinutes": 17.81055
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 30,
+        "rawSeconds": 81,
+        "waitSeconds": 81.001,
+        "finishedMinutes": 19.160566666666668
+      },
+      {
+        "kind": "build",
+        "id": "workshop",
+        "level": 1,
+        "rawSeconds": 18.2022470703125,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 20.893933333333333
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 1,
+        "rawSeconds": 40.449438232421876,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 20.89395
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 3,
+        "rawSeconds": 151.68539331054689,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 20.893966666666667
+      },
+      {
+        "kind": "research",
+        "id": "combat",
+        "level": 2,
+        "rawSeconds": 92,
+        "waitSeconds": 92.001,
+        "finishedMinutes": 22.54395
+      },
+      {
+        "kind": "research",
+        "id": "shooting",
+        "level": 2,
+        "rawSeconds": 184,
+        "waitSeconds": 184.001,
+        "finishedMinutes": 25.610633333333332
+      },
+      {
+        "kind": "research",
+        "id": "protection",
+        "level": 1,
+        "rawSeconds": 52,
+        "waitSeconds": 52.001,
+        "finishedMinutes": 26.477316666666667
+      },
+      {
+        "kind": "research",
+        "id": "protection",
+        "level": 2,
+        "rawSeconds": 115,
+        "waitSeconds": 115.001,
+        "finishedMinutes": 28.394
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 40,
+        "rawSeconds": 108,
+        "waitSeconds": 108.001,
+        "finishedMinutes": 30.194016666666666
+      },
+      {
+        "kind": "train",
+        "id": "shield",
+        "count": 30,
+        "rawSeconds": 54,
+        "waitSeconds": 54.001,
+        "finishedMinutes": 31.094033333333332
+      },
+      {
+        "kind": "train",
+        "id": "scout",
+        "count": 30,
+        "rawSeconds": 27,
+        "waitSeconds": 27.001,
+        "finishedMinutes": 31.54405
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 2,
+        "rawSeconds": 89.83146069335938,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 33.877433333333336
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 4,
+        "rawSeconds": 303.37078662109377,
+        "waitSeconds": 3.372,
+        "finishedMinutes": 33.93363333333333
+      },
+      {
+        "kind": "train",
+        "id": "spear",
+        "count": 40,
+        "rawSeconds": 54,
+        "waitSeconds": 54.001,
+        "finishedMinutes": 34.92745
+      },
+      {
+        "kind": "build",
+        "id": "wall",
+        "level": 3,
+        "rawSeconds": 194.83146069335936,
+        "waitSeconds": 0.001,
+        "finishedMinutes": 37.32748333333333
+      },
+      {
+        "kind": "build",
+        "id": "hall",
+        "level": 5,
+        "rawSeconds": 606.7415729980469,
+        "waitSeconds": 306.743,
+        "finishedMinutes": 42.43986666666667
+      },
+      {
+        "kind": "train",
+        "id": "archer",
+        "count": 60,
+        "rawSeconds": 162,
+        "waitSeconds": 162.001,
+        "finishedMinutes": 45.13988333333333
+      }
+    ],
+    "stock": {
+      "food": 480202.5931627778,
+      "wood": 410166.2153720985,
+      "stone": 702560.0007915563,
+      "iron": 519704.70631830744,
+      "gold": 860624.0612776226
+    },
+    "generals": [
+      "lin",
+      "su",
+      "yan"
+    ],
+    "chapter": [
+      {
+        "id": "field",
+        "done": true
+      },
+      {
+        "id": "wood",
+        "done": true
+      },
+      {
+        "id": "pass",
+        "done": true
+      },
+      {
+        "id": "mine",
+        "done": true
+      },
+      {
+        "id": "camp",
+        "done": true
+      }
+    ],
+    "validSave": true,
+    "method": "fresh save; ordinary API costs, losses and earned gifts; no time speedups; 30 seconds per combat round; free building completion within five minutes",
+    "longestQueueWaitMinutes": 5.266683333333333
+  }
+]
