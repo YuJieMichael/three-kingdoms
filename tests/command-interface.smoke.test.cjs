@@ -36,26 +36,27 @@ function pressGuard(e,action){
  e.evaluate(`globalThis.guardResult={prevented:false,stopped:false};globalThis.guardElement={disabled:false,dataset:{action:${JSON.stringify(action)}}};uiListeners.find(x=>x.type==='click'&&x.capture===true).callback({target:{closest:()=>guardElement},preventDefault(){guardResult.prevented=true;},stopImmediatePropagation(){guardResult.stopped=true;}});`);
  return JSON.parse(e.evaluate('JSON.stringify(guardResult)'));
 }
-// v0.34.7 (7e75183, layout-ui.js layoutShell) replaced the five primary tabs and in-page 城池区域 tabs with an inner/outer/map scene
-// switch plus a fixed command dock, moving shop/reports out of More into that dock; v0.34.8 (75e206d, layoutMoreModal) split More into
-// 征战/城务/辅助 tabs and its README states the pinned shop, reports and settings are not repeated there.
-test('scene switch and command dock keep city areas and reports/shop one tap away while More holds the remaining tools',()=>{
+// The approved sandbox direction keeps five stable primary destinations; bag and shop stay visible above every More category.
+test('five primary destinations remain stable while city areas and the persistent More shortcuts retain access',()=>{
  const e=ui(),navOf=(source,label)=>source.match(new RegExp('<nav class="[^"]*" aria-label="'+label+'"[^>]*>([\\s\\S]*?)</nav>'))[1];
- // Shop is always present; the starting decree also exposes inventory immediately.
- const fresh=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...fresh.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','宝物','商城','营造','更多']);
+ const destinations=['城池','地图','军队','将领','战报'];
+ const fresh=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...fresh.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),destinations);
  delete e.g.state.inventory.labor;
- const emptyInventory=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...emptyInventory.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),['任务','将领','军队','商城','营造','更多']);
+ const emptyInventory=navOf(e.evaluate('classicShell()'),'常用功能');assert.deepEqual([...emptyInventory.matchAll(/aria-label="([^"]+)"/g)].map(m=>m[1]),destinations);
  city(e.g,{hall:3});e.g.state.stats.victories=1;e.g.state.inventory.speed_build_15m=1;
+ e.evaluate("page='city';cityArea='inner'");
  const before=JSON.stringify(e.g.state),html=e.evaluate('classicShell()'),nav=label=>navOf(html,label);
  const buttons=part=>[...part.matchAll(/<button data-action="([^"]*)" data-id="([^"]*)"[^>]*aria-label="([^"]+)"/g)].map(([,action,id,label])=>[label,action,id]);
  const scenes=nav('场景导航'),dock=nav('常用功能');
  assert.deepEqual(buttons(scenes),[['城内','classicNav','inner'],['城外','classicNav','outer'],['地图','classicNav','world']]);
  assert.match(scenes,/data-id="inner" class="active" aria-current="page"/,'the current city area is the active scene');
  assert.match(html,/<nav class="classic-primary layout-command-dock"/);
- assert.deepEqual(buttons(dock),[['任务','classicMission',''],['将领','classicNav','heroes'],['军队','classicNav','army'],['宝物','manualInventory',''],['商城','classicNav','shop'],['报告','classicNav','reports'],['营造','classicQueues',''],['更多','classicMore','']]);
- for(const action of ['classicQueues','manualInventory','classicMission'])assert.match(html,new RegExp('data-action="'+action+'"'));
- const more=JSON.parse(e.evaluate("JSON.stringify(LAYOUT_MORE_TABS.map(([id])=>{layoutSelectMoreCategory(id);return document.getElementById('modal-body').innerHTML;}))")).join('');
- for(const page of ['reports','shop']){assert.match(dock,new RegExp('data-action="classicNav" data-id="'+page+'"'));assert.doesNotMatch(more,new RegExp('data-action="classicNav" data-id="'+page+'"'));}
+ assert.deepEqual(buttons(dock),[['城池','classicNav','inner'],['地图','classicNav','world'],['军队','classicNav','army'],['将领','classicNav','heroes'],['战报','classicNav','reports']]);
+ assert.match(dock,/data-id="inner" class="active" aria-current="page"/);assert.match(html,/data-action="classicMore"[^>]*aria-label="更多城务与功能"/);
+ const categories=JSON.parse(e.evaluate("JSON.stringify(LAYOUT_MORE_TABS.map(([id])=>{layoutSelectMoreCategory(id);return document.getElementById('modal-body').innerHTML;}))")),more=categories.join('');
+ for(const category of categories){const shortcuts=category.match(/<div class="layout-more-shortcuts"[^>]*>([\s\S]*?)<\/div>/)[1];assert.match(shortcuts,/data-action="manualInventory"[^>]*>行囊 · 宝物/);assert.match(shortcuts,/data-action="classicNav" data-id="shop"[^>]*>商城/);assert.ok(category.indexOf('layout-more-shortcuts')<category.indexOf('layout-more-tabs'),'bag and shop remain visible before changing category');}
+ assert.match(dock,/data-action="classicNav" data-id="reports"/);assert.doesNotMatch(more,/data-action="classicNav" data-id="reports"/);
+ for(const action of ['classicQueues','manualInventory','classicMission'])assert.match(more,new RegExp('data-action="'+action+'"'));
  for(const action of ['governance','warCare'])assert.match(more,new RegExp('data-action="'+action+'"'));
  // v0.37.0: 名城版图 stays hidden until the county era (pacing-rework-2026-10-19.md §2).
  assert.doesNotMatch(more,/data-action="namedCities"/);e.evaluate('ChapterData.countyOpen=()=>true');
@@ -201,7 +202,10 @@ test('the shop is open in a fresh hall-one city and an existing empty-inventory 
   g.state.inventory=inventory;
   const before=JSON.stringify(g.state);
   assert.equal(e.evaluate("layoutFeatureOpen('shop')"),true);
-  assert.match(e.evaluate('classicShell()'),/data-action="classicNav" data-id="shop"[^>]*aria-label="商城"/);
+  assert.match(e.evaluate('classicShell()'),/data-action="classicMore"[^>]*aria-label="更多城务与功能"/);
+  e.evaluate('classicMoreModal()');const more=e.evaluate("document.getElementById('modal-body').innerHTML");
+  const shortcuts=more.match(/<div class="layout-more-shortcuts"[^>]*>([\s\S]*?)<\/div>/)[1];
+  assert.match(shortcuts,/data-action="classicNav" data-id="shop"[^>]*>商城/);assert.match(shortcuts,/data-action="manualInventory"/);
   assert.match(e.evaluate('manualShopPage()'),/珍宝商城/);
   assert.equal(JSON.stringify(g.state),before);
  }

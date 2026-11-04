@@ -1,0 +1,16 @@
+{
+  "grass": {
+    "source": "grass-source-v2.png",
+    "file": "grass-v2.webp",
+    "width": 768,
+    "height": 768,
+    "bytes": 138050
+  },
+  "water": {
+    "source": "water-source-v2.png",
+    "file": "water-v2.webp",
+    "width": 768,
+    "height": 768,
+    "bytes": 43822
+  }
+}

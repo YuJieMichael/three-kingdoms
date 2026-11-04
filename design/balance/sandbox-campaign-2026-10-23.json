@@ -1,0 +1,448 @@
+{
+  "seed": 123,
+  "speed": 1,
+  "normalEconomy": true,
+  "onboarding": {
+    "withoutSpeedupsMinutes": 706.70045,
+    "withEarnedSpeedupsMinutes": 4.1639,
+    "earnedSpeedupsUsed": {
+      "speed_build_15m": 6,
+      "population": 4,
+      "speed_build_1h": 15,
+      "speed_train_1h": 2,
+      "speed_build_3h": 1,
+      "speed_research_1h": 3,
+      "speed_research_3h": 2,
+      "speed_research_15m": 1,
+      "speed_train_15m": 1
+    }
+  },
+  "dailyBudget": {
+    "first": {
+      "food": 1200,
+      "iron": 400,
+      "gold": 800
+    },
+    "subsequent": {
+      "food": 600,
+      "iron": 200,
+      "gold": 400
+    },
+    "crossingOnce": {
+      "food": 1500
+    }
+  },
+  "scope": "Existing chapter-progression normal economy, including its explicit first-chapter/civic-rank checkpoint, followed by two real construction queues on successive server days. This bot does not follow suggested hall levels and does not measure the existing hall 7→8 gap; no construction duration changes.",
+  "direct": {
+    "routeId": "direct",
+    "queueWindows": [
+      {
+        "id": "house",
+        "level": 1,
+        "start": 1791909640947,
+        "end": 1791909725216.6628,
+        "hours": 0.02340823967827691
+      },
+      {
+        "id": "house",
+        "level": 1,
+        "start": 1791925200001,
+        "end": 1791925284270.6628,
+        "hours": 0.02340823967827691
+      }
+    ],
+    "log": [
+      {
+        "taskId": "supply",
+        "routeId": "direct",
+        "firstReward": true,
+        "army": 100,
+        "seconds": 10,
+        "foodCost": 140,
+        "queuedAtDispatch": true,
+        "won": true,
+        "lost": 0,
+        "replacementCost": {
+          "food": 0,
+          "wood": 0,
+          "iron": 0
+        },
+        "reward": {
+          "food": 1200
+        },
+        "ordinaryRaidLoot": {
+          "food": 429,
+          "wood": 117
+        },
+        "startedAt": 1791909640947
+      },
+      {
+        "taskId": "bandits",
+        "routeId": "direct",
+        "firstReward": true,
+        "army": 100,
+        "seconds": 14,
+        "foodCost": 148,
+        "queuedAtDispatch": true,
+        "won": true,
+        "lost": 0,
+        "replacementCost": {
+          "food": 0,
+          "wood": 0,
+          "iron": 0
+        },
+        "reward": {
+          "iron": 400,
+          "gold": 800
+        },
+        "ordinaryRaidLoot": {
+          "wood": 455,
+          "food": 169
+        },
+        "startedAt": 1791909655949
+      },
+      {
+        "taskId": "supply",
+        "routeId": "direct",
+        "firstReward": false,
+        "army": 100,
+        "seconds": 10,
+        "foodCost": 140,
+        "queuedAtDispatch": true,
+        "won": true,
+        "lost": 0,
+        "replacementCost": {
+          "food": 0,
+          "wood": 0,
+          "iron": 0
+        },
+        "reward": {
+          "food": 600
+        },
+        "ordinaryRaidLoot": {
+          "food": 257,
+          "wood": 70
+        },
+        "startedAt": 1791925200001
+      },
+      {
+        "taskId": "bandits",
+        "routeId": "direct",
+        "firstReward": false,
+        "army": 100,
+        "seconds": 14,
+        "foodCost": 148,
+        "queuedAtDispatch": true,
+        "won": true,
+        "lost": 0,
+        "replacementCost": {
+          "food": 0,
+          "wood": 0,
+          "iron": 0
+        },
+        "reward": {
+          "iron": 200,
+          "gold": 400
+        },
+        "ordinaryRaidLoot": {
+          "wood": 273,
+          "food": 101
+        },
+        "startedAt": 1791925215003
+      }
+    ],
+    "totalHours": 198.67804083333334,
+    "actualHall": 4,
+    "chapterOneCheckpoint": "黄巾营寨 and 公士 only",
+    "lastStage": "luo_citadel",
+    "validSave": true
+  },
+  "detour": {
+    "routeId": "detour",
+    "queueWindows": [
+      {
+        "id": "house",
+        "level": 1,
+        "start": 1791909640947,
+        "end": 1791909725216.6628,
+        "hours": 0.02340823967827691
+      },
+      {
+        "id": "house",
+        "level": 1,
+        "start": 1791925200001,
+        "end": 1791925284270.6628,
+        "hours": 0.02340823967827691
+      }
+    ],
+    "log": [
+      {
+        "taskId": "supply",
+        "routeId": "detour",
+        "firstReward": true,
+        "army": 100,
+        "seconds": 13,
+        "foodCost": 119,
+        "queuedAtDispatch": true,
+        "won": true,
+        "lost": 0,
+        "replacementCost": {
+          "food": 0,
+          "wood": 0,
+          "iron": 0
+        },
+        "reward": {
+          "food": 1200
+        },
+        "ordinaryRaidLoot": {
+          "food": 429,
+          "wood": 117
+        },
+        "startedAt": 1791909640947
+      },
+      {
+        "taskId": "bandits",
+        "routeId": "detour",
+        "firstReward": true,
+        "army": 100,
+        "seconds": 18.2,
+        "foodCost": 126,
+        "queuedAtDispatch": true,
+        "won": true,
+        "lost": 0,
+        "replacementCost": {
+          "food": 0,
+          "wood": 0,
+          "iron": 0
+        },
+        "reward": {
+          "iron": 400,
+          "gold": 800
+        },
+        "ordinaryRaidLoot": {
+          "wood": 455,
+          "food": 169
+        },
+        "startedAt": 1791909660449
+      },
+      {
+        "taskId": "supply",
+        "routeId": "detour",
+        "firstReward": false,
+        "army": 100,
+        "seconds": 13,
+        "foodCost": 119,
+        "queuedAtDispatch": true,
+        "won": true,
+        "lost": 0,
+        "replacementCost": {
+          "food": 0,
+          "wood": 0,
+          "iron": 0
+        },
+        "reward": {
+          "food": 600
+        },
+        "ordinaryRaidLoot": {
+          "food": 257,
+          "wood": 70
+        },
+        "startedAt": 1791925200001
+      },
+      {
+        "taskId": "bandits",
+        "routeId": "detour",
+        "firstReward": false,
+        "army": 100,
+        "seconds": 18.2,
+        "foodCost": 126,
+        "queuedAtDispatch": true,
+        "won": true,
+        "lost": 0,
+        "replacementCost": {
+          "food": 0,
+          "wood": 0,
+          "iron": 0
+        },
+        "reward": {
+          "iron": 200,
+          "gold": 400
+        },
+        "ordinaryRaidLoot": {
+          "wood": 273,
+          "food": 101
+        },
+        "startedAt": 1791925219503
+      }
+    ],
+    "totalHours": 198.67804083333334,
+    "actualHall": 4,
+    "chapterOneCheckpoint": "黄巾营寨 and 公士 only",
+    "lastStage": "luo_citadel",
+    "validSave": true
+  },
+  "baselineComparison": {
+    "revision": "07d5976",
+    "command": "chapter-progression.run(123,1,true)",
+    "identical": true,
+    "deltaHours": 0,
+    "baseline": {
+      "seed": 123,
+      "speed": 1,
+      "hours": 198.67804083333334,
+      "last": "luo_citadel",
+      "validSave": true,
+      "battles": [
+        {
+          "stage": "north_road",
+          "won": true,
+          "hours": 86.57413805555555
+        },
+        {
+          "stage": "north_granary",
+          "won": true,
+          "hours": 86.61024972222222
+        },
+        {
+          "stage": "north_granary",
+          "won": true,
+          "hours": 93.03279388888889
+        },
+        {
+          "stage": "north_ford",
+          "won": true,
+          "hours": 97.597795
+        },
+        {
+          "stage": "north_camp",
+          "won": true,
+          "hours": 100.25781138888888
+        },
+        {
+          "stage": "north_pass",
+          "won": true,
+          "hours": 106.76863138888889
+        },
+        {
+          "stage": "north_keep",
+          "won": true,
+          "hours": 106.81029861111111
+        },
+        {
+          "stage": "north_keep",
+          "won": true,
+          "hours": 118.30845916666667
+        },
+        {
+          "stage": "north_keep",
+          "won": true,
+          "hours": 124.83980361111111
+        },
+        {
+          "stage": "luo_outpost",
+          "won": true,
+          "hours": 156.97956027777778
+        },
+        {
+          "stage": "luo_gate",
+          "won": true,
+          "hours": 165.32830444444446
+        },
+        {
+          "stage": "luo_cavalry",
+          "won": true,
+          "hours": 198.558595
+        },
+        {
+          "stage": "luo_wall",
+          "won": true,
+          "hours": 198.60470666666666
+        },
+        {
+          "stage": "luo_citadel",
+          "won": true,
+          "hours": 198.65304055555555
+        }
+      ]
+    },
+    "current": {
+      "seed": 123,
+      "speed": 1,
+      "hours": 198.67804083333334,
+      "last": "luo_citadel",
+      "validSave": true,
+      "battles": [
+        {
+          "stage": "north_road",
+          "won": true,
+          "hours": 86.57413805555555
+        },
+        {
+          "stage": "north_granary",
+          "won": true,
+          "hours": 86.61024972222222
+        },
+        {
+          "stage": "north_granary",
+          "won": true,
+          "hours": 93.03279388888889
+        },
+        {
+          "stage": "north_ford",
+          "won": true,
+          "hours": 97.597795
+        },
+        {
+          "stage": "north_camp",
+          "won": true,
+          "hours": 100.25781138888888
+        },
+        {
+          "stage": "north_pass",
+          "won": true,
+          "hours": 106.76863138888889
+        },
+        {
+          "stage": "north_keep",
+          "won": true,
+          "hours": 106.81029861111111
+        },
+        {
+          "stage": "north_keep",
+          "won": true,
+          "hours": 118.30845916666667
+        },
+        {
+          "stage": "north_keep",
+          "won": true,
+          "hours": 124.83980361111111
+        },
+        {
+          "stage": "luo_outpost",
+          "won": true,
+          "hours": 156.97956027777778
+        },
+        {
+          "stage": "luo_gate",
+          "won": true,
+          "hours": 165.32830444444446
+        },
+        {
+          "stage": "luo_cavalry",
+          "won": true,
+          "hours": 198.558595
+        },
+        {
+          "stage": "luo_wall",
+          "won": true,
+          "hours": 198.60470666666666
+        },
+        {
+          "stage": "luo_citadel",
+          "won": true,
+          "hours": 198.65304055555555
+        }
+      ]
+    }
+  }
+}

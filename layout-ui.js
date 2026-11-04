@@ -61,12 +61,13 @@ function layoutShell(){
   const arrivals=Game.allExpeditions().filter(e=>e.phase==='march'&&e.end<=Date.now()).length,bulletin=classicMilitaryBulletin();
   const taskReady=Game.missions.some(x=>Game.missionReady(x))||s.daily.tasks.some(t=>Game.progression.taskReady(s,t))||Game.progression.milestones.some(m=>s.daily.claimed>=m.count&&!s.daily.milestoneClaims.includes(m.count));
   const scenes=[['inner','城内','city'],['outer','城外','outer'],['world','地图','world']];
-  const commands=[['tasks','任务','classicMission','',taskReady?'可领':''],['heroes','将领','classicNav','heroes',''],['army','军队','classicNav','army',arrivals?String(arrivals):''],['inventory','宝物','manualInventory','',''],['shop','商城','classicNav','shop',''],['reports','报告','classicNav','reports',''],['queues','营造','classicQueues','',s.buildQueue.length?String(s.buildQueue.length):''],['more','更多','classicMore','','']].filter(([icon])=>layoutFeatureOpen(icon));layoutAnnounceFeatures();
-  return `<div class="classic-frame command-frame layout-shell heritage-layout ${page==='world'?'world-frame':''} ${focus?'battle-focus':''} ${bulletin?'has-military-bulletin':''} ${classicInfoOpen?'info-open':''}">
+  const commands=[['city','城池','classicNav','inner',s.buildQueue.length?String(s.buildQueue.length):''],['world','地图','classicNav','world',''],['army','军队','classicNav','army',arrivals?String(arrivals):''],['heroes','将领','classicNav','heroes',''],['reports','战报','classicNav','reports','']];layoutAnnounceFeatures();
+  const commandActive=id=>id==='inner'?page==='city':page===id;
+  return `<div class="classic-frame command-frame layout-shell heritage-layout sandbox-shell ${page==='world'?'world-frame':''} ${focus?'battle-focus':''} ${bulletin?'has-military-bulletin':''} ${classicInfoOpen?'info-open':''}">
     <header class="classic-header">
       <div class="classic-brand"><span class="brand-mark">三</span><h1>山河策</h1><span class="classic-edition">${OnlineClient.shared()?'共享世界':'单机'}</span></div>
       <nav class="layout-scene-nav" aria-label="场景导航">${scenes.map(([id,label,icon])=>{const active=id==='world'?page==='world':page==='city'&&cityArea===id;return `<button data-action="classicNav" data-id="${id}" class="${active?'active':''}" ${active?'aria-current="page"':''} aria-label="${label}">${layoutNavIcon(icon)}<span>${label}</span></button>`;}).join('')}</nav>
-      <div class="classic-header-meta">${citySwitchButtonHTML()}<span class="layout-gems">元宝 <b>${num(s.gems)}</b></span><button class="classic-info-toggle" data-action="classicInfo" aria-expanded="${classicInfoOpen}" aria-label="城池详情">城务</button><button data-action="settings" aria-label="设置与帮助">设置</button></div>
+      <div class="classic-header-meta">${citySwitchButtonHTML()}<button data-action="classicMore" aria-label="更多城务与功能">更多</button><button data-action="settings" aria-label="设置与帮助">设置</button></div>
     </header>
     <div class="online-bar-host" data-online-status>${onlineStatusHTML()}</div>
     ${classicResourceRibbon()}
@@ -74,7 +75,7 @@ function layoutShell(){
       <main id="main" class="classic-content screen-${page}" aria-label="游戏主界面">${npcDefenseNoticeHTML()}${typeof otherRegionalFrontNoticeHTML==='function'?otherRegionalFrontNoticeHTML():''}${view}</main>
     </div>
     <footer class="classic-footer"><div class="layout-status-strip">${bulletin}${focus?'':currentObjectiveHTML()}</div>
-      <nav class="classic-primary layout-command-dock" aria-label="常用功能" style="--dock-count:${commands.length}">${commands.map(([icon,label,action,id,badge])=>`<button data-action="${action}" data-id="${id}" class="${action==='classicNav'&&page===id?'active':''}" ${action==='classicNav'&&page===id?'aria-current="page"':''} aria-label="${label}"><span class="layout-dock-emblem">${layoutNavIcon(icon)}</span><span class="layout-nav-label">${label}</span>${badge?`<i>${badge}</i>`:''}</button>`).join('')}</nav>
+      <nav class="classic-primary layout-command-dock" aria-label="常用功能" style="--dock-count:${commands.length}">${commands.map(([icon,label,action,id,badge])=>`<button data-action="${action}" data-id="${id}" class="${commandActive(id)?'active':''}" ${commandActive(id)?'aria-current="page"':''} aria-label="${label}"><span class="layout-dock-emblem">${layoutNavIcon(icon)}</span><span class="layout-nav-label">${label}</span>${badge?`<i>${badge}</i>`:''}</button>`).join('')}</nav>
     </footer>
   </div>`;
 }
@@ -86,10 +87,10 @@ function layoutMoreModal(){
   const groups={
     war:btn('征程','journeyOpen','','secondary')+(layoutFeatureOpen('battlefield')?btn('战场','battlefieldOpen','','secondary'):'')+btn('征战与成长','webEditionHub','','secondary')+btn('掠夺找资源','webRaids','','secondary',WebEdition.shared())+(layoutFeatureOpen('named')?btn('名城版图','namedCities','','secondary'):'')+btn('新手补给 · '+S().onboarding.claims.length+'/10','onboardingGifts','','secondary'),
     city:(layoutFeatureOpen('cities')?btn('治下城市','citySwitchList','','secondary'):'')+btn('领地与驻军','classicTerritory','','secondary')+(layoutFeatureOpen('defense')?btn('来袭与守城','npcDefense','','secondary'):'')+(layoutFeatureOpen('governance')?btn('城务与薪俸','governance','','secondary'):'')+btn('伤兵营','warCare','','secondary')+btn('城池详情','classicInfo','','secondary'),
-    tools:(layoutFeatureOpen('automation')?btn('自动助手'+(unread?' · '+unread+' 未读':''),'automationOpen','','secondary'):'')+btn('消息记录','webMessages','','secondary')+btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','secondary')
+    tools:btn('任务册','classicMission','','secondary')+btn('营造队列','classicQueues','','secondary')+(layoutFeatureOpen('automation')?btn('自动助手'+(unread?' · '+unread+' 未读':''),'automationOpen','','secondary'):'')+btn('消息记录','webMessages','','secondary')+btn(webAudioEnabled?'音乐 · 开':'音乐 · 关','webAudio','','secondary')
   };
   const tabs=LAYOUT_MORE_TABS.map(([id,label])=>`<button role="tab" id="more-tab-${id}" aria-controls="more-category-panel" aria-selected="${layoutMoreCategory===id}" tabindex="${layoutMoreCategory===id?0:-1}" data-action="layoutMoreTab" data-id="${id}">${label}${id==='tools'&&unread?'<i aria-label="有未读记录"></i>':''}</button>`).join('');
-  showModal('更多',`<section class="layout-more-menu"><nav class="layout-more-tabs" role="tablist" aria-label="更多功能分类">${tabs}</nav><div id="more-category-panel" class="layout-more-panel" role="tabpanel" aria-labelledby="more-tab-${layoutMoreCategory}">${groups[layoutMoreCategory]}</div></section>`,btn('关闭','close','','secondary'));
+  showModal('更多',`<section class="layout-more-menu"><div class="layout-more-shortcuts" aria-label="行囊与商城">${btn('行囊 · 宝物','manualInventory','','secondary')}${btn('商城','classicNav','shop','secondary')}</div><nav class="layout-more-tabs" role="tablist" aria-label="更多功能分类">${tabs}</nav><div id="more-category-panel" class="layout-more-panel" role="tabpanel" aria-labelledby="more-tab-${layoutMoreCategory}">${groups[layoutMoreCategory]}</div></section>`,btn('关闭','close','','secondary'));
   manualModalContext=layoutMoreModal;
 }
 function layoutSelectMoreCategory(id){

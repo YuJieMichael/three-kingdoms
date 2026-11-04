@@ -19,13 +19,24 @@ const WorldTargets=(()=>{
     const rows=nearby(s,'training',center,{tile:(x,y)=>{const n=api.tile(x,y);return eligible(n)?n:null;},fixed:(api.fixed||[]).filter(eligible),visible:api.visible,project:n=>({id:n.id,name:n.name,level:n.level,intel:api.intel(n)})});
     return rows.sort((a,b)=>a.level-b.level||a.distance-b.distance||a.id.localeCompare(b.id)).slice(0,5).map(r=>({...r,reason:r.intel==='unknown'?'公开等级符合阶段 · 先侦察，再配兵':'公开等级符合阶段 · 查看情报后配兵'}));
   }
+  function position(points,progress){const lengths=points.slice(1).map((p,i)=>Math.hypot(p.x-points[i].x,p.y-points[i].y)),total=lengths.reduce((n,x)=>n+x,0);let left=total*progress;for(let i=0;i<lengths.length;i++){if(left<=lengths[i]||i===lengths.length-1){const p=lengths[i]?Math.max(0,Math.min(1,left/lengths[i])):0;return {x:points[i].x+(points[i+1].x-points[i].x)*p,y:points[i].y+(points[i+1].y-points[i].y)*p};}left-=lengths[i];}return {...points[0]};}
+  function routePoints(j,origin,target){
+    const points=j.route?.points?.every(point)?j.route.points:[origin,target];
+    if(j.phase!=='return')return points.map(p=>({x:p.x,y:p.y}));
+    if(!j.pathStart)return [...points].reverse().map(p=>({x:p.x,y:p.y}));
+    // A recall returns along the already travelled portion of its frozen route.
+    const start=j.pathStart;let nearest=0,distance=Infinity;
+    if(j.pathProgress!==undefined){const lengths=points.slice(1).map((p,i)=>Math.hypot(p.x-points[i].x,p.y-points[i].y));let left=lengths.reduce((n,x)=>n+x,0)*j.pathProgress;for(let i=0;i<lengths.length;i++){nearest=i;if(left<=lengths[i])break;left-=lengths[i];}}
+    else for(let i=0;i<points.length-1;i++){const a=points[i],b=points[i+1],dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((start.x-a.x)*dx+(start.y-a.y)*dy)/(dx*dx+dy*dy||1))),d=Math.hypot(start.x-a.x-dx*t,start.y-a.y-dy*t);if(d<distance){distance=d;nearest=i;}}
+    return [{...start},...points.slice(0,nearest+1).reverse().map(p=>({x:p.x,y:p.y}))];
+  }
   function paths(jobs,now,api){return jobs.flatMap((j,i)=>{const target=j.target||(j.destinationCity?api.city(j.destinationCity):api.node(j.node)),origin=j.origin||api.city(j.sourceCity);if(!point(target)||!point(origin)||!Number.isFinite(j.start)||!Number.isFinite(j.end))return [];
-    const returning=j.phase==='return',from=returning?(j.pathStart||target):origin,to=returning?origin:target,progress=Math.max(0,Math.min(1,(now-j.start)/Math.max(1,j.end-j.start)));
-    return [{id:j.id||'march_'+i,node:j.node||target.node,kind:j.kind||'expedition',general:j.general||'',phase:j.phase,from:{x:from.x,y:from.y},to:{x:to.x,y:to.y},progress,position:{x:from.x+(to.x-from.x)*progress,y:from.y+(to.y-from.y)*progress},end:j.end}];
+    const returning=j.phase==='return',from=returning?(j.pathStart||target):origin,to=returning?origin:target,progress=Math.max(0,Math.min(1,(now-j.start)/Math.max(1,j.end-j.start))),points=routePoints(j,origin,target);
+    return [{id:j.id||'march_'+i,node:j.node||target.node,kind:j.kind||'expedition',general:j.general||'',phase:j.phase,from:{x:from.x,y:from.y},to:{x:to.x,y:to.y},points,routeId:j.route?.id||'direct',routeName:j.route?.name||'原行军路线',routeKind:j.route?.kind||'road',progress,position:position(points,progress),end:j.end}];
   });}
-  function validPathStart(j){return j.pathStart===undefined||j.pathStart===null||j.phase==='return'&&point(j.pathStart)&&Object.keys(j.pathStart).length===2;}
-  function turnaround(j,now,target){const origin=j.origin;if(!point(origin)||!point(target))return null;const p=Math.max(0,Math.min(1,(now-j.start)/Math.max(1,j.end-j.start)));return {x:origin.x+(target.x-origin.x)*p,y:origin.y+(target.y-origin.y)*p};}
-  return {init,valid,nearby,training,paths,filters,validPathStart,turnaround};
+  function validPathStart(j){const validStart=j.pathStart===undefined||j.pathStart===null||j.phase==='return'&&point(j.pathStart)&&Object.keys(j.pathStart).length===2;if(!validStart)return false;if(j.pathProgress===undefined)return true;if(j.phase!=='return'||!point(j.pathStart)||!Number.isFinite(j.pathProgress)||j.pathProgress<0||j.pathProgress>1||!Array.isArray(j.route?.points)||!j.route.points.length||!j.route.points.every(point))return false;const p=position(j.route.points,j.pathProgress);return Math.hypot(p.x-j.pathStart.x,p.y-j.pathStart.y)<.000001;}
+  function turnaround(j,now,target){const origin=j.origin;if(!point(origin)||!point(target))return null;const p=Math.max(0,Math.min(1,(now-j.start)/Math.max(1,j.end-j.start)));return position(routePoints(j,origin,target),p);}
+  return {init,valid,nearby,training,paths,filters,validPathStart,turnaround,point};
 })();
 const HeroCatalog=(()=>{
   function roster(s,filter,api){if(!['all','march','domestic','idle','captives'].includes(filter))return [];

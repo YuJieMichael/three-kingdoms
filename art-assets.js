@@ -14,6 +14,14 @@ function artSprite(sheet,index,label,classes=''){
 }
 function troopPortrait(id,classes=''){const i=HistoricalArt.troops.ids.indexOf(id);return i<0?'':artSprite('troops',i,Game.units[id].name,classes);}
 function generalPortrait(g,classes=''){
+  const known={guanyu:'guanyu',huangzhong:'huangzhong',machao:'machao'};
+  const provenance=typeof HeroIdentity!=='undefined'&&typeof Game!=='undefined'&&Game.state?HeroIdentity.key(Game.state,g.id):'';
+  const city=typeof NamedGarrison!=='undefined'?NamedGarrison.ids.find(id=>NamedGarrison.generals[id].id===g.id):'';
+  const identity=provenance||(city?NamedGarrison.identity(city):'');
+  if(Object.hasOwn(known,identity)){
+    const label=String(g.name).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    return `<span class="asset-sprite art-generals sandbox-portrait ${classes}" role="img" aria-label="${label}" style="background-image:url('assets/sandbox/${known[identity]}.webp');background-size:cover;background-position:center 15%"></span>`;
+  }
   const fixed=HistoricalArt.generals.ids.indexOf(g.id);
   // Stable across reloads and recruitment; looking at a card never changes its face.
   const hash=Array.from(String(g.id)).reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0))>>>0,0);

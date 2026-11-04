@@ -14,11 +14,12 @@ test('AVIF-capable browsers keep AVIF and download no PNG',async()=>{
   assert.equal(P.src('buildings','hall'),'assets/painted/buildings/hall.avif?v=1');assert.equal(renders.length,0);
   assert.match(vm.runInContext("buildingIcon('hall')",context),/hall\.avif/);
 });
-test('browsers that cannot decode AVIF switch every painted image to PNG once and redraw',async()=>{
+test('browsers that cannot decode AVIF switch legacy art to PNG once while sandbox textures keep WebP',async()=>{
   for(const outcome of ['error','empty']){
     const {P,renders,context}=load(outcome);await settle();
     assert.equal(P.format,'png');assert.equal(renders.length,1);
-    assert.equal(P.src('map','grass'),'assets/painted/map/grass.png?v=1');
+    assert.equal(P.src('map','grass'),'assets/sandbox/grass-v2.webp?v=2');
+    assert.equal(P.src('map','lake'),'assets/sandbox/water-v2.webp?v=2');
     assert.match(P.mapImage('pine',10,10,20),/map\/pine\.png/);assert.match(vm.runInContext("webCityBuildingArt('hall')",context),/buildings\/hall\.png/);
   }
 });

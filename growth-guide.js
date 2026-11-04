@@ -197,6 +197,8 @@ const GrowthGuide=(()=>{
     for(const [id,level]of [['training',4],['shooting',1]]){const goal=resolve('tech',id,level);if(goal)return goal;}
     return train('archer',OnboardingData.archerTarget,'义兵可临时补充兵力；弓箭兵是这条成长路线的远程主力，仍需步兵保护。');
   }
+  // Optional one-time errands remain beside the main goal, so a construction wait still has a real decision.
+  function sandboxOptions(game){return typeof game.sandboxTasks==='function'?game.sandboxTasks().filter(t=>t.status!=='claimed').map(t=>({...t,reward:{...t.reward},canDispatch:t.status==='available'&&!t.reason,canClaim:t.status==='ready'})):[];}
   function key(game){const m=model(game);return JSON.stringify([m.kind,m.phase,m.id,m.level,m.site,m.count,m.queue?.end,m.end,m.inRange,m.command,m.promotionReady,m.cost&&game.canPay(m.cost),m.people]);}
-  return {resources,held,archerComplete,landmarkVictory,supplyGoal,governorAdvice,model,key};
+  return {resources,held,archerComplete,landmarkVictory,supplyGoal,governorAdvice,sandboxOptions,model,key};
 })();
