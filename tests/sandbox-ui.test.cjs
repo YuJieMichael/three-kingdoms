@@ -11,6 +11,14 @@ function ui(e){
   `);
   return e;
 }
+test('the chapter strip shows real progress and next action without changing the save or revealing enemy numbers',()=>{
+  const e=ui(loadGame()),g=e.Game,before=JSON.stringify(g.state),html=e.evaluate('sandboxOpeningHTML()');
+  assert.match(html,/第一章 · 收复青溪/);assert.match(html,/0 \/ 5/);assert.match(html,/领取整备补给/);assert.match(html,/aria-current="step"/);
+  assert.equal((html.match(/data-action="worldTargetGo"/g)||[]).length,5);assert.match(html,/disabled/);assert.equal(JSON.stringify(g.state),before);
+  g.state.raided.field=true;assert.match(e.evaluate('sandboxOpeningHTML()'),/青竹林/);
+  g.state.conquered.camp=true;assert.match(e.evaluate('sandboxOpeningHTML()'),/严秋归队/);
+  g.state.missionClaims.push('camp');assert.equal(e.evaluate('sandboxOpeningHTML()'),'');
+});
 test('map route cards are a pure projection of actual route quotes, with unavailable controls disabled',()=>{
   const e=ui(loadGame()),g=e.Game;city(g,{hall:3,drill:2});g.state.army.archer=30;
   const before=JSON.stringify(g.state),routes=g.sandboxRoutes('field',{archer:30},'lin'),html=e.evaluate("sandboxRouteCardsHTML('field',{archer:30},'lin')");

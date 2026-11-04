@@ -18,15 +18,18 @@ test('opening mission income leaves useful gold reserves without the old three-q
  assert.ok(l.natural.iron>=0);assert.equal(r.validSave,true);
 });
 
-test('real resource fields contribute to the unaccelerated opening while reward overcapacity remains supported',()=>{
- const r=run(123,false,'archer',{includeState:true}),l=ledger(r);
- // Tier 2 now carries most of the opening wood, so wood sits above capacity longer and grows less on its own.
- assert.ok(l.natural.wood>growthEconomy.naturalWoodMin);assert.ok(l.natural.iron>growthEconomy.naturalIronMin);
+test('the faster opening keeps real field production and reward overcapacity',()=>{
+ const r=run(123,false,'archer',{includeState:true});
+ // Measuring an earned city after using its stored stock checks production
+ // directly, rather than requiring the player to wait to earn a minimum amount.
+ const e=loadGame(),g=e.Game;e.advance(r.state.last-e.now());g.importSave(r.state);
+ g.state.res.wood=0;g.state.res.iron=0;const rates=g.rates();e.advance(60000);
+ assert.ok(g.state.res.wood>0&&g.state.res.iron>0);assert.ok(rates.wood>0&&rates.iron>0);
  assert.ok(r.stock.food>growthEconomy.stockFoodMin);assert.ok(r.stock.stone>growthEconomy.stockStoneMin);
  assert.equal(r.validSave,true);
 });
 
-test('all ten gifts remain funded by normal APIs in the one-to-two-day route across twelve seeds',()=>{
+test('all ten gifts remain funded by normal APIs within two days across twelve seeds',()=>{
  for(const seed of [1,2,3,4,5,6,7,8,18,123,456,9876]){
   const r=run(seed,true,'ten-gifts',{includeState:true}),l=ledger(r);
   assert.equal(r.hall,10);assert.equal(r.gifts,10);assert.equal(r.firstBattle,'complete');
@@ -66,12 +69,12 @@ function prepared(e){const g=e.Game;for(const id of Object.keys(g.state.tech))g.
 // v0.35.1: chapter one ends at 黄巾营寨, chapter two at the city 北原城, and the county comes after chapter four.
 test('ten-hall guidance follows chapter one to 黄巾营寨, asks for a city slot before 北原城 and the epic only before chapter four',()=>{
  const e=earnedHall(),g=prepared(e),C=e.Chapter;let m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'wood');assert.equal(m.phase,'campaign');
- g.state.raided.wood=true;g.state.conquered.pass=true;m=inspect(e);assert.equal(m.id,'mine','赤铁山 now comes before 黄巾营寨');
+ g.state.raided.wood=true;g.state.conquered.pass=true;m=inspect(e);assert.equal(m.id,'spear','赤铁山 recommends spears against its cavalry');g.state.army.spear=40;m=inspect(e);assert.equal(m.id,'mine');
  // v0.35.3: each stage's task drives the next step.
  for(const p of g.state.plots)if(p.type==='mine')p.level=Math.min(p.level,2);m=inspect(e);
  assert.equal(m.kind,'building');assert.equal(m.id,'mine');assert.match(m.reason,/章节任务/,'赤铁山 first needs a level-3 iron mine');
- g.state.plots[g.state.plots.findIndex(p=>!p.type)]={type:'mine',level:3};m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'mine');assert.match(m.title,/冶铁搜集/);assert.match(m.reason,/军械残图/);
- g.state.stageTasks.mine={count:3};m=inspect(e);assert.equal(m.id,'camp');assert.equal(JSON.stringify(m.army),'{"archer":160}','黄巾营寨 is an archer-led battle');
+ g.state.plots[g.state.plots.findIndex(p=>!p.type)]={type:'mine',level:3};m=inspect(e);assert.equal(m.kind,'campaign');assert.equal(m.id,'mine');assert.match(m.title,/夺取军械/);assert.match(m.reason,/军械残图/);
+ g.state.stageTasks.mine={count:1};m=inspect(e);assert.equal(m.id,'camp');assert.equal(JSON.stringify(m.army),'{"archer":160}','黄巾营寨 is an archer-led battle');
  const done=n=>{g.state.conquered[n.id]=true;g.state.missionClaims.push('chapter'+n.chapter+'_'+n.id);};
  g.state.conquered.camp=true;m=inspect(e);assert.equal(m.kind,'chapterDeliver','chapter two opens without any county and starts with the food delivery');assert.equal(m.id,'north_road');
  g.state.stageTasks.north_road={delivered:true};m=inspect(e);assert.equal(m.id,'north_road');assert.equal(m.chapter,2);

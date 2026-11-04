@@ -6,7 +6,9 @@ module.exports={
  chapterCampaign:{normalHours:{min:100,max:220},spentFoodMin:1000000},
  lateGarrisons:{innerCityMin:1600,yellowCityMin:250},
  opening:{giftCapacityMaxRatio:1.5,populationOutputMinRatio:2,firstBattleMaxMinutes:10,minPopulationItems:2,archersMaxMinutes:90},
- hallGrowth:{levelTwoSeconds:480,stepMaxRatio:2,levelTenReferenceMaxRatio:.5,tenGiftsHours:{min:24,max:48},lateWaitHours:{min:1,max:24},finalWaitMaxRatio:2.5},
+ // v0.39: first-chapter preparation leaves more earned speedups for later halls;
+ // waiting is capped, never required. First-chapter duration has its own 30–60m gate.
+ hallGrowth:{levelTwoSeconds:480,stepMaxRatio:2,levelTenReferenceMaxRatio:.5,tenGiftsHours:{min:0,max:48},lateWaitHours:{min:0,max:24},finalWaitMaxRatio:2.5},
  growthEconomy:{naturalWoodMin:200,naturalIronMin:500,stockFoodMin:10000,stockStoneMin:30000,governorReductionPercent:{min:7,max:8}},
  growthGold:{
   // starter-gold-tuning-2026-10-05.md: tiers 1+2 = 10,000+20,000.

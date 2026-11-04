@@ -1,8 +1,8 @@
 'use strict';
 let webMapTactical=false;
-// The first six-cell phone view includes both the capital and the first grain-field target.
+// The full-height phone map keeps a wider square world behind the floating HUD.
 // This is transient UI state; later selections/pans continue to set their original coordinates.
-let worldView={x:Game.home.x-1,y:Game.home.y+1},mapDrag=null,suppressMapClick=false;
+let worldView={x:Game.home.x-1,y:Game.home.y+2},mapDrag=null,suppressMapClick=false;
 // 手机上点格子后，目标面板贴在地图可视区底部显示，不再把页面滚走。
 let mapSheetOpen=false;
 function cityBuildingArt(id){
@@ -19,7 +19,7 @@ function cityBuildingArt(id){
 }
 function cityScene(){return manualCityScene();}
 function citySlotModal(index){manualCitySlotModal(index);}
-const worldSpan=()=>window.matchMedia('(max-width:760px)').matches?6:9;
+const worldSpan=()=>window.matchMedia('(max-width:760px)').matches?8:9;
 window.matchMedia('(max-width:760px)').addEventListener?.('change',()=>{if(document.querySelector('.screen-world'))render();});
 const worldBounds=()=>{const span=worldSpan(),half=Math.floor(span/2);return {x:Math.max(0,Math.min(Game.WORLD_SIZE-span,worldView.x-half)),y:Math.max(0,Math.min(Game.WORLD_SIZE-span,worldView.y-half))};};
 function terrainArt(type,tile){

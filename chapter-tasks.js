@@ -7,7 +7,7 @@ const ChapterTasks=(()=>{
     field:{kind:'occupy',type:'首战',raid:true,text:'掠夺或占领河畔荒田并获胜'},
     wood:{kind:'occupy',type:'清剿',raid:true,text:'掠夺或占领青竹林并获胜'},
     pass:{kind:'scout',type:'侦察',text:'取得白石隘口的精确侦察报告，在报告有效期内占领'},
-    mine:{kind:'collect',type:'冶铁搜集',plot:'mine',level:3,need:3,item:'军械残图',text:'城外铁矿升到 3 级后，掠夺或占领赤铁山胜利 3 次，每次缴获 1 份军械残图'},
+    mine:{kind:'collect',type:'夺取军械',plot:'mine',level:3,need:1,item:'军械残图',guideArmy:{archer:100,spear:40},text:'城外铁矿升到 3 级后，掠夺或占领赤铁山获胜，夺取军械残图；枪兵克制巡山骑兵'},
     camp:{kind:'army',type:'兵种',share:{archer:.6},lossCap:{archer:.2},guideArmy:{archer:160},text:'弓兵占出征士兵 ≥ 60% 占领黄巾营寨，弓兵伤亡 ≤ 20%'},
     north_road:{kind:'deliver',type:'运粮',cost:{food:5000},text:'先向北原驿道的乡勇运送粮食 5,000，再占领驿道'},
     north_granary:{kind:'defend',type:'守城',counter:{cavalry:150,spear:110,archer:120,shield:60},text:'占领北原粮仓后，黄巾反扑，再打一场守城战'},
@@ -34,8 +34,12 @@ const ChapterTasks=(()=>{
   const plotLevel=(s,type)=>Math.max(0,...(s.plots||[]).filter(p=>p.type===type).map(p=>p.level));
   // Saves from before v0.35.3 keep every stage they had already reached.
   function init(s){
-    if(!s||s.stageTasks!==undefined)return;s.stageTasks={};
-    for(const id of ids){const d=defs[id],reached=d.raid||d.kind==='collect'?!!(s.raided?.[id]||s.conquered?.[id]):!!s.conquered?.[id];if(reached)s.stageTasks[id]={done:true};}
+    if(!s)return;
+    if(s.stageTasks===undefined){s.stageTasks={};for(const id of ids){const d=defs[id],reached=d.raid||d.kind==='collect'?!!(s.raided?.[id]||s.conquered?.[id]):!!s.conquered?.[id];if(reached)s.stageTasks[id]={done:true};}}
+    // Previous versions required three identical victories. A recorded victory
+    // now clears the mine; migration grants no loot or mission rewards.
+    const mine=s.stageTasks?.mine;
+    if(object(mine)&&Object.keys(mine).every(k=>['count','done'].includes(k))&&(mine.done===undefined||mine.done===true)&&Number.isInteger(mine.count)&&mine.count>=1&&mine.count<=3){mine.count=1;mine.done=true;s.conquered.mine=true;}
   }
   // Every requirement is checked before the march or when the battle is won, so a reached stage is a done stage.
   function done(s,id){

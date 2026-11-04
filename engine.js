@@ -602,7 +602,7 @@ const Game = (() => {
   function refreshBuildings(){for(const id of cityIds)state.buildings[id]=Math.max(0,...state.cityLayout.map((type,i)=>type===id?state.cityLevels[i]:0));}
   const primarySite=id=>state.cityLayout.indexOf(id);
   const buildLimit=()=>activeBuff('labor')?5:2;
-  function buildSeconds(id,level){const referenceSeconds=buildRecord(id,level).seconds||600,seconds=id==='hall'&&OnboardingData.hallBuildSeconds?OnboardingData.hallBuildSeconds(level,referenceSeconds):referenceSeconds;return Math.max(1,seconds/(1+state.tech.construction*.1+general(state.governor).pol/100)/state.speed);}
+  function buildSeconds(id,level){const referenceSeconds=buildRecord(id,level).seconds||600,seconds=id==='hall'&&OnboardingData.hallBuildSeconds?OnboardingData.hallBuildSeconds(level,referenceSeconds):referenceSeconds;return Math.max(1,seconds*OnboardingData.openingFactor(state,'build',id,level)/(1+state.tech.construction*.1+general(state.governor).pol/100)/state.speed);}
   function completeFirstBattleGuide(){tick(Date.now(),false);const error=OnboardingSystem.completeFirstBattle(state);save();return error;}
   function upgradeCost(id){const site=typeof id==='number'?id:primarySite(id),type=typeof id==='number'?state.cityLayout[site]:id,level=state.cityLevels[site]||0;return buildRecord(type,level+1)?.cost||{};}
   function queueBuilding(site,id){tick(Date.now(),false);return enqueueBuilding(site,id);}
@@ -745,7 +745,7 @@ const Game = (() => {
   const unitUnlocked=id=>!unitRequirements(id);
   const trainingLimit=()=>state.cityLayout.reduce((v,id,i)=>v+(id==='barracks'?state.cityLevels[i]:0),0);
   function trainCost(id,count){return Object.fromEntries(Object.entries(units[id].cost).map(([k,v])=>[k,v*count]));}
-  function trainSeconds(id,count){const u=units[id],tech=u.kind==='machine'?state.tech.manufacture:state.tech.training;return Math.max(1,count*u.time/(1+tech*.1+general(HeritageSystem.effectiveHero(state,'train')).atk/100)/state.speed*CityStrategy.territory(state,CitySystem.current(state)).trainFactor*provinceTrainFactor(id));}
+  function trainSeconds(id,count){const u=units[id],tech=u.kind==='machine'?state.tech.manufacture:state.tech.training;return Math.max(1,count*u.time*OnboardingData.openingFactor(state,'train',id)/(1+tech*.1+general(HeritageSystem.effectiveHero(state,'train')).atk/100)/state.speed*CityStrategy.territory(state,CitySystem.current(state)).trainFactor*provinceTrainFactor(id));}
   function siegePreparationQuote(cityId,nodeId){
     const empty={key:'',deficits:{},remaining:{},orders:[],cost:{},people:0,template:null,reason:''};
     if(!state.realm.cities[cityId]||!NamedGarrison.ids.includes(nodeId))return {...empty,reason:'请选择己方城市与名城'};
@@ -1250,7 +1250,7 @@ const Game = (() => {
     return {capacity,loot,loaded,discarded:Object.values(info?.loot||{}).reduce((v,n)=>v+n,0)-loaded,storage:storageQuote(loot,stock,true)};
   }
   function researchCost(id){return ReferenceRules.researchRows[id]?.[state.tech[id]+1]?.cost||{};}
-  const researchSeconds=id=>Math.max(1,Math.floor((ReferenceRules.researchRows[id]?.[state.tech[id]+1]?.seconds||1)/(1+general(HeritageSystem.effectiveHero(state,'research')).wis/100)*(1-(state.tech.researching||0)*.03)/state.speed));
+  const researchSeconds=id=>Math.max(1,Math.floor((ReferenceRules.researchRows[id]?.[state.tech[id]+1]?.seconds||1)*OnboardingData.openingFactor(state,'research',id,state.tech[id]+1)/(1+general(HeritageSystem.effectiveHero(state,'research')).wis/100)*(1-(state.tech.researching||0)*.03)/state.speed));
   const armyLimit=()=>Math.floor(state.buildings.drill*10000*(activeBuff('flag')?1.25:1));
   function enqueueResearch(id){if(!ManualData.technology[id])return '科技不存在';if(state.buildings.academy<1)return '请先建造书院';if(state.researchQueue)return '书院正在研究另一项科技';if(state.tech[id]>=10)return '科技已满级';const level=state.tech[id]+1;const requirement=researchRequirements(id);if(requirement)return '需要 '+requirement;const cost=researchCost(id);if(!canPay(cost))return '研究资源不足';pay(cost);const start=Date.now();state.researchQueue={id,level,start,end:start+researchSeconds(id)*1000};return null;}
   function research(id){tick(Date.now(),false);const error=enqueueResearch(id);if(!error)save();return error;}

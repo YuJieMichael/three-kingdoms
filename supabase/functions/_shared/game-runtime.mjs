@@ -1,5 +1,5 @@
 // Generated from the browser's actual data modules and engine. Rebuild with node scripts/build-online-runtime.cjs.
-export const runtimeHash="78121078ba5e18e8a0897711eafd25352f90566366fe1fe5a7ce8b4e926d6712";
+export const runtimeHash="5d1379d109061f9eec40d9af9bda7e0cc96ea0ad3668bb7ad623167901279880";
 export const runtimeSources=["manual-data.js","speedup-data.js","reference-rules.js","reward-data.js","progression.js","onboarding-data.js","onboarding-system.js","governance-system.js","hero-system.js","hero-identity.js","hero-bonds.js","legend-quest.js","legendary-weapons.js","heritage-data.js","heritage-system.js","npc-data.js","war-care.js","faction-system.js","npc-defense.js","chapter-tasks.js","chapter-data.js","siege-data.js","war-orders.js","automation-system.js","named-city-data.js","named-garrison.js","named-city-system.js","yellow-city-data.js","plot-template-data.js","city-presets.js","training-templates.js","world-targets.js","sandbox-campaign.js","city-system.js","city-strategy.js","city-specialty.js","general-growth-data.js","general-growth-system.js","scout-system.js","battle-stratagems.js","tactical-lessons.js","regional-front.js","supply-lines.js","hero-administration.js","battle-review.js","wild-fields.js","web-edition.js","battlefield-data.js","battlefield-system.js","journey-system.js","research-routes.js","siege-preparation.js","hero-traits.js","engine.js"];
 export function createGameRuntime({snapshot=null,now=globalThis.Date.now(),random=()=>globalThis.Math.random(),externalBusy=[]}={}) {
  const GAME_SERVER_RUNTIME=true;
@@ -12030,6 +12030,14 @@ const Progression = (() => {
 // Prototype rewards: earned once by hall level, separate from recurring supplies.
 const OnboardingData={
   archerTarget:30,
+  // First-chapter preparation uses the same costs and prerequisites. Only newly
+  // queued early work is shortened; the end times in existing saves are retained.
+  openingPace:{factor:.03,buildLevel:5,researchLevel:4,units:['militia','scout','spear','shield','archer']},
+  openingFactor(s,kind,id,level){
+    if(!s||s.buildings.hall>5||Object.keys(s.realm?.cities||{}).length>1||typeof ChapterData!=='undefined'&&ChapterData.chapterOneDone(s))return 1;
+    const p=this.openingPace;
+    return (kind==='build'&&level<=p.buildLevel||kind==='research'&&level<=p.researchLevel||kind==='train'&&p.units.includes(id))?p.factor:1;
+  },
   // 开局选州（design/quick-specs/progression-rework-2026-10-18.md §1）。加成为试玩值；选州不改变出生位置。
   provinces:[
     {id:'jizhou',name:'冀州',desc:'粮食产量 +10%',production:{food:1.1}},
@@ -13900,7 +13908,7 @@ const ChapterTasks=(()=>{
     field:{kind:'occupy',type:'首战',raid:true,text:'掠夺或占领河畔荒田并获胜'},
     wood:{kind:'occupy',type:'清剿',raid:true,text:'掠夺或占领青竹林并获胜'},
     pass:{kind:'scout',type:'侦察',text:'取得白石隘口的精确侦察报告，在报告有效期内占领'},
-    mine:{kind:'collect',type:'冶铁搜集',plot:'mine',level:3,need:3,item:'军械残图',text:'城外铁矿升到 3 级后，掠夺或占领赤铁山胜利 3 次，每次缴获 1 份军械残图'},
+    mine:{kind:'collect',type:'夺取军械',plot:'mine',level:3,need:1,item:'军械残图',guideArmy:{archer:100,spear:40},text:'城外铁矿升到 3 级后，掠夺或占领赤铁山获胜，夺取军械残图；枪兵克制巡山骑兵'},
     camp:{kind:'army',type:'兵种',share:{archer:.6},lossCap:{archer:.2},guideArmy:{archer:160},text:'弓兵占出征士兵 ≥ 60% 占领黄巾营寨，弓兵伤亡 ≤ 20%'},
     north_road:{kind:'deliver',type:'运粮',cost:{food:5000},text:'先向北原驿道的乡勇运送粮食 5,000，再占领驿道'},
     north_granary:{kind:'defend',type:'守城',counter:{cavalry:150,spear:110,archer:120,shield:60},text:'占领北原粮仓后，黄巾反扑，再打一场守城战'},
@@ -13927,8 +13935,12 @@ const ChapterTasks=(()=>{
   const plotLevel=(s,type)=>Math.max(0,...(s.plots||[]).filter(p=>p.type===type).map(p=>p.level));
   // Saves from before v0.35.3 keep every stage they had already reached.
   function init(s){
-    if(!s||s.stageTasks!==undefined)return;s.stageTasks={};
-    for(const id of ids){const d=defs[id],reached=d.raid||d.kind==='collect'?!!(s.raided?.[id]||s.conquered?.[id]):!!s.conquered?.[id];if(reached)s.stageTasks[id]={done:true};}
+    if(!s)return;
+    if(s.stageTasks===undefined){s.stageTasks={};for(const id of ids){const d=defs[id],reached=d.raid||d.kind==='collect'?!!(s.raided?.[id]||s.conquered?.[id]):!!s.conquered?.[id];if(reached)s.stageTasks[id]={done:true};}}
+    // Previous versions required three identical victories. A recorded victory
+    // now clears the mine; migration grants no loot or mission rewards.
+    const mine=s.stageTasks?.mine;
+    if(object(mine)&&Object.keys(mine).every(k=>['count','done'].includes(k))&&(mine.done===undefined||mine.done===true)&&Number.isInteger(mine.count)&&mine.count>=1&&mine.count<=3){mine.count=1;mine.done=true;s.conquered.mine=true;}
   }
   // Every requirement is checked before the march or when the battle is won, so a reached stage is a done stage.
   function done(s,id){
@@ -17382,7 +17394,7 @@ const Game = (() => {
   function refreshBuildings(){for(const id of cityIds)state.buildings[id]=Math.max(0,...state.cityLayout.map((type,i)=>type===id?state.cityLevels[i]:0));}
   const primarySite=id=>state.cityLayout.indexOf(id);
   const buildLimit=()=>activeBuff('labor')?5:2;
-  function buildSeconds(id,level){const referenceSeconds=buildRecord(id,level).seconds||600,seconds=id==='hall'&&OnboardingData.hallBuildSeconds?OnboardingData.hallBuildSeconds(level,referenceSeconds):referenceSeconds;return Math.max(1,seconds/(1+state.tech.construction*.1+general(state.governor).pol/100)/state.speed);}
+  function buildSeconds(id,level){const referenceSeconds=buildRecord(id,level).seconds||600,seconds=id==='hall'&&OnboardingData.hallBuildSeconds?OnboardingData.hallBuildSeconds(level,referenceSeconds):referenceSeconds;return Math.max(1,seconds*OnboardingData.openingFactor(state,'build',id,level)/(1+state.tech.construction*.1+general(state.governor).pol/100)/state.speed);}
   function completeFirstBattleGuide(){tick(Date.now(),false);const error=OnboardingSystem.completeFirstBattle(state);save();return error;}
   function upgradeCost(id){const site=typeof id==='number'?id:primarySite(id),type=typeof id==='number'?state.cityLayout[site]:id,level=state.cityLevels[site]||0;return buildRecord(type,level+1)?.cost||{};}
   function queueBuilding(site,id){tick(Date.now(),false);return enqueueBuilding(site,id);}
@@ -17525,7 +17537,7 @@ const Game = (() => {
   const unitUnlocked=id=>!unitRequirements(id);
   const trainingLimit=()=>state.cityLayout.reduce((v,id,i)=>v+(id==='barracks'?state.cityLevels[i]:0),0);
   function trainCost(id,count){return Object.fromEntries(Object.entries(units[id].cost).map(([k,v])=>[k,v*count]));}
-  function trainSeconds(id,count){const u=units[id],tech=u.kind==='machine'?state.tech.manufacture:state.tech.training;return Math.max(1,count*u.time/(1+tech*.1+general(HeritageSystem.effectiveHero(state,'train')).atk/100)/state.speed*CityStrategy.territory(state,CitySystem.current(state)).trainFactor*provinceTrainFactor(id));}
+  function trainSeconds(id,count){const u=units[id],tech=u.kind==='machine'?state.tech.manufacture:state.tech.training;return Math.max(1,count*u.time*OnboardingData.openingFactor(state,'train',id)/(1+tech*.1+general(HeritageSystem.effectiveHero(state,'train')).atk/100)/state.speed*CityStrategy.territory(state,CitySystem.current(state)).trainFactor*provinceTrainFactor(id));}
   function siegePreparationQuote(cityId,nodeId){
     const empty={key:'',deficits:{},remaining:{},orders:[],cost:{},people:0,template:null,reason:''};
     if(!state.realm.cities[cityId]||!NamedGarrison.ids.includes(nodeId))return {...empty,reason:'请选择己方城市与名城'};
@@ -18030,7 +18042,7 @@ const Game = (() => {
     return {capacity,loot,loaded,discarded:Object.values(info?.loot||{}).reduce((v,n)=>v+n,0)-loaded,storage:storageQuote(loot,stock,true)};
   }
   function researchCost(id){return ReferenceRules.researchRows[id]?.[state.tech[id]+1]?.cost||{};}
-  const researchSeconds=id=>Math.max(1,Math.floor((ReferenceRules.researchRows[id]?.[state.tech[id]+1]?.seconds||1)/(1+general(HeritageSystem.effectiveHero(state,'research')).wis/100)*(1-(state.tech.researching||0)*.03)/state.speed));
+  const researchSeconds=id=>Math.max(1,Math.floor((ReferenceRules.researchRows[id]?.[state.tech[id]+1]?.seconds||1)*OnboardingData.openingFactor(state,'research',id,state.tech[id]+1)/(1+general(HeritageSystem.effectiveHero(state,'research')).wis/100)*(1-(state.tech.researching||0)*.03)/state.speed));
   const armyLimit=()=>Math.floor(state.buildings.drill*10000*(activeBuff('flag')?1.25:1));
   function enqueueResearch(id){if(!ManualData.technology[id])return '科技不存在';if(state.buildings.academy<1)return '请先建造书院';if(state.researchQueue)return '书院正在研究另一项科技';if(state.tech[id]>=10)return '科技已满级';const level=state.tech[id]+1;const requirement=researchRequirements(id);if(requirement)return '需要 '+requirement;const cost=researchCost(id);if(!canPay(cost))return '研究资源不足';pay(cost);const start=Date.now();state.researchQueue={id,level,start,end:start+researchSeconds(id)*1000};return null;}
   function research(id){tick(Date.now(),false);const error=enqueueResearch(id);if(!error)save();return error;}

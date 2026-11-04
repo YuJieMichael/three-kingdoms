@@ -1,0 +1,90 @@
+{
+  "contract": "design/quick-specs/modern-ui-2026-11-03.md: full-workspace map; real chapter, march and target HUD; charcoal, white and cinnabar; 44px actions; unchanged game state and ordinary confirmations",
+  "targetViewports": [
+    "390x844",
+    "440x956",
+    "1280x900",
+    "844x390"
+  ],
+  "accessibility": {
+    "status": "pass",
+    "evidence": "Actual Tab/Shift+Tab focus has a visible solid outline and Enter opens the gift dialog. New HUD buttons and route summary measure at least 44px in all targets. Primary text #fff5ef on #bb4639 is 4.83:1; secondary #a9b5c1 on #18222d is 7.71:1. Reduced-motion mode used; no decorative animation introduced."
+  },
+  "responsive": {
+    "status": "pass",
+    "evidence": "Four real viewports have no document horizontal overflow. The world remains square and is cropped by its viewport rather than stretched; map drag works and clicking the actual capital enters the city. Details expand and existing navigation, heroes and dispatch remain usable."
+  },
+  "contentStates": {
+    "loading": {
+      "status": "not-applicable",
+      "reason": "The changed HUD synchronously projects the existing local engine. It adds no asynchronous data loader; the actual fresh founding and opening sequence were tested."
+    },
+    "empty": {
+      "status": "pass",
+      "evidence": "A fresh game opens military with no unlocked tasks, displays the unlock conditions and a current-objective action; that action really opens the existing objective dialog."
+    },
+    "error": {
+      "status": "pass",
+      "evidence": "A legitimately earned army is reduced to zero in the actual dispatch form; the start action becomes disabled with its real reason. Entering thirty owned archers restores eligibility."
+    },
+    "partial": {
+      "status": "pass",
+      "evidence": "Fresh target intelligence remains unknown and scouting is disabled without scouts; unavailable chapter stages remain disabled. No hidden enemy counts are displayed."
+    },
+    "success": {
+      "status": "pass",
+      "evidence": "Keyboard Enter opens the real starter-gift dialog; confirming the real first gift sets its once-only claim. The legitimate first-victory save also opens ordinary chapter and dispatch screens."
+    },
+    "permission": {
+      "status": "pass",
+      "evidence": "A second page in the same browser context loads the same live save while its writer remains open, displays the actual readonly/save-management boundary and its recovery actions; no takeover is performed."
+    }
+  },
+  "renderedEvidence": [
+    {
+      "viewport": "390x844",
+      "artifact": "mobile-390.png",
+      "observation": "Modern phone map, chapter HUD, real target actions and five-way dock."
+    },
+    {
+      "viewport": "440x956",
+      "artifact": "mobile-440.png",
+      "observation": "Full-height square world cropped to phone; capital and first field remain in view."
+    },
+    {
+      "viewport": "1280x900",
+      "artifact": "desktop.png",
+      "observation": "Wide map, compact left chapter rail, right target panel and command dock."
+    },
+    {
+      "viewport": "844x390",
+      "artifact": "landscape.png",
+      "observation": "Short landscape keeps the target and primary actions inside the workspace."
+    },
+    {
+      "viewport": "440x956",
+      "artifact": "city.png",
+      "observation": "City lots use dark planning cells and remove repeated empty-cell labels while keeping accessible names."
+    },
+    {
+      "viewport": "440x956",
+      "artifact": "heroes.png",
+      "observation": "Larger real portraits, clear stats and horizontal hero actions."
+    },
+    {
+      "viewport": "440x956",
+      "artifact": "dispatch.png",
+      "observation": "Actual unit, commander and route controls in the unified modal."
+    },
+    {
+      "viewport": "440x956",
+      "artifact": "readonly.png",
+      "observation": "Real second-tab writer protection remains visible and readable."
+    },
+    {
+      "viewport": "440x956",
+      "artifact": "dispatch-error.png",
+      "observation": "The actual zero-army validation disables starting and explains the missing soldiers."
+    }
+  ]
+}

@@ -5,8 +5,9 @@ const {run}=require('./balance/archer-onboarding.cjs');
 const copy=value=>JSON.parse(JSON.stringify(value));
 const close=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-6,actual+' != '+expected);
 
-test('hall pacing keeps the opening reference times and applies the normal governor and speed bonuses',()=>{
+test('after chapter one, hall pacing retains the normal governor and speed bonuses',()=>{
   const e=loadGame(),g=e.Game;
+  g.state.conquered.camp=true;
   const divisor=()=>1+g.state.tech.construction*.1+g.general(g.state.governor).pol/100;
   close(g.buildSeconds('hall',1),g.buildRecord('hall',1).seconds/divisor());
   // Hall 2 is shortened to 8 minutes (design/balance/opening-pace-2026-10-08.md).
@@ -88,7 +89,7 @@ test('earned gifts keep the thirty-archer opening under ninety minutes',()=>{
   }
 });
 
-test('normal APIs distribute hall growth over one to two days instead of a final multi-day cliff',()=>{
+test('normal APIs still finish ten gifts within two days, with no required minimum idle time',()=>{
   for(const seed of [123,456,4,18]){
     const result=run(seed,true,'ten-gifts'),hours=result.minutes/60;
     assert.equal(result.hall,10);
@@ -98,8 +99,9 @@ test('normal APIs distribute hall growth over one to two days instead of a final
     const halls=result.queueLog.filter(q=>q.kind==='build'&&q.id==='hall');
     const waiting=level=>halls.find(q=>q.level===level).waitSeconds/3600;
     for(const level of [7,8,9,10])assert.ok(waiting(level)>=hallGrowth.lateWaitHours.min&&waiting(level)<hallGrowth.lateWaitHours.max,'seed '+seed+', hall '+level);
-    assert.ok(waiting(7)<waiting(8)&&waiting(8)<waiting(9));
-    assert.ok(waiting(10)<=waiting(9)*hallGrowth.finalWaitMaxRatio);
+    // Early preparation now preserves earned speedups for later halls. A shorter
+    // or zero late wait is permitted; the upper bounds still catch stalls.
+    assert.ok(Math.max(...halls.map(q=>q.waitSeconds/3600))<hallGrowth.lateWaitHours.max);
     assert.equal(result.validSave,true);
   }
 });
